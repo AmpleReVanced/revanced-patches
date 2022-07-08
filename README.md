@@ -1,1 +1,2 @@
-Repo for all ReVanced patches
+# ReVanced Patches
+🧩 Official patches by ReVanced
