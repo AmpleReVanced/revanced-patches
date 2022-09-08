@@ -64,6 +64,16 @@ The official Patch bundle provided by ReVanced and the community.
 | `tiktok-ads` | Removes ads from TikTok. | all |
 </details>
 
+### 📦 `com.zhiliaoapp.musically`
+<details>
+
+| 💊 Patch | 📜 Description | 🏹 Target Version |
+|:--------:|:--------------:|:-----------------:|
+| `tiktok-download` | Remove restrictions on downloads video. | all |
+| `tiktok-seekbar` | Show progress bar for all video. | all |
+| `tiktok-ads` | Removes ads from TikTok. | all |
+</details>
+
 ### 📦 `com.google.android.youtube`
 <details>
 
@@ -100,6 +110,14 @@ The official Patch bundle provided by ReVanced and the community.
 | `video-ads` | Removes ads in the video player. | 17.33.42 |
 | `general-ads` | Removes general ads. | 17.33.42 |
 | `hide-infocard-suggestions` | Hides infocards in videos. | 17.33.42 |
+</details>
+
+### 📦 `com.vanced.android.youtube`
+<details>
+
+| 💊 Patch | 📜 Description | 🏹 Target Version |
+|:--------:|:--------------:|:-----------------:|
+| `client-spoof` | Spoofs the YouTube or Vanced client to prevent playback issues. | all |
 </details>
 
 ## 📝 JSON Format
