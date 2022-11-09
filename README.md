@@ -161,6 +161,14 @@ The official Patch bundle provided by ReVanced and the community.
 | `general-reddit-ads` | Removes general ads from the Reddit frontpage and subreddits. | all |
 </details>
 
+### 📦 `com.awedea.nyx`
+<details>
+
+| 💊 Patch | 📜 Description | 🏹 Target Version |
+|:--------:|:--------------:|:-----------------:|
+| `unlock-pro` | Unlocks all pro features. | all |
+</details>
+
 ## 📝 JSON Format
 
 This section explains the JSON format for the [patches.json](patches.json) file.
