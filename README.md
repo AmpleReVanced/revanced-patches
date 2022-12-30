@@ -199,14 +199,6 @@ The official Patch bundle provided by ReVanced and the community.
 | `promo-code-unlock` | Disables the validation of promo code. Any code will work to unlock all features. | all |
 </details>
 
-### [📦 `net.dinglisch.android.taskerm`](https://play.google.com/store/apps/details?id=net.dinglisch.android.taskerm)
-<details>
-
-| 💊 Patch | 📜 Description | 🏹 Target Version |
-|:--------:|:--------------:|:-----------------:|
-| `unlock-license` | Unlocks the trial version. | all |
-</details>
-
 ### [📦 `co.windyapp.android`](https://play.google.com/store/apps/details?id=co.windyapp.android)
 <details>
 
@@ -253,6 +245,14 @@ The official Patch bundle provided by ReVanced and the community.
 | 💊 Patch | 📜 Description | 🏹 Target Version |
 |:--------:|:--------------:|:-----------------:|
 | `unlock-themes` | Unlocks all themes. | all |
+</details>
+
+### [📦 `net.dinglisch.android.taskerm`](https://play.google.com/store/apps/details?id=net.dinglisch.android.taskerm)
+<details>
+
+| 💊 Patch | 📜 Description | 🏹 Target Version |
+|:--------:|:--------------:|:-----------------:|
+| `unlock-trial` | Unlocks the trial version. | all |
 </details>
 
 ## 📝 JSON Format
