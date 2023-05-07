@@ -1,8 +1,6 @@
-## 🧩 Patches
+## 🧩 ReVanced Patches
 
-The official Patch bundle provided by ReVanced and the community.
-
-> Looking for the JSON variant of this? [Click here](patches.json).
+The official ReVanced Patches.
 
 ### [📦 `com.google.android.youtube`](https://play.google.com/store/apps/details?id=com.google.android.youtube)
 <details>
@@ -367,6 +365,8 @@ The official Patch bundle provided by ReVanced and the community.
 |:--------:|:--------------:|:-----------------:|
 | `unlock-trial` | Unlocks the trial version. | all |
 </details>
+
+> Looking for the JSON variant of this? [Click here](patches.json).
 
 ## 📝 JSON Format
 
