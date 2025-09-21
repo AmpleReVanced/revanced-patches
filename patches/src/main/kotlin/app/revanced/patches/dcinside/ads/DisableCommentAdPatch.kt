@@ -33,7 +33,7 @@ val disableCommentAdPatch = bytecodePatch(
                     invoke-virtual {p0, p1}, Landroid/view/View;->setVisibility(I)V
 
                     const/4 v0, 0x1
-                    iput-boolean v0, p0, Lcom/dcinside/app/view/PostReadReplyAdView;->c:Z
+                    iput-boolean v0, p0, Lcom/dcinside/app/view/PostReadReplyAdView;->f:Z
                 """.trimIndent()
             )
         }
