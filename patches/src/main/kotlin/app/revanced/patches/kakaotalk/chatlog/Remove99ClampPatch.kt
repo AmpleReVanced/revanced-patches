@@ -1,0 +1,30 @@
+package app.revanced.patches.kakaotalk.chatlog
+
+import app.revanced.patcher.extensions.InstructionExtensions.instructions
+import app.revanced.patcher.extensions.InstructionExtensions.replaceInstruction
+import app.revanced.patcher.patch.bytecodePatch
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.processWatermarkCountFingerprint
+import com.android.tools.smali.dexlib2.Opcode
+import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction10t
+import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction22t
+
+@Suppress("unused")
+val remove99ClampPatch = bytecodePatch(
+    name = "Disable 99 unread limit",
+    description = "Skip the 99-cap so unread count shows full value"
+) {
+    compatibleWith("com.kakao.talk"("25.7.3"))
+
+    execute {
+        val method = processWatermarkCountFingerprint.method
+
+        method.instructions
+            .filterIsInstance<BuilderInstruction22t>()
+            .filter { it.opcode == Opcode.IF_LE }
+            .forEach { ifle ->
+                val idx = method.instructions.indexOf(ifle)
+                val goto = BuilderInstruction10t(Opcode.GOTO, ifle.target)
+                method.replaceInstruction(idx, goto)
+            }
+    }
+}

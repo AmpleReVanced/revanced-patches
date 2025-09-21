@@ -12,6 +12,16 @@ pluginManagement {
                 password = providers.gradleProperty("gpr.key").getOrElse(System.getenv("GITHUB_TOKEN"))
             }
         }
+        maven {
+            name = "GiteaPackages"
+            url = uri("https://git.naijun.dev/api/packages/ReVanced/maven")
+            credentials(HttpHeaderCredentials::class) {
+                name = "Authorization"
+                value = "token ${providers.gradleProperty("gitea.accessToken")}"
+            }
+
+            authentication { create<HttpHeaderAuthentication>("header") }
+        }
     }
 }
 
