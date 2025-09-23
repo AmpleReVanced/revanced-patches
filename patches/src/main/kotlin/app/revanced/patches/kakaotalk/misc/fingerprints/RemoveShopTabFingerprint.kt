@@ -6,23 +6,23 @@ import com.android.tools.smali.dexlib2.Opcode
 
 internal val addNavigationTabFingerprint = fingerprint {
     accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
-    returns("V")
-    parameters()
-    strings("webtoon")
+    returns("Ljava/util/List;")
+    parameters("Lcom/kakao/talk/activity/main/d\$b;")
+    strings("<get-values>(...)")
     opcodes(
-        Opcode.IGET_OBJECT,
-        Opcode.INVOKE_VIRTUAL,
-        Opcode.SGET_OBJECT,
-        Opcode.INVOKE_VIRTUAL,
+        Opcode.NEW_INSTANCE,
+        Opcode.INVOKE_DIRECT,
+        Opcode.CONST_4,
         Opcode.INVOKE_STATIC,
         Opcode.MOVE_RESULT_OBJECT,
+        Opcode.INVOKE_VIRTUAL,
+        Opcode.MOVE_RESULT_OBJECT,
         Opcode.INVOKE_INTERFACE,
-        Opcode.MOVE_RESULT,
-        Opcode.SGET_OBJECT,
         Opcode.CONST_4,
-        Opcode.CONST_4,
-        Opcode.IF_EQZ,
-        Opcode.SGET_OBJECT,
-        Opcode.GOTO,
+        Opcode.INVOKE_STATIC,
+        Opcode.MOVE_RESULT_OBJECT,
+        Opcode.INVOKE_VIRTUAL,
+        Opcode.MOVE_RESULT_OBJECT,
+        Opcode.INVOKE_INTERFACE,
     )
 }
