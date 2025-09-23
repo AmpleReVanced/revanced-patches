@@ -10,6 +10,9 @@ import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction35c
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
+/**
+ * TODO: 25.8.0 업데이트되면서 빈 공간이 생기기 시작함, 수정 필요
+ */
 @Suppress("unused")
 val removeMoreTabAdPatch = bytecodePatch(
     name = "Remove More tab ad",

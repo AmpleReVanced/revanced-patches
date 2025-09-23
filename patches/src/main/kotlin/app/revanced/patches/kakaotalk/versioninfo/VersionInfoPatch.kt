@@ -2,6 +2,7 @@ package app.revanced.patches.kakaotalk.versioninfo
 
 import app.revanced.patcher.Fingerprint
 import app.revanced.patcher.extensions.InstructionExtensions.instructions
+import app.revanced.patcher.extensions.InstructionExtensions.removeInstruction
 import app.revanced.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.revanced.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.versioninfo.fingerprints.versionInfoFingerprint
@@ -23,18 +24,20 @@ val versionInfoPatch = bytecodePatch(
         val runPatch: (Fingerprint, Boolean) -> Unit = { fp, inDetail ->
             val versionInfo = fp.method.instructions
                 .filterIsInstance<BuilderInstruction21c>()
-                .first { inst ->
+                .filter { inst ->
                     inst.opcode == Opcode.CONST_STRING
                 }
 
-            val versionString = (versionInfo.reference as StringReference).string
+            val index = if (inDetail) 1 else 0
+
+            val versionString = (versionInfo[index].reference as StringReference).string
 
             fp.method
                 .replaceInstruction(
-                    versionInfo.location.index,
+                    versionInfo[index].location.index,
                     BuilderInstruction21c(
                         Opcode.CONST_STRING,
-                        versionInfo.registerA,
+                        versionInfo[index].registerA,
                         ImmutableStringReference(
                             if (inDetail) {
                                 val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")

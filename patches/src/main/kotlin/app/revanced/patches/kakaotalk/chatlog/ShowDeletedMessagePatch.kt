@@ -13,7 +13,7 @@ import com.android.tools.smali.dexlib2.Opcode
 val showDeletedMessagePatch = bytecodePatch(
     name = "Show deleted messages",
     description = "Allows you to see deleted messages in chat logs.",
-    use = true
+    use = false // TODO: 삭제 방법이 바뀌어서 작동하지 않음, 수정 필요
 ) {
     compatibleWith("com.kakao.talk"("25.8.0"))
 
