@@ -20,8 +20,9 @@ import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 val enableChatGroupPatch = bytecodePatch(
     name = "Enable Chat Group",
     description = "An enable Chat Group Patch",
+    use = false // Disabled until further testing
 ) {
-    compatibleWith("com.kakao.talk"("25.7.3"))
+    compatibleWith("com.kakao.talk"("25.8.0"))
 
     execute {
         val checkChatGroupMethod = checkChatGroupFeatureFingerprint.method

@@ -5,7 +5,7 @@ import com.android.tools.smali.dexlib2.AccessFlags
 
 @Suppress("unused")
 internal val verifyingSignatureFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.STATIC)
+    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
     returns("Z")
     parameters()
     strings("getPackageName(...)")

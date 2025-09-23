@@ -4,18 +4,21 @@ import app.revanced.patcher.fingerprint
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
+// v7, x7중에 햇갈림, 일단 v7으로
 internal val alwaysShowKickButtonFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC)
+    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
     parameters()
     returns("V")
     strings("getString(...)")
     opcodes(
         Opcode.MOVE_OBJECT_FROM16,
-        Opcode.CONST_4,
-        Opcode.CONST_4,
         Opcode.IGET_OBJECT,
         Opcode.SGET_OBJECT,
-        Opcode.IF_EQ
+        Opcode.INVOKE_VIRTUAL_RANGE,
+        Opcode.MOVE_RESULT_OBJECT,
+        Opcode.INVOKE_VIRTUAL,
+        Opcode.MOVE_RESULT,
+        Opcode.CONST_4
     )
     custom { method, classDef -> classDef.sourceFile == "OlkProfileFragment.kt" }
 }

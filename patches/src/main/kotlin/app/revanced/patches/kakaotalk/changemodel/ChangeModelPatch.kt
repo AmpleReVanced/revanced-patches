@@ -17,7 +17,7 @@ val changeModelPatch = bytecodePatch(
         description = "Device model to change to (Only works for models that support subdevice features like SM-X926N)",
     )
 
-    compatibleWith("com.kakao.talk"("25.7.3"))
+    compatibleWith("com.kakao.talk"("25.8.0"))
 
     execute {
         changeModelFingerprint.method.addInstructions(

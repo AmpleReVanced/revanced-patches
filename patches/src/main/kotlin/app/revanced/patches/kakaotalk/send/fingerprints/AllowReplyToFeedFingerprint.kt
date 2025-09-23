@@ -4,6 +4,7 @@ import app.revanced.patcher.fingerprint
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
+// 25.8.0 patch completed
 internal val realActionForReplyFingerprint = fingerprint {
     accessFlags(AccessFlags.PUBLIC, AccessFlags.CONSTRUCTOR)
     returns("V")
@@ -13,7 +14,9 @@ internal val realActionForReplyFingerprint = fingerprint {
     )
     opcodes(
         Opcode.CONST_STRING,
+        Opcode.INVOKE_STATIC,
         Opcode.CONST_STRING,
+        Opcode.INVOKE_STATIC,
         Opcode.CONST,
         Opcode.INVOKE_STATIC,
         Opcode.MOVE_RESULT_OBJECT,
@@ -21,22 +24,25 @@ internal val realActionForReplyFingerprint = fingerprint {
         Opcode.INVOKE_DIRECT,
         Opcode.IPUT_OBJECT,
         Opcode.IPUT_OBJECT,
+        Opcode.SGET_OBJECT,
         Opcode.INVOKE_VIRTUAL,
         Opcode.MOVE_RESULT_OBJECT,
-        Opcode.INVOKE_STATIC,
+        Opcode.INVOKE_VIRTUAL,
         Opcode.MOVE_RESULT,
         Opcode.IF_NEZ,
+        Opcode.SGET_OBJECT,
         Opcode.INVOKE_VIRTUAL,
         Opcode.MOVE_RESULT_OBJECT,
-        Opcode.SGET_OBJECT,
-        Opcode.IF_NE,
-        Opcode.GOTO_16
+        Opcode.INVOKE_VIRTUAL,
+        Opcode.MOVE_RESULT_OBJECT,
+        Opcode.INVOKE_VIRTUAL,
     )
 }
 
+// 25.8.0 patch completed
 internal val allowSwipeReplyToFeedFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
-    parameters("Landroidx/recyclerview/widget/RecyclerView;", "Landroidx/recyclerview/widget/RecyclerView\$D;")
+    accessFlags(AccessFlags.PUBLIC)
+    parameters("Landroidx/recyclerview/widget/RecyclerView;", "Landroidx/recyclerview/widget/RecyclerView\$F;")
     returns("I")
     strings("recyclerView", "viewHolder")
     opcodes(

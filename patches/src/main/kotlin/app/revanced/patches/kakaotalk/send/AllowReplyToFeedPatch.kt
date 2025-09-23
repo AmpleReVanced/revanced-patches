@@ -16,7 +16,7 @@ val allowReplyToFeedPatch = bytecodePatch(
     name = "Allow reply to feed",
     description = "Allows replying to feed messages",
 ) {
-    compatibleWith("com.kakao.talk"("25.7.3"))
+    compatibleWith("com.kakao.talk"("25.8.0"))
 
     execute {
         val patch: (Fingerprint) -> Unit = { fp ->

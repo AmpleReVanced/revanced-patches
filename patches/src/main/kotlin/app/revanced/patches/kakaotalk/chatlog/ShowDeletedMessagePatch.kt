@@ -15,7 +15,7 @@ val showDeletedMessagePatch = bytecodePatch(
     description = "Allows you to see deleted messages in chat logs.",
     use = true
 ) {
-    compatibleWith("com.kakao.talk"("25.7.3"))
+    compatibleWith("com.kakao.talk"("25.8.0"))
 
     execute {
         val method = replaceToFeedFingerprint.method
