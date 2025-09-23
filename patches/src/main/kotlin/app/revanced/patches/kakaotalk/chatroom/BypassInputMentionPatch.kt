@@ -22,7 +22,7 @@ val bypassInputMentionPatch = bytecodePatch(
     name = "Bypass input mention limit in non-multichat",
     description = "Bypass the limit of input mentions in non-multichat rooms",
 ) {
-    compatibleWith("com.kakao.talk"("25.7.3"))
+    compatibleWith("com.kakao.talk"("25.8.0"))
 
     execute {
         val mentionComponent = mentionComponentClassFingerprint.method.definingClass

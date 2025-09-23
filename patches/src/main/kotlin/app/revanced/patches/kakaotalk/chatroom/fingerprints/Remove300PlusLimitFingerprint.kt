@@ -7,14 +7,16 @@ import com.android.tools.smali.dexlib2.AccessFlags
 internal val limit300PlusBaseChatRoomFingerprint = fingerprint {
     accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
     returns("V")
-    parameters("Lcom/kakao/talk/widget/ViewBindable;")
+    parameters()
     strings("300+")
+    custom { method, classDef -> classDef.sourceFile == "BaseChatRoomItem.kt" }
 }
 
 @Suppress("unused")
 internal val limit300PlusOpenChatRoomFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
+    accessFlags(AccessFlags.PUBLIC)
     returns("V")
     parameters()
     strings("300+")
+    custom { method, classDef -> classDef.sourceFile == "OpenLinkChatsItem.kt" }
 }

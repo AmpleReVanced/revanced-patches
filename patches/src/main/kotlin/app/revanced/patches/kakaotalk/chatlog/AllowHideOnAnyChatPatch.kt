@@ -8,7 +8,7 @@ val allowHideOnAnyChatPatch = app.revanced.patcher.patch.bytecodePatch(
     name = "Allow Hide on Any Chat",
     description = "Users with hiding privileges can hide any chat, including their own messages.",
 ) {
-    compatibleWith("com.kakao.talk"("25.7.3"))
+    compatibleWith("com.kakao.talk"("25.8.0"))
 
     execute {
         checkIsAllowedHideFingerprint.method.addInstructions(
