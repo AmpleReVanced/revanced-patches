@@ -1,15 +1,14 @@
 package app.revanced.patches.kakaotalk.send
 
-import app.revanced.patcher.Fingerprint
 import app.revanced.patcher.extensions.InstructionExtensions.instructions
-import app.revanced.patcher.extensions.InstructionExtensions.removeInstruction
-import app.revanced.patcher.extensions.InstructionExtensions.replaceInstruction
+import app.revanced.patcher.extensions.InstructionExtensions.replaceInstructions
+import app.revanced.patcher.patch.PatchException
 import app.revanced.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.send.fingerprints.allowSwipeReplyToFeedFingerprint
-import app.revanced.patches.kakaotalk.send.fingerprints.realActionForReplyFingerprint
+import app.revanced.util.getReference
 import com.android.tools.smali.dexlib2.Opcode
-import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction11n
-import com.android.tools.smali.dexlib2.iface.instruction.formats.Instruction21t
+import com.android.tools.smali.dexlib2.iface.reference.FieldReference
+import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
 @Suppress("unused")
 val allowReplyToFeedPatch = bytecodePatch(
@@ -19,31 +18,27 @@ val allowReplyToFeedPatch = bytecodePatch(
     compatibleWith("com.kakao.talk"("25.8.0"))
 
     execute {
-        val patch: (Fingerprint) -> Unit = { fp ->
-            val method = fp.method
-            val insns = method.instructions
+        allowSwipeReplyToFeedFingerprint.method.apply {
+            val getChatTypeInst = instructions.first { it.opcode == Opcode.INVOKE_VIRTUAL }.getReference<MethodReference>()
+                ?: throw PatchException("Failed to find method reference for getting chat type")
+            val getChatTypeMethodName = getChatTypeInst.name
+            val getChatTypeClassName = getChatTypeInst.definingClass
+            val chatType = instructions.first { it.opcode == Opcode.SGET_OBJECT }.getReference<FieldReference>()?.definingClass
 
-            val idxIfnez = insns.indexOfFirst { it is Instruction21t && it.opcode == Opcode.IF_NEZ }
-            val idxIfnezTarget = (insns[idxIfnez] as Instruction21t).registerA
-
-            val idxInvoke = insns.subList(0, idxIfnez)
-                .indexOfLast { it.opcode == Opcode.INVOKE_VIRTUAL }
-
-            (idxInvoke until idxIfnez).toList()
-                .sortedDescending()
-                .forEach { method.removeInstruction(it) }
-
-            method.replaceInstruction(
-                idxInvoke,
-                BuilderInstruction11n(
-                    Opcode.CONST_4,
-                    idxIfnezTarget,
-                    0x0,
-                )
+            replaceInstructions(
+                0,
+                """
+                    invoke-virtual {p2}, $getChatTypeClassName->$getChatTypeMethodName()$chatType
+                    move-result-object v0
+                    sget-object v2, $chatType->Leverage:$chatType
+                    if-ne v0, v2, :cond_0
+                    const/4 v0, 0x0
+                    return v0
+                    :cond_0
+                    const/4 v0, 0x1
+                    return v0
+                """.trimIndent()
             )
         }
-
-        patch(realActionForReplyFingerprint)
-        patch(allowSwipeReplyToFeedFingerprint)
     }
 }
