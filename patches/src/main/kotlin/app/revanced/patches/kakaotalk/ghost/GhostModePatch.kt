@@ -20,7 +20,6 @@ val ghostMode = bytecodePatch(
         val sendActionMethod = sendCurrentActionFingerprint(actionJobClass).method
         val protocolSuccessClass = protocolSuccessFingerprint.classDef
 
-        // TODO: We need more testing to see if this works as intended.
         sendActionMethod.replaceInstructions(
             0,
             """
