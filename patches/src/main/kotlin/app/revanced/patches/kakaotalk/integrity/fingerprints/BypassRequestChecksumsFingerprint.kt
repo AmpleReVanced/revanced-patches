@@ -5,12 +5,16 @@ import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
 internal val requestChecksumsFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.BRIDGE, AccessFlags.SYNTHETIC)
-    parameters("Landroid/content/pm/PackageManager;", "Ljava/lang/String;", "Z", "I", "Ljava/util/List;", "Landroid/content/pm/PackageManager\$OnChecksumsReadyListener;")
+    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
     returns("V")
-    strings()
+    strings("context", "action", "com.kakao.talk")
     opcodes(
-        Opcode.INVOKE_VIRTUAL_RANGE,
-        Opcode.RETURN_VOID,
+        Opcode.CONST_STRING,
+        Opcode.INVOKE_STATIC,
+        Opcode.CONST_STRING,
+        Opcode.INVOKE_STATIC,
+        Opcode.SGET_OBJECT,
+        Opcode.INVOKE_VIRTUAL,
     )
+    custom { method, classDef -> classDef.sourceFile == "PlatformUtils.kt" }
 }
