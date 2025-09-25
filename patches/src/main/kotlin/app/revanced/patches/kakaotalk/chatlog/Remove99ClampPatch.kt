@@ -3,6 +3,7 @@ package app.revanced.patches.kakaotalk.chatlog
 import app.revanced.patcher.extensions.InstructionExtensions.instructions
 import app.revanced.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.revanced.patcher.patch.bytecodePatch
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.getWatermarkCountFromCacheFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.processWatermarkCountFingerprint
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction10t
@@ -16,15 +17,21 @@ val remove99ClampPatch = bytecodePatch(
     compatibleWith("com.kakao.talk"("25.8.0"))
 
     execute {
-        val method = processWatermarkCountFingerprint.method
+        val processWatermarkCountMethod = processWatermarkCountFingerprint.method
 
-        method.instructions
+        processWatermarkCountMethod.apply {
+            replaceInstruction(instructions.size - 2, "nop")
+        }
+
+        val getWatermarkCountFromCacheMethod = getWatermarkCountFromCacheFingerprint.method
+
+        getWatermarkCountFromCacheMethod.instructions
             .filterIsInstance<BuilderInstruction22t>()
             .filter { it.opcode == Opcode.IF_LE }
             .forEach { ifle ->
-                val idx = method.instructions.indexOf(ifle)
+                val idx = getWatermarkCountFromCacheMethod.instructions.indexOf(ifle)
                 val goto = BuilderInstruction10t(Opcode.GOTO, ifle.target)
-                method.replaceInstruction(idx, goto)
+                getWatermarkCountFromCacheMethod.replaceInstruction(idx, goto)
             }
     }
 }
