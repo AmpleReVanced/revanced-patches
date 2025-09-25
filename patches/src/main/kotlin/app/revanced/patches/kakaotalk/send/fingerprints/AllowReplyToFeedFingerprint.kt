@@ -4,7 +4,7 @@ import app.revanced.patcher.fingerprint
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
-// 25.8.0 patch completed
+// 25.8.1 patch completed
 internal val allowSwipeReplyToFeedFingerprint = fingerprint {
     accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
     returns("Z")

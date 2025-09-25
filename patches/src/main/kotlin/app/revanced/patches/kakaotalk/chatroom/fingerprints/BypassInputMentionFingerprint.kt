@@ -6,7 +6,7 @@ import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.NarrowLiteralInstruction
 
-// 25.8.0 patch completed
+// 25.8.1 patch completed
 internal val limitMentionToNonMultiChatFingerprint = fingerprint {
     accessFlags(AccessFlags.PUBLIC, AccessFlags.CONSTRUCTOR)
     returns("V")
@@ -64,7 +64,7 @@ internal val limitMentionToNonMultiChatFingerprint = fingerprint {
     custom { method, classDef -> classDef.sourceFile == "InputComponent.kt" }
 }
 
-// 25.8.0 patch completed
+// 25.8.1 patch completed
 internal val mentionComponentClassFingerprint = fingerprint {
     accessFlags(AccessFlags.PUBLIC, AccessFlags.CONSTRUCTOR)
     returns("V")
@@ -88,7 +88,7 @@ internal val mentionComponentClassFingerprint = fingerprint {
     custom { method, classDef -> classDef.sourceFile == "MentionComponent.kt" }
 }
 
-// 25.8.0 patch completed
+// 25.8.1 patch completed
 internal val checkMentionableFingerprint = fingerprint {
     accessFlags(AccessFlags.PUBLIC)
     returns("Landroid/widget/Filter${"$"}FilterResults;")
@@ -106,7 +106,7 @@ internal val checkMentionableFingerprint = fingerprint {
     custom { method, classDef -> classDef.sourceFile == "MentionItemListAdapter.kt" && method.name == "performFiltering" }
 }
 
-// 25.8.0 patch completed
+// 25.8.1 patch completed
 internal val isMultiChatFingerprint = fingerprint {
     accessFlags(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.FINAL)
     returns("Z")
