@@ -4,7 +4,6 @@ import app.revanced.patcher.fingerprint
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
-// 25.8.1 patched completed
 internal val checkIsAllowedHideFingerprint = fingerprint {
     accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
     returns("Z")
@@ -22,4 +21,22 @@ internal val checkIsAllowedHideFingerprint = fingerprint {
         Opcode.CONST_4,
     )
     custom { method, classDef -> classDef.sourceFile == "DeletableAction.kt" }
+}
+
+internal val checkIsEqualWithMyUserIdFingerprint = fingerprint {
+    accessFlags(AccessFlags.PUBLIC)
+    parameters("J")
+    returns("Z")
+    strings()
+    opcodes(
+        Opcode.INVOKE_VIRTUAL,
+        Opcode.MOVE_RESULT_WIDE,
+        Opcode.CMP_LONG,
+        Opcode.IF_NEZ,
+        Opcode.CONST_4,
+        Opcode.GOTO,
+        Opcode.CONST_4,
+        Opcode.RETURN
+    )
+    custom { method, classDef -> classDef.sourceFile == "Me.kt" }
 }
