@@ -4,7 +4,7 @@ import app.revanced.patcher.fingerprint
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
-// 25.8.0 patch completed
+// 25.8.1 patch completed
 internal val moatCheckResultFingerprintOne = fingerprint {
     accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
     parameters("Ljava/util/List;", "Ljava/lang/String;", "Ljava/lang/String;")
@@ -27,7 +27,7 @@ internal val moatCheckResultFingerprintOne = fingerprint {
     custom { method, classDef -> classDef.sourceFile == "PaySecurityWorker.kt" }
 }
 
-// 25.8.0 patch completed
+// 25.8.1 patch completed
 internal val moatCheckResultFingerprintTwo = fingerprint {
     accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
     parameters("Ljava/util/List;", "Ljava/lang/String;", "Ljava/lang/String;")
@@ -55,7 +55,7 @@ internal val moatCheckResultFingerprintTwo = fingerprint {
     custom { method, classDef -> classDef.sourceFile == "PaySecurityWorker.kt" }
 }
 
-// 25.8.0 patch completed
+// 25.8.1 patch completed
 internal val postprocessMoatCheckFailedFingerprint = fingerprint {
     accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
     parameters("Lcom/kakaopay/kpsd/moat/sdk/MoatFlag;", "Ljava/lang/String;", "[Ljava/lang/String;")

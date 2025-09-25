@@ -10,7 +10,7 @@ val bypassRequestChecksumPatch = bytecodePatch(
     name = "Bypass requestChecksums",
     description = "Prevents the execution of checksum verification logic by making it return early.",
 ) {
-    compatibleWith("com.kakao.talk"("25.8.0"))
+    compatibleWith("com.kakao.talk"("25.8.1"))
 
     execute {
         val method = requestChecksumsFingerprint.method
