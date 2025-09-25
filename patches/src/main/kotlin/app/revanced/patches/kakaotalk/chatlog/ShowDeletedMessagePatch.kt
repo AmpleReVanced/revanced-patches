@@ -23,7 +23,6 @@ val showDeletedMessagePatch = bytecodePatch(
 
         val insns = method.instructions
 
-        // pswitch(2,3) 블록에서 사용되는 플래그 세팅: or-int/lit16 p2, p2, 0x4000
         val orIdx = insns.indexOfFirst { it.opcode == Opcode.OR_INT_LIT16 }
         if (orIdx == -1) error("could not find OR_INT_LIT16 in method ${method.name}")
 
@@ -31,15 +30,6 @@ val showDeletedMessagePatch = bytecodePatch(
         val getTextMethod = chatLogGetTextFingerprint.method.name
         val chatLogClass = chatLogSetTextFingerprint.method.definingClass
 
-        /*
-         * or-int/lit16 직전에 접두사 처리 로직을 주입하고, 마지막에 return-void로
-         * 메서드를 종료합니다. 이렇게 하면 원래 플래그 설정 및 M1 호출은 실행되지 않습니다.
-         *
-         * 중요: 이 메서드의 시그니처 상 chatLog 파라미터는 p1 입니다.
-         *       get/set 메서드는 p1(=chatLog)에 호출해야 합니다.
-         *
-         * 사용 레지스터: v0, v1, v2 (이 메서드의 .registers 14 환경에서 안전)
-         */
         method.addInstructionsWithLabels(
             orIdx,
             """
