@@ -17,6 +17,9 @@ import com.android.tools.smali.dexlib2.iface.instruction.formats.Instruction21c
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.reference.TypeReference
 
+/**
+ * TODO: Not working at 25.8.0, needs rework
+ */
 @Suppress("unused")
 val bypassInputMentionPatch = bytecodePatch(
     name = "Bypass input mention limit in non-multichat",
