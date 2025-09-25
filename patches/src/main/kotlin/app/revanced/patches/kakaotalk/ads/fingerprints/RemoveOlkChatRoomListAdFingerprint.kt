@@ -23,3 +23,21 @@ internal val addOlkChatRoomListAdFingerprint = fingerprint {
     )
     custom { method, classDef -> classDef.sourceFile == "OlkChatRoomListViewModel.kt" }
 }
+
+internal val openChatTabFragmentAdEnabledFingerprint = fingerprint {
+    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
+    parameters()
+    returns("Z")
+    strings()
+    opcodes(
+        Opcode.INVOKE_VIRTUAL,
+        Opcode.MOVE_RESULT_OBJECT,
+        Opcode.INVOKE_VIRTUAL,
+        Opcode.MOVE_RESULT_OBJECT,
+        Opcode.IGET,
+        Opcode.CONST_4,
+        Opcode.IF_NE,
+        Opcode.SGET_OBJECT,
+    )
+    custom { method, classDef -> classDef.sourceFile == "OpenChatTabFragment.kt" }
+}

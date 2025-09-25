@@ -1,8 +1,10 @@
 package app.revanced.patches.kakaotalk.ads
 
 import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
+import app.revanced.patcher.extensions.InstructionExtensions.replaceInstructions
 import app.revanced.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.ads.fingerprints.addOlkChatRoomListAdFingerprint
+import app.revanced.patches.kakaotalk.ads.fingerprints.openChatTabFragmentAdEnabledFingerprint
 import app.revanced.patches.kakaotalk.common.fingerprints.kotlinUnitInstanceFingerprint
 
 @Suppress("unused")
@@ -25,6 +27,14 @@ val removeOlkChatRoomListAdPatch = bytecodePatch(
             """
                 sget-object v0, $unitClass->a:$unitClass
                 return-object v0
+            """.trimIndent()
+        )
+
+        openChatTabFragmentAdEnabledFingerprint.method.replaceInstructions(
+            0,
+            """
+                const/4 v0, 0x0
+                return v0
             """.trimIndent()
         )
     }
