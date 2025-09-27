@@ -9,7 +9,7 @@ val disableChatRoomListAdPatch = bytecodePatch(
     name = "Disable chat room list ad",
     description = "Disable the chat room list ad.",
 ) {
-    compatibleWith("com.kakao.talk"("25.8.1"))
+    compatibleWith("com.kakao.talk"("25.8.2"))
 
     execute {
         val chatListAdHelperEnabledMethod = chatListAdHelperEnabledFingerprint.method
