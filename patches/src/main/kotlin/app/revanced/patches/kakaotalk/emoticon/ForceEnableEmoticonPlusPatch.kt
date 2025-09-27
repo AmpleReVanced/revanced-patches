@@ -9,7 +9,7 @@ val forceEnableEmoticonPlusPatch = bytecodePatch(
     name = "Force enable emoticon plus feature",
     description = "Force enable emoticon plus feature (Unpurchased emoticon can be sent once per day)",
 ) {
-    compatibleWith("com.kakao.talk"("25.8.1"))
+    compatibleWith("com.kakao.talk"("25.8.2"))
 
     execute {
         isEnableEmoticonPlusFingerprint.method.addInstructions(
