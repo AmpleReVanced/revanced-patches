@@ -1,4 +1,4 @@
-package app.revanced.patches.kakaotalk.misc.fingerprints
+package app.revanced.patches.kakaotalk.tab.fingerprints
 
 import app.revanced.patcher.fingerprint
 import com.android.tools.smali.dexlib2.AccessFlags
