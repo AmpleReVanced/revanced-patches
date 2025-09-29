@@ -20,3 +20,25 @@ internal val allowSwipeReplyToFeedFingerprint = fingerprint {
     )
     custom { method, classDef -> classDef.sourceFile == "ChatLogItemTouchHelperCallback.kt" }
 }
+
+internal val isCarouselTypeFingerprint = fingerprint {
+    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
+    returns("Z")
+    parameters()
+    strings()
+    opcodes(
+        Opcode.INVOKE_VIRTUAL,
+        Opcode.MOVE_RESULT_OBJECT,
+        Opcode.INVOKE_VIRTUAL,
+        Opcode.MOVE_RESULT_OBJECT,
+        Opcode.IF_EQZ,
+        Opcode.INVOKE_VIRTUAL,
+        Opcode.MOVE_RESULT,
+        Opcode.IF_EQZ,
+        Opcode.CONST_4,
+        Opcode.GOTO,
+        Opcode.CONST_4,
+        Opcode.RETURN,
+    )
+    custom { method, classDef -> classDef.sourceFile == "LeverageChatLog.kt" }
+}
