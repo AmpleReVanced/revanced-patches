@@ -1,8 +1,10 @@
 package app.revanced.patches.kakaotalk.ghost
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
+import app.revanced.patcher.extensions.InstructionExtensions.replaceInstructions
 import app.revanced.patcher.patch.bytecodePatch
-import app.revanced.patches.kakaotalk.common.fingerprints.kotlinUnitInstanceFingerprint
+import app.revanced.patches.kakaotalk.ghost.fingerprints.actionJobMethodFingerprint
+import app.revanced.patches.kakaotalk.ghost.fingerprints.locoMethodClassFingerprint
+import app.revanced.patches.kakaotalk.ghost.fingerprints.protocolSuccessFingerprint
 import app.revanced.patches.kakaotalk.ghost.fingerprints.sendCurrentActionFingerprint
 
 @Suppress("unused")
@@ -10,22 +12,25 @@ val ghostMode = bytecodePatch(
     name = "Ghost Mode",
     description = "Don't expose your typing status to the other party.",
 ) {
-    compatibleWith("com.kakao.talk"("25.7.3"))
+    compatibleWith("com.kakao.talk"("25.8.2"))
 
     execute {
-        val findUnit = kotlinUnitInstanceFingerprint.method
-        val unitClass = findUnit.definingClass
+        val locoMethodClass = locoMethodClassFingerprint.classDef
+        val actionJobClass = actionJobMethodFingerprint(locoMethodClass).classDef
+        val sendActionMethod = sendCurrentActionFingerprint(actionJobClass).method
+        val protocolSuccessClass = protocolSuccessFingerprint.classDef
 
-        val method = sendCurrentActionFingerprint.method
-
-        // I tried to find the field name, but it's pretty obvious to me, so I hardcode it.
-        // If it changes, we need to fix it
-        method.addInstructions(
+        sendActionMethod.replaceInstructions(
             0,
             """
-                sget-object v0, $unitClass->a:$unitClass
-                return-object v0
-            """.trimIndent()
+                const/4 v0, 0x0
+                
+                new-instance v1, ${protocolSuccessClass.type}
+                
+                invoke-direct {v1, v0}, ${protocolSuccessClass.type}-><init>(Ljava/lang/Object;)V
+                
+                return-object v1
+            """
         )
     }
 }

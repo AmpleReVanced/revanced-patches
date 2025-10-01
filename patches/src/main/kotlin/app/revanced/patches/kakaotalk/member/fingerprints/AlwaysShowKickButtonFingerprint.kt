@@ -4,18 +4,20 @@ import app.revanced.patcher.fingerprint
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
-internal val alwaysShowKickButtonFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC)
+internal val kickButtonManageMethodFingerprint = fingerprint {
+    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
     parameters()
     returns("V")
-    strings("getString(...)")
+    strings()
     opcodes(
-        Opcode.MOVE_OBJECT_FROM16,
-        Opcode.CONST_4,
-        Opcode.CONST_4,
-        Opcode.IGET_OBJECT,
         Opcode.SGET_OBJECT,
-        Opcode.IF_EQ
+        Opcode.IGET_OBJECT,
+        Opcode.INVOKE_VIRTUAL,
+        Opcode.MOVE_RESULT,
+        Opcode.INVOKE_DIRECT,
+        Opcode.MOVE_RESULT,
+        Opcode.IGET_OBJECT,
+        Opcode.INVOKE_VIRTUAL
     )
     custom { method, classDef -> classDef.sourceFile == "OlkProfileFragment.kt" }
 }

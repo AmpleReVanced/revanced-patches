@@ -8,14 +8,15 @@ internal val configConstructorFingerprint = fingerprint {
     accessFlags(AccessFlags.STATIC, AccessFlags.CONSTRUCTOR)
     returns("V")
     parameters()
-    strings("getBytes(...)")
+    strings("google", "one")
     opcodes(
+        Opcode.NEW_INSTANCE,
+        Opcode.INVOKE_DIRECT,
+        Opcode.SPUT_OBJECT,
         Opcode.SGET_OBJECT,
         Opcode.INVOKE_VIRTUAL,
-        Opcode.INVOKE_STATIC,
         Opcode.MOVE_RESULT_OBJECT,
         Opcode.SGET_OBJECT,
-        Opcode.CONST_4,
         Opcode.CONST_4,
         Opcode.IF_EQ,
         Opcode.MOVE,
