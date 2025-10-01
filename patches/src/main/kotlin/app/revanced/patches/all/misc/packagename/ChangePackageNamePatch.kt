@@ -98,12 +98,14 @@ val changePackageNamePatch = resourcePatch(
                 val permissions = manifest.getElementsByTagName("permission").asSequence()
                 val usesPermissions = manifest.getElementsByTagName("uses-permission").asSequence()
 
-                val receiverNotExported = "DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
-
                 (permissions + usesPermissions)
                     .map { it as Element }
-                    .filter { it.getAttribute("android:name") == "$packageName.$receiverNotExported" }
-                    .forEach { it.setAttribute("android:name", "$newPackageName.$receiverNotExported") }
+                    .forEach {
+                        val name = it.getAttribute("android:name")
+                        if (name.startsWith("$packageName.")) {
+                            it.setAttribute("android:name", name.replace(packageName, newPackageName))
+                        }
+                    }
             }
 
             if (updateProviders == true) {
