@@ -18,10 +18,8 @@ internal val chatLogSetTextFingerprint = fingerprint {
     accessFlags(AccessFlags.PUBLIC)
     returns("V")
     parameters("Ljava/lang/String;")
+    strings("\u202e", "")
     opcodes(
-        Opcode.CONST_4,
-        Opcode.CONST_STRING,
-        Opcode.CONST_STRING,
         Opcode.IF_EQZ,
         Opcode.INVOKE_VIRTUAL,
         Opcode.MOVE_RESULT,
@@ -30,6 +28,9 @@ internal val chatLogSetTextFingerprint = fingerprint {
         Opcode.MOVE_RESULT,
         Opcode.CONST_16,
         Opcode.IF_LE,
+        Opcode.INVOKE_STATIC,
+        Opcode.MOVE_RESULT_OBJECT,
+        Opcode.INVOKE_VIRTUAL,
     )
     custom { method, classDef -> classDef.sourceFile == "ChatLog.kt" }
 }

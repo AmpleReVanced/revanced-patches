@@ -1,13 +1,13 @@
-package app.revanced.patches.kakaotalk.misc
+package app.revanced.patches.kakaotalk.tab
 
 import app.revanced.patcher.extensions.InstructionExtensions.addInstruction
 import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
 import app.revanced.patcher.extensions.InstructionExtensions.getInstruction
 import app.revanced.patcher.extensions.InstructionExtensions.instructions
 import app.revanced.patcher.patch.bytecodePatch
-import app.revanced.patches.kakaotalk.misc.fingerprints.checkChatGroupFeatureFingerprint
-import app.revanced.patches.kakaotalk.misc.fingerprints.checkOpenChatTabFeature
-import app.revanced.patches.kakaotalk.misc.fingerprints.listChatRoomSettingsItems
+import app.revanced.patches.kakaotalk.tab.fingerprints.checkChatGroupFeatureFingerprint
+import app.revanced.patches.kakaotalk.tab.fingerprints.checkOpenChatTabFeature
+import app.revanced.patches.kakaotalk.tab.fingerprints.listChatRoomSettingsItems
 import app.revanced.util.getReference
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction11n
@@ -20,8 +20,9 @@ import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 val enableChatGroupPatch = bytecodePatch(
     name = "Enable Chat Group",
     description = "An enable Chat Group Patch",
+    use = false // Disabled until further testing
 ) {
-    compatibleWith("com.kakao.talk"("25.7.3"))
+    compatibleWith("com.kakao.talk"("25.8.2"))
 
     execute {
         val checkChatGroupMethod = checkChatGroupFeatureFingerprint.method

@@ -5,7 +5,7 @@ import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
 internal val kotlinUnitInstanceFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
+    accessFlags(AccessFlags.PUBLIC)
     parameters()
     returns("Ljava/lang/String;")
     strings("kotlin.Unit")

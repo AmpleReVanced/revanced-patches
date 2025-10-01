@@ -6,15 +6,15 @@ import com.android.tools.smali.dexlib2.Opcode
 
 internal val isRecordingPauseResumeEnabled = fingerprint {
     accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
-    returns("Ljava/lang/Object;")
-    parameters("Ljava/lang/Object;")
+    parameters()
     strings("is_enable_recording_pause_resume_enabled")
     opcodes(
-        Opcode.SGET_OBJECT,
-        Opcode.IGET,
-        Opcode.CONST_4,
-        Opcode.IF_EQZ,
-        Opcode.IF_NE,
+        Opcode.INVOKE_VIRTUAL,
+        Opcode.MOVE_RESULT_OBJECT,
+        Opcode.CONST_STRING,
+        Opcode.INVOKE_STATIC,
+        Opcode.MOVE_RESULT_OBJECT,
+        Opcode.CONST_4
     )
-    custom { method, classDef -> classDef.sourceFile == "CbtPreferencesWithBlocking.kt" }
+    custom { method, classDef -> classDef.sourceFile == "CbtPreferences.kt" }
 }

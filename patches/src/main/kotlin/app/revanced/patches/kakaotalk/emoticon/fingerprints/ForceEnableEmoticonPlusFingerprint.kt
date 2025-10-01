@@ -8,17 +8,17 @@ internal val isEnableEmoticonPlusFingerprint = fingerprint {
     accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
     returns("Z")
     parameters()
-    strings("emoticonPlusMe")
+    strings()
     opcodes(
         Opcode.SGET_OBJECT,
-        Opcode.INVOKE_VIRTUAL,
-        Opcode.SGET_OBJECT,
-        Opcode.IF_EQZ,
-        Opcode.IGET_BOOLEAN,
-        Opcode.RETURN,
-        Opcode.CONST_STRING,
-        Opcode.INVOKE_STATIC,
         Opcode.CONST_4,
-        Opcode.THROW,
+        Opcode.IF_EQZ,
+        Opcode.INVOKE_VIRTUAL,
+        Opcode.MOVE_RESULT,
+        Opcode.CONST_4,
+        Opcode.IF_NE,
+        Opcode.MOVE,
+        Opcode.RETURN
     )
+    custom { method, classDef -> classDef.sourceFile == "EmoticonPlusManager.kt" }
 }
