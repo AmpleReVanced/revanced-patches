@@ -10,7 +10,7 @@ val disableCommentAdPatch = bytecodePatch(
     name = "Disable Comment Ad",
     description = "Disables the comment ad in the app.",
 ) {
-    compatibleWith("com.dcinside.app.android"("5.1.4"))
+    compatibleWith("com.dcinside.app.android"("5.1.5"))
 
     execute {
         val method = postReadReplyAdViewFingerprint.method
