@@ -19,8 +19,8 @@ public class AppId {
 
     private static final String TAG = "AppId";
     private static final String DC_APP_PACKAGE = "com.dcinside.app.android";
-    private static final String DC_APP_VERSION_CODE = "100128";
-    private static final String DC_APP_VERSION_NAME = "5.1.4";
+    private static final String DC_APP_VERSION_CODE = "100130";
+    private static final String DC_APP_VERSION_NAME = "5.1.5";
     private static final String DC_APP_SIGNATURE = "5rJxRKJ2YLHgBgj6RdMZBl2X0KcftUuMoXVug0bsKd0=";
     private static final String USER_AGENT = "dcinside.app";
 
