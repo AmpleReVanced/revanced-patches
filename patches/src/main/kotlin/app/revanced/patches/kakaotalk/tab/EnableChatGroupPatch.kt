@@ -22,7 +22,7 @@ val enableChatGroupPatch = bytecodePatch(
     description = "An enable Chat Group Patch",
     use = false // Disabled until further testing
 ) {
-    compatibleWith("com.kakao.talk"("25.8.2"))
+    compatibleWith("com.kakao.talk"("25.8.3"))
 
     execute {
         val checkChatGroupMethod = checkChatGroupFeatureFingerprint.method
