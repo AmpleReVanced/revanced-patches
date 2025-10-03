@@ -16,7 +16,7 @@ val allowReplyToFeedPatch = bytecodePatch(
     name = "Allow reply to feed",
     description = "Allows replying to feed messages",
 ) {
-    compatibleWith("com.kakao.talk"("25.8.2"))
+    compatibleWith("com.kakao.talk"("25.8.3"))
 
     execute {
         allowSwipeReplyToFeedFingerprint.method.apply {
