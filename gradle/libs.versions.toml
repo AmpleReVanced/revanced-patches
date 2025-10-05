@@ -1,5 +1,5 @@
 [versions]
-revanced-patcher = "21.1.0"
+revanced-patcher = "21.0.0"
 # Tracking https://github.com/google/smali/issues/64.
 #noinspection GradleDependency
 smali = "3.0.9"
@@ -29,6 +29,7 @@ protobuf-protoc = { module = "com.google.protobuf:protoc", version.ref = "protoc
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
 apksig = { group = "com.android.tools.build", name = "apksig", version.ref = "apksig" }
+revanced-patcher = { module = "app.revanced.experiment:revanced-patcher", version.ref = "revanced-patcher" }
 
 [plugins]
 android-library = { id = "com.android.library" }
