@@ -10,7 +10,6 @@ import com.android.tools.smali.dexlib2.Opcode
 val forceEnableDebugModePatch = bytecodePatch(
     name = "Force enable debug mode",
     description = "Enables debug mode in the app.",
-    use = false // May cause instability in some versions
 ) {
     compatibleWith("com.kakao.talk"("25.8.3"))
 
@@ -25,7 +24,7 @@ val forceEnableDebugModePatch = bytecodePatch(
             idxReturn,
             """
                 const/4 v0, 0x1
-                sput-boolean v0, $clazz->a:Z
+                sput-boolean v0, $clazz->b:Z
             """.trimIndent()
         )
     }
