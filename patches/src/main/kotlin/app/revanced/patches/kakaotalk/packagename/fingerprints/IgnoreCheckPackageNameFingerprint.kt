@@ -20,3 +20,8 @@ internal val checkPackageNameFingerprint = fingerprint {
     )
     custom { method, classDef -> classDef.sourceFile == "AppHelper.kt" }
 }
+
+internal val getInstallSourceInfoFingerprint = fingerprint {
+    strings("com.kakao.talk")
+    custom { method, classDef -> classDef.type == "Lcom/kakao/talk/application/initializer/Initializer\$a;" && method.name == "invokeSuspend" }
+}
