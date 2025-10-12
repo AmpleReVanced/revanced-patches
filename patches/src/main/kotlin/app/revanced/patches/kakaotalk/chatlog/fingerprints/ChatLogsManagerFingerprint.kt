@@ -48,3 +48,43 @@ internal val flushToDBChatLogFingerprint = fingerprint {
     )
     custom { method, classDef -> classDef.sourceFile == "ChatLogsManager.kt" && method.parameterTypes.size == 1 }
 }
+
+internal val putDeletedMessageCacheFingerprint = fingerprint {
+    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
+    parameters("J", "J")
+    returns("V")
+    opcodes(
+        Opcode.SGET_OBJECT,
+        Opcode.INVOKE_STATIC,
+        Opcode.MOVE_RESULT_OBJECT,
+        Opcode.INVOKE_VIRTUAL,
+        Opcode.MOVE_RESULT_OBJECT,
+        Opcode.CHECK_CAST,
+        Opcode.IF_NEZ,
+        Opcode.NEW_INSTANCE,
+        Opcode.CONST_16,
+        Opcode.INVOKE_DIRECT,
+    )
+    custom { method, classDef -> classDef.sourceFile == "ChatLogsManager.kt" }
+}
+
+internal val getDeletedMessageCacheFingerprint = fingerprint {
+    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
+    returns("Z")
+    opcodes(
+        Opcode.SGET_OBJECT,
+        Opcode.INVOKE_VIRTUAL,
+        Opcode.MOVE_RESULT_WIDE,
+        Opcode.INVOKE_STATIC,
+        Opcode.MOVE_RESULT_OBJECT,
+        Opcode.INVOKE_VIRTUAL,
+        Opcode.MOVE_RESULT_OBJECT,
+        Opcode.CHECK_CAST,
+        Opcode.IF_EQZ,
+        Opcode.INVOKE_VIRTUAL,
+        Opcode.MOVE_RESULT_WIDE,
+        Opcode.INVOKE_STATIC,
+        Opcode.MOVE_RESULT_OBJECT,
+    )
+    custom { method, classDef -> classDef.sourceFile == "ChatLogsManager.kt" && method.parameterTypes.size == 1 }
+}
