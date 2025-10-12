@@ -24,6 +24,7 @@ import app.revanced.util.getReference
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.MutableMethodImplementation
+import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction11n
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.immutable.ImmutableField
@@ -70,24 +71,7 @@ val showDeletedMessagePatch = bytecodePatch(
             """
                 iget-object v0, p0, Lcom/kakao/talk/widget/chatlog/ChatInfoView;->extension:Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;
                 if-eqz v0, :cond_extension_end
-                invoke-virtual {v0}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->isDeleted()Z
-                move-result v1
-                if-eqz v1, :cond_check_hidden
-                invoke-virtual {v0}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->getDeletedLayout()Landroid/text/Layout;
-                move-result-object v1
-                if-eqz v1, :cond_extension_end
-                invoke-virtual {v1}, Landroid/text/Layout;->getHeight()I
-                move-result v1
-                add-int/2addr v2, v1
-                goto :cond_extension_end
-                :cond_check_hidden
-                invoke-virtual {v0}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->isHidden()Z
-                move-result v1
-                if-eqz v1, :cond_extension_end
-                invoke-virtual {v0}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->getHiddenLayout()Landroid/text/Layout;
-                move-result-object v0
-                if-eqz v0, :cond_extension_end
-                invoke-virtual {v0}, Landroid/text/Layout;->getHeight()I
+                invoke-virtual {v0}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->getAdditionalHeight()I
                 move-result v0
                 add-int/2addr v2, v0
                 :cond_extension_end
@@ -129,6 +113,17 @@ val showDeletedMessagePatch = bytecodePatch(
                 )
             },
         )
+
+        val makeLayoutMethod = chatInfoViewClass.methods.first { it.name == "makeLayout" }
+        val getUnreadPaint = makeLayoutMethod.instructions.indexOfLast { it.opcode == Opcode.IGET_OBJECT && it.getReference<FieldReference>()?.name == "unreadPaint" }
+        makeLayoutMethod.instructions.slice(getUnreadPaint until getUnreadPaint + 10).first {
+            it.opcode == Opcode.CONST_4 && (it as BuilderInstruction11n).narrowLiteral == 0x1
+        }.let {
+            makeLayoutMethod.replaceInstruction(
+                it.location.index,
+                BuilderInstruction11n(Opcode.CONST_4, (it as BuilderInstruction11n).registerA, 0x0)
+            )
+        }
 
         val otherChatInfoViewClass = othersChatInfoViewClassFingerprint.classDef
         otherChatInfoViewClass.let {
@@ -208,11 +203,11 @@ val showDeletedMessagePatch = bytecodePatch(
                 """
                     move-result-object v0
                     if-eqz v0, :cond_extension_rect
-                    invoke-virtual {p0}, Lcom/kakao/talk/widget/chatlog/MyChatInfoView;->getTotalWidth()I
-                    move-result v3
                     invoke-virtual {p0}, Landroid/view/View;->getPaddingLeft()I
+                    move-result v3
+                    invoke-virtual {p0}, Lcom/kakao/talk/widget/chatlog/MyChatInfoView;->getTotalWidth()I
                     move-result v4
-                    invoke-virtual {v0, v4, v3, v2}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->calculateRect(III)I
+                    invoke-virtual {v0, v3, v4, v2}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->calculateRect(III)I
                     move-result v2
                     :cond_extension_rect
                     invoke-virtual {p0}, Lcom/kakao/talk/widget/chatlog/ChatInfoView;->getDateLayout()Landroid/text/Layout;
@@ -335,6 +330,23 @@ val showDeletedMessagePatch = bytecodePatch(
                     return-void
                 """.trimIndent()
             )
+
+            val lastSgetFeedIndex = it.instructions.indexOfLast { it.opcode == Opcode.SGET_OBJECT && it.getReference<FieldReference>()?.name == "Feed" }
+            it.replaceInstruction(
+                lastSgetFeedIndex,
+                "nop"
+            )
+
+            it.addInstructions(
+                lastSgetFeedIndex + 1,
+                """
+                    iget-object v0, p1, ${chatLogClass.type}->${vFieldField.name}:${vFieldField.type}
+                    const/4 v1, 0x1
+                    invoke-virtual {v0, v1}, ${chatLogVFieldClass.type}->putHidden(Z)V
+                    invoke-virtual {p0, p1}, ${it.definingClass}->${flushToDBMethod.name}(${chatLogClass.type})Z
+                    return-void
+                """.trimIndent()
+            )
         }
 
         val checkViewableChatLogMethod = checkViewableChatLogFingerprint.method
@@ -350,32 +362,46 @@ val showDeletedMessagePatch = bytecodePatch(
         chatLogViewHolderSetupChatInfoViewMethod.let {
             val getChatLogItemMethod = chatLogItemViewHolderFingerprint.method
 
-            val setModifyIndex = it.instructions.indexOfFirst { it.opcode == Opcode.INVOKE_VIRTUAL && it.getReference<MethodReference>()?.name == "setModify" }
+            val setModifyIndex = it.instructions.indexOfFirst {
+                it.opcode == Opcode.INVOKE_VIRTUAL &&
+                        it.getReference<MethodReference>()?.name == "setModify"
+            }
+
             it.addInstructionsWithLabels(
                 setModifyIndex + 1,
                 """
                     invoke-virtual {v0}, Lcom/kakao/talk/widget/chatlog/ChatInfoView;->getExtension()Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;
                     move-result-object v5
-                    if-eqz v5, :skip_set_deleted
+                    if-eqz v5, :skip_set_flags
+                    
                     invoke-virtual {p0}, $getChatLogItemMethod
                     move-result-object v6
                     instance-of v7, v6, ${chatLogClass.type}
-                    if-eqz v7, :cond_deleted_null
+                    if-eqz v7, :cond_chatlog_null
                     check-cast v6, ${chatLogClass.type}
-                    goto :goto_deleted_cvar
-                    :cond_deleted_null
+                    goto :goto_chatlog_cvar
+                    :cond_chatlog_null
                     const/4 v6, 0x0
-                    :goto_deleted_cvar
-                    if-eqz v6, :cond_deleted_false
+                    :goto_chatlog_cvar
+                    if-nez v6, :cond_get_vfield
+                    const/4 v8, 0x0
+                    const/4 v9, 0x0
+                    goto :goto_set_flags
+                    
+                    :cond_get_vfield
                     iget-object v7, v6, ${chatLogClass.type}->${vFieldField.name}:${vFieldField.type}
+                    
                     invoke-virtual {v7}, ${vFieldField.type}->getDeleted()Z
-                    move-result v6
-                    goto :goto_deleted_result
-                    :cond_deleted_false
-                    const/4 v6, 0x0
-                    :goto_deleted_result
-                    invoke-virtual {v5, v6}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->setDeleted(Z)V
-                    :skip_set_deleted
+                    move-result v8
+                    
+                    invoke-virtual {v7}, ${vFieldField.type}->getHidden()Z
+                    move-result v9
+                    
+                    :goto_set_flags
+                    invoke-virtual {v5, v8}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->setDeleted(Z)V
+                    invoke-virtual {v5, v9}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->setHidden(Z)V
+                    
+                    :skip_set_flags
                     nop
                 """.trimIndent()
             )
