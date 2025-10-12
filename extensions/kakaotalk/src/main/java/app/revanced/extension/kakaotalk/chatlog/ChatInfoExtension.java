@@ -170,6 +170,15 @@ public class ChatInfoExtension {
         return Math.max(deletedWidth, hiddenWidth);
     }
 
+    public int getAdditionalHeight() {
+        if (isDeleted && deletedLayout != null) {
+            return deletedLayout.getHeight();
+        } else if (isHidden && hiddenLayout != null) {
+            return hiddenLayout.getHeight();
+        }
+        return 0;
+    }
+
     public int calculateRect(int paddingLeft, int totalWidth, int currentTop) {
         int nextTop = currentTop;
 
@@ -177,10 +186,11 @@ public class ChatInfoExtension {
             int height = deletedLayout.getHeight() + currentTop;
 
             if (view instanceof MyChatInfoView) {
+                int actualWidth = totalWidth - view.getPaddingLeft() - view.getPaddingRight();
                 deletedRect = new Rect(
-                        totalWidth - deletedLayout.getWidth(),
+                        view.getPaddingLeft() + actualWidth - deletedLayout.getWidth(),
                         currentTop,
-                        totalWidth,
+                        view.getPaddingLeft() + actualWidth,
                         height
                 );
             } else if (view instanceof OthersChatInfoView) {
@@ -197,10 +207,11 @@ public class ChatInfoExtension {
             int height = hiddenLayout.getHeight() + currentTop;
 
             if (view instanceof MyChatInfoView) {
+                int actualWidth = totalWidth - view.getPaddingLeft() - view.getPaddingRight();
                 hiddenRect = new Rect(
-                        totalWidth - hiddenLayout.getWidth(),
+                        view.getPaddingLeft() + actualWidth - hiddenLayout.getWidth(),
                         currentTop,
-                        totalWidth,
+                        view.getPaddingLeft() + actualWidth,
                         height
                 );
             } else if (view instanceof OthersChatInfoView) {
