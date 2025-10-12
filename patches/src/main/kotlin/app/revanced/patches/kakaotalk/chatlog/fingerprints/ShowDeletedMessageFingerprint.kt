@@ -75,3 +75,20 @@ internal val chatLogItemViewHolderFingerprint = fingerprint {
     )
     custom { method, classDef -> classDef.sourceFile == "ViewHolder.kt" }
 }
+
+internal val filterChatLogItemFingerprint = fingerprint {
+    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
+    returns("Z")
+    opcodes(
+        Opcode.CONST_4,
+        Opcode.IF_NEZ,
+        Opcode.RETURN,
+        Opcode.INVOKE_VIRTUAL,
+        Opcode.MOVE_RESULT_OBJECT,
+        Opcode.SGET_OBJECT,
+        Opcode.IF_NE,
+        Opcode.GOTO_16,
+        Opcode.INSTANCE_OF
+    )
+    custom { method, classDef -> classDef.sourceFile == "ChatLogSearchHelper.kt" && method.parameterTypes.size == 1 }
+}
