@@ -13,14 +13,18 @@ import app.revanced.patches.kakaotalk.chatlog.fingerprints.chatLogItemViewHolder
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.chatLogVFieldPutBooleanFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.chatLogViewHolderSetupChatInfoViewFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.checkViewableChatLogFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.filterChatLogItemFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.flushToDBChatLogFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.getDeletedMessageCacheFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.myChatInfoViewClassFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.othersChatInfoViewClassFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.putDeletedMessageCacheFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.replaceToFeedFingerprint
 import app.revanced.util.getReference
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.MutableMethodImplementation
+import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.immutable.ImmutableField
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
@@ -315,10 +319,14 @@ val showDeletedMessagePatch = bytecodePatch(
         replaceToFeedMethod.let {
             val flushToDBMethod = flushToDBChatLogFingerprint.method
 
-            val orIdx = it.instructions.indexOfFirst { it.opcode == Opcode.OR_INT_LIT16 }
+            val sgetObjectDeleteToAllIndex = it.instructions.indexOfFirst { it.opcode == Opcode.SGET_OBJECT && it.getReference<FieldReference>()?.name == "DELETE_TO_ALL" }
+            it.replaceInstruction(
+                sgetObjectDeleteToAllIndex,
+                "nop"
+            )
 
             it.addInstructions(
-                orIdx,
+                sgetObjectDeleteToAllIndex + 1,
                 """
                     iget-object v0, p1, ${chatLogClass.type}->${vFieldField.name}:${vFieldField.type}
                     const/4 v1, 0x1
@@ -372,5 +380,28 @@ val showDeletedMessagePatch = bytecodePatch(
                 """.trimIndent()
             )
         }
+
+        filterChatLogItemFingerprint.method.addInstructions(
+            0,
+            """
+                const/4 v0, 0x1
+                return v0
+            """.trimIndent()
+        )
+
+        putDeletedMessageCacheFingerprint.method.addInstructions(
+            0,
+            """
+                return-void
+            """.trimIndent()
+        )
+
+        getDeletedMessageCacheFingerprint.method.addInstructions(
+            0,
+            """
+                const/4 v0, 0x0
+                return v0
+            """.trimIndent()
+        )
     }
 }
