@@ -28,8 +28,6 @@ public class ChatInfoExtension {
     public ChatInfoExtension(ChatInfoView view) {
         this.view = view;
         initializePaints();
-
-//        setDeleted(true);
     }
 
     private void initializePaints() {
