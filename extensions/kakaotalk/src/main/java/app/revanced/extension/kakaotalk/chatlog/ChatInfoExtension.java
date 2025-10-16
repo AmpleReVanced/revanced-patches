@@ -87,6 +87,7 @@ public class ChatInfoExtension {
                 deletedRect = null;
             }
             view.requestLayout();
+            view.invalidate();
         }
     }
 
@@ -101,6 +102,7 @@ public class ChatInfoExtension {
                 hiddenRect = null;
             }
             view.requestLayout();
+            view.invalidate();
         }
     }
 
