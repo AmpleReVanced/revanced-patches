@@ -1,8 +1,8 @@
 package app.revanced.patches.kakaotalk.emoticon
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
+import app.revanced.patcher.extensions.InstructionExtensions.addInstruction
 import app.revanced.patcher.patch.bytecodePatch
-import app.revanced.patches.kakaotalk.emoticon.fingerprints.isEnableEmoticonPlusFingerprint
+import app.revanced.patches.kakaotalk.emoticon.fingerprints.emoticonPlusMeResultConstructorFingerprint
 
 @Suppress("unused")
 val forceEnableEmoticonPlusPatch = bytecodePatch(
@@ -12,12 +12,9 @@ val forceEnableEmoticonPlusPatch = bytecodePatch(
     compatibleWith("com.kakao.talk"("25.8.3"))
 
     execute {
-        isEnableEmoticonPlusFingerprint.method.addInstructions(
-            0,
-            """
-                const/4 v0, 0x1
-                return v0
-            """.trimIndent()
+        emoticonPlusMeResultConstructorFingerprint.method.addInstruction(
+            1,
+            "const/4 p1, 0x1"
         )
     }
 }
