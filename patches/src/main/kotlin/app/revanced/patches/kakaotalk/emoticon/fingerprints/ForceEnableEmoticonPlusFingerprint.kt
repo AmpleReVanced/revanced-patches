@@ -4,21 +4,16 @@ import app.revanced.patcher.fingerprint
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
-internal val isEnableEmoticonPlusFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
-    returns("Z")
-    parameters()
-    strings()
+internal val emoticonPlusMeResultConstructorFingerprint = fingerprint {
+    accessFlags(AccessFlags.PUBLIC, AccessFlags.CONSTRUCTOR)
+    parameters("Z", "J", "J")
+    returns("V")
     opcodes(
-        Opcode.SGET_OBJECT,
-        Opcode.CONST_4,
-        Opcode.IF_EQZ,
-        Opcode.INVOKE_VIRTUAL,
-        Opcode.MOVE_RESULT,
-        Opcode.CONST_4,
-        Opcode.IF_NE,
-        Opcode.MOVE,
-        Opcode.RETURN
+        Opcode.INVOKE_DIRECT,
+        Opcode.IPUT_BOOLEAN,
+        Opcode.IPUT_WIDE,
+        Opcode.IPUT_WIDE,
+        Opcode.RETURN_VOID
     )
-    custom { method, classDef -> classDef.sourceFile == "EmoticonPlusManager.kt" }
+    custom { method, classDef -> classDef.type == "Lcom/kakao/talk/emoticon/itemstore/plus/EmoticonPlusMeResult;" }
 }
