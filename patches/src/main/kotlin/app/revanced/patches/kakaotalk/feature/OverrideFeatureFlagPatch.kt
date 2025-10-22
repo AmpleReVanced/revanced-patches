@@ -10,6 +10,7 @@ import com.android.tools.smali.dexlib2.Opcode
 val overrideFeatureFlagPatch = bytecodePatch(
     name = "Override feature flag",
     description = "Overrides the feature flag to enable the feature.",
+    use = false
 ) {
     compatibleWith("com.kakao.talk"("25.9.0"))
     extendWith("extensions/kakaotalk.rve")
