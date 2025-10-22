@@ -1,5 +1,6 @@
 package app.revanced.extension.kakaotalk.chatlog;
 
+import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.text.BoringLayout;
 import android.text.Layout;
@@ -173,61 +174,99 @@ public class ChatInfoExtension {
     }
 
     public int getAdditionalHeight() {
+        int extensionHeight = 0;
+
         if (isDeleted && deletedLayout != null) {
-            return deletedLayout.getHeight();
+            extensionHeight = deletedLayout.getHeight();
         } else if (isHidden && hiddenLayout != null) {
-            return hiddenLayout.getHeight();
+            extensionHeight = hiddenLayout.getHeight();
         }
-        return 0;
+
+        try {
+            Bitmap chatThreadIcon = view.getChatThreadShareIcon();
+
+            if (chatThreadIcon != null) {
+                Layout unreadLayout = view.getUnreadLayout();
+                int chatThreadHeight = chatThreadIcon.getHeight();
+
+                int spacing = 0;
+                try {
+                    spacing = view.getResources().getDimensionPixelSize(
+                            view.getResources().getIdentifier(
+                                    "chat_info_spacing_2", "dimen", view.getContext().getPackageName()
+                            )
+                    );
+                } catch (Exception e) {
+                    float density = view.getResources().getDisplayMetrics().density;
+                    spacing = (int) (2 * density);
+                }
+
+                if (unreadLayout != null) {
+                    int unreadHeight = unreadLayout.getHeight();
+                    int correction = (chatThreadHeight + spacing) - unreadHeight;
+                    if (correction > 0) {
+                        extensionHeight += correction;
+                    }
+                } else {
+                    extensionHeight += spacing;
+                }
+            }
+        } catch (Exception e) {
+            // ignore
+        }
+
+        return extensionHeight;
     }
 
     public int calculateRect(int paddingLeft, int totalWidth, int currentTop) {
-        int nextTop = currentTop;
+        if (!isDeleted && !isHidden) {
+            return currentTop;
+        }
 
-        if (isDeleted && deletedLayout != null) {
-            int height = deletedLayout.getHeight() + currentTop;
+        Layout targetLayout = isDeleted ? deletedLayout : hiddenLayout;
+        if (targetLayout == null) {
+            return currentTop;
+        }
 
+        int bottom = currentTop + targetLayout.getHeight();
+
+        if (isDeleted) {
             if (view instanceof MyChatInfoView) {
                 int actualWidth = totalWidth - view.getPaddingLeft() - view.getPaddingRight();
                 deletedRect = new Rect(
                         view.getPaddingLeft() + actualWidth - deletedLayout.getWidth(),
                         currentTop,
                         view.getPaddingLeft() + actualWidth,
-                        height
+                        bottom
                 );
             } else if (view instanceof OthersChatInfoView) {
                 deletedRect = new Rect(
                         paddingLeft,
                         currentTop,
                         paddingLeft + deletedLayout.getWidth(),
-                        height
+                        bottom
                 );
             }
-            nextTop = height;
-
-        } else if (isHidden && hiddenLayout != null) {
-            int height = hiddenLayout.getHeight() + currentTop;
-
+        } else if (isHidden) {
             if (view instanceof MyChatInfoView) {
                 int actualWidth = totalWidth - view.getPaddingLeft() - view.getPaddingRight();
                 hiddenRect = new Rect(
                         view.getPaddingLeft() + actualWidth - hiddenLayout.getWidth(),
                         currentTop,
                         view.getPaddingLeft() + actualWidth,
-                        height
+                        bottom
                 );
             } else if (view instanceof OthersChatInfoView) {
                 hiddenRect = new Rect(
                         paddingLeft,
                         currentTop,
                         paddingLeft + hiddenLayout.getWidth(),
-                        height
+                        bottom
                 );
             }
-            nextTop = height;
         }
 
-        return nextTop;
+        return bottom;
     }
 
     public void draw(android.graphics.Canvas canvas) {
