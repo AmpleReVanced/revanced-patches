@@ -13,7 +13,7 @@ val playYoutubePlayerInChatRoomPatch = bytecodePatch(
     name = "Play YouTube player in chat room",
     description = "Allows playing YouTube videos in KakaoTalk chat rooms.",
 ) {
-    compatibleWith("com.kakao.talk"("25.8.3"))
+    compatibleWith("com.kakao.talk"("25.9.0"))
 
     execute {
         isPlayYoutubePlayerInChatRoomFingerprint.method.instructions.indexOfFirst { it.opcode == Opcode.CONST_4 && (it as BuilderInstruction11n).narrowLiteral == 0x0 }

@@ -11,7 +11,7 @@ val forceEnableDebugModePatch = bytecodePatch(
     name = "Force enable debug mode",
     description = "Enables debug mode in the app.",
 ) {
-    compatibleWith("com.kakao.talk"("25.8.3"))
+    compatibleWith("com.kakao.talk"("25.9.0"))
 
     execute {
         val method = configConstructorFingerprint.method

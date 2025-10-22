@@ -13,7 +13,7 @@ val enableSendBigTextPatch = bytecodePatch(
     name = "Enable send big text",
     description = "Allows sending big text messages in KakaoTalk.",
 ) {
-    compatibleWith("com.kakao.talk"("25.8.3"))
+    compatibleWith("com.kakao.talk"("25.9.0"))
 
     execute {
         isEnableSendBigTextFingerprint.method.instructions.indexOfFirst { it.opcode == Opcode.CONST_4 && (it as BuilderInstruction11n).narrowLiteral == 0x0 }
