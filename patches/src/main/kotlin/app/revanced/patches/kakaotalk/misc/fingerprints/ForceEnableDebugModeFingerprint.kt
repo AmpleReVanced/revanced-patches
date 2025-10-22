@@ -8,7 +8,7 @@ internal val configConstructorFingerprint = fingerprint {
     accessFlags(AccessFlags.STATIC, AccessFlags.CONSTRUCTOR)
     returns("V")
     parameters()
-    strings("google", "one")
+    strings("agit.daumkakao.com", "agit.io", "agit.in", "play.google.com")
     opcodes(
         Opcode.NEW_INSTANCE,
         Opcode.INVOKE_DIRECT,
