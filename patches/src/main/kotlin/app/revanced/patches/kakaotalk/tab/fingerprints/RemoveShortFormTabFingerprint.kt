@@ -17,13 +17,11 @@ internal val nowTabPagerAdapterFingerprint = fingerprint {
     parameters("I")
     returns("Landroidx/fragment/app/Fragment;")
     opcodes(
-        Opcode.IGET_OBJECT,
+        Opcode.SGET_OBJECT,
         Opcode.INVOKE_VIRTUAL,
-        Opcode.MOVE_RESULT_OBJECT,
-        Opcode.CONST_STRING,
+        Opcode.MOVE_RESULT,
+        Opcode.IF_NE,
         Opcode.INVOKE_STATIC,
-        Opcode.CHECK_CAST,
-        Opcode.INVOKE_INTERFACE,
         Opcode.MOVE_RESULT_OBJECT,
         Opcode.INVOKE_INTERFACE,
     )
@@ -70,35 +68,4 @@ internal val transitionOpenLinkOrShortformMethodFingerprint = fingerprint {
         Opcode.AGET,
     )
     custom { method, classDef -> classDef.sourceFile == "NowFragment.kt" }
-}
-
-internal val chooseTabShortFormOrOpenLinkFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
-    parameters("Landroid/os/Bundle;")
-    returns("V")
-    strings("NOW_TAB", "binding", "current_tab")
-    opcodes(
-        Opcode.INVOKE_STATIC,
-        Opcode.MOVE_RESULT_OBJECT,
-        Opcode.INVOKE_INTERFACE,
-        Opcode.MOVE_RESULT_OBJECT,
-        Opcode.INVOKE_INTERFACE,
-        Opcode.MOVE_RESULT,
-        Opcode.CONST_4,
-        Opcode.IF_EQZ,
-        Opcode.INVOKE_INTERFACE,
-        Opcode.MOVE_RESULT_OBJECT,
-        Opcode.MOVE_OBJECT,
-        Opcode.CHECK_CAST,
-    )
-    custom { method, classDef -> classDef.sourceFile == "NowFragment.kt" }
-}
-
-internal val fragmentMainTabNowBindingFingerprint = fingerprint {
-    custom { _, classDef -> classDef.sourceFile == "FragmentMainTabNowBinding.java" }
-}
-
-internal val viewPager2VerifyFingerprint = fingerprint {
-    strings("Cannot change current item when ViewPager2 is fake dragging")
-    custom { _, classDef -> classDef.sourceFile == "ViewPager2.java" }
 }

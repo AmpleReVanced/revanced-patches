@@ -18,7 +18,7 @@ val versionInfoPatch = bytecodePatch(
     name = "Version info patch",
     description = "Patches the version info to include '(ReVanced)' in the version string.",
 ) {
-    compatibleWith("com.kakao.talk"("25.8.3"))
+    compatibleWith("com.kakao.talk"("25.9.0"))
 
     execute {
         val runPatch: (Fingerprint, Boolean) -> Unit = { fp, inDetail ->
