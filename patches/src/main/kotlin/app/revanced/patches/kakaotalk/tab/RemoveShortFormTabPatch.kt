@@ -3,6 +3,7 @@ package app.revanced.patches.kakaotalk.tab
 import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
 import app.revanced.patcher.extensions.InstructionExtensions.getInstruction
 import app.revanced.patcher.extensions.InstructionExtensions.instructions
+import app.revanced.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.revanced.patcher.extensions.InstructionExtensions.replaceInstructions
 import app.revanced.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.tab.fingerprints.getOpenLinkModuleFingerprint
@@ -103,6 +104,25 @@ val removeShortFormTabPatch = bytecodePatch(
                 return-void
             """.trimIndent()
         )
+
+        val chooseNowChildTabMethod = nowTabPagerAdapterFingerprint.method
+        val getShortForm = chooseNowChildTabMethod.instructions.filter { it.opcode == Opcode.SGET_OBJECT && it.getReference<FieldReference>()?.name == "ShortForm" }
+        getShortForm.forEach {
+            val index = chooseNowChildTabMethod.instructions.indexOf(it)
+            chooseNowChildTabMethod.replaceInstruction(
+                index,
+                BuilderInstruction21c(
+                    Opcode.SGET_OBJECT,
+                    (it as BuilderInstruction21c).registerA,
+                    ImmutableMethodReference(
+                        it.getReference<FieldReference>()!!.definingClass,
+                        "Openlink",
+                        listOf(),
+                        it.getReference<FieldReference>()!!.type
+                    )
+                )
+            )
+        }
     }
 
 }
