@@ -69,3 +69,20 @@ internal val transitionOpenLinkOrShortformMethodFingerprint = fingerprint {
     )
     custom { method, classDef -> classDef.sourceFile == "NowFragment.kt" }
 }
+
+internal val chooseNowChildTabFingerprint = fingerprint {
+    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
+    parameters()
+    returns("V")
+    strings("binding", "NOW_TAB")
+    opcodes(
+        Opcode.INVOKE_STATIC,
+        Opcode.MOVE_RESULT_OBJECT,
+        Opcode.INVOKE_INTERFACE,
+        Opcode.MOVE_RESULT_OBJECT,
+        Opcode.INVOKE_INTERFACE,
+        Opcode.MOVE_RESULT,
+        Opcode.CONST_4
+    )
+    custom { method, classDef -> classDef.sourceFile == "NowFragment.kt" }
+}
