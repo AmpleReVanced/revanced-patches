@@ -3,8 +3,10 @@ package app.revanced.patches.kakaotalk.tab
 import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
 import app.revanced.patcher.extensions.InstructionExtensions.getInstruction
 import app.revanced.patcher.extensions.InstructionExtensions.instructions
+import app.revanced.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.revanced.patcher.extensions.InstructionExtensions.replaceInstructions
 import app.revanced.patcher.patch.bytecodePatch
+import app.revanced.patches.kakaotalk.tab.fingerprints.chooseNowChildTabFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.getOpenLinkModuleFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.nowFragmentOnViewCreatedFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.nowTabPagerAdapterFingerprint
@@ -16,6 +18,7 @@ import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction21s
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction22c
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction35c
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
+import com.android.tools.smali.dexlib2.immutable.reference.ImmutableFieldReference
 import com.android.tools.smali.dexlib2.immutable.reference.ImmutableMethodReference
 
 @Suppress("unused")
@@ -103,6 +106,24 @@ val removeShortFormTabPatch = bytecodePatch(
                 return-void
             """.trimIndent()
         )
+
+        val chooseNowChildTabMethod = chooseNowChildTabFingerprint.method
+        val getShortForm = chooseNowChildTabMethod.instructions.filter { it.opcode == Opcode.SGET_OBJECT && it.getReference<FieldReference>()?.name == "ShortForm" }
+        getShortForm.forEach {
+            val index = chooseNowChildTabMethod.instructions.indexOf(it)
+            chooseNowChildTabMethod.replaceInstruction(
+                index,
+                BuilderInstruction21c(
+                    Opcode.SGET_OBJECT,
+                    (it as BuilderInstruction21c).registerA,
+                    ImmutableFieldReference(
+                        it.getReference<FieldReference>()!!.definingClass,
+                        "Openlink",
+                        it.getReference<FieldReference>()!!.type
+                    )
+                )
+            )
+        }
     }
 
 }
