@@ -18,7 +18,9 @@ val dimensPatch = resourcePatch(
                         it.attributes.getNamedItem("name").nodeValue == "read_ad_minimum_height" ||
                         it.attributes.getNamedItem("name").nodeValue == "script_ad_size" ||
                         it.attributes.getNamedItem("name").nodeValue == "image_ad_height" ||
-                        it.attributes.getNamedItem("name").nodeValue == "main_ad_live_best_spacing" }
+                        it.attributes.getNamedItem("name").nodeValue == "main_ad_live_best_spacing" ||
+                        it.attributes.getNamedItem("name").nodeValue == "ad_main_small_native_height" ||
+                        it.attributes.getNamedItem("name").nodeValue == "ad_minimum_height_tall" }
                 .toList()
 
             if (adMinimumHeight.none()) {
