@@ -9,6 +9,6 @@ dependencies {
 
 android {
     defaultConfig {
-        minSdk = 26
+        minSdk = 28 // to enable app component factory
     }
 }

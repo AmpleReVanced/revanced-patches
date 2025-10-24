@@ -20,6 +20,7 @@ import app.revanced.patches.kakaotalk.chatlog.fingerprints.myChatInfoViewClassFi
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.othersChatInfoViewClassFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.putDeletedMessageCacheFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.replaceToFeedFingerprint
+import app.revanced.patches.kakaotalk.misc.addExtensionPatch
 import app.revanced.util.getReference
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
@@ -37,8 +38,7 @@ val showDeletedMessagePatch = bytecodePatch(
     description = "Allows you to see deleted messages in chat logs.",
 ) {
     compatibleWith("com.kakao.talk"("25.9.0"))
-
-    extendWith("extensions/kakaotalk.rve")
+    dependsOn(addExtensionPatch)
 
     execute {
         val chatInfoViewClass = chatInfoViewClassFingerprint.classDef

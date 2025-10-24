@@ -429,6 +429,10 @@ public final class app/revanced/patches/kakaotalk/integrity/BypassRequestChecksu
 	public static final fun getBypassRequestChecksumPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
 }
 
+public final class app/revanced/patches/kakaotalk/integrity/HookPackageManagerPatchKt {
+	public static final fun getHookPackageManagerPatch ()Lapp/revanced/patcher/patch/ResourcePatch;
+}
+
 public final class app/revanced/patches/kakaotalk/integrity/SpoofAppIdPatchKt {
 	public static final fun getSpoofAppIdPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
 }
@@ -443,6 +447,10 @@ public final class app/revanced/patches/kakaotalk/integrity/VerifyingSignaturePa
 
 public final class app/revanced/patches/kakaotalk/member/AlwaysShowKickButtonPatchKt {
 	public static final fun getAlwaysShowKickButtonPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/misc/AddExtensionPatchKt {
+	public static final fun getAddExtensionPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
 }
 
 public final class app/revanced/patches/kakaotalk/misc/DefaultExternalBrowserPatchKt {
