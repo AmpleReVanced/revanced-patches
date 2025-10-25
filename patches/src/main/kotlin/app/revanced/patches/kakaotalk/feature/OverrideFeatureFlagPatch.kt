@@ -4,6 +4,7 @@ import app.revanced.patcher.extensions.InstructionExtensions.addInstructionsWith
 import app.revanced.patcher.extensions.InstructionExtensions.instructions
 import app.revanced.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.feature.fingerprints.getFeatureFlagValueFingerprint
+import app.revanced.patches.kakaotalk.misc.addExtensionPatch
 import com.android.tools.smali.dexlib2.Opcode
 
 @Suppress("unused")
@@ -13,7 +14,7 @@ val overrideFeatureFlagPatch = bytecodePatch(
     use = false
 ) {
     compatibleWith("com.kakao.talk"("25.9.0"))
-    extendWith("extensions/kakaotalk.rve")
+    dependsOn(addExtensionPatch)
 
     execute {
         val method = getFeatureFlagValueFingerprint.method
