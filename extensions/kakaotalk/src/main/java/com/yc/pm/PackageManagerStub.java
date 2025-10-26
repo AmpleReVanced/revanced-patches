@@ -116,12 +116,11 @@ public class PackageManagerStub extends MethodInvocationProxy<MethodInvocationSt
 
             Log.i("PATCHER", "originalPackageName: " + originalPackageName);
 
-            String requestPackageName = (String) args[0];
-
             if (args[0] != null && (args[0].equals(Spoofer.PACKAGE_NAME) || args[0].equals(originalPackageName))) {
-                requestPackageName = originalPackageName;
+                Object[] modifiedArgs = args.clone();
+                modifiedArgs[0] = originalPackageName;
 
-                InstallSourceInfo result = (InstallSourceInfo) method.invoke(who, requestPackageName);
+                InstallSourceInfo result = (InstallSourceInfo) method.invoke(who, modifiedArgs);
 
                 if (result != null) {
                     Spoofer.setField(
@@ -134,7 +133,7 @@ public class PackageManagerStub extends MethodInvocationProxy<MethodInvocationSt
 
                 return result;
             } else {
-                return method.invoke(who, requestPackageName);
+                return method.invoke(who, args);
             }
         }
     }
