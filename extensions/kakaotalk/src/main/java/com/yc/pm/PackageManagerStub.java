@@ -6,10 +6,13 @@ import android.content.pm.Signature;
 import android.os.IBinder;
 import android.os.IInterface;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import android.util.Log;
 import app.revanced.extension.kakaotalk.spoofer.Spoofer;
 import kotlin.Suppress;
+import org.lsposed.hiddenapibypass.HiddenApiBypass;
 
 /**
  * Created by yanchen on 18-1-28.
@@ -102,14 +105,37 @@ public class PackageManagerStub extends MethodInvocationProxy<MethodInvocationSt
 
         @Override
         public Object call(Object who, Method method, Object... args) throws Throwable {
-            InstallSourceInfo result = (InstallSourceInfo) method.invoke(who, args);
-            if (result != null) {
-                String mInitiatingPackageName = Reflect.on(result).get("mInitiatingPackageName");
-                if (mInitiatingPackageName != null) {
-                    Reflect.on(result).set("mInitiatingPackageName", "com.android.vending");
+            HiddenApiBypass.addHiddenApiExemptions("Landroid/content/pm/InstallSourceInfo;");
+
+            String originalPackageName = (String) Spoofer.invokeStaticMethod(
+                    "android.app.ActivityThread",
+                    "currentPackageName",
+                    new Class[]{},
+                    new Object[]{}
+            );
+
+            Log.i("PATCHER", "originalPackageName: " + originalPackageName);
+
+            String requestPackageName = (String) args[0];
+
+            if (args[0] != null && (args[0].equals(Spoofer.PACKAGE_NAME) || args[0].equals(originalPackageName))) {
+                requestPackageName = originalPackageName;
+
+                InstallSourceInfo result = (InstallSourceInfo) method.invoke(who, requestPackageName);
+
+                if (result != null) {
+                    Spoofer.setField(
+                            "android.content.pm.InstallSourceInfo",
+                            result,
+                            "mInitiatingPackageName",
+                            "com.android.vending"
+                    );
                 }
+
+                return result;
+            } else {
+                return method.invoke(who, requestPackageName);
             }
-            return result;
         }
     }
 
@@ -121,11 +147,18 @@ public class PackageManagerStub extends MethodInvocationProxy<MethodInvocationSt
 
         @Override
         public Object call(Object who, Method method, Object... args) throws Throwable {
-            String result = (String) method.invoke(who, args);
-            if (result != null) {
-                result = "com.android.vending";
+            String originalPackageName = (String) Spoofer.invokeStaticMethod(
+                    "android.app.ActivityThread",
+                    "currentPackageName",
+                    new Class[]{},
+                    new Object[]{}
+            );
+
+            if (args[0] != null && (args[0].equals(Spoofer.PACKAGE_NAME) || args[0].equals(originalPackageName))) {
+                return "com.android.vending";
+            } else {
+                return method.invoke(who, args[0]);
             }
-            return result;
         }
     }
 }

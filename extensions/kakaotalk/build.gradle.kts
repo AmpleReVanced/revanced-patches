@@ -5,6 +5,8 @@ dependencies {
     compileOnly(libs.okhttp)
     compileOnly(libs.retrofit)
     compileOnly(libs.appcompat)
+
+    implementation(libs.hiddenapibypass)
 }
 
 android {
