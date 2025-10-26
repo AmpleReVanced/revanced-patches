@@ -1,31 +1,29 @@
 package app.revanced.patches.kakaotalk.changemodel
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
 import app.revanced.patcher.patch.bytecodePatch
-import app.revanced.patcher.patch.stringOption
-import app.revanced.patches.kakaotalk.changemodel.fingerprints.changeModelFingerprint
+import app.revanced.patches.all.misc.build.BuildInfo
+import app.revanced.patches.all.misc.build.baseSpoofBuildInfoPatch
+
+val spoofBuildInfoPatch = baseSpoofBuildInfoPatch {
+    BuildInfo(
+        brand = "samsung",
+        manufacturer = "samsung",
+        device = "qssi",
+        product = "gts9wifixx",
+        model = "SM-X710",
+        fingerprint = "samsung/gts9wifixx/qssi:14/UP1A.231005.007/X710XXU5BYA1:user/release-keys",
+    )
+}
 
 @Suppress("unused")
 val changeModelPatch = bytecodePatch(
     name = "Change model",
     description = "Changes the device model to supporting subdevice features",
 ) {
-    val changeModelOption by stringOption(
-        key = "model",
-        default = "SM-X926N",
-        title = "Model",
-        description = "Device model to change to (Only works for models that support subdevice features like SM-X926N)",
-    )
-
     compatibleWith("com.kakao.talk"("25.9.0"))
+    dependsOn(spoofBuildInfoPatch)
 
     execute {
-        changeModelFingerprint.method.addInstructions(
-            0,
-            """
-                const-string v0, "$changeModelOption"
-                return-object v0
-            """.trimIndent()
-        )
+        // NOP
     }
 }
