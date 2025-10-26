@@ -17,6 +17,7 @@ protobuf = "0.9.5"
 antlr4 = "4.13.2"
 nanohttpd = "2.3.1"
 apksig = "8.10.1"
+hiddenapibypass = "6.1"
 
 [libraries]
 annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
@@ -30,6 +31,7 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
 apksig = { group = "com.android.tools.build", name = "apksig", version.ref = "apksig" }
 revanced-patcher = { module = "app.revanced.experiment:revanced-patcher", version.ref = "revanced-patcher" }
+hiddenapibypass = { module = "org.lsposed.hiddenapibypass:hiddenapibypass", version.ref = "hiddenapibypass" }
 
 [plugins]
 android-library = { id = "com.android.library" }
