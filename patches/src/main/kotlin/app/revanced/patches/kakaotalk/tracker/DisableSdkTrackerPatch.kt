@@ -6,10 +6,13 @@ import app.revanced.patches.kakaotalk.tracker.fingerprints.buildSdkTrackerUrlFin
 import app.revanced.patches.shared.misc.string.replaceStringPatch
 
 @Suppress("unused")
-val disableSdkTrackerPatch = bytecodePatch {
+val disableSdkTrackerPatch = bytecodePatch(
+    name = "Disable SDK Tracker",
+    description = "Disables the SDK Tracker in KakaoTalk."
+) {
     compatibleWith("com.kakao.talk"("25.9.0"))
     dependsOn(
-        replaceStringPatch("display.ad.daum.net", "example.com")
+        replaceStringPatch("ad.daum.net", "example.com")
     )
 
     execute {
