@@ -5,17 +5,15 @@ pluginManagement {
         gradlePluginPortal()
         google()
         maven {
-            name = "GiteaPackages"
-            url = uri("https://git.naijun.dev/api/packages/ReVanced/maven")
-            credentials(HttpHeaderCredentials::class) {
-                name = "Authorization"
-                value = "token ${providers.gradleProperty("gitea.accessToken")}"
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/amplerevanced/registry")
+            credentials {
+                username = providers.gradleProperty("gpr.user").getOrElse(System.getenv("GITHUB_ACTOR"))
+                password = providers.gradleProperty("gpr.key").getOrElse(System.getenv("GITHUB_TOKEN"))
             }
-
-            authentication { create<HttpHeaderAuthentication>("header") }
         }
         maven {
-            name = "GitHubPackages"
+            name = "GitHubPackagesOfficial"
             url = uri("https://maven.pkg.github.com/revanced/registry")
             credentials {
                 username = providers.gradleProperty("gpr.user").getOrElse(System.getenv("GITHUB_ACTOR"))
@@ -29,17 +27,15 @@ dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.PREFER_PROJECT)
     repositories {
         maven {
-            name = "GiteaPackages"
-            url = uri("https://git.naijun.dev/api/packages/ReVanced/maven")
-            credentials(HttpHeaderCredentials::class) {
-                name = "Authorization"
-                value = "token ${providers.gradleProperty("gitea.accessToken")}"
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/amplerevanced/registry")
+            credentials {
+                username = providers.gradleProperty("gpr.user").getOrElse(System.getenv("GITHUB_ACTOR"))
+                password = providers.gradleProperty("gpr.key").getOrElse(System.getenv("GITHUB_TOKEN"))
             }
-
-            authentication { create<HttpHeaderAuthentication>("header") }
         }
         maven {
-            name = "GitHubPackages"
+            name = "GitHubPackagesOfficial"
             url = uri("https://maven.pkg.github.com/revanced/registry")
             credentials {
                 username = providers.gradleProperty("gpr.user").getOrElse(System.getenv("GITHUB_ACTOR"))
