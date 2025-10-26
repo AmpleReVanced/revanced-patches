@@ -20,6 +20,7 @@ import com.android.tools.smali.dexlib2.immutable.reference.ImmutableFieldReferen
 val bypassMoatCheckPatch = bytecodePatch(
     name = "Bypass Moat check",
     description = "Bypass Moat check that prevents the app from running.",
+    use = false // Do not enable by default.
 ) {
     compatibleWith("com.kakao.talk"("25.9.0"))
 
