@@ -33,9 +33,9 @@ import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethodParameter
 
 @Suppress("unused")
-val showDeletedMessagePatch = bytecodePatch(
-    name = "Show deleted messages",
-    description = "Allows you to see deleted messages in chat logs.",
+val showDeletedOrHiddenMessagePatch = bytecodePatch(
+    name = "Show deleted or hidden messages",
+    description = "Allows you to see deleted/hidden messages in chat logs.",
 ) {
     compatibleWith("com.kakao.talk"("25.9.0"))
     dependsOn(addExtensionPatch)
