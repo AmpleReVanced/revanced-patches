@@ -23,6 +23,7 @@ import app.revanced.patches.kakaotalk.chatlog.fingerprints.othersChatInfoViewCla
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.putDeletedMessageCacheFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.replaceToFeedFingerprint
 import app.revanced.patches.kakaotalk.misc.addExtensionPatch
+import app.revanced.patches.kakaotalk.misc.sharedExtensionPatch
 import app.revanced.util.getReference
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
@@ -40,7 +41,7 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
     description = "Allows you to see deleted/hidden messages in chat logs.",
 ) {
     compatibleWith("com.kakao.talk"("25.9.0"))
-    dependsOn(addExtensionPatch, addResourcesPatch)
+    dependsOn(addExtensionPatch, addResourcesPatch, sharedExtensionPatch)
 
     execute {
         addResources("kakaotalk", "chatlog.showDeletedOrHiddenMessagePatch")
