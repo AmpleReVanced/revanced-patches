@@ -9,6 +9,7 @@ val addExtensionPatch = bytecodePatch(
 ) {
     compatibleWith("com.kakao.talk"("25.9.0"))
     extendWith("extensions/kakaotalk.rve")
+    dependsOn(sharedExtensionPatch)
 
     execute { /* NOP */ }
 }
