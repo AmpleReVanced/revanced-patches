@@ -1856,4 +1856,10 @@ Video playback with AV1 may stutter or drop frames."</string>
             <string name="revanced_twitch_debug_summary_off">Debug logs are disabled</string>
         </patch>
     </app>
+    <app id="kakaotalk">
+        <patch id="chatlog.showDeletedOrHiddenMessagePatch">
+            <string name="revanced_kakaotalk_chatlog_deleted">Deleted</string>
+            <string name="revanced_kakaotalk_chatlog_hidden">Hidden</string>
+        </patch>
+    </app>
 </resources>
