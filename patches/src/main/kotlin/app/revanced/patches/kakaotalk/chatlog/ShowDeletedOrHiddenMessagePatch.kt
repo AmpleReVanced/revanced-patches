@@ -7,6 +7,8 @@ import app.revanced.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.revanced.patcher.patch.bytecodePatch
 import app.revanced.patcher.util.proxy.mutableTypes.MutableField.Companion.toMutable
 import app.revanced.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
+import app.revanced.patches.all.misc.resources.addResources
+import app.revanced.patches.all.misc.resources.addResourcesPatch
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.chatInfoViewClassFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.chatLogFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.chatLogItemViewHolderFingerprint
@@ -38,9 +40,11 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
     description = "Allows you to see deleted/hidden messages in chat logs.",
 ) {
     compatibleWith("com.kakao.talk"("25.9.0"))
-    dependsOn(addExtensionPatch)
+    dependsOn(addExtensionPatch, addResourcesPatch)
 
     execute {
+        addResources("kakaotalk", "chatlog.showDeletedOrHiddenMessagePatch")
+
         val chatInfoViewClass = chatInfoViewClassFingerprint.classDef
 
         chatInfoViewClass.fields.add(
