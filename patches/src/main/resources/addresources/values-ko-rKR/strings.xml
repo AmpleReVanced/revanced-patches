@@ -1784,5 +1784,8 @@ AV1이 사용된 동영상 재생이 끊기거나 프레임이 손실될 수 있
   <string name="revanced_kakaotalk_chatlog_deleted">삭제됨</string>
   <string name="revanced_kakaotalk_chatlog_hidden">가려짐</string>
   </patch>
+  <patch id="settings.revancedSettingsPatch">
+  <string name="revanced_label_for_revanced_settings">ReVanced 설정</string>
+  </patch>
   </app>
 </resources>
