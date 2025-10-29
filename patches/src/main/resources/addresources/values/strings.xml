@@ -1861,5 +1861,8 @@ Video playback with AV1 may stutter or drop frames."</string>
             <string name="revanced_kakaotalk_chatlog_deleted">Deleted</string>
             <string name="revanced_kakaotalk_chatlog_hidden">Hidden</string>
         </patch>
+        <patch id="settings.revancedSettingsPatch">
+            <string name="revanced_label_for_revanced_settings">ReVanced Settings</string>
+        </patch>
     </app>
 </resources>
