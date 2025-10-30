@@ -1,6 +1,7 @@
 package app.revanced.patches.kakaotalk.settings
 
 import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
+import app.revanced.patcher.extensions.InstructionExtensions.getInstruction
 import app.revanced.patcher.extensions.InstructionExtensions.instructions
 import app.revanced.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.revanced.patcher.patch.PatchException
@@ -17,9 +18,12 @@ import app.revanced.util.getReference
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.MutableMethodImplementation
+import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction35c
+import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction3rc
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
+import com.android.tools.smali.dexlib2.iface.reference.TypeReference
 import com.android.tools.smali.dexlib2.immutable.ImmutableField
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
 
@@ -135,66 +139,52 @@ val addSettingsTabPatch = bytecodePatch(
             throw PatchException("Could not find separator insertion point")
         }
 
+        val sgetLaboratoryIndex = setupSettingsItemMethod.instructions.indexOfFirst {
+            it.opcode == Opcode.SGET_OBJECT &&
+                    it.getReference<FieldReference>()?.name == "LABORATORY"
+        }
+        val finishSetupSettingsModel = (setupSettingsItemMethod.getInstruction(sgetLaboratoryIndex - 3) as BuilderInstruction3rc).getReference<MethodReference>()
+
+        val lastNewInstanceIndex = setupSettingsItemMethod.instructions.indexOfLast {
+            it.opcode == Opcode.NEW_INSTANCE
+        }
+        val initialSettingsItemInstruction = setupSettingsItemMethod.getInstruction(lastNewInstanceIndex - 1) as BuilderInstruction35c
+        val initialSettingsItemReference = initialSettingsItemInstruction.getReference<MethodReference>()
+
+        val trackingAction = setupSettingsItemMethod.instructions.first {
+            it.opcode == Opcode.INVOKE_VIRTUAL &&
+                    it.getReference<MethodReference>()?.name == "action"
+        }
+
+        val originalInstruction = setupSettingsItemMethod.instructions[separatorIndex]
         setupSettingsItemMethod.replaceInstruction(separatorIndex, "nop")
 
         setupSettingsItemMethod.addInstructions(
             separatorIndex + 1,
             """
-                new-instance v2, LYj/E0;
-
-                .line 111
-                sget-object v22, LYj/F0;->REVANCED:LYj/F0;
-
-                .line 112
-                new-instance v4, Lel/c;
-
-                .line 113
-                invoke-virtual/range {v22 .. v22}, LYj/F0;->getStringResId()I
-
+                new-instance v2, ${finishSetupSettingsModel?.definingClass}
+                sget-object v22, ${mainSettingItemTypeClass.type}->REVANCED:${mainSettingItemTypeClass.type}
+                new-instance v4, ${finishSetupSettingsModel?.parameterTypes[2]}
+                invoke-virtual/range {v22 .. v22}, ${mainSettingItemTypeClass.type}->getStringResId()I
                 move-result v5
-
                 invoke-virtual {v6, v5}, Landroid/content/Context;->getString(I)Ljava/lang/String;
-
                 move-result-object v5
-
-                invoke-static {v5, v9}, Lkotlin/jvm/internal/w;->i(Ljava/lang/Object;Ljava/lang/String;)V
-
-                .line 114
                 new-instance v8, Landroid/content/Intent;
-
                 const-class v12, Lcom/kakao/talk/activity/setting/laboratory/LaboratoryActivity;
-
                 invoke-direct {v8, v6, v12}, Landroid/content/Intent;-><init>(Landroid/content/Context;Ljava/lang/Class;)V
-
                 const/16 v12, 0x1e
-
-                .line 115
-                invoke-virtual {v10, v12}, LCq/a;->action(I)LCq/c;
-
+                invoke-virtual {v10, v12}, ${trackingAction.getReference<MethodReference>()}
                 move-result-object v12
-
-                .line 116
                 sget-object v14, Lcom/kakao/talk/activity/setting/laboratory/LaboratoryActivity;->O:Lcom/kakao/talk/activity/setting/laboratory/LaboratoryActivity${'$'}a;
-
-                .line 117
-                invoke-direct {v4, v5, v8, v12, v14}, Lel/c;-><init>(Ljava/lang/String;Landroid/content/Intent;LCq/c;Lel/b;)V
-
+                invoke-direct {v4, v5, v8, v12, v14}, $initialSettingsItemReference
                 const/16 v25, 0x2
-
                 const/16 v26, 0x0
-
                 const/16 v23, 0x0
-
                 move-object/from16 v21, v2
-
                 move-object/from16 v24, v4
-
-                .line 118
-                invoke-direct/range {v21 .. v26}, LYj/E0;-><init>(LYj/F0;ZLel/c;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-
+                invoke-direct/range {v21 .. v26}, $finishSetupSettingsModel
                 invoke-virtual {v7, v2}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
-                
-                new-instance v0, LYj/K; # stub
+                new-instance v0, ${originalInstruction.getReference<TypeReference>()?.type} # stub
             """.trimIndent()
         )
     }
