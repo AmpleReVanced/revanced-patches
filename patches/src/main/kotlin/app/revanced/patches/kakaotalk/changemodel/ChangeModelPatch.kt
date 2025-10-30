@@ -20,7 +20,7 @@ val changeModelPatch = bytecodePatch(
     name = "Change model",
     description = "Changes the device model to supporting subdevice features",
 ) {
-    compatibleWith("com.kakao.talk"("25.9.0"))
+    compatibleWith("com.kakao.talk"("25.9.1"))
     dependsOn(spoofBuildInfoPatch)
 
     execute {
