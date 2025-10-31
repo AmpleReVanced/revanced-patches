@@ -396,6 +396,10 @@ public final class app/revanced/patches/kakaotalk/ads/RemoveOlkChatRoomListAdPat
 	public static final fun getRemoveOlkChatRoomListAdPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
 }
 
+public final class app/revanced/patches/kakaotalk/branding/CustomBrandingPatchKt {
+	public static final fun getCustomBrandingPatch ()Lapp/revanced/patcher/patch/ResourcePatch;
+}
+
 public final class app/revanced/patches/kakaotalk/changemodel/ChangeModelPatchKt {
 	public static final fun getChangeModelPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
 	public static final fun getSpoofBuildInfoPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
@@ -2164,6 +2168,8 @@ public final class app/revanced/util/ResourceUtilsKt {
 	public static final fun insertFirst (Lorg/w3c/dom/Node;Lorg/w3c/dom/Node;)V
 	public static final fun iterateXmlNodeChildren (Lapp/revanced/patcher/patch/ResourcePatchContext;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public static final fun removeFromParent (Lorg/w3c/dom/Node;)Lorg/w3c/dom/Node;
+	public static final fun removeStringsElements (Lapp/revanced/patcher/patch/ResourcePatchContext;[Ljava/lang/String;)V
+	public static final fun removeStringsElements (Lapp/revanced/patcher/patch/ResourcePatchContext;[Ljava/lang/String;[Ljava/lang/String;)V
 }
 
 public final class app/revanced/util/resource/ArrayResource : app/revanced/util/resource/BaseResource {
