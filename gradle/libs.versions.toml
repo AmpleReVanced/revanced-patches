@@ -36,7 +36,6 @@ revanced-patcher = { module = "app.revanced.experiment:revanced-patcher", versio
 hiddenapibypass = { module = "org.lsposed.hiddenapibypass:hiddenapibypass", version.ref = "hiddenapibypass" }
 pine = { group = "top.canyie.pine", name = "core", version.ref = "pine" }
 netty-all = { module = "io.netty:netty-all", version.ref = "netty" }
-netty-codec = { module = "io.netty:netty-codec", version.ref = "netty" }
 
 [plugins]
 android-library = { id = "com.android.library" }
