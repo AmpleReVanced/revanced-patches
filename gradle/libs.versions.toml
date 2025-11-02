@@ -18,6 +18,8 @@ antlr4 = "4.13.2"
 nanohttpd = "2.3.1"
 apksig = "8.10.1"
 hiddenapibypass = "6.1"
+pine = "0.3.0"
+netty = "4.1.128.Final"
 
 [libraries]
 annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
@@ -32,6 +34,9 @@ guava = { module = "com.google.guava:guava", version.ref = "guava" }
 apksig = { group = "com.android.tools.build", name = "apksig", version.ref = "apksig" }
 revanced-patcher = { module = "app.revanced.experiment:revanced-patcher", version.ref = "revanced-patcher" }
 hiddenapibypass = { module = "org.lsposed.hiddenapibypass:hiddenapibypass", version.ref = "hiddenapibypass" }
+pine = { group = "top.canyie.pine", name = "core", version.ref = "pine" }
+netty-all = { module = "io.netty:netty-all", version.ref = "netty" }
+netty-codec = { module = "io.netty:netty-codec", version.ref = "netty" }
 
 [plugins]
 android-library = { id = "com.android.library" }
