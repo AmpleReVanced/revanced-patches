@@ -5,8 +5,10 @@ dependencies {
     compileOnly(libs.okhttp)
     compileOnly(libs.retrofit)
     compileOnly(libs.appcompat)
+    compileOnly(libs.netty.all)
 
     implementation(libs.hiddenapibypass)
+    implementation(libs.pine)
 }
 
 android {
