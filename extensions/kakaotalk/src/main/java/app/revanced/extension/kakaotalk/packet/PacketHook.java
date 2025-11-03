@@ -10,8 +10,10 @@ import java.lang.reflect.Method;
 public class PacketHook {
 
     private static final String TAG = "PacketHook";
-    private static final String TARGET_CLASS = "Jp.p";
-    private static final String TARGET_METHOD = "S";
+    private static final String TARGET_CLASS_1 = "Jp.p"; // for response without request
+    private static final String TARGET_METHOD_1 = "S";
+    private static final String TARGET_CLASS_2 = "Gp.g$b"; // for response with request
+    private static final String TARGET_METHOD_2 = "b";
 
     private final Serializer serializer;
 
@@ -21,18 +23,33 @@ public class PacketHook {
 
     public void install() {
         try {
-            Class<?> targetClass = Class.forName(TARGET_CLASS);
-            Method targetMethod = findMethod(targetClass, TARGET_METHOD);
+            Class<?> targetClass1 = Class.forName(TARGET_CLASS_1);
+            Method targetMethod1 = findMethod(targetClass1, TARGET_METHOD_1);
 
-            if (targetMethod == null) {
-                Log.e(TAG, "Method not found: " + TARGET_METHOD);
+            if (targetMethod1 == null) {
+                Log.e(TAG, "Method not found: " + TARGET_METHOD_1);
                 return;
             }
 
-            Pine.hook(targetMethod, new MethodHook() {
+            Pine.hook(targetMethod1, new MethodHook() {
                 @Override
                 public void beforeCall(Pine.CallFrame callFrame) {
                     handlePacket((Jp.k) callFrame.args[1]);
+                }
+            });
+
+            Class<?> targetClass2 = Class.forName(TARGET_CLASS_2);
+            Method targetMethod2 = findMethod(targetClass2, TARGET_METHOD_2);
+
+            if (targetMethod2 == null) {
+                Log.e(TAG, "Method not found: " + TARGET_METHOD_2);
+                return;
+            }
+
+            Pine.hook(targetMethod2, new MethodHook() {
+                @Override
+                public void beforeCall(Pine.CallFrame callFrame) {
+                    handlePacket((Jp.k) callFrame.args[0]);
                 }
             });
 
