@@ -446,6 +446,10 @@ public final class app/revanced/patches/kakaotalk/ghost/GhostModePatchKt {
 	public static final fun getGhostMode ()Lapp/revanced/patcher/patch/BytecodePatch;
 }
 
+public final class app/revanced/patches/kakaotalk/hook/AddPacketHandlerPatchKt {
+	public static final fun getAddPacketHandlerPatch ()Lapp/revanced/patcher/patch/ResourcePatch;
+}
+
 public final class app/revanced/patches/kakaotalk/integrity/BypassMoatCheckPatchKt {
 	public static final fun getBypassMoatCheckPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
 }
@@ -476,6 +480,10 @@ public final class app/revanced/patches/kakaotalk/member/AlwaysShowKickButtonPat
 
 public final class app/revanced/patches/kakaotalk/misc/AddExtensionPatchKt {
 	public static final fun getAddExtensionPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/misc/AddPineLibPatchKt {
+	public static final fun getAddPineLibPatch ()Lapp/revanced/patcher/patch/ResourcePatch;
 }
 
 public final class app/revanced/patches/kakaotalk/misc/DefaultExternalBrowserPatchKt {
