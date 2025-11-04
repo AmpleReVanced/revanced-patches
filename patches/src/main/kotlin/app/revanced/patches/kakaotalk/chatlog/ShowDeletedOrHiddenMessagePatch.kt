@@ -40,7 +40,7 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
     name = "Show deleted or hidden messages",
     description = "Allows you to see deleted/hidden messages in chat logs.",
 ) {
-    compatibleWith("com.kakao.talk"("25.9.1"))
+    compatibleWith("com.kakao.talk"("25.9.2"))
     dependsOn(addExtensionPatch, addResourcesPatch, sharedExtensionPatch)
 
     execute {
