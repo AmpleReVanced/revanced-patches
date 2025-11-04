@@ -13,7 +13,7 @@ val customBrandingPatch = resourcePatch(
     description = "Customize app branding (name)",
     use = false
 ) {
-    compatibleWith("com.kakao.talk"("25.9.1"))
+    compatibleWith("com.kakao.talk"("25.9.2"))
     dependsOn(resourceMappingPatch)
 
     val customName by stringOption(
