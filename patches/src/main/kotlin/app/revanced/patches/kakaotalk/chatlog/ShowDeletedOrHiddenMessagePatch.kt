@@ -7,6 +7,8 @@ import app.revanced.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.revanced.patcher.patch.bytecodePatch
 import app.revanced.patcher.util.proxy.mutableTypes.MutableField.Companion.toMutable
 import app.revanced.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
+import app.revanced.patches.all.misc.resources.addResources
+import app.revanced.patches.all.misc.resources.addResourcesPatch
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.chatInfoViewClassFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.chatLogFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.chatLogItemViewHolderFingerprint
@@ -21,6 +23,7 @@ import app.revanced.patches.kakaotalk.chatlog.fingerprints.othersChatInfoViewCla
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.putDeletedMessageCacheFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.replaceToFeedFingerprint
 import app.revanced.patches.kakaotalk.misc.addExtensionPatch
+import app.revanced.patches.kakaotalk.misc.sharedExtensionPatch
 import app.revanced.util.getReference
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
@@ -33,14 +36,16 @@ import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethodParameter
 
 @Suppress("unused")
-val showDeletedMessagePatch = bytecodePatch(
-    name = "Show deleted messages",
-    description = "Allows you to see deleted messages in chat logs.",
+val showDeletedOrHiddenMessagePatch = bytecodePatch(
+    name = "Show deleted or hidden messages",
+    description = "Allows you to see deleted/hidden messages in chat logs.",
 ) {
-    compatibleWith("com.kakao.talk"("25.9.0"))
-    dependsOn(addExtensionPatch)
+    compatibleWith("com.kakao.talk"("25.9.2"))
+    dependsOn(addExtensionPatch, addResourcesPatch, sharedExtensionPatch)
 
     execute {
+        addResources("kakaotalk", "chatlog.showDeletedOrHiddenMessagePatch")
+
         val chatInfoViewClass = chatInfoViewClassFingerprint.classDef
 
         chatInfoViewClass.fields.add(

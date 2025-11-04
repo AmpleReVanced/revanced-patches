@@ -13,7 +13,7 @@ val defaultExternalBrowserPatch = bytecodePatch(
     name = "Default external browser",
     description = "Sets the default external browser for KakaoTalk to the system's default browser.",
 ) {
-    compatibleWith("com.kakao.talk"("25.9.0"))
+    compatibleWith("com.kakao.talk"("25.9.2"))
 
     execute {
         defaultExternalBrowserFingerprint.method.instructions.indexOfFirst { it.opcode == Opcode.CONST_4 && (it as BuilderInstruction11n).narrowLiteral == 0x0 }
