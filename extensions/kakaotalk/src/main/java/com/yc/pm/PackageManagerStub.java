@@ -81,7 +81,12 @@ public class PackageManagerStub extends MethodInvocationProxy<MethodInvocationSt
 
                 if (result.signingInfo != null) {
                      Object mSigningDetails = Reflect.on(result.signingInfo).get("mSigningDetails");
-                     Object mSignatures = Reflect.on(mSigningDetails).get("mSignatures");
+                     Object mSignatures;
+                     if (isAndroid13OrAbove()) {
+                         mSignatures = Reflect.on(mSigningDetails).get("mSignatures");
+                     } else {
+                         mSignatures = Reflect.on(mSigningDetails).get("signatures");
+                     }
                      if (mSignatures != null && mSignatures.getClass().isArray()) {
                          Signature[] sigs = (Signature[]) mSignatures;
                          Spoofer.replaceSignature(sigs);
@@ -93,6 +98,10 @@ public class PackageManagerStub extends MethodInvocationProxy<MethodInvocationSt
                 }
             }
             return result;
+        }
+
+        private boolean isAndroid13OrAbove() {
+            return android.os.Build.VERSION.SDK_INT >= 33;
         }
     }
 

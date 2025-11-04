@@ -344,6 +344,40 @@ val addResourcesPatch = resourcePatch(
      * This is called after all patches that depend on [addResourcesPatch] have been executed.
      */
     finalize {
+        val resourceBasePath = run {
+            val testPath = "res/values/strings.xml"
+            val existingResource = try {
+                this@finalize[testPath, false]
+            } catch (e: Exception) {
+                null
+            }
+
+            when {
+                existingResource != null && existingResource.exists() -> {
+                    existingResource.parentFile.parentFile
+                }
+                else -> {
+                    val resourcesDir = this@finalize["resources", false]
+                    if (resourcesDir.exists() && resourcesDir.isDirectory) {
+                        val packageDirs = resourcesDir.listFiles()
+                            ?.filter { it.isDirectory && it.name.startsWith("package_") }
+                            ?: emptyList()
+
+                        val basePackageDir = packageDirs.firstOrNull { packageDir ->
+                            packageDir.resolve("AndroidManifest.xml").exists()
+                        } ?: packageDirs.firstOrNull { packageDir ->
+                            packageDir.resolve("res").exists()
+                        } ?: packageDirs.firstOrNull()
+
+                        basePackageDir?.resolve("res")
+                            ?: resourcesDir.resolve("package_01/res").also { it.mkdirs() }
+                    } else {
+                        this@finalize["res", false]
+                    }
+                }
+            }
+        }
+
         operator fun MutableMap<String, Pair<Document, Node>>.invoke(
             value: Value,
             resource: BaseResource,
@@ -359,12 +393,11 @@ val addResourcesPatch = resourcePatch(
                 }
 
             getOrPut(resourceFileName) {
-                this@finalize["res/$value/$resourceFileName.xml"].also {
-                    it.parentFile?.mkdirs()
+                val resourceFile = resourceBasePath.resolve("$value/$resourceFileName.xml")
+                resourceFile.parentFile?.mkdirs()
 
-                    if (it.createNewFile()) {
-                        it.writeText("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<resources>\n</resources>")
-                    }
+                if (resourceFile.createNewFile()) {
+                    resourceFile.writeText("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<resources>\n</resources>")
                 }
  
                 document("res/$value/$resourceFileName.xml").let { document ->

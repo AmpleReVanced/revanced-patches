@@ -10,6 +10,8 @@ import com.kakao.talk.widget.chatlog.ChatInfoView;
 import com.kakao.talk.widget.chatlog.MyChatInfoView;
 import com.kakao.talk.widget.chatlog.OthersChatInfoView;
 
+import static app.revanced.extension.shared.StringRef.str;
+
 public class ChatInfoExtension {
 
     // Related to a deleted message
@@ -110,7 +112,7 @@ public class ChatInfoExtension {
     private void createDeletedLayout() {
         if (deletedPaint == null) return;
 
-        String text = "삭제됨";
+        String text = str("revanced_kakaotalk_chatlog_deleted");
         BoringLayout.Metrics metrics = BoringLayout.isBoring(text, deletedPaint);
 
         if (metrics == null) {
@@ -140,7 +142,7 @@ public class ChatInfoExtension {
     private void createHiddenLayout() {
         if (hiddenPaint == null) return;
 
-        String text = "가려짐";
+        String text = str("revanced_kakaotalk_chatlog_hidden");
         BoringLayout.Metrics metrics = BoringLayout.isBoring(text, hiddenPaint);
 
         if (metrics == null) {
