@@ -93,7 +93,7 @@ public class PackageManagerStub extends MethodInvocationProxy<MethodInvocationSt
                      }
                 }
 
-                if (result.packageName != null && !result.packageName.equals("com.google.android.webview")) {
+                if (result.packageName != null && !result.packageName.contains("webview")) {
                     result.packageName = Spoofer.PACKAGE_NAME;
                 }
             }
