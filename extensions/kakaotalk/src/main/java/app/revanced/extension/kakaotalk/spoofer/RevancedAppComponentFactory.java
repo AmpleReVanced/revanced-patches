@@ -24,24 +24,6 @@ public class RevancedAppComponentFactory extends AppComponentFactory {
 
         PackageManagerStub.replaceService();
         WebViewUpdateServiceStub.replaceService();
-
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                Context context = Reflect.on("android.app.ActivityThread").call("currentApplication").get();
-
-                Log.i("PATCHER", "currentApplication: " + context);
-                Log.i("PATCHER", "currentPackageName: " + context.getApplicationContext().getPackageName());
-                Log.i("PATCHER", "installPackageName (LEGACY): " + context.getApplicationContext().getPackageManager().getInstallerPackageName(context.getPackageName()));
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    try {
-                        Log.i("PATCHER", "installPackageName (MODERN): " + context.getApplicationContext().getPackageManager().getInstallSourceInfo(context.getPackageName()).getInitiatingPackageName());
-                    } catch (PackageManager.NameNotFoundException e) {
-                        Log.e("PATCHER", "Failed to get install source info", e);
-                    }
-                }
-            }
-        }, 5000);
     }
 
     @Override
