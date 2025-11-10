@@ -14,11 +14,14 @@ import app.revanced.patches.kakaotalk.chatlog.fingerprints.chatLogFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.chatLogItemViewHolderFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.chatLogVFieldPutBooleanFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.chatLogViewHolderSetupChatInfoViewFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.chatRoomListManagerGetInstanceFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.checkViewableChatLogFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.filterChatLogItemFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.flushToDBChatLogFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.getChatRoomByChannelIdFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.getDeletedMessageCacheFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.myChatInfoViewClassFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.originalSyncMethodFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.othersChatInfoViewClassFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.putDeletedMessageCacheFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.replaceToFeedFingerprint
@@ -318,6 +321,12 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
         val replaceToFeedMethod = replaceToFeedFingerprint.method
         replaceToFeedMethod.let {
             val flushToDBMethod = flushToDBChatLogFingerprint.method
+            val chatRoomListManagerGetInstanceMethod = chatRoomListManagerGetInstanceFingerprint.method
+            val getChatRoomByChannelIdMethod = getChatRoomByChannelIdFingerprint.method
+            val originalSyncMethod = originalSyncMethodFingerprint.method
+
+            val invokeVirtualInst = originalSyncMethod.instructions.last { it.opcode == Opcode.INVOKE_VIRTUAL }
+            val invokeStaticInst = originalSyncMethod.instructions.last { it.opcode == Opcode.INVOKE_STATIC }
 
             val sgetObjectDeleteToAllIndex = it.instructions.indexOfFirst { it.opcode == Opcode.SGET_OBJECT && it.getReference<FieldReference>()?.name == "DELETE_TO_ALL" }
             it.replaceInstruction(
@@ -332,6 +341,18 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
                     const/4 v1, 0x1
                     invoke-virtual {v0, v1}, ${chatLogVFieldClass.type}->putDeleted(Z)V
                     invoke-virtual {p0, p1}, ${it.definingClass}->${flushToDBMethod.name}(${chatLogClass.type})Z
+                    
+                    sget-object v0, ${chatRoomListManagerGetInstanceMethod.returnType}->q:${chatRoomListManagerGetInstanceMethod.definingClass}
+                    invoke-virtual {v0}, $chatRoomListManagerGetInstanceMethod
+                    move-result-object v0
+                    invoke-virtual {v0, p3, p4}, $getChatRoomByChannelIdMethod
+                    move-result-object v0
+                    const/4 v1, 0x1
+                    invoke-virtual {v0, p1, v1}, ${invokeVirtualInst.getReference<MethodReference>()}
+                    move-result-object v0
+                    const/4 v1, 0x0
+                    const/4 v2, 0x1
+                    invoke-static {v0, v1, v2, v1}, ${invokeStaticInst.getReference<MethodReference>()}
                     return-void
                 """.trimIndent()
             )
@@ -349,6 +370,18 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
                     const/4 v1, 0x1
                     invoke-virtual {v0, v1}, ${chatLogVFieldClass.type}->putHidden(Z)V
                     invoke-virtual {p0, p1}, ${it.definingClass}->${flushToDBMethod.name}(${chatLogClass.type})Z
+                    
+                    sget-object v0, ${chatRoomListManagerGetInstanceMethod.returnType}->q:${chatRoomListManagerGetInstanceMethod.definingClass}
+                    invoke-virtual {v0}, $chatRoomListManagerGetInstanceMethod
+                    move-result-object v0
+                    invoke-virtual {v0, p3, p4}, $getChatRoomByChannelIdMethod
+                    move-result-object v0
+                    const/4 v1, 0x1
+                    invoke-virtual {v0, p1, v1}, ${invokeVirtualInst.getReference<MethodReference>()}
+                    move-result-object v0
+                    const/4 v1, 0x0
+                    const/4 v2, 0x1
+                    invoke-static {v0, v1, v2, v1}, ${invokeStaticInst.getReference<MethodReference>()}
                     return-void
                 """.trimIndent()
             )
