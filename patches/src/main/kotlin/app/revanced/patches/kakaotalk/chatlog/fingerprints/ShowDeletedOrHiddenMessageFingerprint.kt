@@ -27,12 +27,8 @@ internal val chatLogViewHolderSetupChatInfoViewFingerprint = fingerprint {
         Opcode.INVOKE_VIRTUAL,
         Opcode.MOVE_RESULT,
         Opcode.CONST_4,
-        Opcode.XOR_INT_2ADDR,
-        Opcode.INVOKE_STATIC,
-        Opcode.IGET_OBJECT,
-        Opcode.INVOKE_VIRTUAL,
-        Opcode.MOVE_RESULT,
         Opcode.CONST_4,
+        Opcode.IF_NEZ
     )
     custom { method, classDef -> classDef.sourceFile == "ChatLogViewHolder.kt" }
 }
@@ -91,4 +87,61 @@ internal val filterChatLogItemFingerprint = fingerprint {
         Opcode.INSTANCE_OF
     )
     custom { method, classDef -> classDef.sourceFile == "ChatLogSearchHelper.kt" && method.parameterTypes.size == 1 }
+}
+
+internal val chatRoomListManagerGetInstanceFingerprint = fingerprint {
+    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
+    strings("sInstance")
+    parameters()
+    opcodes(
+        Opcode.INVOKE_STATIC,
+        Opcode.MOVE_RESULT_OBJECT,
+        Opcode.CONST_4,
+        Opcode.CONST_4,
+        Opcode.IF_NEZ,
+        Opcode.CONST_CLASS,
+        Opcode.MONITOR_ENTER,
+        Opcode.INVOKE_STATIC,
+        Opcode.MOVE_RESULT_OBJECT
+    )
+    custom { method, classDef -> classDef.sourceFile == "ChatRoomListManager.kt" }
+}
+
+internal val getChatRoomByChannelIdFingerprint = fingerprint {
+    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
+    parameters("J")
+    opcodes(
+        Opcode.CONST_4,
+        Opcode.CONST_4,
+        Opcode.CONST_4,
+        Opcode.CONST_4,
+        Opcode.MOVE_OBJECT,
+        Opcode.MOVE_WIDE,
+        Opcode.INVOKE_STATIC_RANGE,
+        Opcode.MOVE_RESULT_OBJECT,
+        Opcode.RETURN_OBJECT
+    )
+    custom { method, classDef -> classDef.sourceFile == "ChatRoomListManager.kt" }
+}
+
+internal val originalSyncMethodFingerprint = fingerprint {
+    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
+    returns("V")
+    strings("chatLog", "feedType")
+    opcodes(
+        Opcode.MOVE_OBJECT_FROM16,
+        Opcode.MOVE_OBJECT_FROM16,
+        Opcode.CONST_STRING,
+        Opcode.INVOKE_STATIC,
+        Opcode.CONST_STRING,
+        Opcode.INVOKE_STATIC,
+        Opcode.INVOKE_VIRTUAL_RANGE,
+        Opcode.MOVE_RESULT_WIDE,
+        Opcode.MOVE_OBJECT,
+        Opcode.INVOKE_VIRTUAL,
+        Opcode.MOVE_RESULT_OBJECT,
+        Opcode.IF_NEZ,
+        Opcode.RETURN_VOID
+    )
+    custom { method, classDef -> classDef.sourceFile == "ChatRoomListManager.kt" }
 }
