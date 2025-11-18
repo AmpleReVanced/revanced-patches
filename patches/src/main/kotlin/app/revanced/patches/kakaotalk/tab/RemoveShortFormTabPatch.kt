@@ -3,7 +3,6 @@ package app.revanced.patches.kakaotalk.tab
 import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
 import app.revanced.patcher.extensions.InstructionExtensions.getInstruction
 import app.revanced.patcher.extensions.InstructionExtensions.instructions
-import app.revanced.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.revanced.patcher.extensions.InstructionExtensions.replaceInstructions
 import app.revanced.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.tab.fingerprints.chooseNowChildTabFingerprint
@@ -18,6 +17,7 @@ import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction21s
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction22c
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction35c
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
+import com.android.tools.smali.dexlib2.iface.reference.TypeReference
 import com.android.tools.smali.dexlib2.immutable.reference.ImmutableFieldReference
 import com.android.tools.smali.dexlib2.immutable.reference.ImmutableMethodReference
 
@@ -26,7 +26,7 @@ val removeShortFormTabPatch = bytecodePatch(
     name = "Remove Short-form Tab",
     description = "Removes the Short-form tab from the now fragment.",
 ) {
-    compatibleWith("com.kakao.talk"("25.9.2"))
+    compatibleWith("com.kakao.talk"("25.10.0"))
 
     execute {
         val onViewCreated = nowFragmentOnViewCreatedFingerprint.method
@@ -66,12 +66,12 @@ val removeShortFormTabPatch = bytecodePatch(
             )
         )
 
-        val getChildTab = onViewCreated.instructions.last { it.opcode == Opcode.SGET_OBJECT } as BuilderInstruction21c
-        val fieldRef = getChildTab.getReference<FieldReference>()
+        val getChildTab = onViewCreated.instructions.last { it.opcode == Opcode.CHECK_CAST } as BuilderInstruction21c
+        val fieldRef = getChildTab.getReference<TypeReference>()
 
         onViewCreated.addInstructions(
             onViewCreated.instructions.indexOfLast { it.opcode == Opcode.MOVE_RESULT_OBJECT } + 1,
-            "sget-object v0, ${fieldRef!!.definingClass}->Openlink:${fieldRef.definingClass}"
+            "sget-object v0, ${fieldRef!!.type}->Openlink:${fieldRef.type}"
         )
 
         val getItemCountMethod = nowTabPagerAdapterFingerprint.classDef.methods.first { it.name == "getItemCount" }
@@ -108,18 +108,23 @@ val removeShortFormTabPatch = bytecodePatch(
         )
 
         val chooseNowChildTabMethod = chooseNowChildTabFingerprint.method
-        val getShortForm = chooseNowChildTabMethod.instructions.filter { it.opcode == Opcode.SGET_OBJECT && it.getReference<FieldReference>()?.name == "ShortForm" }
-        getShortForm.forEach {
+        val endIfPosition = chooseNowChildTabMethod.instructions.filter { it.opcode == Opcode.IGET_OBJECT && it.getReference<FieldReference>()?.type == "Landroidx/viewpager2/widget/ViewPager2;" }
+        endIfPosition.forEach {
+            val getPosition = chooseNowChildTabMethod.getInstruction(it.location.index + 1) as BuilderInstruction35c
+            val target = getPosition.registerC
+
             val index = chooseNowChildTabMethod.instructions.indexOf(it)
-            chooseNowChildTabMethod.replaceInstruction(
-                index,
-                BuilderInstruction21c(
-                    Opcode.SGET_OBJECT,
-                    (it as BuilderInstruction21c).registerA,
-                    ImmutableFieldReference(
-                        it.getReference<FieldReference>()!!.definingClass,
-                        "Openlink",
-                        it.getReference<FieldReference>()!!.type
+            chooseNowChildTabMethod.addInstructions(
+                index + 1,
+                listOf(
+                    BuilderInstruction21c(
+                        Opcode.SGET_OBJECT,
+                        target,
+                        ImmutableFieldReference(
+                            fieldRef.type,
+                            "Openlink",
+                            fieldRef.type
+                        )
                     )
                 )
             )

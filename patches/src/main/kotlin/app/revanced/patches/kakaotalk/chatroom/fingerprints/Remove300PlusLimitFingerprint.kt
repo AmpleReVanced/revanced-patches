@@ -7,9 +7,8 @@ import com.android.tools.smali.dexlib2.Opcode
 internal val limit300PlusBaseChatRoomFingerprint = fingerprint {
     accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
     returns("V")
-    parameters()
     strings("300+")
-    custom { method, classDef -> classDef.sourceFile == "BaseChatRoomItem.kt" }
+    custom { method, classDef -> classDef.sourceFile == "BaseChatRoomItemViewHolder.kt" }
 }
 
 internal val limit300PlusOpenChatRoomFingerprint = fingerprint {

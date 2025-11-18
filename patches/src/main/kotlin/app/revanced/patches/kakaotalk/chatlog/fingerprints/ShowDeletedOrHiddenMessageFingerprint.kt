@@ -27,12 +27,8 @@ internal val chatLogViewHolderSetupChatInfoViewFingerprint = fingerprint {
         Opcode.INVOKE_VIRTUAL,
         Opcode.MOVE_RESULT,
         Opcode.CONST_4,
-        Opcode.XOR_INT_2ADDR,
-        Opcode.INVOKE_STATIC,
-        Opcode.IGET_OBJECT,
-        Opcode.INVOKE_VIRTUAL,
-        Opcode.MOVE_RESULT,
         Opcode.CONST_4,
+        Opcode.IF_NEZ
     )
     custom { method, classDef -> classDef.sourceFile == "ChatLogViewHolder.kt" }
 }

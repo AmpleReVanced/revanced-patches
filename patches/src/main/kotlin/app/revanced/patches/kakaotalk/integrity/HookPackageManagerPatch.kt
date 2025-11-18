@@ -10,7 +10,7 @@ val hookPackageManagerPatch = resourcePatch(
     name = "Hook Package Manager",
     description = "Hooks the Package Manager to bypass integrity checks.",
 ) {
-    compatibleWith("com.kakao.talk"("25.9.2"))
+    compatibleWith("com.kakao.talk"("25.10.0"))
     dependsOn(addExtensionPatch)
 
     execute {

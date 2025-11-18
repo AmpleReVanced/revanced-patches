@@ -9,19 +9,17 @@ internal val addSectionToMoreTabUIFingerprint = fingerprint {
     parameters("Ljava/lang/Object;")
     returns("Ljava/lang/Object;")
     strings(
+        "call to 'resume' before 'invoke' with coroutine",
         "null cannot be cast to non-null type com.kakao.talk.moretab.ui.model.KakaoPayUiModel",
-        "null cannot be cast to non-null type com.kakao.talk.moretab.ui.model.WalletUiModel",
         "null cannot be cast to non-null type com.kakao.talk.moretab.ui.model.WeatherUiModel",
         "null cannot be cast to non-null type com.kakao.talk.moretab.ui.model.KakaoNowUiModel",
         "null cannot be cast to non-null type com.kakao.talk.moretab.ui.model.ServiceGroupUiModel",
-        "null cannot be cast to non-null type com.kakao.talk.moretab.ui.model.WalletBannerUiModel",
         "null cannot be cast to non-null type com.kakao.talk.moretab.ui.model.AdBigUiModel",
         "null cannot be cast to non-null type com.kakao.talk.moretab.ui.model.AdLocalUiModel",
         "null cannot be cast to non-null type com.kakao.talk.moretab.ui.model.MoreTabConfiguration",
         "null cannot be cast to non-null type com.kakao.talk.moretab.ui.model.ServiceShortcutUiModel",
         "null cannot be cast to non-null type com.kakao.talk.moretab.ui.model.GamePlayUiModel",
         "null cannot be cast to non-null type kotlin.collections.List<com.kakao.talk.moretab.domain.model.MoreTabFeature>",
-        "call to 'resume' before 'invoke' with coroutine"
     )
     opcodes(
         Opcode.MOVE_OBJECT_FROM16,
