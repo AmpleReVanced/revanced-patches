@@ -14,7 +14,7 @@ val spoofApkChecksumsPatch = bytecodePatch(
     name = "Spoof apk checksums",
     description = "Spoofs the apk checksums to pass integrity checks.",
 ) {
-    compatibleWith("com.kakao.talk"("25.9.2"))
+    compatibleWith("com.kakao.talk"("25.10.0"))
 
     execute {
         val getApkChecksumsMethod = getApkChecksumsFingerprint.method

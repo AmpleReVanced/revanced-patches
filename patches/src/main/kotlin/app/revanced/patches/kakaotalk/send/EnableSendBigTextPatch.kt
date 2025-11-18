@@ -12,8 +12,9 @@ import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction11n
 val enableSendBigTextPatch = bytecodePatch(
     name = "Enable send big text",
     description = "Allows sending big text messages in KakaoTalk.",
+    use = false // TODO: Starting from 25.10.0, the Quiet Send feature has been added, causing conflicts with the entry point for that feature. Therefore, it is disabled by default
 ) {
-    compatibleWith("com.kakao.talk"("25.9.2"))
+    compatibleWith("com.kakao.talk"("25.10.0"))
 
     execute {
         isEnableSendBigTextFingerprint.method.instructions.indexOfFirst { it.opcode == Opcode.CONST_4 && (it as BuilderInstruction11n).narrowLiteral == 0x0 }

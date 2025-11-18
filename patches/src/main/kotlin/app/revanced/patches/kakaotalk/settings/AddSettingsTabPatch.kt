@@ -30,9 +30,9 @@ import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
 @Suppress("unused")
 val addSettingsTabPatch = bytecodePatch(
     name = "Add settings tab",
-    description = "Adds a settings tab to the app."
+    description = "Adds a settings tab to the app.",
 ) {
-    compatibleWith("com.kakao.talk"("25.9.2"))
+    compatibleWith("com.kakao.talk"("25.10.0"))
     dependsOn(
         addExtensionPatch,
         addResourcesPatch,
@@ -126,7 +126,6 @@ val addSettingsTabPatch = bytecodePatch(
             val nextInstruction = setupSettingsItemMethod.instructions[i + 1]
 
             if (instruction.opcode == Opcode.NEW_INSTANCE &&
-                (instruction as ReferenceInstruction).reference.toString() == "LYj/K;" &&
                 nextInstruction.opcode == Opcode.INVOKE_STATIC &&
                 nextInstruction.getReference<MethodReference>()?.name == "getSystem" &&
                 nextInstruction.getReference<MethodReference>()?.definingClass == "Landroid/content/res/Resources;") {
@@ -139,11 +138,11 @@ val addSettingsTabPatch = bytecodePatch(
             throw PatchException("Could not find separator insertion point")
         }
 
-        val sgetLaboratoryIndex = setupSettingsItemMethod.instructions.indexOfFirst {
+        val sgetCallIndex = setupSettingsItemMethod.instructions.indexOfFirst {
             it.opcode == Opcode.SGET_OBJECT &&
-                    it.getReference<FieldReference>()?.name == "LABORATORY"
+                    it.getReference<FieldReference>()?.name == "CALL"
         }
-        val finishSetupSettingsModel = (setupSettingsItemMethod.getInstruction(sgetLaboratoryIndex - 3) as BuilderInstruction3rc).getReference<MethodReference>()
+        val finishSetupSettingsModel = (setupSettingsItemMethod.getInstruction(sgetCallIndex - 5) as BuilderInstruction3rc).getReference<MethodReference>()
 
         val lastNewInstanceIndex = setupSettingsItemMethod.instructions.indexOfLast {
             it.opcode == Opcode.NEW_INSTANCE
