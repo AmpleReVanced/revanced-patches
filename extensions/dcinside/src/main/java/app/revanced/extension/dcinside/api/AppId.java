@@ -3,10 +3,13 @@ package app.revanced.extension.dcinside.api;
 import android.content.Context;
 import android.util.Log;
 
+import com.dcinside.app.util.Save;
 import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.MultipartBody;
@@ -19,8 +22,8 @@ public class AppId {
 
     private static final String TAG = "AppId";
     private static final String DC_APP_PACKAGE = "com.dcinside.app.android";
-    private static final String DC_APP_VERSION_CODE = "100134";
-    private static final String DC_APP_VERSION_NAME = "5.1.7";
+    private static final String DC_APP_VERSION_CODE = "100138";
+    private static final String DC_APP_VERSION_NAME = "5.2.0";
     private static final String DC_APP_SIGNATURE = "5rJxRKJ2YLHgBgj6RdMZBl2X0KcftUuMoXVug0bsKd0=";
     private static final String USER_AGENT = "dcinside.app";
 
@@ -63,7 +66,19 @@ public class AppId {
                 if (response.isSuccessful()) {
                     String responseBody = response.body().string();
                     JSONObject jsonResponse = new JSONObject(responseBody);
-                    return "S:" + jsonResponse.getString("app_id");
+
+                    boolean result = jsonResponse.getBoolean("result");
+                    String appId = jsonResponse.getString("app_id");
+
+                    if (!result) {
+                        String cause  = jsonResponse.getString("cause");
+                        return "F:" + cause;
+                    }
+
+                    Save.appAccessIdTime(System.currentTimeMillis());
+                    Save.appAccessIdValue(appId);
+
+                    return "S:" + appId;
                 } else {
                     Log.e(TAG, "HTTP request failed with response code: " + response.code());
                     return "F:Failed to get app ID";
@@ -93,5 +108,19 @@ public class AppId {
             hexString.append(hex);
         }
         return hexString.toString();
+    }
+
+    public static String getApkSignatureHex() {
+        return "E6:B2:71:44:A2:76:60:B1:E0:06:08:FA:45:D3:19:06:5D:97:D0:A7:1F:B5:4B:8C:A1:75:6E:83:46:EC:29:DD";
+    }
+
+    public static ArrayList<String> getApkSignatureByType(String type) {
+        if (type.equals("hex")) {
+            return new ArrayList<>(List.of("59:E7:78:9C:3F:45:49:62:EF:CC:BC:47:88:44:52:E4:88:5D:AE:0F:BD:16:E0:B4:48:00:F1:46:63:04:F9:13"));
+        } else if (type.equals("base")) {
+            return new ArrayList<>(List.of("Wed4nD9FSWLvzLxHiERS5Ihdrg+9FuC0SADxRmME+RM="));
+        } else {
+            throw new IllegalArgumentException("Invalid type: " + type);
+        }
     }
 }
