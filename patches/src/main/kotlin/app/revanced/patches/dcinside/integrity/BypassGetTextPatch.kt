@@ -14,8 +14,7 @@ val bypassGetTextPath = bytecodePatch(
     name = "Bypass getText",
     description = "Bypasses the integrity check for getText.",
 ) {
-    compatibleWith("com.dcinside.app.android"("5.1.7"))
-
+    compatibleWith("com.dcinside.app.android"("5.2.0"))
     extendWith("extensions/dcinside.rve")
 
     execute {
@@ -26,7 +25,7 @@ val bypassGetTextPath = bytecodePatch(
         nativeGetTextFingerprint.classDef.methods.add(
             ImmutableMethod(
                 nativeGetTextMethod.definingClass,
-                "getText",
+                "gt",
                 listOf(
                     ImmutableMethodParameter("Landroid/content/Context;", null, null),
                     ImmutableMethodParameter("Ljava/lang/String;", null, null),

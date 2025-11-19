@@ -9,7 +9,7 @@ val disableUpdateCheckPatch = bytecodePatch(
     name = "Disable update check",
     description = "Disables the app's update check.",
 ) {
-    compatibleWith("com.dcinside.app"("5.1.7"))
+    compatibleWith("com.dcinside.app"("5.2.0"))
 
     execute {
         val method = disableUpdateCheckFingerprint.method

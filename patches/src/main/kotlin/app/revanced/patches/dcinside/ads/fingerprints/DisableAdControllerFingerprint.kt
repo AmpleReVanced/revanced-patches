@@ -5,15 +5,15 @@ import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
 internal val disableAdControllerFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
+    accessFlags(AccessFlags.PRIVATE, AccessFlags.FINAL)
     parameters()
     returns("V")
     opcodes(
         Opcode.IGET_OBJECT,
-        Opcode.INVOKE_VIRTUAL,
-        Opcode.MOVE_RESULT,
-        Opcode.IF_EQZ,
+        Opcode.IF_NEZ,
         Opcode.RETURN_VOID,
+        Opcode.IGET_OBJECT,
+        Opcode.INVOKE_VIRTUAL,
     )
-    custom { method, classDef -> classDef.toString().startsWith("Lcom/dcinside/app/ad/util") }
+    custom { method, classDef -> classDef.toString().startsWith("Lcom/dcinside/app/ad/support") }
 }

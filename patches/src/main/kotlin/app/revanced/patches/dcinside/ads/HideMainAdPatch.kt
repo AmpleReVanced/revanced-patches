@@ -9,7 +9,7 @@ val hideMainAdPatch = bytecodePatch(
     name = "Hide Main Ad",
     description = "Hides the main ad in the app.",
 ) {
-    compatibleWith("com.dcinside.app.android"("5.1.7"))
+    compatibleWith("com.dcinside.app.android"("5.2.0"))
 
     execute {
         val method = hideMainAdFingerprint.method
