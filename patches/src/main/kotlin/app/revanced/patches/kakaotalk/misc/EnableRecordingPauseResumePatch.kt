@@ -13,7 +13,7 @@ val enableRecordingPauseResumePatch = bytecodePatch(
     name = "Enable recording pause/resume feature",
     description = "Enable recording pause/resume feature in KakaoTalk",
 ) {
-    compatibleWith("com.kakao.talk"("25.10.0"))
+    compatibleWith("com.kakao.talk"("25.10.1"))
 
     execute {
         isRecordingPauseResumeEnabled.method.instructions.indexOfFirst { it.opcode == Opcode.CONST_4 && (it as BuilderInstruction11n).narrowLiteral == 0x0 }
