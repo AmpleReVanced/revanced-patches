@@ -15,7 +15,8 @@ val disableUpdateCheckPatch = bytecodePatch(
         disableUpdateCheckFingerprint.method.addInstruction(
             0,
             """
-                return-void
+                const/4 v1, 0x0
+                return v1
             """.trimIndent()
         )
     }
