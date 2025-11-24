@@ -15,7 +15,7 @@ val disableImageAdPatch = bytecodePatch(
     name = "Disable Image Ad",
     description = "Disables the image ad in the app.",
 ) {
-    compatibleWith("com.dcinside.app.android"("5.2.1"))
+    compatibleWith("com.dcinside.app.android"("5.2.2"))
 
     execute {
         postReadImageAdViewFingerprint.method.apply {
