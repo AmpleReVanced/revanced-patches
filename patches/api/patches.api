@@ -196,6 +196,51 @@ public final class app/revanced/patches/crunchyroll/ads/HideAdsPatchKt {
 	public static final fun getHideAdsPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
 }
 
+public final class app/revanced/patches/dcinside/ads/DimensPatchKt {
+	public static final fun getDimensPatch ()Lapp/revanced/patcher/patch/ResourcePatch;
+}
+
+public final class app/revanced/patches/dcinside/ads/DisableAdControllerPatchKt {
+	public static final fun getDisableAdControllerPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/dcinside/ads/DisableCommentAdPatchKt {
+	public static final fun getDisableCommentAdPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/dcinside/ads/DisableImageAdPatchKt {
+	public static final fun getDisableImageAdPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/dcinside/ads/HideMainAdPatchKt {
+	public static final fun getHideMainAdPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/dcinside/ads/fingerprints/DimensFingerprintKt {
+	public static final fun getGetMinimumDimensFingerprint ()Lapp/revanced/patcher/Fingerprint;
+	public static final fun getReadFooterAdContainerSetupFingerprint ()Lapp/revanced/patcher/Fingerprint;
+}
+
+public final class app/revanced/patches/dcinside/integrity/BypassGetTextPatchKt {
+	public static final fun getBypassGetTextPath ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/dcinside/integrity/SpoofSignaturePatchKt {
+	public static final fun getSpoofSignaturePatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/dcinside/misc/DisableUpdateCheckPatchKt {
+	public static final fun getDisableUpdateCheckPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/dcinside/onestore/EnableOnestoreFeaturePatchKt {
+	public static final fun getEnableOnestoreFeaturePatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/dcinside/packagename/UpdateProviderPatchKt {
+	public static final fun getUpdateProviderPatch ()Lapp/revanced/patcher/patch/ResourcePatch;
+}
+
 public final class app/revanced/patches/disneyplus/ads/SkipAdsPatchKt {
 	public static final fun getSkipAdsPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
 }
@@ -350,6 +395,199 @@ public final class app/revanced/patches/instagram/story/flipping/DisableStoryAut
 
 public final class app/revanced/patches/irplus/ad/RemoveAdsPatchKt {
 	public static final fun getRemoveAdsPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/ads/DisableChatRoomAdControllerPatchKt {
+	public static final fun getDisableChatRoomAdControllerPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/ads/DisableChatRoomListAdPatchKt {
+	public static final fun getDisableChatRoomListAdPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/ads/DisableFriendListsAdPatchKt {
+	public static final fun getDisableFriendListsAdPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/ads/RemoveBizBoardPatchKt {
+	public static final fun getRemoveBizBoardPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/ads/RemoveFeedAdPatchKt {
+	public static final fun getRemoveFeedAdPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/ads/RemoveFocusAdPatchKt {
+	public static final fun getRemoveFocusAdPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/ads/RemoveMoreTabAdPatchKt {
+	public static final fun getRemoveMoreTabAdPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/ads/RemoveNativeAdPatchKt {
+	public static final fun getRemoveNativeAdPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/ads/RemoveOlkChatRoomListAdPatchKt {
+	public static final fun getRemoveOlkChatRoomListAdPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/branding/CustomBrandingPatchKt {
+	public static final fun getCustomBrandingPatch ()Lapp/revanced/patcher/patch/ResourcePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/changemodel/ChangeModelPatchKt {
+	public static final fun getChangeModelPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+	public static final fun getSpoofBuildInfoPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/chatlog/AllowHideOnAnyChatPatchKt {
+	public static final fun getAllowHideOnAnyChatPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/chatlog/EnableReactionMentionFlagPatchKt {
+	public static final fun getEnableReactionMentionFlagPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/chatlog/Remove99ClampPatchKt {
+	public static final fun getRemove99ClampPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/chatlog/ShowDeletedOrHiddenMessagePatchKt {
+	public static final fun getShowDeletedOrHiddenMessagePatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/chatroom/BypassInputMentionPatchKt {
+	public static final fun getBypassInputMentionPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/chatroom/PlayYoutubePlayerInChatRoomPatchKt {
+	public static final fun getPlayYoutubePlayerInChatRoomPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/chatroom/Remove300PlusLimitPatchKt {
+	public static final fun getRemove300PlusLimitChatRoomPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/emoticon/ForceEnableEmoticonPlusPatchKt {
+	public static final fun getForceEnableEmoticonPlusPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/feature/OverrideFeatureFlagPatchKt {
+	public static final fun getOverrideFeatureFlagPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/ghost/GhostModePatchKt {
+	public static final fun getGhostMode ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/hook/AddPacketHandlerPatchKt {
+	public static final fun getAddPacketHandlerPatch ()Lapp/revanced/patcher/patch/ResourcePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/integrity/BypassMoatCheckPatchKt {
+	public static final fun getBypassMoatCheckPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/integrity/HookPackageManagerPatchKt {
+	public static final fun getHookPackageManagerPatch ()Lapp/revanced/patcher/patch/ResourcePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/integrity/SpoofApkChecksumsPatchKt {
+	public static final fun getSpoofApkChecksumsPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/integrity/SpoofAppIdPatchKt {
+	public static final fun getSpoofAppIdPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/integrity/SpoofSignaturePatchKt {
+	public static final fun getSpoofSignaturePatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/integrity/VerifyingSignaturePatchKt {
+	public static final fun getVerifyingSignaturePatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/member/AlwaysShowKickButtonPatchKt {
+	public static final fun getAlwaysShowKickButtonPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/misc/AddExtensionPatchKt {
+	public static final fun getAddExtensionPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/misc/AddPineLibPatchKt {
+	public static final fun getAddPineLibPatch ()Lapp/revanced/patcher/patch/ResourcePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/misc/DefaultExternalBrowserPatchKt {
+	public static final fun getDefaultExternalBrowserPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/misc/EnableRecordingPauseResumePatchKt {
+	public static final fun getEnableRecordingPauseResumePatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/misc/ForceEnableDebugModePatchKt {
+	public static final fun getForceEnableDebugModePatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/misc/SharedExtensionPatchKt {
+	public static final fun getSharedExtensionPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/packagename/IgnoreCheckPackageNamePatchKt {
+	public static final fun getIgnoreCheckPackageNamePatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/send/AllowReplyToFeedPatchKt {
+	public static final fun getAllowReplyToFeedPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/send/EnableSendBigTextPatchKt {
+	public static final fun getEnableSendBigTextPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/settings/AddSettingsTabPatchKt {
+	public static final fun getAddSettingsTabPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/tab/DisableFriendFeedTabPatchKt {
+	public static final fun getDisableFriendFeedTabPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/tab/EnableChatGroupPatchKt {
+	public static final fun getEnableChatGroupPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/tab/RemoveShopTabPatchKt {
+	public static final fun getRemoveShopTabPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/tab/RemoveShortFormTabPatchKt {
+	public static final fun getRemoveShortFormTabPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/tracker/DisableS2EventPatchKt {
+	public static final fun getDisableS2EventPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/tracker/DisableSdkTrackerPatchKt {
+	public static final fun getDisableSdkTrackerPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/tracker/DisableSentryPatchKt {
+	public static final fun getDisableSentryPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/tracker/DisableTrackerPatchKt {
+	public static final fun getDisableTrackerPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/versioninfo/VersionInfoPatchKt {
+	public static final fun getVersionInfoPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
 }
 
 public final class app/revanced/patches/letterboxd/ads/HideAdsPatchKt {
