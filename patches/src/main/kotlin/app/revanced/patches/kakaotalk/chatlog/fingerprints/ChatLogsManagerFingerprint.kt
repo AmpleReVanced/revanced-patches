@@ -11,7 +11,6 @@ internal val replaceToFeedFingerprint = fingerprint {
         "chatLog",
         "feedType",
         "byHost",
-        "no matched overwrite feedType : ",
     )
     custom { method, classDef -> classDef.sourceFile == "ChatLogsManager.kt" }
 }
@@ -34,17 +33,15 @@ internal val flushToDBChatLogFingerprint = fingerprint {
     accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
     returns("Z")
     opcodes(
-        Opcode.INSTANCE_OF,
-        Opcode.IF_EQZ,
-        Opcode.MOVE_OBJECT,
-        Opcode.CHECK_CAST,
-        Opcode.INVOKE_VIRTUAL,
         Opcode.SGET_OBJECT,
         Opcode.NEW_INSTANCE,
         Opcode.INVOKE_DIRECT,
         Opcode.INVOKE_VIRTUAL,
         Opcode.CONST_4,
         Opcode.RETURN,
+        Opcode.INVOKE_VIRTUAL,
+        Opcode.CONST_4,
+        Opcode.RETURN
     )
     custom { method, classDef -> classDef.sourceFile == "ChatLogsManager.kt" && method.parameterTypes.size == 1 }
 }
