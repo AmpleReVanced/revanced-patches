@@ -20,7 +20,6 @@ internal val loadNativeAdFingerprint = fingerprint {
         "Invalid Count: "
     )
     opcodes(
-        Opcode.MOVE_OBJECT_FROM16,
         Opcode.MOVE_FROM16,
         Opcode.CONST_STRING,
         Opcode.MOVE_OBJECT_FROM16,

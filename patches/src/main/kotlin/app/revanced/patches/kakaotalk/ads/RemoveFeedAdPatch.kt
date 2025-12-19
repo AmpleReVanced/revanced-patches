@@ -16,7 +16,7 @@ val removeFeedAdPatch = bytecodePatch(
     name = "Remove feed ad",
     description = "Removes the feed ad from the app.",
 ) {
-    compatibleWith("com.kakao.talk"("25.10.1"))
+    compatibleWith("com.kakao.talk"("25.11.0"))
 
     execute {
         val feedAdLayoutConstructor = feedAdLayoutFingerprint.method

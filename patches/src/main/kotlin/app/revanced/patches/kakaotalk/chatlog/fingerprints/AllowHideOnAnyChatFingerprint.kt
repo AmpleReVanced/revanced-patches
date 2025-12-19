@@ -34,7 +34,7 @@ internal val checkIsEqualWithMyUserIdFingerprint = fingerprint {
         Opcode.CMP_LONG,
         Opcode.IF_NEZ,
         Opcode.CONST_4,
-        Opcode.GOTO,
+        Opcode.RETURN,
         Opcode.CONST_4,
         Opcode.RETURN
     )

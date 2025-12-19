@@ -20,7 +20,7 @@ val ignoreCheckPackageNamePatch = bytecodePatch(
     description = "Ignores the package name check to allow installation of modified versions.",
     use = false,
 ) {
-    compatibleWith("com.kakao.talk"("25.10.1"))
+    compatibleWith("com.kakao.talk"("25.11.0"))
 
     dependsOn(changePackageNamePatch)
 

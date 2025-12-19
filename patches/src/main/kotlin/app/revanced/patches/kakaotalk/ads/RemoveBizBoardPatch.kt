@@ -9,7 +9,7 @@ val removeBizBoardPatch = bytecodePatch(
     name = "Remove BizBoard ads",
     description = "Removes the BizBoard ad by forcing its dimensions to 0x0 and visibility to GONE in onMeasure.",
 ) {
-    compatibleWith("com.kakao.talk"("25.10.1"))
+    compatibleWith("com.kakao.talk"("25.11.0"))
 
     execute {
         val method = measuringBizBoardFingerprint.method
