@@ -11,7 +11,7 @@ val updateProviderPatch = resourcePatch(
     description = "It allows you to install the clone app just like the original.",
     use = false
 ) {
-    compatibleWith("com.dcinside.app.android"("5.2.2"))
+    compatibleWith("com.dcinside.app.android"("5.2.4"))
     dependsOn(changePackageNamePatch)
 
     execute {

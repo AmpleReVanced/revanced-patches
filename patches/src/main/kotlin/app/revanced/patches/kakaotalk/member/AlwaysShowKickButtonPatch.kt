@@ -8,6 +8,7 @@ import app.revanced.patches.kakaotalk.member.fingerprints.kickButtonManageMethod
 import app.revanced.util.getReference
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction11n
+import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.TwoRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
@@ -16,7 +17,7 @@ val alwaysShowKickButtonPatch = bytecodePatch(
     name = "Always Show Kick Button",
     description = "Always shows the kick button in group member management.",
 ) {
-    compatibleWith("com.kakao.talk"("25.10.1"))
+    compatibleWith("com.kakao.talk"("25.11.0"))
 
     execute {
         val containsUserByIdMethod = containsUserByIdFingerprint.method
@@ -27,17 +28,22 @@ val alwaysShowKickButtonPatch = bytecodePatch(
                     it.getReference<MethodReference>()?.name == containsUserByIdMethod.name &&
                     it.getReference<MethodReference>()?.definingClass == containsUserByIdMethod.definingClass
         }.let {
-            val moveInst = kickButtonManageMethod.instructions.getOrNull(it + 2) as TwoRegisterInstruction
-            val register = moveInst.registerA
+            if (it != -1) {
+                val moveResultInst = kickButtonManageMethod.instructions.getOrNull(it + 1) as? OneRegisterInstruction
 
-            kickButtonManageMethod.addInstruction(
-                it + 3,
-                BuilderInstruction11n(
-                    Opcode.CONST_4,
-                    register,
-                    0x1
-                )
-            )
+                if (moveResultInst != null && moveResultInst.opcode == Opcode.MOVE_RESULT) {
+                    val register = moveResultInst.registerA
+
+                    kickButtonManageMethod.addInstruction(
+                        it + 2,
+                        BuilderInstruction11n(
+                            Opcode.CONST_4,
+                            register,
+                            0x1
+                        )
+                    )
+                }
+            }
         }
     }
 }

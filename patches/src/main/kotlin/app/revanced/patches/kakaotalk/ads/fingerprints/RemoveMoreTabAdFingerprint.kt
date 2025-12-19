@@ -27,7 +27,7 @@ internal val addSectionToMoreTabUIFingerprint = fingerprint {
         Opcode.MOVE_RESULT_OBJECT,
         Opcode.IGET,
         Opcode.CONST_4,
-        Opcode.IF_EQZ,
+        Opcode.CONST_4,
     )
 }
 

@@ -49,7 +49,7 @@ internal val checkViewableChatLogFingerprint = fingerprint {
         Opcode.IF_GT,
         Opcode.CONST_4,
         Opcode.IF_GE,
-        Opcode.GOTO,
+        Opcode.RETURN,
         Opcode.CONST_4,
         Opcode.RETURN,
     )
@@ -83,7 +83,7 @@ internal val filterChatLogItemFingerprint = fingerprint {
         Opcode.MOVE_RESULT_OBJECT,
         Opcode.SGET_OBJECT,
         Opcode.IF_NE,
-        Opcode.GOTO_16,
+        Opcode.RETURN,
         Opcode.INSTANCE_OF
     )
     custom { method, classDef -> classDef.sourceFile == "ChatLogSearchHelper.kt" && method.parameterTypes.size == 1 }
@@ -130,14 +130,12 @@ internal val originalSyncMethodFingerprint = fingerprint {
     strings("chatLog", "feedType")
     opcodes(
         Opcode.MOVE_OBJECT_FROM16,
-        Opcode.MOVE_OBJECT_FROM16,
         Opcode.CONST_STRING,
         Opcode.INVOKE_STATIC,
         Opcode.CONST_STRING,
         Opcode.INVOKE_STATIC,
-        Opcode.INVOKE_VIRTUAL_RANGE,
+        Opcode.INVOKE_VIRTUAL,
         Opcode.MOVE_RESULT_WIDE,
-        Opcode.MOVE_OBJECT,
         Opcode.INVOKE_VIRTUAL,
         Opcode.MOVE_RESULT_OBJECT,
         Opcode.IF_NEZ,

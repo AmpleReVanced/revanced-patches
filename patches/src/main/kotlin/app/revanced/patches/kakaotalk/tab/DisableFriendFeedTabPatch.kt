@@ -10,7 +10,7 @@ val disableFriendFeedTabPatch = bytecodePatch(
     name = "Disable Friend Feed tab",
     description = "Disables the Friend Feed tab in KakaoTalk.",
 ) {
-    compatibleWith("com.kakao.talk"("25.10.1"))
+    compatibleWith("com.kakao.talk"("25.11.0"))
 
     execute {
         mainTabConfigFingerprint.method.addInstructions(
