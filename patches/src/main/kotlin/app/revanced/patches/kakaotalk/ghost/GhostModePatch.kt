@@ -12,7 +12,7 @@ val ghostMode = bytecodePatch(
     name = "Ghost Mode",
     description = "Don't expose your typing status to the other party.",
 ) {
-    compatibleWith("com.kakao.talk"("25.10.1"))
+    compatibleWith("com.kakao.talk"("25.11.0"))
 
     execute {
         val locoMethodClass = locoMethodClassFingerprint.classDef

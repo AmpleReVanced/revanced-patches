@@ -35,7 +35,6 @@ internal val locoMethodClassFingerprint = fingerprint {
         Opcode.CONST_STRING,
         Opcode.CONST_4,
         Opcode.CONST_4,
-        Opcode.MOVE_OBJECT,
         Opcode.INVOKE_DIRECT_RANGE,
         Opcode.SPUT_OBJECT
     )

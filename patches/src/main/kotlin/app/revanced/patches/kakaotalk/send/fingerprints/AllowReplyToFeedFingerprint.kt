@@ -36,7 +36,7 @@ internal val isCarouselTypeFingerprint = fingerprint {
         Opcode.MOVE_RESULT,
         Opcode.IF_EQZ,
         Opcode.CONST_4,
-        Opcode.GOTO,
+        Opcode.RETURN,
         Opcode.CONST_4,
         Opcode.RETURN,
     )
