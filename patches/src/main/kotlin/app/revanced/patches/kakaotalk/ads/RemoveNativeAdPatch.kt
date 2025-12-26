@@ -9,7 +9,7 @@ val removeNativeAdPatch = bytecodePatch(
     name = "Remove native ad",
     description = "Removes the native ad from the app.",
 ) {
-    compatibleWith("com.kakao.talk"("25.11.0"))
+    compatibleWith("com.kakao.talk"("25.11.1"))
 
     execute {
         val method = loadNativeAdFingerprint.method
