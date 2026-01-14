@@ -9,7 +9,7 @@ val removeFocusAdPatch = bytecodePatch(
     name = "Remove focus ad",
     description = "Removes the focus ad from the app.",
 ) {
-    compatibleWith("com.kakao.talk"("25.11.0"))
+    compatibleWith("com.kakao.talk"("25.11.2"))
 
     execute {
         loadFocusAdFingerprint.method.addInstructions(
