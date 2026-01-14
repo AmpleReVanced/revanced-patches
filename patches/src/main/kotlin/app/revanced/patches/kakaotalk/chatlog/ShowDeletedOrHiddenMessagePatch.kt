@@ -43,7 +43,7 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
     name = "Show deleted or hidden messages",
     description = "Allows you to see deleted/hidden messages in chat logs.",
 ) {
-    compatibleWith("com.kakao.talk"("25.11.0"))
+    compatibleWith("com.kakao.talk"("25.11.2"))
     dependsOn(addExtensionPatch, addResourcesPatch, sharedExtensionPatch)
 
     execute {
@@ -342,10 +342,10 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
                     invoke-virtual {v0, v1}, ${chatLogVFieldClass.type}->putDeleted(Z)V
                     invoke-virtual {p0, p1}, ${it.definingClass}->${flushToDBMethod.name}(${chatLogClass.type})Z
                     
-                    sget-object v0, ${chatRoomListManagerGetInstanceMethod.returnType}->q:${chatRoomListManagerGetInstanceMethod.definingClass}
+                    sget-object v0, ${chatRoomListManagerGetInstanceMethod.returnType}->o:${chatRoomListManagerGetInstanceMethod.definingClass}
                     invoke-virtual {v0}, $chatRoomListManagerGetInstanceMethod
                     move-result-object v0
-                    invoke-virtual {v0, p3, p4}, $getChatRoomByChannelIdMethod
+                    invoke-virtual {v0, v3, v4}, $getChatRoomByChannelIdMethod
                     move-result-object v0
                     const/4 v1, 0x1
                     invoke-virtual {v0, p1, v1}, ${invokeVirtualInst.getReference<MethodReference>()}
@@ -371,10 +371,10 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
                     invoke-virtual {v0, v1}, ${chatLogVFieldClass.type}->putHidden(Z)V
                     invoke-virtual {p0, p1}, ${it.definingClass}->${flushToDBMethod.name}(${chatLogClass.type})Z
                     
-                    sget-object v0, ${chatRoomListManagerGetInstanceMethod.returnType}->q:${chatRoomListManagerGetInstanceMethod.definingClass}
+                    sget-object v0, ${chatRoomListManagerGetInstanceMethod.returnType}->o:${chatRoomListManagerGetInstanceMethod.definingClass}
                     invoke-virtual {v0}, $chatRoomListManagerGetInstanceMethod
                     move-result-object v0
-                    invoke-virtual {v0, p3, p4}, $getChatRoomByChannelIdMethod
+                    invoke-virtual {v0, v3, v4}, $getChatRoomByChannelIdMethod
                     move-result-object v0
                     const/4 v1, 0x1
                     invoke-virtual {v0, p1, v1}, ${invokeVirtualInst.getReference<MethodReference>()}

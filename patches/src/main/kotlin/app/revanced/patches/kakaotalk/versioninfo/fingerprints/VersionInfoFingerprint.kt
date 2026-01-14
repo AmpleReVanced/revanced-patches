@@ -6,7 +6,7 @@ import com.android.tools.smali.dexlib2.Opcode
 
 internal val versionInfoFingerprint = fingerprint {
     accessFlags(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.FINAL)
-    strings("\$this\$group", "25.11.0")
+    strings("\$this\$group", "25.11.2")
     opcodes(
         Opcode.CONST_STRING,
         Opcode.INVOKE_STATIC,
@@ -28,7 +28,7 @@ internal val versionInfoPreviewFingerprint = fingerprint {
     accessFlags(AccessFlags.PUBLIC)
     parameters()
     returns("Ljava/lang/String;")
-    strings("25.11.0")
+    strings("25.11.2")
     opcodes(
         Opcode.SGET_OBJECT,
         Opcode.INVOKE_VIRTUAL,

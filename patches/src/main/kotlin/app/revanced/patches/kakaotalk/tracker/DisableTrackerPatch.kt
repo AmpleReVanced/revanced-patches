@@ -17,7 +17,7 @@ val disableTrackerPatch = bytecodePatch(
     name = "Disable tracker",
     description = "Disables the tracker in KakaoTalk",
 ) {
-    compatibleWith("com.kakao.talk"("25.11.0"))
+    compatibleWith("com.kakao.talk"("25.11.2"))
 
     execute {
         val targetClass = "Lcom/kakao/talk/net/retrofit/service/TalkShareService;"
