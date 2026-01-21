@@ -5,20 +5,14 @@ pluginManagement {
         gradlePluginPortal()
         google()
         maven {
-            name = "GitHubPackages"
+            name = "githubPackages"
             url = uri("https://maven.pkg.github.com/amplerevanced/registry")
-            credentials {
-                username = providers.gradleProperty("gpr.user").getOrElse(System.getenv("GITHUB_ACTOR"))
-                password = providers.gradleProperty("gpr.key").getOrElse(System.getenv("GITHUB_TOKEN"))
-            }
+            credentials(PasswordCredentials::class)
         }
         maven {
-            name = "GitHubPackagesOfficial"
+            name = "githubPackagesOfficial"
             url = uri("https://maven.pkg.github.com/revanced/registry")
-            credentials {
-                username = providers.gradleProperty("gpr.user").getOrElse(System.getenv("GITHUB_ACTOR"))
-                password = providers.gradleProperty("gpr.key").getOrElse(System.getenv("GITHUB_TOKEN"))
-            }
+            credentials(PasswordCredentials::class)
         }
     }
 }
@@ -27,20 +21,14 @@ dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.PREFER_PROJECT)
     repositories {
         maven {
-            name = "GitHubPackages"
+            name = "githubPackages"
             url = uri("https://maven.pkg.github.com/amplerevanced/registry")
-            credentials {
-                username = providers.gradleProperty("gpr.user").getOrElse(System.getenv("GITHUB_ACTOR"))
-                password = providers.gradleProperty("gpr.key").getOrElse(System.getenv("GITHUB_TOKEN"))
-            }
+            credentials(PasswordCredentials::class)
         }
         maven {
-            name = "GitHubPackagesOfficial"
+            name = "githubPackagesOfficial"
             url = uri("https://maven.pkg.github.com/revanced/registry")
-            credentials {
-                username = providers.gradleProperty("gpr.user").getOrElse(System.getenv("GITHUB_ACTOR"))
-                password = providers.gradleProperty("gpr.key").getOrElse(System.getenv("GITHUB_TOKEN"))
-            }
+            credentials(PasswordCredentials::class)
         }
     }
 }
