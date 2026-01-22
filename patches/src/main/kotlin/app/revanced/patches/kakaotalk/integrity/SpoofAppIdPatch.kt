@@ -10,7 +10,7 @@ val spoofAppIdPatch = bytecodePatch(
     name = "Spoof App ID",
     description = "Spoofs the App ID to bypass integrity checks. (to bypass biometric auth etc.)",
 ) {
-    compatibleWith("com.kakao.talk"("25.11.2"))
+    compatibleWith("com.kakao.talk"("26.1.0"))
 
     execute {
         val apkKeyHash = "android:apk-key-hash:7MRbkCrB6DyL4XWKJX5nSS3jdFY"

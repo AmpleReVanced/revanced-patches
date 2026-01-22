@@ -17,7 +17,7 @@ val allowHideOnAnyChatPatch = bytecodePatch(
     name = "Allow Hide on Any Chat",
     description = "Users with hiding privileges can hide any chat, including their own messages.",
 ) {
-    compatibleWith("com.kakao.talk"("25.11.2"))
+    compatibleWith("com.kakao.talk"("26.1.0"))
 
     execute {
         val checkIsAllowedHideMethod = checkIsAllowedHideFingerprint.method
