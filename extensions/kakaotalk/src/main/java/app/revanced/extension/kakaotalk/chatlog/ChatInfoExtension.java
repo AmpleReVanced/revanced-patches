@@ -1,7 +1,6 @@
 package app.revanced.extension.kakaotalk.chatlog;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.text.BoringLayout;
 import android.text.Layout;
