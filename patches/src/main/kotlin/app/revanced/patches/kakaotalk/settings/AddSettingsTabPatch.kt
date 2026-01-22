@@ -31,8 +31,9 @@ import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
 val addSettingsTabPatch = bytecodePatch(
     name = "Add settings tab",
     description = "Adds a settings tab to the app.",
+    use = false // Since the settings-related activity has not yet been developed, it will be disabled for the time being.
 ) {
-    compatibleWith("com.kakao.talk"("25.11.2"))
+    compatibleWith("com.kakao.talk"("26.1.0"))
     dependsOn(
         addExtensionPatch,
         addResourcesPatch,

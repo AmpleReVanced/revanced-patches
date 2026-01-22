@@ -9,7 +9,7 @@ val disableSentryPatch = bytecodePatch(
     name = "Disable Sentry",
     description = "Disables Sentry error reporting in KakaoTalk."
 ) {
-    compatibleWith("com.kakao.talk"("25.11.2"))
+    compatibleWith("com.kakao.talk"("26.1.0"))
     execute {
         disableSentryFingerprint.method.addInstructions(
             0,
