@@ -43,7 +43,7 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
     name = "Show deleted or hidden messages",
     description = "Allows you to see deleted/hidden messages in chat logs.",
 ) {
-    compatibleWith("com.kakao.talk"("25.11.2"))
+    compatibleWith("com.kakao.talk"("26.1.0"))
     dependsOn(addExtensionPatch, addResourcesPatch, sharedExtensionPatch)
 
     execute {
@@ -74,31 +74,37 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
         )
 
         val getMaxHeightMethod = chatInfoViewClass.methods.first { it.name == "getMaxHeight" }
+        val paddingTopIndex = getMaxHeightMethod.instructions.indexOfFirst {
+            it.opcode == Opcode.INVOKE_VIRTUAL &&
+                    it.getReference<MethodReference>()?.name == "getPaddingTop"
+        }
+        getMaxHeightMethod.addInstructions(
+            paddingTopIndex,
+            "move-object v4, p0"
+        )
         getMaxHeightMethod.addInstructionsWithLabels(
             getMaxHeightMethod.instructions.count() - 1,
             """
-                iget-object v0, p0, Lcom/kakao/talk/widget/chatlog/ChatInfoView;->extension:Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;
-                if-eqz v0, :cond_extension_end
+                iget-object v0, v4, Lcom/kakao/talk/widget/chatlog/ChatInfoView;->extension:Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;
+                if-eqz v0, :revanced_ext_end
                 invoke-virtual {v0}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->getAdditionalHeight()I
                 move-result v0
                 add-int/2addr v2, v0
-                :cond_extension_end
+                :revanced_ext_end
                 nop
             """.trimIndent()
         )
 
         val onDrawMethod = chatInfoViewClass.methods.first { it.name == "onDraw" }
-        onDrawMethod.replaceInstruction(
-            onDrawMethod.instructions.last { it.opcode == Opcode.RETURN_VOID }.location.index,
-            "iget-object v0, p0, Lcom/kakao/talk/widget/chatlog/ChatInfoView;->extension:Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;"
-        )
+        val firstInvokeSuperIdx = onDrawMethod.instructions.indexOfFirst { it.opcode == Opcode.INVOKE_SUPER }
         onDrawMethod.addInstructionsWithLabels(
-            onDrawMethod.instructions.size,
+            firstInvokeSuperIdx + 1,
             """
+                iget-object v0, p0, Lcom/kakao/talk/widget/chatlog/ChatInfoView;->extension:Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;
                 if-eqz v0, :cond_end
                 invoke-virtual {v0, p1}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->draw(Landroid/graphics/Canvas;)V
                 :cond_end
-                return-void
+                nop
             """.trimIndent()
         )
 

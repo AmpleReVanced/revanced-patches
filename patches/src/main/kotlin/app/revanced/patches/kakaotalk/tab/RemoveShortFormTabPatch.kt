@@ -1,8 +1,10 @@
 package app.revanced.patches.kakaotalk.tab
 
+import app.revanced.patcher.extensions.InstructionExtensions.addInstruction
 import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
 import app.revanced.patcher.extensions.InstructionExtensions.getInstruction
 import app.revanced.patcher.extensions.InstructionExtensions.instructions
+import app.revanced.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.revanced.patcher.extensions.InstructionExtensions.replaceInstructions
 import app.revanced.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.tab.fingerprints.chooseNowChildTabFingerprint
@@ -20,13 +22,14 @@ import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.TypeReference
 import com.android.tools.smali.dexlib2.immutable.reference.ImmutableFieldReference
 import com.android.tools.smali.dexlib2.immutable.reference.ImmutableMethodReference
+import com.android.tools.smali.dexlib2.immutable.reference.ImmutableTypeReference
 
 @Suppress("unused")
 val removeShortFormTabPatch = bytecodePatch(
     name = "Remove Short-form Tab",
     description = "Removes the Short-form tab from the now fragment.",
 ) {
-    compatibleWith("com.kakao.talk"("25.11.2"))
+    compatibleWith("com.kakao.talk"("26.1.0"))
 
     execute {
         val onViewCreated = nowFragmentOnViewCreatedFingerprint.method
@@ -108,27 +111,28 @@ val removeShortFormTabPatch = bytecodePatch(
         )
 
         val chooseNowChildTabMethod = chooseNowChildTabFingerprint.method
-        val endIfPosition = chooseNowChildTabMethod.instructions.filter { it.opcode == Opcode.IGET_OBJECT && it.getReference<FieldReference>()?.type == "Landroidx/viewpager2/widget/ViewPager2;" }
-        endIfPosition.forEach {
-            val getPosition = chooseNowChildTabMethod.getInstruction(it.location.index + 1) as BuilderInstruction35c
-            val target = getPosition.registerC
-
-            val index = chooseNowChildTabMethod.instructions.indexOf(it)
-            chooseNowChildTabMethod.addInstructions(
-                index + 1,
-                listOf(
-                    BuilderInstruction21c(
-                        Opcode.SGET_OBJECT,
-                        target,
-                        ImmutableFieldReference(
-                            fieldRef.type,
-                            "Openlink",
-                            fieldRef.type
-                        )
+        val firstReturnObjectIdx = chooseNowChildTabMethod.instructions.indexOfFirst { it.opcode == Opcode.RETURN_OBJECT }
+        val checkCastInst = chooseNowChildTabMethod.getInstruction(firstReturnObjectIdx + 1) as BuilderInstruction21c
+        chooseNowChildTabMethod.replaceInstruction(firstReturnObjectIdx + 1, "nop")
+        chooseNowChildTabMethod.addInstructions(
+            firstReturnObjectIdx + 2,
+            listOf(
+                BuilderInstruction21c(
+                    Opcode.SGET_OBJECT,
+                    checkCastInst.registerA,
+                    ImmutableFieldReference(
+                        fieldRef.type,
+                        "Openlink",
+                        fieldRef.type
                     )
+                ),
+                BuilderInstruction21c(
+                    Opcode.CHECK_CAST,
+                    checkCastInst.registerA,
+                    checkCastInst.reference
                 )
             )
-        }
+        )
     }
 
 }
