@@ -5,6 +5,9 @@ import app.revanced.patcher.extensions.InstructionExtensions.addInstructionsWith
 import app.revanced.patcher.extensions.InstructionExtensions.instructions
 import app.revanced.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.revanced.patcher.patch.bytecodePatch
+import app.revanced.patcher.patch.intOption
+import app.revanced.patcher.patch.longOption
+import app.revanced.patcher.patch.stringOption
 import app.revanced.patcher.util.proxy.mutableTypes.MutableField.Companion.toMutable
 import app.revanced.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
 import app.revanced.patches.all.misc.resources.addResources
@@ -19,7 +22,9 @@ import app.revanced.patches.kakaotalk.chatlog.fingerprints.checkViewableChatLogF
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.filterChatLogItemFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.flushToDBChatLogFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.getChatRoomByChannelIdFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.getDeletedColorFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.getDeletedMessageCacheFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.getHiddenColorFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.myChatInfoViewClassFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.originalSyncMethodFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.othersChatInfoViewClassFingerprint
@@ -38,6 +43,25 @@ import com.android.tools.smali.dexlib2.immutable.ImmutableField
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethodParameter
 
+private fun parseArgb32ToInt(input: String): Int {
+    val t = input.trim().replace("_", "")
+    val value = when {
+        t.startsWith("0x", ignoreCase = true) -> t.substring(2).toLong(16)
+        t.startsWith("-0x", ignoreCase = true) -> -t.substring(3).toLong(16)
+        else -> t.toLong()
+    }
+    return (value and 0xFFFF_FFFFL).toInt()
+}
+
+private fun toSmaliIntLiteral(v: Int): String {
+    return if (v < 0) {
+        val absHex = kotlin.math.abs(v.toLong()).toString(16)
+        "-0x$absHex"
+    } else {
+        "0x" + v.toString(16)
+    }
+}
+
 @Suppress("unused")
 val showDeletedOrHiddenMessagePatch = bytecodePatch(
     name = "Show deleted or hidden messages",
@@ -46,8 +70,30 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
     compatibleWith("com.kakao.talk"("26.1.0"))
     dependsOn(addExtensionPatch, addResourcesPatch, sharedExtensionPatch)
 
+    val deletedColorText by stringOption(
+        key = "deletedColor",
+        title = "Deleted color",
+        description = "32-bit ARGB. Accepts 0xAARRGGBB or signed decimal.",
+        default = "0xFFFF4444",
+    )
+
+    val hiddenColorText by stringOption(
+        key = "hiddenColor",
+        title = "Hidden color",
+        description = "32-bit ARGB. Accepts 0xAARRGGBB or signed decimal.",
+        default = "0xFF999999",
+    )
+
     execute {
         addResources("kakaotalk", "chatlog.showDeletedOrHiddenMessagePatch")
+
+        val deletedInt = parseArgb32ToInt(deletedColorText!!)
+        val deletedLit = toSmaliIntLiteral(deletedInt)
+        val hiddenInt = parseArgb32ToInt(hiddenColorText!!)
+        val hiddenLit = toSmaliIntLiteral(hiddenInt)
+
+        getDeletedColorFingerprint.method.replaceInstruction(0, "const v0, $deletedLit")
+        getHiddenColorFingerprint.method.replaceInstruction(0, "const v0, $hiddenLit")
 
         val chatInfoViewClass = chatInfoViewClassFingerprint.classDef
 
