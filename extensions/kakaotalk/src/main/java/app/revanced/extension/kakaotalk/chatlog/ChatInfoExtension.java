@@ -1,6 +1,7 @@
 package app.revanced.extension.kakaotalk.chatlog;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.text.BoringLayout;
 import android.text.Layout;
@@ -35,10 +36,18 @@ public class ChatInfoExtension {
 
     private void initializePaints() {
         deletedPaint = new TextPaint(1);
-        deletedPaint.setColor(0xFFFF4444); // Color.RED (for deleted)
+        deletedPaint.setColor(getDeletedColor()); // Color.RED (for deleted)
 
         hiddenPaint = new TextPaint(1);
-        hiddenPaint.setColor(0xFF999999); // Color.GRAY (for hidden)
+        hiddenPaint.setColor(getHiddenColor()); // Color.GRAY (for hidden)
+    }
+
+    private static int getDeletedColor() {
+        return 0xFFFF4444; // Modified during patching.
+    }
+
+    private static int getHiddenColor() {
+        return 0xFF999999; // Modified during patching.
     }
 
     private void ensurePaintsInitialized() {
