@@ -73,15 +73,24 @@ internal val transitionOpenLinkOrShortformMethodFingerprint = fingerprint {
 internal val chooseNowChildTabFingerprint = fingerprint {
     accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
     returns("Ljava/lang/Object;")
-    strings("call to 'resume' before 'invoke' with coroutine", "NOW_TAB", "binding")
+    strings("call to 'resume' before 'invoke' with coroutine", "NOW_TAB", "binding", "viewpager", "hsv")
     opcodes(
-        Opcode.INSTANCE_OF,
-        Opcode.IF_EQZ,
-        Opcode.MOVE_OBJECT,
-        Opcode.CHECK_CAST,
+        Opcode.INVOKE_STATIC,
+        Opcode.MOVE_RESULT_OBJECT,
         Opcode.IGET,
-        Opcode.CONST_HIGH16,
-        Opcode.AND_INT
+        Opcode.CONST_4,
+        Opcode.CONST_4,
+        Opcode.IF_EQZ,
+        Opcode.IF_NE,
+        Opcode.INVOKE_STATIC,
+        Opcode.MOVE_OBJECT,
+        Opcode.GOTO,
+        Opcode.NEW_INSTANCE,
+        Opcode.CONST_STRING,
+        Opcode.INVOKE_DIRECT,
+        Opcode.THROW,
+        Opcode.INVOKE_STATIC,
+        Opcode.IGET_OBJECT
     )
-    custom { method, classDef -> classDef.sourceFile == "NowFragment.kt" }
+    custom { method, classDef -> classDef.sourceFile == "NowFragment.kt" && method.name == "invokeSuspend" }
 }

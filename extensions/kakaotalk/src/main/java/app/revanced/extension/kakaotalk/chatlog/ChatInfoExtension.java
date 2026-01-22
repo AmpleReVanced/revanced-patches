@@ -35,10 +35,18 @@ public class ChatInfoExtension {
 
     private void initializePaints() {
         deletedPaint = new TextPaint(1);
-        deletedPaint.setColor(0xFFFF4444); // Color.RED (for deleted)
+        deletedPaint.setColor(getDeletedColor());
 
         hiddenPaint = new TextPaint(1);
-        hiddenPaint.setColor(0xFF999999); // Color.GRAY (for hidden)
+        hiddenPaint.setColor(getHiddenColor());
+    }
+
+    private static int getDeletedColor() {
+        return 0xFFFF4444; // Modified during patching.
+    }
+
+    private static int getHiddenColor() {
+        return 0xFF999999; // Modified during patching.
     }
 
     private void ensurePaintsInitialized() {
