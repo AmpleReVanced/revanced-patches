@@ -24,6 +24,10 @@ internal val setupAdapterFingerprint = fingerprint {
     custom { method, classDef -> classDef.sourceFile == "OpenChatTabFragment.kt" }
 }
 
+internal val initViewModelFingerprint = fingerprint {
+    custom { method, classDef -> classDef.sourceFile == "OpenChatTabFragment.kt" && method.name == "initViewModel" }
+}
+
 internal val commonChatRoomListAdapterClassFingerprint = fingerprint {
     custom { method, classDef -> classDef.sourceFile == "CommonChatRoomListAdapter.kt" && !classDef.type.contains("$") }
 }

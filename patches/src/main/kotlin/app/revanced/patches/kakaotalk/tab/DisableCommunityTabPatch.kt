@@ -5,6 +5,7 @@ import app.revanced.patcher.extensions.InstructionExtensions.instructions
 import app.revanced.patcher.extensions.InstructionExtensions.removeInstructions
 import app.revanced.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.tab.fingerprints.commonChatRoomListAdapterClassFingerprint
+import app.revanced.patches.kakaotalk.tab.fingerprints.initViewModelFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.setupAdapterFingerprint
 import app.revanced.util.getReference
 import com.android.tools.smali.dexlib2.Opcode
@@ -45,6 +46,13 @@ val disableCommunityTabPatch = bytecodePatch(
                     invoke-virtual {v2, v5}, ${callSetAdapter.getReference<MethodReference>()}
                 """.trimIndent()
             )
+
+            initViewModelFingerprint.method.apply {
+                removeInstructions(
+                    instructions.filter { it.opcode == Opcode.INVOKE_VIRTUAL }[4].location.index,
+                    1
+                )
+            }
         }
     }
 }
