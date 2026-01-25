@@ -574,12 +574,16 @@ public final class app/revanced/patches/kakaotalk/settings/AddSettingsTabPatchKt
 	public static final fun getAddSettingsTabPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
 }
 
-public final class app/revanced/patches/kakaotalk/tab/DisableFriendFeedTabPatchKt {
-	public static final fun getDisableFriendFeedTabPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+public final class app/revanced/patches/kakaotalk/tab/DisableCollapseButtonPatchKt {
+	public static final fun getDisableCollapseButtonPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
 }
 
-public final class app/revanced/patches/kakaotalk/tab/EnableChatGroupPatchKt {
-	public static final fun getEnableChatGroupPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+public final class app/revanced/patches/kakaotalk/tab/DisableCommunityTabPatchKt {
+	public static final fun getDisableCommunityTabPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
+public final class app/revanced/patches/kakaotalk/tab/DisableFriendFeedTabPatchKt {
+	public static final fun getDisableFriendFeedTabPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
 }
 
 public final class app/revanced/patches/kakaotalk/tab/RemoveShopTabPatchKt {
