@@ -22,7 +22,7 @@ val bypassMoatCheckPatch = bytecodePatch(
     description = "Bypass Moat check that prevents the app from running.",
     use = false // Do not enable by default.
 ) {
-    compatibleWith("com.kakao.talk"("26.1.1"))
+    compatibleWith("com.kakao.talk"("26.1.2"))
 
     execute {
         val patch: (Fingerprint) -> Unit = {

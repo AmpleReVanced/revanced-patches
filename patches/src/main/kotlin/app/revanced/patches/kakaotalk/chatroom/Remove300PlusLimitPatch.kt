@@ -16,7 +16,7 @@ val remove300PlusLimitChatRoomPatch = bytecodePatch(
     name = "Disable 300+ unread limit",
     description = "Always show the real unread count instead of '300+' in chatroom list"
 ) {
-    compatibleWith("com.kakao.talk"("26.1.1"))
+    compatibleWith("com.kakao.talk"("26.1.2"))
 
     execute {
         limit300PlusBaseChatRoomFingerprint.method.apply {
