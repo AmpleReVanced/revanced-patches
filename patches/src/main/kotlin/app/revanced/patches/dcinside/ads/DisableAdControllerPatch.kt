@@ -9,7 +9,7 @@ val disableAdControllerPatch = bytecodePatch(
     name = "Disable ad controller",
     description = "Disables the ad controller that manages ads in the app.",
 ) {
-    compatibleWith("com.dcinside.app.android"("5.2.5"))
+    compatibleWith("com.dcinside.app.android"("5.2.6"))
 
     execute {
         disableAdControllerFingerprint.method.addInstructions(
