@@ -11,7 +11,7 @@ val enableOnestoreFeaturePatch = bytecodePatch(
     name = "Enable OneStore feature",
     description = "Enables the OneStore feature in DC Inside app.",
 ) {
-    compatibleWith("com.dcinside.app.android"("5.2.5"))
+    compatibleWith("com.dcinside.app.android"("5.2.6"))
 
     execute {
         val applicationConfigClass = applicationConfigClassFingerprint.classDef

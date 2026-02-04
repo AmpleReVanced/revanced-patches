@@ -82,7 +82,7 @@ public class WebViewUpdateServiceStub extends MethodInvocationProxy<MethodInvoca
                     }
 
                     String packageName = Reflect.on(inf).get("packageName");
-                    if (packageName != null && !packageName.contains("android")) {
+                    if (packageName != null && !WebViewUtils.isWebViewPackage(packageName)) {
                         Reflect.on(inf).set("packageName", Spoofer.PACKAGE_NAME);
                     }
                 }
