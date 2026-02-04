@@ -9,7 +9,7 @@ val disableCollapseButtonPatch = bytecodePatch(
     name = "Disable Collapse Button",
     description = "Disable collapse button on OpenChatList",
 ) {
-    compatibleWith("com.kakao.talk"("26.1.1"))
+    compatibleWith("com.kakao.talk"("26.1.2"))
 
     execute {
         isChatListCollapseButtonEnabledFingerprint.method.apply {

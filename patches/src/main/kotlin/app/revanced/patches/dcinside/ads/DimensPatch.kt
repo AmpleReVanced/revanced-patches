@@ -33,7 +33,7 @@ val dimensPatch = resourcePatch(
     name = "Dimens Patch",
     description = "reassigns ad_minimum_height to 0dp to remove ads from the app.",
 ) {
-    compatibleWith("com.dcinside.app.android"("5.2.5"))
+    compatibleWith("com.dcinside.app.android"("5.2.6"))
     dependsOn(dimensBytecodePatch)
 
     execute {
