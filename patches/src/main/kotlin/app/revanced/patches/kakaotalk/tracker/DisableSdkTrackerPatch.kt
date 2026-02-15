@@ -10,7 +10,7 @@ val disableSdkTrackerPatch = bytecodePatch(
     name = "Disable SDK Tracker",
     description = "Disables the SDK Tracker in KakaoTalk."
 ) {
-    compatibleWith("com.kakao.talk"("26.1.2"))
+    compatibleWith("com.kakao.talk"("26.1.3"))
     dependsOn(
         replaceStringPatch("ad.daum.net", "example.com")
     )

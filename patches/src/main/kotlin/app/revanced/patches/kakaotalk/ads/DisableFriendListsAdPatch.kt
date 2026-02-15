@@ -9,7 +9,7 @@ val disableFriendListsAdPatch = bytecodePatch(
     name = "Disable Friend Lists ad",
     description = "Disables the Friend Lists ad in KakaoTalk.",
 ) {
-    compatibleWith("com.kakao.talk"("26.1.2"))
+    compatibleWith("com.kakao.talk"("26.1.3"))
 
     execute {
         val checkDisableFriendListsAdMethod = checkDisableFriendListsAdFingerprint.method

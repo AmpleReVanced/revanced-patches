@@ -16,7 +16,7 @@ val removeMoreTabAdPatch = bytecodePatch(
     name = "Remove More tab ad",
     description = "Removes the ad from the More tab.",
 ) {
-    compatibleWith("com.kakao.talk"("26.1.2"))
+    compatibleWith("com.kakao.talk"("26.1.3"))
 
     execute {
         val method = addSectionToMoreTabUIFingerprint.method

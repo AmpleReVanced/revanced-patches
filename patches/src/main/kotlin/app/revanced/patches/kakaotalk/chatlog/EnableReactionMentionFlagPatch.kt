@@ -14,7 +14,7 @@ val enableReactionMentionFlagPatch = bytecodePatch(
     description = "Enables the reaction mention flag in KakaoTalk chat logs.",
     use = false // This patch is currently disabled due to issues with the KakaoTalk app.
 ) {
-    compatibleWith("com.kakao.talk"("26.1.2"))
+    compatibleWith("com.kakao.talk"("26.1.3"))
 
     execute {
         reactionMentionFlagFingerprint.method.instructions.indexOfFirst { it.opcode == Opcode.CONST_4 && (it as BuilderInstruction11n).narrowLiteral == 0x0 }
