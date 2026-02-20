@@ -32,7 +32,7 @@ publishing {
     repositories {
         maven {
             name = "githubPackages"
-            url = uri("https://maven.pkg.github.com/revanced/revanced-patches")
+            url = uri("https://maven.pkg.github.com/amplerevanced/revanced-patches")
             credentials(PasswordCredentials::class)
         }
     }
