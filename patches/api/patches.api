@@ -425,7 +425,6 @@ public final class app/revanced/patches/irplus/ad/RemoveAdsPatchKt {
 	public static final fun getRemoveAdsPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
 }
 
-<<<<<<< HEAD
 public final class app/revanced/patches/kakaotalk/ads/DisableChatRoomAdControllerPatchKt {
 	public static final fun getDisableChatRoomAdControllerPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
 }
@@ -621,14 +620,14 @@ public final class app/revanced/patches/kakaotalk/tracker/DisableTrackerPatchKt 
 
 public final class app/revanced/patches/kakaotalk/versioninfo/VersionInfoPatchKt {
 	public static final fun getVersionInfoPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
-=======
+}
+
 public final class app/revanced/patches/kleinanzeigen/ads/HideAdsPatchKt {
 	public static final fun getHideAdsPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
 }
 
 public final class app/revanced/patches/kleinanzeigen/hide_pur/HidePurPatchKt {
 	public static final fun getHidePurPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
->>>>>>> upstream/main
 }
 
 public final class app/revanced/patches/letterboxd/ads/HideAdsPatchKt {
