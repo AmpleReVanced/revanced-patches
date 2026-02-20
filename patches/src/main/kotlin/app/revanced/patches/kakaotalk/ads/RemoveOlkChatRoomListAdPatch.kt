@@ -12,7 +12,7 @@ val removeOlkChatRoomListAdPatch = bytecodePatch(
     name = "Remove OpenLink chat room list ad",
     description = "Removes the OpenLink chat room list ad.",
 ) {
-    compatibleWith("com.kakao.talk"("26.1.2"))
+    compatibleWith("com.kakao.talk"("26.1.3"))
 
     execute {
         val findUnit = kotlinUnitInstanceFingerprint.method
