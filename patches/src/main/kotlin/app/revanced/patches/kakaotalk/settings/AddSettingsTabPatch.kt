@@ -33,7 +33,7 @@ val addSettingsTabPatch = bytecodePatch(
     description = "Adds a settings tab to the app.",
     use = false // Since the settings-related activity has not yet been developed, it will be disabled for the time being.
 ) {
-    compatibleWith("com.kakao.talk"("26.1.2"))
+    compatibleWith("com.kakao.talk"("26.1.3"))
     dependsOn(
         addExtensionPatch,
         addResourcesPatch,

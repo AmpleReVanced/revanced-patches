@@ -9,7 +9,7 @@ val spoofSignaturePatch = bytecodePatch(
     name = "Spoof signature",
     description = "Spoofs the app signature to pass integrity checks.",
 ) {
-    compatibleWith("com.kakao.talk"("26.1.2"))
+    compatibleWith("com.kakao.talk"("26.1.3"))
 
     execute {
         val method = utilityGetSignatureFingerprint.method

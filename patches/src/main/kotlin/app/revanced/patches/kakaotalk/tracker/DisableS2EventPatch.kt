@@ -11,7 +11,7 @@ val disableS2EventPatch = bytecodePatch(
     name = "Disable S2Event",
     description = "Disables Tracker",
 ) {
-    compatibleWith("com.kakao.talk"("26.1.2"))
+    compatibleWith("com.kakao.talk"("26.1.3"))
 
     execute {
         disableSaveS2EventFingerprint.method.addInstructions(
