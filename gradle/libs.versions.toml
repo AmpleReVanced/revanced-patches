@@ -1,5 +1,5 @@
 [versions]
-revanced-patcher = "21.1.1"
+revanced-patcher = "21.1.5"
 # Tracking https://github.com/google/smali/issues/64.
 #noinspection GradleDependency
 smali = "3.0.9"
