@@ -80,17 +80,18 @@ internal val chooseNowChildTabFingerprint = fingerprint {
         Opcode.IGET,
         Opcode.CONST_4,
         Opcode.CONST_4,
+        Opcode.CONST_4,
         Opcode.IF_EQZ,
+        Opcode.IF_EQ,
         Opcode.IF_NE,
         Opcode.INVOKE_STATIC,
-        Opcode.MOVE_OBJECT,
-        Opcode.GOTO,
+        Opcode.GOTO_16,
         Opcode.NEW_INSTANCE,
         Opcode.CONST_STRING,
         Opcode.INVOKE_DIRECT,
         Opcode.THROW,
         Opcode.INVOKE_STATIC,
-        Opcode.IGET_OBJECT
+        Opcode.MOVE_OBJECT
     )
     custom { method, classDef -> classDef.sourceFile == "NowFragment.kt" && method.name == "invokeSuspend" }
 }
