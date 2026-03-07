@@ -13,7 +13,7 @@ val overrideFeatureFlagPatch = bytecodePatch(
     description = "Overrides the feature flag to enable the feature.",
     use = false
 ) {
-    compatibleWith("com.kakao.talk"("26.1.3"))
+    compatibleWith("com.kakao.talk"("26.2.0"))
     dependsOn(addExtensionPatch)
 
     execute {

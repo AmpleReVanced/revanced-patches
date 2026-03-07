@@ -4,7 +4,6 @@ import app.revanced.patcher.extensions.InstructionExtensions.addInstruction
 import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
 import app.revanced.patcher.extensions.InstructionExtensions.getInstruction
 import app.revanced.patcher.extensions.InstructionExtensions.instructions
-import app.revanced.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.revanced.patcher.extensions.InstructionExtensions.replaceInstructions
 import app.revanced.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.tab.fingerprints.chooseNowChildTabFingerprint
@@ -18,18 +17,20 @@ import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction21c
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction21s
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction22c
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction35c
+import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction3rc
+import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
+import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.reference.TypeReference
 import com.android.tools.smali.dexlib2.immutable.reference.ImmutableFieldReference
 import com.android.tools.smali.dexlib2.immutable.reference.ImmutableMethodReference
-import com.android.tools.smali.dexlib2.immutable.reference.ImmutableTypeReference
 
 @Suppress("unused")
 val removeShortFormTabPatch = bytecodePatch(
     name = "Remove Short-form Tab",
     description = "Removes the Short-form tab from the now fragment.",
 ) {
-    compatibleWith("com.kakao.talk"("26.1.3"))
+    compatibleWith("com.kakao.talk"("26.2.0"))
 
     execute {
         val onViewCreated = nowFragmentOnViewCreatedFingerprint.method
@@ -111,25 +112,36 @@ val removeShortFormTabPatch = bytecodePatch(
         )
 
         val chooseNowChildTabMethod = chooseNowChildTabFingerprint.method
-        val firstReturnObjectIdx = chooseNowChildTabMethod.instructions.indexOfFirst { it.opcode == Opcode.RETURN_OBJECT }
-        val checkCastInst = chooseNowChildTabMethod.getInstruction(firstReturnObjectIdx + 1) as BuilderInstruction21c
-        chooseNowChildTabMethod.replaceInstruction(firstReturnObjectIdx + 1, "nop")
-        chooseNowChildTabMethod.addInstructions(
-            firstReturnObjectIdx + 2,
-            listOf(
-                BuilderInstruction21c(
-                    Opcode.SGET_OBJECT,
-                    checkCastInst.registerA,
-                    ImmutableFieldReference(
-                        fieldRef.type,
-                        "Openlink",
-                        fieldRef.type
-                    )
-                ),
-                BuilderInstruction21c(
-                    Opcode.CHECK_CAST,
-                    checkCastInst.registerA,
-                    checkCastInst.reference
+        val getPositionIdx = chooseNowChildTabMethod.instructions.indexOfFirst {
+            if (it.opcode != Opcode.INVOKE_VIRTUAL) return@indexOfFirst false
+
+            val ref = (it as? ReferenceInstruction)?.reference as? MethodReference
+                ?: return@indexOfFirst false
+
+            ref.definingClass == fieldRef.type &&
+                    ref.name == "getPosition" &&
+                    ref.returnType == "I" &&
+                    ref.parameterTypes.isEmpty()
+        }
+        check(getPositionIdx >= 0) {
+            "LSj/b;->getPosition()I invoke not found"
+        }
+
+        val tabRegister = when (val invokeInsn = chooseNowChildTabMethod.getInstruction(getPositionIdx)) {
+            is BuilderInstruction35c -> invokeInsn.registerC
+            is BuilderInstruction3rc -> invokeInsn.startRegister
+            else -> error("Unsupported invoke instruction type: ${invokeInsn::class.java.name}")
+        }
+
+        chooseNowChildTabMethod.addInstruction(
+            getPositionIdx,
+            BuilderInstruction21c(
+                Opcode.SGET_OBJECT,
+                tabRegister,
+                ImmutableFieldReference(
+                    fieldRef.type,
+                    "Openlink",
+                    fieldRef.type
                 )
             )
         )
