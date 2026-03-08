@@ -15,6 +15,7 @@ import com.android.tools.smali.dexlib2.immutable.ImmutableMethodParameter
 val bypassMoatCheckPatch = bytecodePatch(
     name = "Bypass Moat check",
     description = "Bypass Moat check that prevents the app from running.",
+    use = false,
 ) {
     compatibleWith("com.kakao.talk"("26.2.0"))
     dependsOn(addExtensionPatch)
