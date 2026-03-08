@@ -58,3 +58,25 @@ internal val postprocessMoatCheckFailedFingerprint = fingerprint {
     parameters("Lcom/kakaopay/kpsd/moat/sdk/MoatFlag;", "Ljava/lang/String;", "[Ljava/lang/String;")
     strings("OUTPUT_KEY_FAILURE_REASON", "msg_title", "msg_body", "OUTPUT_KEY_FAILURE_TITLE", "let(...)", "OUTPUT_KEY_FAILURE_TYPE", "OUTPUT_KEY_PACKAGE_NAMES")
 }
+
+internal val checkApkChecksumsFingerprint = fingerprint {
+    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
+    parameters()
+    returns("Lkotlin/Pair;")
+    opcodes(
+        Opcode.INVOKE_VIRTUAL,
+        Opcode.MOVE_RESULT_OBJECT,
+        Opcode.INVOKE_STATIC,
+        Opcode.MOVE_RESULT,
+        Opcode.IF_EQZ,
+        Opcode.MOVE_OBJECT,
+        Opcode.CHECK_CAST,
+    )
+    custom { method, classDef -> classDef.type.startsWith("Lcom/kakaopay/kpsd/moat/sdk/") }
+}
+
+internal val moatNativeStatusFingerprint = fingerprint {
+    accessFlags(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.FINAL, AccessFlags.NATIVE)
+    parameters("I", "I")
+    custom { method, classDef -> method.name == "a" }
+}
