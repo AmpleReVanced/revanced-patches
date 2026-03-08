@@ -22,7 +22,6 @@ val bypassMoatCheckPatch = bytecodePatch(
 
     execute {
         checkApkChecksumsFingerprint.method.apply {
-            println(this)
             addInstructions(
                 0,
                 """
