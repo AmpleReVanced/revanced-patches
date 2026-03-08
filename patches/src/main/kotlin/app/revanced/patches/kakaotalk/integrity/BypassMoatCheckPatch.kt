@@ -1,80 +1,65 @@
 package app.revanced.patches.kakaotalk.integrity
 
-import app.revanced.patcher.Fingerprint
-import app.revanced.patcher.extensions.InstructionExtensions.instructions
-import app.revanced.patcher.extensions.InstructionExtensions.removeInstruction
-import app.revanced.patcher.extensions.InstructionExtensions.replaceInstruction
+import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
 import app.revanced.patcher.patch.bytecodePatch
-import app.revanced.patches.kakaotalk.integrity.fingerprints.moatCheckResultFingerprintOne
-import app.revanced.patches.kakaotalk.integrity.fingerprints.moatCheckResultFingerprintTwo
-import app.revanced.patches.kakaotalk.integrity.fingerprints.postprocessMoatCheckFailedFingerprint
-import app.revanced.util.getReference
-import com.android.tools.smali.dexlib2.Opcode
-import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction21c
-import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction35c
-import com.android.tools.smali.dexlib2.iface.instruction.Instruction
-import com.android.tools.smali.dexlib2.iface.reference.MethodReference
-import com.android.tools.smali.dexlib2.immutable.reference.ImmutableFieldReference
+import app.revanced.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
+import app.revanced.patches.kakaotalk.integrity.fingerprints.checkApkChecksumsFingerprint
+import app.revanced.patches.kakaotalk.integrity.fingerprints.moatNativeStatusFingerprint
+import app.revanced.patches.kakaotalk.misc.addExtensionPatch
+import com.android.tools.smali.dexlib2.AccessFlags
+import com.android.tools.smali.dexlib2.builder.MutableMethodImplementation
+import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
+import com.android.tools.smali.dexlib2.immutable.ImmutableMethodParameter
 
 @Suppress("unused")
 val bypassMoatCheckPatch = bytecodePatch(
     name = "Bypass Moat check",
     description = "Bypass Moat check that prevents the app from running.",
-    use = false // Do not enable by default.
 ) {
     compatibleWith("com.kakao.talk"("26.2.0"))
+    dependsOn(addExtensionPatch)
 
     execute {
-        val patch: (Fingerprint) -> Unit = {
-            val method = it.method
-            val insns  = method.instructions
-
-            insns
-                .filterIsInstance<BuilderInstruction21c>()
-                .filter { inst ->
-                    inst.opcode    == Opcode.SGET_OBJECT &&
-                            inst.reference == ImmutableFieldReference(
-                        "Ljava/lang/Boolean;", "FALSE", "Ljava/lang/Boolean;"
-                    )
-                }
-                .forEach { inst ->
-                    val idx = insns.indexOf(inst)
-                    method.replaceInstruction(
-                        idx,
-                        BuilderInstruction21c(
-                            Opcode.SGET_OBJECT,
-                            inst.registerA,
-                            ImmutableFieldReference(
-                                "Ljava/lang/Boolean;", "TRUE", "Ljava/lang/Boolean;"
-                            )
-                        )
-                    )
-                }
-
-            val postprocessMoatCheckFailedMethod = postprocessMoatCheckFailedFingerprint.method
-
-            val toRemove = mutableListOf<Instruction>()
-            insns.forEachIndexed { i, inst ->
-                if (inst is BuilderInstruction35c &&
-                    inst.opcode == Opcode.INVOKE_VIRTUAL &&
-                    (inst.getReference<MethodReference>()?.name == postprocessMoatCheckFailedMethod.name) &&
-                    inst.getReference<MethodReference>()?.definingClass ==
-                    "Lcom/kakaopay/shared/security/moat/PaySecurityWorker;"
-                ) {
-                    for (j in 0..3) {
-                        insns.getOrNull(i + j)?.let { toRemove += it }
-                    }
-                }
-            }
-            toRemove
-                .distinct()
-                .sortedByDescending { insns.indexOf(it) }
-                .forEach { inst ->
-                    method.removeInstruction(insns.indexOf(inst))
-                }
+        checkApkChecksumsFingerprint.method.apply {
+            println(this)
+            addInstructions(
+                0,
+                """
+                    new-instance v0, Lkotlin/Pair;
+                    sget-object v1, Lui0/a;->VERIFIED:Lui0/a;
+                    const-string v2, ""
+                    invoke-direct {v0, v1, v2}, Lkotlin/Pair;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V
+                    return-object v0
+                """.trimIndent()
+            )
         }
 
-        patch(moatCheckResultFingerprintOne)
-        patch(moatCheckResultFingerprintTwo)
+        val nativeMethod = moatNativeStatusFingerprint.method
+        moatNativeStatusFingerprint.classDef.methods.remove(nativeMethod)
+        moatNativeStatusFingerprint.classDef.methods.add(
+            ImmutableMethod(
+                nativeMethod.definingClass,
+                "a",
+                listOf(
+                    ImmutableMethodParameter("I", null, null),
+                    ImmutableMethodParameter("I", null, null)
+                ),
+                "[Lk/a;",
+                nativeMethod.accessFlags and AccessFlags.NATIVE.value.inv(),
+                null,
+                null,
+                MutableMethodImplementation(5)
+            ).toMutable().apply {
+                addInstructions(
+                    """
+                        invoke-static {}, Lapp/revanced/extension/kakaotalk/integrity/Moat;->returnEmpty()[Lk/a;
+                    
+                        move-result-object v0
+                        
+                        return-object v0
+                    """.trimIndent()
+                )
+            }
+        )
     }
 }
