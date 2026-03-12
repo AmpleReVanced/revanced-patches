@@ -11,7 +11,7 @@ val verifyingSignaturePatch = bytecodePatch(
     name = "Disable verifying signature",
     description = "Disables the signature verification check that prevents the app from running.",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.0"))
+    compatibleWith("com.kakao.talk"("26.2.1"))
 
     execute {
         verifyingSignatureFingerprint.method.addInstructions(

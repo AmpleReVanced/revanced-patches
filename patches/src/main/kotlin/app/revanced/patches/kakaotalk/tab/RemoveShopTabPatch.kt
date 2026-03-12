@@ -18,7 +18,7 @@ val removeShopTabPatch = bytecodePatch(
     name = "Remove shop tab",
     description = "Removes the shop tab from the bottom navigation bar.",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.0"))
+    compatibleWith("com.kakao.talk"("26.2.1"))
 
     execute {
         val method = addNavigationTabFingerprint.method

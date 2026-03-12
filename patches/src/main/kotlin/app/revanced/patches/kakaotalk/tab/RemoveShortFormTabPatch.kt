@@ -30,7 +30,7 @@ val removeShortFormTabPatch = bytecodePatch(
     name = "Remove Short-form Tab",
     description = "Removes the Short-form tab from the now fragment.",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.0"))
+    compatibleWith("com.kakao.talk"("26.2.1"))
 
     execute {
         val onViewCreated = nowFragmentOnViewCreatedFingerprint.method

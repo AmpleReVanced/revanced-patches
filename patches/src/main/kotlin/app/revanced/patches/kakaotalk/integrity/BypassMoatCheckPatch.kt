@@ -21,12 +21,11 @@ val bypassMoatCheckPatch = bytecodePatch(
     description = "Bypass Moat check that prevents the app from running.",
     use = false,
 ) {
-    compatibleWith("com.kakao.talk"("26.2.0"))
+    compatibleWith("com.kakao.talk"("26.2.1"))
 
     execute {
         checkApkChecksumsFingerprint.method.apply {
             val lastSgetObjectType = instructions.last { it.opcode == Opcode.SGET_OBJECT }.getReference<FieldReference>()?.type
-            println("lastSgetObjectType: $lastSgetObjectType")
 
             addInstructions(
                 0,
