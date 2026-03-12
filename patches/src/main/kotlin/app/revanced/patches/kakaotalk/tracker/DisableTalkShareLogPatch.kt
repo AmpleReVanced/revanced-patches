@@ -13,7 +13,7 @@ val disableTalkShareLogPatch = bytecodePatch(
     name = "Disable Talk Share Log",
     description = "Disable talk share log"
 ) {
-    compatibleWith("com.kakao.talk"("26.2.0"))
+    compatibleWith("com.kakao.talk"("26.2.1"))
 
     execute {
         talkShareServiceInit.method.apply {

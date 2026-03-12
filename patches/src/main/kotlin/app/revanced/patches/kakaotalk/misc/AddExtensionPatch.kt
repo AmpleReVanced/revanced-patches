@@ -7,7 +7,7 @@ val addExtensionPatch = bytecodePatch(
     name = "Add extension",
     description = "Adds extension support to the app.",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.0"))
+    compatibleWith("com.kakao.talk"("26.2.1"))
     extendWith("extensions/kakaotalk.rve")
     dependsOn(sharedExtensionPatch)
 

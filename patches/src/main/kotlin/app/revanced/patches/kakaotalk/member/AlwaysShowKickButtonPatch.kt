@@ -17,7 +17,7 @@ val alwaysShowKickButtonPatch = bytecodePatch(
     name = "Always Show Kick Button",
     description = "Always shows the kick button in group member management.",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.0"))
+    compatibleWith("com.kakao.talk"("26.2.1"))
 
     execute {
         val containsUserByIdMethod = containsUserByIdFingerprint.method
