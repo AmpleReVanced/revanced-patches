@@ -14,7 +14,7 @@ val remove99ClampPatch = bytecodePatch(
     name = "Disable 99 unread limit",
     description = "Skip the 99-cap so unread count shows full value"
 ) {
-    compatibleWith("com.kakao.talk"("26.2.1"))
+    compatibleWith("com.kakao.talk"("26.2.2"))
 
     execute {
         val processWatermarkCountMethod = processWatermarkCountFingerprint.method

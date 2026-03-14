@@ -16,7 +16,7 @@ val overrideFeatureFlagPatch = bytecodePatch(
     description = "Overrides the feature flag to enable the feature.",
     use = false
 ) {
-    compatibleWith("com.kakao.talk"("26.2.1"))
+    compatibleWith("com.kakao.talk"("26.2.2"))
     dependsOn(addExtensionPatch)
 
     // Example: "normal_chat_room_comment_disabled=false;open_chat_room_comment_disabled=false"
