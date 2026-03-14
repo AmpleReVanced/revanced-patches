@@ -17,7 +17,7 @@ val disableCommunityTabPatch = bytecodePatch(
     name = "Disable Community Tab",
     description = "Disables Community Tab",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.1"))
+    compatibleWith("com.kakao.talk"("26.2.2"))
 
     execute {
         setupAdapterFingerprint.method.apply {
