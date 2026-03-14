@@ -20,3 +20,7 @@ internal val getFeatureFlagValueFingerprint = fingerprint {
     )
     custom { method, classDef -> classDef.sourceFile == "Feature.kt" }
 }
+
+internal val getFeatureFlagsInExtensionFingerprint = fingerprint {
+    custom { method, classDef -> classDef.type == "Lapp/revanced/extension/kakaotalk/feature/Flag;" && method.name == "getFeatureFlags" }
+}
