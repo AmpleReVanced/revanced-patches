@@ -14,7 +14,7 @@ val bypassGetTextPath = bytecodePatch(
     name = "Bypass getText",
     description = "Bypasses the integrity check for getText.",
 ) {
-    compatibleWith("com.dcinside.app.android"("5.2.6"))
+    compatibleWith("com.dcinside.app.android"("5.2.7"))
     extendWith("extensions/dcinside.rve")
 
     execute {

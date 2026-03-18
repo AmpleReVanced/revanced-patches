@@ -1,3 +1,5 @@
+package app.revanced.patches.instagram.reels
+
 import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
 import app.revanced.patcher.patch.bytecodePatch
 import app.revanced.patches.instagram.reels.clipsSwipeRefreshLayoutOnInterceptTouchEventFingerprint
