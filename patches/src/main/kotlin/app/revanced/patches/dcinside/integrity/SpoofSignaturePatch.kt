@@ -15,7 +15,7 @@ val spoofSignaturePatch = bytecodePatch(
     name = "Spoof Signature",
     description = "Spoofs the app signature to bypass integrity checks.",
 ) {
-    compatibleWith("com.dcinside.app.android"("5.2.6"))
+    compatibleWith("com.dcinside.app.android"("5.2.7"))
     extendWith("extensions/dcinside.rve")
 
     execute {

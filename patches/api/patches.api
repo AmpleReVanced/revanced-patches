@@ -1,4 +1,4 @@
-public final class DisableReelsScrollingPatchKt {
+public final class app/revanced/patches/instagram/reels/DisableReelsScrollingPatchKt {
 	public static final fun getDisableReelsScrollingPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
 }
 
@@ -2393,4 +2393,3 @@ public final class app/revanced/util/resource/StringResource : app/revanced/util
 public final class app/revanced/util/resource/StringResource$Companion {
 	public final fun fromNode (Lorg/w3c/dom/Node;)Lapp/revanced/util/resource/StringResource;
 }
-
