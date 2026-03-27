@@ -10,6 +10,8 @@ import app.morphe.patcher.util.proxy.mutableTypes.MutableField.Companion.toMutab
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
 import app.morphe.patches.all.misc.resources.addAppResources
 import app.morphe.patches.all.misc.resources.addResourcesPatch
+import app.morphe.util.getReference
+import app.morphe.util.returnEarly
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.chatInfoViewClassFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.chatLogFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.chatLogItemViewHolderFingerprint
@@ -30,7 +32,6 @@ import app.revanced.patches.kakaotalk.chatlog.fingerprints.putDeletedMessageCach
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.replaceToFeedFingerprint
 import app.revanced.patches.kakaotalk.misc.addExtensionPatch
 import app.revanced.patches.kakaotalk.misc.sharedExtensionPatch
-import app.morphe.util.getReference
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
@@ -438,14 +439,7 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
             )
         }
 
-        val checkViewableChatLogMethod = checkViewableChatLogFingerprint.method
-        checkViewableChatLogMethod.addInstructions(
-            0,
-            """
-                const/4 v0, 0x1
-                return v0
-            """.trimIndent()
-        )
+        checkViewableChatLogFingerprint.method.returnEarly(true)
 
         val chatLogViewHolderSetupChatInfoViewMethod = chatLogViewHolderSetupChatInfoViewFingerprint.method
         chatLogViewHolderSetupChatInfoViewMethod.let {
@@ -496,27 +490,10 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
             )
         }
 
-        filterChatLogItemFingerprint.method.addInstructions(
-            0,
-            """
-                const/4 v0, 0x1
-                return v0
-            """.trimIndent()
-        )
+        filterChatLogItemFingerprint.method.returnEarly(true)
 
-        putDeletedMessageCacheFingerprint.method.addInstructions(
-            0,
-            """
-                return-void
-            """.trimIndent()
-        )
+        putDeletedMessageCacheFingerprint.method.returnEarly()
 
-        getDeletedMessageCacheFingerprint.method.addInstructions(
-            0,
-            """
-                const/4 v0, 0x0
-                return v0
-            """.trimIndent()
-        )
+        getDeletedMessageCacheFingerprint.method.returnEarly(false)
     }
 }

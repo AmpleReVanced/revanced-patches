@@ -1,7 +1,7 @@
 package app.revanced.patches.kakaotalk.ads
 
-import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.util.returnEarly
 import app.revanced.patches.kakaotalk.ads.fingerprints.loadNativeAdFingerprint
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 
@@ -13,14 +13,6 @@ val removeNativeAdPatch = bytecodePatch(
     compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        val method = loadNativeAdFingerprint.method
-
-        method.addInstructions(
-            0,
-            """
-                const/4 v0, 0x1
-                return v0
-            """.trimIndent()
-        )
+        loadNativeAdFingerprint.method.returnEarly(true)
     }
 }

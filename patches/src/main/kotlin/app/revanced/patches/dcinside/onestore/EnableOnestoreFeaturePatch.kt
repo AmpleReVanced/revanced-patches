@@ -2,6 +2,7 @@ package app.revanced.patches.dcinside.onestore
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.util.returnEarly
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction11n
@@ -27,13 +28,7 @@ val enableOnestoreFeaturePatch = bytecodePatch(
             }
 
             if (isMatch) {
-                method.addInstructions(
-                    0,
-                    """
-                        const/4 v0, 0x1
-                        return v0
-                    """.trimIndent()
-                )
+                method.returnEarly(true)
             }
         }
     }
