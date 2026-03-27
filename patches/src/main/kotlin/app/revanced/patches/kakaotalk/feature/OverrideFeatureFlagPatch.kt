@@ -8,6 +8,7 @@ import app.morphe.patcher.patch.stringOption
 import app.revanced.patches.kakaotalk.feature.fingerprints.getFeatureFlagValueFingerprint
 import app.revanced.patches.kakaotalk.feature.fingerprints.getFeatureFlagsInExtensionFingerprint
 import app.revanced.patches.kakaotalk.misc.addExtensionPatch
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.Opcode
 
 @Suppress("unused")
@@ -16,7 +17,7 @@ val overrideFeatureFlagPatch = bytecodePatch(
     description = "Overrides the feature flag to enable the feature.",
 //    default = false
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
     dependsOn(addExtensionPatch)
 
     // Example: "normal_chat_room_comment_disabled=false;open_chat_room_comment_disabled=false"

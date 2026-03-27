@@ -5,6 +5,7 @@ import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.getWatermarkCountFromCacheFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.processWatermarkCountFingerprint
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction10t
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction22t
@@ -14,7 +15,7 @@ val remove99ClampPatch = bytecodePatch(
     name = "Disable 99 unread limit",
     description = "Skip the 99-cap so unread count shows full value"
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
         val processWatermarkCountMethod = processWatermarkCountFingerprint.method

@@ -8,6 +8,7 @@ import app.revanced.patches.kakaotalk.integrity.fingerprints.checkApkChecksumsFi
 import app.revanced.patches.kakaotalk.integrity.fingerprints.moatNativeStatusFingerprint
 import app.revanced.patches.kakaotalk.integrity.fingerprints.moatResultClassFingerprint
 import app.morphe.util.getReference
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.MutableMethodImplementation
@@ -21,7 +22,7 @@ val bypassMoatCheckPatch = bytecodePatch(
     description = "Bypass Moat check that prevents the app from running.",
     default = false,
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
         checkApkChecksumsFingerprint.method.apply {

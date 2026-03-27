@@ -12,6 +12,7 @@ import app.revanced.patches.kakaotalk.tab.fingerprints.nowFragmentOnViewCreatedF
 import app.revanced.patches.kakaotalk.tab.fingerprints.nowTabPagerAdapterFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.transitionOpenLinkOrShortformMethodFingerprint
 import app.morphe.util.getReference
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction21c
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction21s
@@ -30,7 +31,7 @@ val removeShortFormTabPatch = bytecodePatch(
     name = "Remove Short-form Tab",
     description = "Removes the Short-form tab from the now fragment.",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
         val onViewCreated = nowFragmentOnViewCreatedFingerprint.method

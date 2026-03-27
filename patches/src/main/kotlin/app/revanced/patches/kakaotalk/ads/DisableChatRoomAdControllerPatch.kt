@@ -3,13 +3,14 @@ package app.revanced.patches.kakaotalk.ads
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstructions
 import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.ads.fingerprints.chatRoomAdViewControllerEnabledFingerprint
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 
 @Suppress("unused")
 val disableChatRoomAdControllerPatch = bytecodePatch(
     name = "Disable ChatRoomAdController",
     description = "Disables the ChatRoomAdController to prevent ads from being shown in chat room list",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
         val chatRoomAdViewControllerEnabledMethod = chatRoomAdViewControllerEnabledFingerprint.method

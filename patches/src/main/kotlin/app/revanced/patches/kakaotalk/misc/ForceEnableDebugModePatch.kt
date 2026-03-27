@@ -4,6 +4,7 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.misc.fingerprints.configConstructorFingerprint
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.Opcode
 
 @Suppress("unused")
@@ -11,7 +12,7 @@ val forceEnableDebugModePatch = bytecodePatch(
     name = "Force enable debug mode",
     description = "Enables debug mode in the app.",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
         val method = configConstructorFingerprint.method

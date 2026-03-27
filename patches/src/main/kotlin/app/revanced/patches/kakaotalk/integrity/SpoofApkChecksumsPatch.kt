@@ -6,6 +6,7 @@ import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.integrity.fingerprints.getApkChecksumsFingerprint
 import app.morphe.util.getReference
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 
@@ -14,7 +15,7 @@ val spoofApkChecksumsPatch = bytecodePatch(
     name = "Spoof apk checksums",
     description = "Spoofs the apk checksums to pass integrity checks.",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
         val getApkChecksumsMethod = getApkChecksumsFingerprint.method

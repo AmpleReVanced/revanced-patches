@@ -2,6 +2,7 @@ package app.revanced.patches.kakaotalk.tab
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.bytecodePatch
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.patches.kakaotalk.tab.fingerprints.isChatListCollapseButtonEnabledFingerprint
 
 @Suppress("unused")
@@ -9,7 +10,7 @@ val disableCollapseButtonPatch = bytecodePatch(
     name = "Disable Collapse Button",
     description = "Disable collapse button on OpenChatList",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
         isChatListCollapseButtonEnabledFingerprint.method.apply {

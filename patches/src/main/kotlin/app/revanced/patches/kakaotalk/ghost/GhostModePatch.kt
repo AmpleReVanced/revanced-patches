@@ -6,13 +6,14 @@ import app.revanced.patches.kakaotalk.ghost.fingerprints.actionJobMethodFingerpr
 import app.revanced.patches.kakaotalk.ghost.fingerprints.locoMethodClassFingerprint
 import app.revanced.patches.kakaotalk.ghost.fingerprints.protocolSuccessFingerprint
 import app.revanced.patches.kakaotalk.ghost.fingerprints.sendCurrentActionFingerprint
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 
 @Suppress("unused")
 val ghostMode = bytecodePatch(
     name = "Ghost Mode",
     description = "Don't expose your typing status to the other party.",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
         val locoMethodClass = locoMethodClassFingerprint.classDef

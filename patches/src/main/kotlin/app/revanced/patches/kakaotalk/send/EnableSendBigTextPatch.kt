@@ -5,6 +5,7 @@ import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.send.fingerprints.isEnableSendBigTextFingerprint
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction11n
 
@@ -14,11 +15,12 @@ val enableSendBigTextPatch = bytecodePatch(
     description = "Allows sending big text messages in KakaoTalk.",
     default = false // Starting from newer version, the Quiet Send feature has been added, causing conflicts with the entry point for that feature. Therefore, it is disabled by default
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        isEnableSendBigTextFingerprint.method.instructions.indexOfFirst { it.opcode == Opcode.CONST_4 && (it as BuilderInstruction11n).narrowLiteral == 0x0 }
-            .takeIf { it >= 0 }
+        isEnableSendBigTextFingerprint.method.instructions.indexOfFirst {
+            it.opcode == Opcode.CONST_4 && (it as BuilderInstruction11n).narrowLiteral == 0x0
+        }.takeIf { it >= 0 }
             ?.let { index ->
                 isEnableSendBigTextFingerprint.method.replaceInstruction(
                     index,

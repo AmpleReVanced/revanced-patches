@@ -7,6 +7,7 @@ import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.checkIsAllowedHideFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.checkIsEqualWithMyUserIdFingerprint
 import app.morphe.util.getReference
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction11n
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
@@ -17,7 +18,7 @@ val allowHideOnAnyChatPatch = bytecodePatch(
     name = "Allow Hide on Any Chat",
     description = "Users with hiding privileges can hide any chat, including their own messages.",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
         val checkIsAllowedHideMethod = checkIsAllowedHideFingerprint.method

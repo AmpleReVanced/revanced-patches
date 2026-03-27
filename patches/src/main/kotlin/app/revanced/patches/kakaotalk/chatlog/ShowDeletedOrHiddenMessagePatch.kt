@@ -31,6 +31,7 @@ import app.revanced.patches.kakaotalk.chatlog.fingerprints.replaceToFeedFingerpr
 import app.revanced.patches.kakaotalk.misc.addExtensionPatch
 import app.revanced.patches.kakaotalk.misc.sharedExtensionPatch
 import app.morphe.util.getReference
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.MutableMethodImplementation
@@ -65,7 +66,7 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
     name = "Show deleted or hidden messages",
     description = "Allows you to see deleted/hidden messages in chat logs.",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
     dependsOn(addExtensionPatch, addResourcesPatch, sharedExtensionPatch)
 
     val deletedColorText by stringOption(

@@ -9,6 +9,7 @@ import app.revanced.patches.all.misc.packagename.packageNameOption
 import app.revanced.patches.kakaotalk.packagename.fingerprints.checkPackageNameFingerprint
 import app.revanced.patches.kakaotalk.packagename.fingerprints.getInstallSourceInfoFingerprint
 import app.morphe.util.getReference
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction21c
 import com.android.tools.smali.dexlib2.iface.reference.StringReference
@@ -20,7 +21,7 @@ val ignoreCheckPackageNamePatch = bytecodePatch(
     description = "Ignores the package name check to allow installation of modified versions.",
     default = false,
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
 
     dependsOn(changePackageNamePatch)
 

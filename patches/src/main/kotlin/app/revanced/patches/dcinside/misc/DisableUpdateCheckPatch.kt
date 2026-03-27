@@ -2,14 +2,14 @@ package app.revanced.patches.dcinside.misc
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
 import app.morphe.patcher.patch.bytecodePatch
-import app.revanced.patches.dcinside.misc.fingerprints.disableUpdateCheckFingerprint
+import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
 
 @Suppress("unused")
 val disableUpdateCheckPatch = bytecodePatch(
     name = "Disable update check",
     description = "Disables the app's update check.",
 ) {
-    compatibleWith("com.dcinside.app.android"("5.2.7"))
+    compatibleWith(COMPATIBILITY_DC_INSIDE)
 
     execute {
         disableUpdateCheckFingerprint.method.addInstruction(

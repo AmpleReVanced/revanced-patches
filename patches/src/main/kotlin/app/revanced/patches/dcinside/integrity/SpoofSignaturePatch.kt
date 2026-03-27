@@ -5,6 +5,7 @@ import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
 import app.revanced.patches.dcinside.integrity.fingerprints.nativeGetSignatureByTypeFingerprint
 import app.revanced.patches.dcinside.integrity.fingerprints.nativeGetSignatureHexFingerprint
+import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.builder.MutableMethodImplementation
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
@@ -15,7 +16,7 @@ val spoofSignaturePatch = bytecodePatch(
     name = "Spoof Signature",
     description = "Spoofs the app signature to bypass integrity checks.",
 ) {
-    compatibleWith("com.dcinside.app.android"("5.2.7"))
+    compatibleWith(COMPATIBILITY_DC_INSIDE)
     extendWith("extensions/dcinside.rve")
 
     execute {

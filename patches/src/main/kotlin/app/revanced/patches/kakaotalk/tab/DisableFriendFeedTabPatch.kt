@@ -4,6 +4,7 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.bytecodePatch
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.patches.kakaotalk.tab.fingerprints.determineFeedOrListMethodFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.isHideFriendsTabSettingsFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.mainTabConfigFingerprint
@@ -14,7 +15,7 @@ val disableFriendFeedTabPatch = bytecodePatch(
     name = "Disable Friend Feed tab",
     description = "Disables the Friend Feed tab in KakaoTalk.",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
         mainTabConfigFingerprint.method.addInstructions(
