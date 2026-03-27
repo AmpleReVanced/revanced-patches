@@ -1,18 +1,18 @@
 package app.revanced.patches.dcinside.ads.fingerprints
 
-import app.morphe.patcher.fingerprint
+import app.morphe.patcher.Fingerprint
 import com.android.tools.smali.dexlib2.AccessFlags
 
-internal val postReadImageAdViewFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.CONSTRUCTOR)
-    parameters("Landroid/content/Context;", "Landroid/util/AttributeSet;", "I")
-    returns("V")
-    custom { method, classDef -> classDef.type == "Lcom/dcinside/app/view/PostReadImageAdView;" }
-}
+internal object PostReadImageAdViewFingerprint : Fingerprint(
+    definingClass = "Lcom/dcinside/app/view/PostReadImageAdView;",
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.CONSTRUCTOR),
+    parameters = listOf("Landroid/content/Context;", "Landroid/util/AttributeSet;", "I"),
+    returnType = "V"
+)
 
-internal val refreshImageAdFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
-    returns("V")
-    strings("galleryGrade")
-    custom { method, classDef -> classDef.type == "Lcom/dcinside/app/view/PostReadImageAdView;" }
-}
+internal object RefreshImageAdFingerprint : Fingerprint(
+    definingClass = "Lcom/dcinside/app/view/PostReadImageAdView;",
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    returnType = "V",
+    strings = listOf("galleryGrade")
+)

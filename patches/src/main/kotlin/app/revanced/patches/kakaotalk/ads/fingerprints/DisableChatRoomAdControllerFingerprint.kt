@@ -1,20 +1,21 @@
 package app.revanced.patches.kakaotalk.ads.fingerprints
 
-import app.morphe.patcher.fingerprint
+import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.OpcodesFilter
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
-internal val chatRoomAdViewControllerEnabledFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
-    parameters()
-    returns("Z")
-    opcodes(
+internal object ChatRoomAdViewControllerEnabledFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf(),
+    returnType = "Z",
+    filters = OpcodesFilter.opcodesToFilters(
         Opcode.SGET_OBJECT,
         Opcode.INVOKE_VIRTUAL,
         Opcode.MOVE_RESULT,
         Opcode.RETURN,
-    )
-    custom { _, classDef ->
+    ),
+    custom = { _, classDef ->
         classDef.sourceFile == "ChatRoomAdViewController.kt"
     }
-}
+)

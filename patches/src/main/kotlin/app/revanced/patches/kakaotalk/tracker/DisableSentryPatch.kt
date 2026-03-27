@@ -3,7 +3,7 @@ package app.revanced.patches.kakaotalk.tracker
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
-import app.revanced.patches.kakaotalk.tracker.fingerprints.disableSentryFingerprint
+import app.revanced.patches.kakaotalk.tracker.fingerprints.DisableSentryFingerprint
 import app.revanced.patches.shared.misc.privacy.disableSentryTelemetryPatch
 
 @Suppress("unused")
@@ -14,7 +14,7 @@ val disableSentryPatch = bytecodePatch(
     compatibleWith(COMPATIBILITY_KAKAO)
     dependsOn(disableSentryTelemetryPatch)
     execute {
-        disableSentryFingerprint.method.addInstructions(
+        DisableSentryFingerprint.method.addInstructions(
             0,
             """
                 return-void

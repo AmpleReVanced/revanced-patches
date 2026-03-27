@@ -4,9 +4,9 @@ import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstructions
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
-import app.revanced.patches.kakaotalk.send.fingerprints.allowSwipeReplyToFeedFingerprint
-import app.revanced.patches.kakaotalk.send.fingerprints.isCarouselTypeFingerprint
 import app.morphe.util.getReference
+import app.revanced.patches.kakaotalk.send.fingerprints.AllowSwipeReplyToFeedFingerprint
+import app.revanced.patches.kakaotalk.send.fingerprints.IsCarouselTypeFingerprint
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
@@ -20,7 +20,7 @@ val allowReplyToFeedPatch = bytecodePatch(
     compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        allowSwipeReplyToFeedFingerprint.method.apply {
+        AllowSwipeReplyToFeedFingerprint.method.apply {
             val getChatTypeInst = instructions.first { it.opcode == Opcode.INVOKE_VIRTUAL }
                 .getReference<MethodReference>()
                 ?: throw PatchException("Failed to find method reference for getting chat type")
@@ -32,7 +32,7 @@ val allowReplyToFeedPatch = bytecodePatch(
                 .getReference<FieldReference>()?.definingClass
                 ?: throw PatchException("Failed to infer chat type enum class")
 
-            val isCarouselTypeMethod = isCarouselTypeFingerprint.method
+            val isCarouselTypeMethod = IsCarouselTypeFingerprint.method
 
             replaceInstructions(
                 0,

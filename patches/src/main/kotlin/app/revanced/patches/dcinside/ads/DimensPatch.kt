@@ -4,8 +4,8 @@ import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstructions
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.resourcePatch
-import app.revanced.patches.dcinside.ads.fingerprints.getMinimumDimensFingerprint
-import app.revanced.patches.dcinside.ads.fingerprints.readFooterAdContainerSetupFingerprint
+import app.revanced.patches.dcinside.ads.fingerprints.GetMinimumDimensFingerprint
+import app.revanced.patches.dcinside.ads.fingerprints.ReadFooterAdContainerSetupFingerprint
 import app.morphe.util.asSequence
 import app.morphe.util.returnEarly
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
@@ -14,9 +14,9 @@ import com.android.tools.smali.dexlib2.Opcode
 @Suppress("unused")
 internal val dimensBytecodePatch = bytecodePatch {
     execute {
-        getMinimumDimensFingerprint.method.returnEarly(0)
+        GetMinimumDimensFingerprint.method.returnEarly(0)
 
-        readFooterAdContainerSetupFingerprint.method.apply {
+        ReadFooterAdContainerSetupFingerprint.method.apply {
             val ifLez = instructions.indexOfFirst { it.opcode == Opcode.IF_LEZ }
             replaceInstructions(
                 ifLez + 2,

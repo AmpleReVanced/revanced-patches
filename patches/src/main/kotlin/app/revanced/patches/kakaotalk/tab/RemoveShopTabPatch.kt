@@ -5,7 +5,7 @@ import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.removeInstructions
 import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
-import app.revanced.patches.kakaotalk.tab.fingerprints.addNavigationTabFingerprint
+import app.revanced.patches.kakaotalk.tab.fingerprints.AddNavigationTabFingerprint
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction11n
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction11x
@@ -22,17 +22,16 @@ val removeShopTabPatch = bytecodePatch(
     compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        val method = addNavigationTabFingerprint.method
-
-        method.apply {
+        AddNavigationTabFingerprint.method.apply {
             // Delete linkedHashMap.put(3, f(3, tabConfig));
             var removeStartIndex = instructions.indexOfFirst {
                 it.opcode == Opcode.CONST_4 && (it as Instruction11n).narrowLiteral == 0x3
             }
             if (removeStartIndex >= 0) {
-                val removeEndRel = instructions.subList(removeStartIndex, instructions.size).indexOfFirst {
-                    it.opcode == Opcode.INVOKE_INTERFACE
-                }
+                val removeEndRel =
+                    instructions.subList(removeStartIndex, instructions.size).indexOfFirst {
+                        it.opcode == Opcode.INVOKE_INTERFACE
+                    }
                 if (removeEndRel >= 0) {
                     val actualEndIndex = removeStartIndex + removeEndRel
                     val count = actualEndIndex - removeStartIndex + 1

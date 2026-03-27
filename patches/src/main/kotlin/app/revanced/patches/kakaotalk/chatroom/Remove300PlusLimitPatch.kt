@@ -4,9 +4,9 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.bytecodePatch
-import app.revanced.patches.kakaotalk.chatroom.fingerprints.getUnreadCountFingerprint
-import app.revanced.patches.kakaotalk.chatroom.fingerprints.limit300PlusBaseChatRoomFingerprint
-import app.revanced.patches.kakaotalk.chatroom.fingerprints.limit300PlusOpenChatRoomFingerprint
+import app.revanced.patches.kakaotalk.chatroom.fingerprints.GetUnreadCountFingerprint
+import app.revanced.patches.kakaotalk.chatroom.fingerprints.Limit300PlusBaseChatRoomFingerprint
+import app.revanced.patches.kakaotalk.chatroom.fingerprints.Limit300PlusOpenChatRoomFingerprint
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction10t
@@ -20,7 +20,7 @@ val remove300PlusLimitChatRoomPatch = bytecodePatch(
     compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        limit300PlusBaseChatRoomFingerprint.method.apply {
+        Limit300PlusBaseChatRoomFingerprint.method.apply {
             val branches = instructions
                 .filterIsInstance<BuilderInstruction22t>()
                 .filter { it.opcode == Opcode.IF_LT }
@@ -36,7 +36,7 @@ val remove300PlusLimitChatRoomPatch = bytecodePatch(
             }
         }
 
-        limit300PlusOpenChatRoomFingerprint.method.apply {
+        Limit300PlusOpenChatRoomFingerprint.method.apply {
             instructions
                 .filterIsInstance<BuilderInstruction22t>()
                 .filter { it.opcode == Opcode.IF_LT }
@@ -48,7 +48,7 @@ val remove300PlusLimitChatRoomPatch = bytecodePatch(
                 }
         }
 
-        getUnreadCountFingerprint.method.apply {
+        GetUnreadCountFingerprint.method.apply {
             addInstructions(
                 0,
                 """

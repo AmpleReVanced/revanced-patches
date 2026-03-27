@@ -1,18 +1,18 @@
 package app.revanced.patches.dcinside.ads.fingerprints
 
-import app.morphe.patcher.fingerprint
+import app.morphe.patcher.Fingerprint
 import com.android.tools.smali.dexlib2.AccessFlags
 
-internal val postReadCommentAdViewFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.CONSTRUCTOR)
-    parameters("Landroid/content/Context;", "Landroid/util/AttributeSet;", "I")
-    returns("V")
-    custom { method, classDef -> classDef.type == "Lcom/dcinside/app/view/PostReadCommentAdView;" }
-}
+internal object PostReadCommentAdViewFingerprint : Fingerprint(
+    definingClass = "Lcom/dcinside/app/view/PostReadCommentAdView;",
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.CONSTRUCTOR),
+    parameters = listOf("Landroid/content/Context;", "Landroid/util/AttributeSet;", "I"),
+    returnType = "V",
+)
 
-internal val postReadCommentTopAdViewFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.CONSTRUCTOR)
-    parameters("Landroid/content/Context;", "Landroid/util/AttributeSet;", "I")
-    returns("V")
-    custom { method, classDef -> classDef.type == "Lcom/dcinside/app/view/PostReadCommentTopAdView;" }
-}
+internal object PostReadCommentTopAdViewFingerprint : Fingerprint(
+    definingClass = "Lcom/dcinside/app/view/PostReadCommentTopAdView;",
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.CONSTRUCTOR),
+    parameters = listOf("Landroid/content/Context;", "Landroid/util/AttributeSet;", "I"),
+    returnType = "V"
+)

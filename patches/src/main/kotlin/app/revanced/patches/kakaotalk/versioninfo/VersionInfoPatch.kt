@@ -2,12 +2,9 @@ package app.revanced.patches.kakaotalk.versioninfo
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
-import app.morphe.patcher.extensions.InstructionExtensions.removeInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
-import app.revanced.patches.kakaotalk.versioninfo.fingerprints.versionInfoFingerprint
-import app.revanced.patches.kakaotalk.versioninfo.fingerprints.versionInfoPreviewFingerprint
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction21c
 import com.android.tools.smali.dexlib2.iface.reference.StringReference
@@ -55,7 +52,7 @@ val versionInfoPatch = bytecodePatch(
                 )
         }
 
-        runPatch(versionInfoFingerprint, true)
-        runPatch(versionInfoPreviewFingerprint, false)
+        runPatch(VersionInfoFingerprint, true)
+        runPatch(VersionInfoPreviewFingerprint, false)
     }
 }

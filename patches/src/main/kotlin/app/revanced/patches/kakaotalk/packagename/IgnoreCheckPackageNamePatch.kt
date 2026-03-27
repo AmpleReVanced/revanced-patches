@@ -4,11 +4,9 @@ import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstructions
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.util.getReference
 import app.revanced.patches.all.misc.packagename.changePackageNamePatch
 import app.revanced.patches.all.misc.packagename.packageNameOption
-import app.revanced.patches.kakaotalk.packagename.fingerprints.checkPackageNameFingerprint
-import app.revanced.patches.kakaotalk.packagename.fingerprints.getInstallSourceInfoFingerprint
-import app.morphe.util.getReference
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction21c
@@ -26,14 +24,14 @@ val ignoreCheckPackageNamePatch = bytecodePatch(
     dependsOn(changePackageNamePatch)
 
     execute {
-        checkPackageNameFingerprint.method.replaceInstructions(
+        CheckPackageNameFingerprint.method.replaceInstructions(
             0,
             """
                 return-void
             """.trimIndent()
         )
 
-        getInstallSourceInfoFingerprint.method.apply {
+        GetInstallSourceInfoFingerprint.method.apply {
             val replacementPackageName = packageNameOption.value
             val newPackageName = if (replacementPackageName != packageNameOption.default) {
                 replacementPackageName!!

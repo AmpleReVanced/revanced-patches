@@ -3,7 +3,7 @@ package app.revanced.patches.kakaotalk.tab
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
-import app.revanced.patches.kakaotalk.tab.fingerprints.isChatListCollapseButtonEnabledFingerprint
+import app.revanced.patches.kakaotalk.tab.fingerprints.IsChatListCollapseButtonEnabledFingerprint
 
 @Suppress("unused")
 val disableCollapseButtonPatch = bytecodePatch(
@@ -13,7 +13,8 @@ val disableCollapseButtonPatch = bytecodePatch(
     compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        isChatListCollapseButtonEnabledFingerprint.method.apply {
+        // TODO: use returnEarly
+        IsChatListCollapseButtonEnabledFingerprint.method.apply {
             addInstructions(
                 0,
                 """

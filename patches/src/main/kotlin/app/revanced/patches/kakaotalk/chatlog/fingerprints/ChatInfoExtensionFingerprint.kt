@@ -1,13 +1,15 @@
 package app.revanced.patches.kakaotalk.chatlog.fingerprints
 
-import app.morphe.patcher.fingerprint
+import app.morphe.patcher.Fingerprint
 
-internal const val CHAT_INFO_EXTENSION_TYPE = "Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;"
+private const val CHAT_INFO_EXTENSION_TYPE = "Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;"
 
-internal val getDeletedColorFingerprint = fingerprint {
-    custom { method, classDef -> classDef.type == CHAT_INFO_EXTENSION_TYPE && method.name == "getDeletedColor" }
-}
+internal object GetDeletedColorFingerprint : Fingerprint(
+    definingClass = CHAT_INFO_EXTENSION_TYPE,
+    name = "getDeletedColor"
+)
 
-internal val getHiddenColorFingerprint = fingerprint {
-    custom { method, classDef -> classDef.type == CHAT_INFO_EXTENSION_TYPE && method.name == "getHiddenColor" }
-}
+internal object GetHiddenColorFingerprint : Fingerprint(
+    definingClass = CHAT_INFO_EXTENSION_TYPE,
+    name = "getHiddenColor"
+)

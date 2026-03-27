@@ -2,7 +2,6 @@ package app.revanced.patches.kakaotalk.emoticon
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
 import app.morphe.patcher.patch.bytecodePatch
-import app.revanced.patches.kakaotalk.emoticon.fingerprints.emoticonPlusMeResultConstructorFingerprint
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 
 @Suppress("unused")
@@ -13,7 +12,7 @@ val forceEnableEmoticonPlusPatch = bytecodePatch(
     compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        emoticonPlusMeResultConstructorFingerprint.method.addInstruction(
+        EmoticonPlusMeResultConstructorFingerprint.method.addInstruction(
             1,
             "const/4 p1, 0x1"
         )

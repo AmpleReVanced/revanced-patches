@@ -5,8 +5,6 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLa
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.stringOption
-import app.revanced.patches.kakaotalk.feature.fingerprints.getFeatureFlagValueFingerprint
-import app.revanced.patches.kakaotalk.feature.fingerprints.getFeatureFlagsInExtensionFingerprint
 import app.revanced.patches.kakaotalk.misc.addExtensionPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.Opcode
@@ -28,7 +26,7 @@ val overrideFeatureFlagPatch = bytecodePatch(
     )
 
     execute {
-        getFeatureFlagsInExtensionFingerprint.method.apply {
+        GetFeatureFlagsInExtensionFingerprint.method.apply {
             val featureFlags = overrideFeatureFlag?.takeIf { it.isNotBlank() }
 
             addInstructions(
@@ -40,7 +38,7 @@ val overrideFeatureFlagPatch = bytecodePatch(
             )
         }
 
-        val method = getFeatureFlagValueFingerprint.method
+        val method = GetFeatureFlagValueFingerprint.method
         val parameterType = method.parameterTypes[0]
         val invokeStaticIdx = method.instructions.indexOfFirst { it.opcode == Opcode.INVOKE_STATIC }
 

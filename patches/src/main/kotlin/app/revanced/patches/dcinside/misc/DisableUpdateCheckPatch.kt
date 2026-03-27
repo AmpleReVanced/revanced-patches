@@ -1,7 +1,7 @@
 package app.revanced.patches.dcinside.misc
 
-import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.util.returnEarly
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
 
 @Suppress("unused")
@@ -12,12 +12,6 @@ val disableUpdateCheckPatch = bytecodePatch(
     compatibleWith(COMPATIBILITY_DC_INSIDE)
 
     execute {
-        disableUpdateCheckFingerprint.method.addInstruction(
-            0,
-            """
-                const/4 v1, 0x0
-                return v1
-            """.trimIndent()
-        )
+        DisableUpdateCheckFingerprint.method.returnEarly(false)
     }
 }

@@ -4,10 +4,10 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
-import app.revanced.patches.kakaotalk.integrity.fingerprints.checkApkChecksumsFingerprint
-import app.revanced.patches.kakaotalk.integrity.fingerprints.moatNativeStatusFingerprint
-import app.revanced.patches.kakaotalk.integrity.fingerprints.moatResultClassFingerprint
 import app.morphe.util.getReference
+import app.revanced.patches.kakaotalk.integrity.fingerprints.CheckApkChecksumsFingerprint
+import app.revanced.patches.kakaotalk.integrity.fingerprints.MoatNativeStatusFingerprint
+import app.revanced.patches.kakaotalk.integrity.fingerprints.MoatResultClassFingerprint
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
@@ -25,7 +25,7 @@ val bypassMoatCheckPatch = bytecodePatch(
     compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        checkApkChecksumsFingerprint.method.apply {
+        CheckApkChecksumsFingerprint.method.apply {
             val lastSgetObjectType = instructions.last { it.opcode == Opcode.SGET_OBJECT }.getReference<FieldReference>()?.type
 
             addInstructions(
@@ -40,11 +40,11 @@ val bypassMoatCheckPatch = bytecodePatch(
             )
         }
 
-        val moatResultClass = moatResultClassFingerprint.classDef
+        val moatResultClass = MoatResultClassFingerprint.classDef
 
-        val nativeMethod = moatNativeStatusFingerprint.method
-        moatNativeStatusFingerprint.classDef.methods.remove(nativeMethod)
-        moatNativeStatusFingerprint.classDef.methods.add(
+        val nativeMethod = MoatNativeStatusFingerprint.method
+        MoatNativeStatusFingerprint.classDef.methods.remove(nativeMethod)
+        MoatNativeStatusFingerprint.classDef.methods.add(
             ImmutableMethod(
                 nativeMethod.definingClass,
                 nativeMethod.name,

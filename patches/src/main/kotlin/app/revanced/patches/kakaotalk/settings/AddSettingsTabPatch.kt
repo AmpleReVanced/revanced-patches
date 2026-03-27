@@ -9,11 +9,9 @@ import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.util.proxy.mutableTypes.MutableField.Companion.toMutable
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
 import app.morphe.patches.all.misc.resources.addResourcesPatch
+import app.morphe.util.getReference
 import app.revanced.patches.kakaotalk.misc.addExtensionPatch
 import app.revanced.patches.kakaotalk.misc.sharedExtensionPatch
-import app.revanced.patches.kakaotalk.settings.fingerprints.mainSettingItemTypeFingerprint
-import app.revanced.patches.kakaotalk.settings.fingerprints.setupSettingsItemFingerprint
-import app.morphe.util.getReference
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
@@ -41,14 +39,12 @@ val addSettingsTabPatch = bytecodePatch(
     )
 
     execute {
-//        addResources("kakaotalk", "settings.revancedSettingsPatch")
-
-        val mainSettingItemTypeClass = mainSettingItemTypeFingerprint.classDef
+        val mainSettingItemTypeClass = MainSettingItemTypeFingerprint.classDef
 
         mainSettingItemTypeClass.fields.add(
             ImmutableField(
                 mainSettingItemTypeClass.type,
-                "REVANCED",
+                "MORPHE",
                 mainSettingItemTypeClass.type,
                 AccessFlags.PUBLIC.value or AccessFlags.STATIC.value or AccessFlags.FINAL.value or AccessFlags.ENUM.value,
                 null,
@@ -105,7 +101,7 @@ val addSettingsTabPatch = bytecodePatch(
 
         clinitMethod.addInstructions(insertIndex, """
             new-instance v0, ${mainSettingItemTypeClass.type}
-            const-string v1, "REVANCED"
+            const-string v1, "MORPHE"
             const/16 v2, 0x15
             const-string v3, "morphe_label_for_ample_settings"
             const-string v4, "string"
@@ -119,7 +115,7 @@ val addSettingsTabPatch = bytecodePatch(
             sput-object v0, ${mainSettingItemTypeClass.type}->REVANCED:${mainSettingItemTypeClass.type}
         """)
 
-        val setupSettingsItemMethod = setupSettingsItemFingerprint.method
+        val setupSettingsItemMethod = SetupSettingsItemFingerprint.method
 
         var separatorIndex = -1
         for (i in 0 until setupSettingsItemMethod.instructions.size - 1) {

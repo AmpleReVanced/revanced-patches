@@ -2,7 +2,7 @@ package app.revanced.patches.kakaotalk.ads
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.bytecodePatch
-import app.revanced.patches.kakaotalk.ads.fingerprints.measuringBizBoardFingerprint
+import app.revanced.patches.kakaotalk.ads.fingerprints.MeasuringBizBoardFingerprint
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 
 @Suppress("unused")
@@ -13,9 +13,7 @@ val removeBizBoardPatch = bytecodePatch(
     compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        val method = measuringBizBoardFingerprint.method
-
-        method.addInstructions(
+        MeasuringBizBoardFingerprint.method.addInstructions(
             0,
             """
                 const/4 v0, 0x0

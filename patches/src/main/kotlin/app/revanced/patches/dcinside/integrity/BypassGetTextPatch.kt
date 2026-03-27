@@ -3,7 +3,7 @@ package app.revanced.patches.dcinside.integrity
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
-import app.revanced.patches.dcinside.integrity.fingerprints.nativeGetTextFingerprint
+import app.revanced.patches.dcinside.integrity.fingerprints.NativeGetTextFingerprint
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.builder.MutableMethodImplementation
@@ -19,11 +19,11 @@ val bypassGetTextPath = bytecodePatch(
     extendWith("extensions/dcinside.rve")
 
     execute {
-        val nativeGetTextMethod = nativeGetTextFingerprint.method
+        val nativeGetTextMethod = NativeGetTextFingerprint.method
 
-        nativeGetTextFingerprint.classDef.methods.remove(nativeGetTextMethod)
+        NativeGetTextFingerprint.classDef.methods.remove(nativeGetTextMethod)
 
-        nativeGetTextFingerprint.classDef.methods.add(
+        NativeGetTextFingerprint.classDef.methods.add(
             ImmutableMethod(
                 nativeGetTextMethod.definingClass,
                 "gt",

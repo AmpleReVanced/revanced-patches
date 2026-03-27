@@ -1,14 +1,16 @@
 package app.revanced.patches.kakaotalk.integrity.fingerprints
 
-import app.morphe.patcher.fingerprint
+import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.OpcodesFilter
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
-internal val checkApkChecksumsFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
-    parameters()
-    returns("Lkotlin/Pair;")
-    opcodes(
+internal object CheckApkChecksumsFingerprint : Fingerprint(
+    definingClass = "Lcom/kakaopay/kpsd/moat/sdk/",
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf(),
+    returnType = "Lkotlin/Pair;",
+    filters = OpcodesFilter.opcodesToFilters(
         Opcode.INVOKE_VIRTUAL,
         Opcode.MOVE_RESULT_OBJECT,
         Opcode.INVOKE_STATIC,
@@ -17,20 +19,31 @@ internal val checkApkChecksumsFingerprint = fingerprint {
         Opcode.MOVE_OBJECT,
         Opcode.CHECK_CAST,
     )
-    custom { method, classDef -> classDef.type.startsWith("Lcom/kakaopay/kpsd/moat/sdk/") }
-}
+)
 
-internal val moatNativeStatusFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.FINAL, AccessFlags.NATIVE)
-    parameters("I", "I")
-    custom { method, classDef -> method.name == "a" }
-}
+internal object MoatNativeStatusFingerprint : Fingerprint(
+    name = "a", // Hard coded obfuscated method name.
+    accessFlags = listOf(
+        AccessFlags.PUBLIC,
+        AccessFlags.STATIC,
+        AccessFlags.FINAL,
+        AccessFlags.NATIVE
+    ),
+    parameters = listOf("I", "I")
+)
 
-internal val moatResultClassFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.CONSTRUCTOR)
-    parameters("Lcom/kakaopay/kpsd/moat/sdk/MoatFlag\$PrivateMoatFlag;", "Ljava/lang/String;", "Ljava/lang/String;", "Ljava/lang/String;", "Z")
-    returns("V")
-    opcodes(
+internal object MoatResultClassFingerprint : Fingerprint(
+    name = "<init>",
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.CONSTRUCTOR),
+    parameters = listOf(
+        "Lcom/kakaopay/kpsd/moat/sdk/MoatFlag\$PrivateMoatFlag;",
+        "Ljava/lang/String;",
+        "Ljava/lang/String;",
+        "Ljava/lang/String;",
+        "Z"
+    ),
+    returnType = "V",
+    filters = OpcodesFilter.opcodesToFilters(
         Opcode.INVOKE_DIRECT,
         Opcode.IPUT_OBJECT,
         Opcode.IPUT_OBJECT,
@@ -39,5 +52,4 @@ internal val moatResultClassFingerprint = fingerprint {
         Opcode.IPUT_BOOLEAN,
         Opcode.RETURN_VOID
     )
-    custom { method, classDef -> method.name == "<init>" }
-}
+)

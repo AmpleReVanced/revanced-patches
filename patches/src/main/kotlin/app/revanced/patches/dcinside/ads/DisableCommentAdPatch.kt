@@ -2,8 +2,8 @@ package app.revanced.patches.dcinside.ads
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.bytecodePatch
-import app.revanced.patches.dcinside.ads.fingerprints.postReadCommentAdViewFingerprint
-import app.revanced.patches.dcinside.ads.fingerprints.postReadCommentTopAdViewFingerprint
+import app.revanced.patches.dcinside.ads.fingerprints.PostReadCommentAdViewFingerprint
+import app.revanced.patches.dcinside.ads.fingerprints.PostReadCommentTopAdViewFingerprint
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
 import com.android.tools.smali.dexlib2.Opcode
 
@@ -15,7 +15,7 @@ val disableCommentAdPatch = bytecodePatch(
     compatibleWith(COMPATIBILITY_DC_INSIDE)
 
     execute {
-        val postReadCommentAdViewMethod = postReadCommentAdViewFingerprint.method
+        val postReadCommentAdViewMethod = PostReadCommentAdViewFingerprint.method
         postReadCommentAdViewMethod.apply {
             val returnIndex = implementation!!.instructions.indexOfLast {
                 it.opcode == Opcode.RETURN_VOID
@@ -40,7 +40,7 @@ val disableCommentAdPatch = bytecodePatch(
             )
         }
 
-        val postReadCommentTopAdViewMethod = postReadCommentTopAdViewFingerprint.method
+        val postReadCommentTopAdViewMethod = PostReadCommentTopAdViewFingerprint.method
         postReadCommentTopAdViewMethod.apply {
             val returnIndex = implementation!!.instructions.indexOfLast {
                 it.opcode == Opcode.RETURN_VOID

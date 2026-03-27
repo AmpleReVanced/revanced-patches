@@ -1,6 +1,5 @@
 package app.revanced.patches.dcinside.onestore
 
-import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.util.returnEarly
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
@@ -15,9 +14,7 @@ val enableOnestoreFeaturePatch = bytecodePatch(
     compatibleWith(COMPATIBILITY_DC_INSIDE)
 
     execute {
-        val applicationConfigClass = applicationConfigClassFingerprint.classDef
-
-        applicationConfigClass.methods.forEach { method ->
+        ApplicationConfigClassFingerprint.classDef.methods.forEach { method ->
             val isMatch = method.run {
                         parameterTypes.isEmpty() &&
                         returnType == "Z" &&

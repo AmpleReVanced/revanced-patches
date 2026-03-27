@@ -4,9 +4,9 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.bytecodePatch
-import app.revanced.patches.kakaotalk.chatlog.fingerprints.checkIsAllowedHideFingerprint
-import app.revanced.patches.kakaotalk.chatlog.fingerprints.checkIsEqualWithMyUserIdFingerprint
 import app.morphe.util.getReference
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.CheckIsAllowedHideFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.CheckIsEqualWithMyUserIdFingerprint
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction11n
@@ -21,8 +21,8 @@ val allowHideOnAnyChatPatch = bytecodePatch(
     compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        val checkIsAllowedHideMethod = checkIsAllowedHideFingerprint.method
-        val checkIsEqualWithMyUserIdClass = checkIsEqualWithMyUserIdFingerprint.classDef
+        val checkIsAllowedHideMethod = CheckIsAllowedHideFingerprint.method
+        val checkIsEqualWithMyUserIdClass = CheckIsEqualWithMyUserIdFingerprint.classDef
 
         val index = checkIsAllowedHideMethod.instructions
             .indexOfFirst { it.opcode == Opcode.INVOKE_INTERFACE &&
