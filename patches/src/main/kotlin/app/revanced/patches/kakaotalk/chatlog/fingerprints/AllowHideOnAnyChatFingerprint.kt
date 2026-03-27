@@ -1,6 +1,6 @@
 package app.revanced.patches.kakaotalk.chatlog.fingerprints
 
-import app.revanced.patcher.fingerprint
+import app.morphe.patcher.fingerprint
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
@@ -27,7 +27,6 @@ internal val checkIsEqualWithMyUserIdFingerprint = fingerprint {
     accessFlags(AccessFlags.PUBLIC)
     parameters("J")
     returns("Z")
-    strings()
     opcodes(
         Opcode.INVOKE_VIRTUAL,
         Opcode.MOVE_RESULT_WIDE,

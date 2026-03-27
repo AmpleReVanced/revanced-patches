@@ -1,7 +1,7 @@
 package app.revanced.patches.kakaotalk.integrity
 
-import app.revanced.patcher.patch.PatchException
-import app.revanced.patcher.patch.resourcePatch
+import app.morphe.patcher.patch.PatchException
+import app.morphe.patcher.patch.resourcePatch
 import app.revanced.patches.kakaotalk.misc.addExtensionPatch
 import java.io.File
 

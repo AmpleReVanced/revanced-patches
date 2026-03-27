@@ -1,9 +1,9 @@
 package app.revanced.patches.kakaotalk.chatlog
 
-import app.revanced.patcher.extensions.InstructionExtensions.getInstruction
-import app.revanced.patcher.extensions.InstructionExtensions.instructions
-import app.revanced.patcher.extensions.InstructionExtensions.replaceInstruction
-import app.revanced.patcher.patch.bytecodePatch
+import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
+import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
+import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.reactionMentionFlagFingerprint
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction11n
@@ -12,7 +12,7 @@ import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction11n
 val enableReactionMentionFlagPatch = bytecodePatch(
     name = "Enable reaction mention flag",
     description = "Enables the reaction mention flag in KakaoTalk chat logs.",
-    use = false // This patch is currently disabled due to issues with the KakaoTalk app.
+    default = false // This patch is currently disabled due to issues with the KakaoTalk app.
 ) {
     compatibleWith("com.kakao.talk"("26.2.2"))
 

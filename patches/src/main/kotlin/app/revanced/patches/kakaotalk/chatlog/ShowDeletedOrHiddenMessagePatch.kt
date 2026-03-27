@@ -1,15 +1,15 @@
 package app.revanced.patches.kakaotalk.chatlog
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
-import app.revanced.patcher.extensions.InstructionExtensions.instructions
-import app.revanced.patcher.extensions.InstructionExtensions.replaceInstruction
-import app.revanced.patcher.patch.bytecodePatch
-import app.revanced.patcher.patch.stringOption
-import app.revanced.patcher.util.proxy.mutableTypes.MutableField.Companion.toMutable
-import app.revanced.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
-import app.revanced.patches.all.misc.resources.addResources
-import app.revanced.patches.all.misc.resources.addResourcesPatch
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
+import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
+import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.stringOption
+import app.morphe.patcher.util.proxy.mutableTypes.MutableField.Companion.toMutable
+import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
+import app.morphe.patches.all.misc.resources.addAppResources
+import app.morphe.patches.all.misc.resources.addResourcesPatch
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.chatInfoViewClassFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.chatLogFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.chatLogItemViewHolderFingerprint
@@ -30,7 +30,7 @@ import app.revanced.patches.kakaotalk.chatlog.fingerprints.putDeletedMessageCach
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.replaceToFeedFingerprint
 import app.revanced.patches.kakaotalk.misc.addExtensionPatch
 import app.revanced.patches.kakaotalk.misc.sharedExtensionPatch
-import app.revanced.util.getReference
+import app.morphe.util.getReference
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.MutableMethodImplementation
@@ -83,7 +83,7 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
     )
 
     execute {
-        addResources("kakaotalk", "chatlog.showDeletedOrHiddenMessagePatch")
+        addAppResources("kakaotalk")
 
         val deletedInt = parseArgb32ToInt(deletedColorText!!)
         val deletedLit = toSmaliIntLiteral(deletedInt)

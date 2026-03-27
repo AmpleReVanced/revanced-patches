@@ -1,7 +1,7 @@
 package app.revanced.patches.kakaotalk.tracker
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
-import app.revanced.patcher.patch.bytecodePatch
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.tracker.fingerprints.disableSentryFingerprint
 import app.revanced.patches.shared.misc.privacy.disableSentryTelemetryPatch
 

@@ -1,6 +1,6 @@
 package app.revanced.patches.kakaotalk.tab.fingerprints
 
-import app.revanced.patcher.fingerprint
+import app.morphe.patcher.fingerprint
 
 // Sorry to proguard :(
 internal val isChatListCollapseButtonEnabledFingerprint = fingerprint {

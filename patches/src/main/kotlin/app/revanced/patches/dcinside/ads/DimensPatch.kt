@@ -1,13 +1,13 @@
 package app.revanced.patches.dcinside.ads
 
-import app.revanced.patcher.extensions.InstructionExtensions.instructions
-import app.revanced.patcher.extensions.InstructionExtensions.replaceInstructions
-import app.revanced.patcher.patch.bytecodePatch
-import app.revanced.patcher.patch.resourcePatch
+import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.extensions.InstructionExtensions.replaceInstructions
+import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.resourcePatch
 import app.revanced.patches.dcinside.ads.fingerprints.getMinimumDimensFingerprint
 import app.revanced.patches.dcinside.ads.fingerprints.readFooterAdContainerSetupFingerprint
-import app.revanced.util.asSequence
-import app.revanced.util.returnEarly
+import app.morphe.util.asSequence
+import app.morphe.util.returnEarly
 import com.android.tools.smali.dexlib2.Opcode
 
 @Suppress("unused")

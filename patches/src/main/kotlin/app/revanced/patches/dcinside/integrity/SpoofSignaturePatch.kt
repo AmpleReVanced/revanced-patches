@@ -1,8 +1,8 @@
 package app.revanced.patches.dcinside.integrity
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
-import app.revanced.patcher.patch.bytecodePatch
-import app.revanced.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
 import app.revanced.patches.dcinside.integrity.fingerprints.nativeGetSignatureByTypeFingerprint
 import app.revanced.patches.dcinside.integrity.fingerprints.nativeGetSignatureHexFingerprint
 import com.android.tools.smali.dexlib2.AccessFlags

@@ -1,6 +1,6 @@
 package app.revanced.patches.kakaotalk.integrity.fingerprints
 
-import app.revanced.patcher.fingerprint
+import app.morphe.patcher.fingerprint
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
@@ -15,7 +15,6 @@ internal val intentResolveClientMethod = fingerprint {
     accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
     parameters("Landroid/content/pm/PackageInfo;")
     returns("Z")
-    strings()
     opcodes(
         Opcode.IGET_OBJECT,
         Opcode.IF_EQZ,

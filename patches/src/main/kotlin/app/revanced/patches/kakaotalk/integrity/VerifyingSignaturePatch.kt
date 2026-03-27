@@ -1,8 +1,8 @@
 package app.revanced.patches.kakaotalk.integrity
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
-import app.revanced.patcher.extensions.InstructionExtensions.replaceInstructions
-import app.revanced.patcher.patch.bytecodePatch
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.replaceInstructions
+import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.integrity.fingerprints.intentResolveClientMethod
 import app.revanced.patches.kakaotalk.integrity.fingerprints.verifyingSignatureFingerprint
 

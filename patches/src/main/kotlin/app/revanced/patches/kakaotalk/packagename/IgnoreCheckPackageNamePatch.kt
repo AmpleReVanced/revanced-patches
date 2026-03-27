@@ -1,14 +1,14 @@
 package app.revanced.patches.kakaotalk.packagename
 
-import app.revanced.patcher.extensions.InstructionExtensions.instructions
-import app.revanced.patcher.extensions.InstructionExtensions.replaceInstruction
-import app.revanced.patcher.extensions.InstructionExtensions.replaceInstructions
-import app.revanced.patcher.patch.bytecodePatch
+import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
+import app.morphe.patcher.extensions.InstructionExtensions.replaceInstructions
+import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.all.misc.packagename.changePackageNamePatch
 import app.revanced.patches.all.misc.packagename.packageNameOption
 import app.revanced.patches.kakaotalk.packagename.fingerprints.checkPackageNameFingerprint
 import app.revanced.patches.kakaotalk.packagename.fingerprints.getInstallSourceInfoFingerprint
-import app.revanced.util.getReference
+import app.morphe.util.getReference
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction21c
 import com.android.tools.smali.dexlib2.iface.reference.StringReference
@@ -18,7 +18,7 @@ import com.android.tools.smali.dexlib2.immutable.reference.ImmutableStringRefere
 val ignoreCheckPackageNamePatch = bytecodePatch(
     name = "Ignore Check Package Name",
     description = "Ignores the package name check to allow installation of modified versions.",
-    use = false,
+    default = false,
 ) {
     compatibleWith("com.kakao.talk"("26.2.2"))
 

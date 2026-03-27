@@ -1,8 +1,8 @@
 package app.revanced.patches.kakaotalk.branding
 
-import app.revanced.patcher.patch.resourcePatch
-import app.revanced.patcher.patch.stringOption
-import app.revanced.patches.shared.misc.mapping.resourceMappingPatch
+import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.patch.stringOption
+import app.morphe.patches.shared.misc.mapping.resourceMappingPatch
 import app.revanced.util.removeStringsElements
 import java.util.logging.Logger
 
@@ -11,7 +11,7 @@ import java.util.logging.Logger
 val customBrandingPatch = resourcePatch(
     name = "Custom branding",
     description = "Customize app branding (name)",
-    use = false
+    default = false
 ) {
     compatibleWith("com.kakao.talk"("26.2.2"))
     dependsOn(resourceMappingPatch)

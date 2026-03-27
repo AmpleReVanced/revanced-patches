@@ -1,9 +1,9 @@
 package app.revanced.patches.kakaotalk.send
 
-import app.revanced.patcher.extensions.InstructionExtensions.getInstruction
-import app.revanced.patcher.extensions.InstructionExtensions.instructions
-import app.revanced.patcher.extensions.InstructionExtensions.replaceInstruction
-import app.revanced.patcher.patch.bytecodePatch
+import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
+import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
+import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.send.fingerprints.isEnableSendBigTextFingerprint
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction11n
@@ -12,7 +12,7 @@ import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction11n
 val enableSendBigTextPatch = bytecodePatch(
     name = "Enable send big text",
     description = "Allows sending big text messages in KakaoTalk.",
-    use = false // Starting from newer version, the Quiet Send feature has been added, causing conflicts with the entry point for that feature. Therefore, it is disabled by default
+    default = false // Starting from newer version, the Quiet Send feature has been added, causing conflicts with the entry point for that feature. Therefore, it is disabled by default
 ) {
     compatibleWith("com.kakao.talk"("26.2.2"))
 

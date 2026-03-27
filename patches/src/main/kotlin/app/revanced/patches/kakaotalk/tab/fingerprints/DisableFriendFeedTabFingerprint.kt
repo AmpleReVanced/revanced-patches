@@ -1,6 +1,6 @@
 package app.revanced.patches.kakaotalk.tab.fingerprints
 
-import app.revanced.patcher.fingerprint
+import app.morphe.patcher.fingerprint
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
@@ -8,7 +8,6 @@ internal val mainTabConfigFingerprint = fingerprint {
     accessFlags(AccessFlags.PUBLIC, AccessFlags.CONSTRUCTOR)
     parameters("Z", "Z", "Z", "Z", "Z", "Z", "Ljava/lang/String;")
     returns("V")
-    strings()
     opcodes(
         Opcode.INVOKE_DIRECT,
         Opcode.IPUT_BOOLEAN,
@@ -27,7 +26,6 @@ internal val isHideFriendsTabSettingsFingerprint = fingerprint {
     accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
     parameters()
     returns("Z")
-    strings()
     opcodes(
         Opcode.SGET_OBJECT,
         Opcode.INVOKE_STATIC,
@@ -46,7 +44,6 @@ internal val determineFeedOrListMethodFingerprint = fingerprint {
     accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
     parameters("Ljava/lang/Object;")
     returns("Ljava/lang/Object;")
-    strings()
     opcodes(
         Opcode.INVOKE_STATIC,
         Opcode.MOVE_RESULT_OBJECT,
