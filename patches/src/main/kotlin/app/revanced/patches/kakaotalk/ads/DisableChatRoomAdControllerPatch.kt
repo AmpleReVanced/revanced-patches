@@ -2,7 +2,7 @@ package app.revanced.patches.kakaotalk.ads
 
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.util.returnEarly
-import app.revanced.patches.kakaotalk.ads.fingerprints.chatRoomAdViewControllerEnabledFingerprint
+import app.revanced.patches.kakaotalk.ads.fingerprints.ChatRoomAdViewControllerEnabledFingerprint
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 
 @Suppress("unused")
@@ -13,6 +13,6 @@ val disableChatRoomAdControllerPatch = bytecodePatch(
     compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        chatRoomAdViewControllerEnabledFingerprint.method.returnEarly(false)
+        ChatRoomAdViewControllerEnabledFingerprint.method.returnEarly(false)
     }
 }

@@ -6,14 +6,14 @@ import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstructions
 import app.morphe.patcher.patch.bytecodePatch
-import app.revanced.patches.kakaotalk.tab.fingerprints.chooseNowChildTabFingerprint
-import app.revanced.patches.kakaotalk.tab.fingerprints.getOpenLinkModuleFingerprint
-import app.revanced.patches.kakaotalk.tab.fingerprints.nowFragmentOnViewCreatedFingerprint
-import app.revanced.patches.kakaotalk.tab.fingerprints.nowTabPagerAdapterFingerprint
-import app.revanced.patches.kakaotalk.tab.fingerprints.transitionOpenLinkOrShortformMethodFingerprint
 import app.morphe.util.getReference
 import app.morphe.util.returnEarly
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
+import app.revanced.patches.kakaotalk.tab.fingerprints.ChooseNowChildTabFingerprint
+import app.revanced.patches.kakaotalk.tab.fingerprints.GetOpenLinkModuleFingerprint
+import app.revanced.patches.kakaotalk.tab.fingerprints.NowFragmentOnViewCreatedFingerprint
+import app.revanced.patches.kakaotalk.tab.fingerprints.NowTabPagerAdapterFingerprint
+import app.revanced.patches.kakaotalk.tab.fingerprints.TransitionOpenLinkOrShortformMethodFingerprint
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction21c
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction21s
@@ -35,7 +35,7 @@ val removeShortFormTabPatch = bytecodePatch(
     compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        val onViewCreated = nowFragmentOnViewCreatedFingerprint.method
+        val onViewCreated = NowFragmentOnViewCreatedFingerprint.method
 
         val igetObject = onViewCreated.instructions.first {
             it.opcode == Opcode.IGET_OBJECT &&
@@ -80,13 +80,13 @@ val removeShortFormTabPatch = bytecodePatch(
             "sget-object v0, ${fieldRef!!.type}->Openlink:${fieldRef.type}"
         )
 
-        nowTabPagerAdapterFingerprint.classDef.methods.first {
+        NowTabPagerAdapterFingerprint.classDef.methods.first {
             it.name == "getItemCount"
         }.returnEarly(0)
 
-        val getOpenLinkModuleMethod = getOpenLinkModuleFingerprint.method
+        val getOpenLinkModuleMethod = GetOpenLinkModuleFingerprint.method
 
-        val createFragmentMethod = nowTabPagerAdapterFingerprint.method
+        val createFragmentMethod = NowTabPagerAdapterFingerprint.method
         createFragmentMethod.replaceInstructions(
             0,
             """
@@ -100,9 +100,9 @@ val removeShortFormTabPatch = bytecodePatch(
             """.trimIndent()
         )
 
-        transitionOpenLinkOrShortformMethodFingerprint.method.returnEarly()
+        TransitionOpenLinkOrShortformMethodFingerprint.method.returnEarly()
 
-        val chooseNowChildTabMethod = chooseNowChildTabFingerprint.method
+        val chooseNowChildTabMethod = ChooseNowChildTabFingerprint.method
         val getPositionIdx = chooseNowChildTabMethod.instructions.indexOfFirst {
             if (it.opcode != Opcode.INVOKE_VIRTUAL) return@indexOfFirst false
 

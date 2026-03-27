@@ -1,15 +1,16 @@
 package app.revanced.patches.kakaotalk.chatlog.fingerprints
 
+import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.fingerprint
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
-internal val chatLogFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC)
-    returns("Ljava/lang/String;")
-    parameters()
-    strings(
+internal object ChatLogFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC),
+    returnType = "Ljava/lang/String;",
+    parameters = listOf(),
+    strings = listOf(
         "[class:",
         "] ChatLog [id=",
     )
-}
+)

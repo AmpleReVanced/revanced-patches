@@ -2,7 +2,7 @@ package app.revanced.patches.dcinside.ads
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.bytecodePatch
-import app.revanced.patches.dcinside.ads.fingerprints.hideMainAdFingerprint
+import app.revanced.patches.dcinside.ads.fingerprints.HideMainAdFingerprint
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
 
 @Suppress("unused")
@@ -13,9 +13,7 @@ val hideMainAdPatch = bytecodePatch(
     compatibleWith(COMPATIBILITY_DC_INSIDE)
 
     execute {
-        val method = hideMainAdFingerprint.method
-
-        method.addInstructions(
+        HideMainAdFingerprint.method.addInstructions(
             0,
             """
                 const/16 v0, 0x8

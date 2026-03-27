@@ -1,27 +1,29 @@
 package app.revanced.patches.kakaotalk.chatlog.fingerprints
 
+import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.OpcodesFilter
 import app.morphe.patcher.fingerprint
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
-internal val processWatermarkCountFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
-    returns("I")
-    opcodes(
+internal object ProcessWatermarkCountFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    returnType = "I",
+    filters = OpcodesFilter.opcodesToFilters(
         Opcode.IGET_OBJECT,
         Opcode.SGET_OBJECT,
         Opcode.IF_NE,
         Opcode.INVOKE_VIRTUAL,
         Opcode.MOVE_RESULT_OBJECT,
-    )
-    custom { method, classDef -> classDef.sourceFile == "ChatLogRecyclerItem.kt" }
-}
+    ),
+   custom = { _, classDef -> classDef.sourceFile == "ChatLogRecyclerItem.kt" }
+)
 
-internal val getWatermarkCountFromCacheFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
-    returns("I")
-    strings("chatRoom")
-    opcodes(
+internal object GetWatermarkCountFromCacheFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    returnType = "I",
+    strings = listOf("chatRoom"),
+    filters = OpcodesFilter.opcodesToFilters(
         Opcode.CONST_STRING,
         Opcode.INVOKE_STATIC,
         Opcode.INVOKE_VIRTUAL,
@@ -29,6 +31,6 @@ internal val getWatermarkCountFromCacheFingerprint = fingerprint {
         Opcode.INVOKE_STATIC,
         Opcode.MOVE_RESULT,
         Opcode.IF_EQZ,
-    )
-    custom { method, classDef -> classDef.sourceFile == "WatermarksManager.kt" }
-}
+    ),
+   custom = { method, classDef -> classDef.sourceFile == "WatermarksManager.kt" }
+)

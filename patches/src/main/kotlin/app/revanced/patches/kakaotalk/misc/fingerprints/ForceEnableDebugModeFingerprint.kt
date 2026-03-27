@@ -1,15 +1,16 @@
 package app.revanced.patches.kakaotalk.misc.fingerprints
 
-import app.morphe.patcher.fingerprint
+import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.OpcodesFilter
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
-internal val configConstructorFingerprint = fingerprint {
-    accessFlags(AccessFlags.STATIC, AccessFlags.CONSTRUCTOR)
-    returns("V")
-    parameters()
-    strings("agit.daumkakao.com", "agit.io", "agit.in", "play.google.com")
-    opcodes(
+internal object ConfigConstructorFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.STATIC, AccessFlags.CONSTRUCTOR),
+    returnType = "V",
+    parameters = listOf(),
+    strings = listOf("agit.daumkakao.com", "agit.io", "agit.in", "play.google.com"),
+    filters = OpcodesFilter.opcodesToFilters(
         Opcode.NEW_INSTANCE,
         Opcode.INVOKE_DIRECT,
         Opcode.SPUT_OBJECT,
@@ -21,6 +22,6 @@ internal val configConstructorFingerprint = fingerprint {
         Opcode.IF_EQ,
         Opcode.MOVE,
         Opcode.GOTO,
-    )
-    custom { method, classDef -> classDef.sourceFile == "Config.kt" }
-}
+    ),
+    custom = { _, classDef -> classDef.sourceFile == "Config.kt" }
+)

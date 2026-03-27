@@ -1,12 +1,11 @@
 package app.revanced.patches.kakaotalk.changemodel.fingerprints
 
-import app.morphe.patcher.fingerprint
+import app.morphe.patcher.Fingerprint
 
 @Suppress("unused")
-internal val changeModelFingerprint = fingerprint {
-    strings("<this>", "MODEL", "\\s", "-", "US", "toUpperCase(...)")
-    custom {
-            _, classDef ->
+internal object ChangeModelFingerprint : Fingerprint(
+    strings = listOf("<this>", "MODEL", "\\s", "-", "US", "toUpperCase(...)"),
+    custom = { _, classDef ->
         classDef.methods.indexOf(classDef.methods.last()) >= 2
     }
-}
+)

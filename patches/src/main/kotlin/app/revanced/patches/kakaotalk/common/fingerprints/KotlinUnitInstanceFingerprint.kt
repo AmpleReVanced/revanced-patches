@@ -1,19 +1,18 @@
 package app.revanced.patches.kakaotalk.common.fingerprints
 
-import app.morphe.patcher.fingerprint
+import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.OpcodesFilter
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
-internal val kotlinUnitInstanceFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC)
-    parameters()
-    returns("Ljava/lang/String;")
-    strings("kotlin.Unit")
-    opcodes(
+internal object KotlinUnitInstanceFingerprint : Fingerprint(
+    name = "toString",
+    accessFlags = listOf(AccessFlags.PUBLIC),
+    parameters = listOf(),
+    returnType = "Ljava/lang/String;",
+    strings = listOf("kotlin.Unit"),
+    filters = OpcodesFilter.opcodesToFilters(
         Opcode.CONST_STRING,
         Opcode.RETURN_OBJECT
     )
-    custom { method, classDef ->
-        method.name == "toString"
-    }
-}
+)

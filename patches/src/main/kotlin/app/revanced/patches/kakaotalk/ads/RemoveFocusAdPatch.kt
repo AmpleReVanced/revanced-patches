@@ -2,7 +2,7 @@ package app.revanced.patches.kakaotalk.ads
 
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.util.returnEarly
-import app.revanced.patches.kakaotalk.ads.fingerprints.loadFocusAdFingerprint
+import app.revanced.patches.kakaotalk.ads.fingerprints.LoadFocusAdFingerprint
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 
 @Suppress("unused")
@@ -13,6 +13,6 @@ val removeFocusAdPatch = bytecodePatch(
     compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        loadFocusAdFingerprint.method.returnEarly(true)
+        LoadFocusAdFingerprint.method.returnEarly(true)
     }
 }

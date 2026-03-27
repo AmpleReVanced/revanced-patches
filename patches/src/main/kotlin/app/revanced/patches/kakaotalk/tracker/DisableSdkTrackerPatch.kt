@@ -3,7 +3,7 @@ package app.revanced.patches.kakaotalk.tracker
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
-import app.revanced.patches.kakaotalk.tracker.fingerprints.buildSdkTrackerUrlFingerprint
+import app.revanced.patches.kakaotalk.tracker.fingerprints.BuildSdkTrackerUrlFingerprint
 import app.revanced.patches.shared.misc.string.replaceStringPatch
 
 @Suppress("unused")
@@ -17,7 +17,7 @@ val disableSdkTrackerPatch = bytecodePatch(
     )
 
     execute {
-        buildSdkTrackerUrlFingerprint.method.addInstructions(
+        BuildSdkTrackerUrlFingerprint.method.addInstructions(
             0,
             """
                 const-string p0, ""

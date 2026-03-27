@@ -1,14 +1,16 @@
 package app.revanced.patches.kakaotalk.tab.fingerprints
 
+import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.OpcodesFilter
 import app.morphe.patcher.fingerprint
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
-internal val mainTabConfigFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.CONSTRUCTOR)
-    parameters("Z", "Z", "Z", "Z", "Z", "Z", "Ljava/lang/String;")
-    returns("V")
-    opcodes(
+internal object MainTabConfigFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.CONSTRUCTOR),
+    parameters = listOf("Z", "Z", "Z", "Z", "Z", "Z", "Ljava/lang/String;"),
+    returnType = "V",
+    filters = OpcodesFilter.opcodesToFilters(
         Opcode.INVOKE_DIRECT,
         Opcode.IPUT_BOOLEAN,
         Opcode.IPUT_BOOLEAN,
@@ -18,15 +20,15 @@ internal val mainTabConfigFingerprint = fingerprint {
         Opcode.IPUT_BOOLEAN,
         Opcode.IPUT_OBJECT,
         Opcode.RETURN_VOID,
-    )
-    custom { method, classDef -> classDef.sourceFile == "MainTabConfig.kt" }
-}
+    ),
+    custom = { method, classDef -> classDef.sourceFile == "MainTabConfig.kt" }
+)
 
-internal val isHideFriendsTabSettingsFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
-    parameters()
-    returns("Z")
-    opcodes(
+internal object IsHideFriendsTabSettingsFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf(),
+    returnType = "Z",
+    filters = OpcodesFilter.opcodesToFilters(
         Opcode.SGET_OBJECT,
         Opcode.INVOKE_STATIC,
         Opcode.MOVE_RESULT_OBJECT,
@@ -36,15 +38,15 @@ internal val isHideFriendsTabSettingsFingerprint = fingerprint {
         Opcode.SGET_OBJECT,
         Opcode.INVOKE_VIRTUAL,
         Opcode.MOVE_RESULT_OBJECT,
-    )
-    custom { method, classDef -> classDef.sourceFile == "FriendTab.kt" }
-}
+    ),
+    custom = { method, classDef -> classDef.sourceFile == "FriendTab.kt" }
+)
 
-internal val determineFeedOrListMethodFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
-    parameters("Ljava/lang/Object;")
-    returns("Ljava/lang/Object;")
-    opcodes(
+internal object DetermineFeedOrListMethodFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf("Ljava/lang/Object;"),
+    returnType = "Ljava/lang/Object;",
+    filters = OpcodesFilter.opcodesToFilters(
         Opcode.INVOKE_STATIC,
         Opcode.MOVE_RESULT_OBJECT,
         Opcode.IGET,
@@ -64,6 +66,6 @@ internal val determineFeedOrListMethodFingerprint = fingerprint {
         Opcode.IGET_BOOLEAN,
         Opcode.IGET_BOOLEAN,
         Opcode.IGET_BOOLEAN
-    )
-    custom { method, classDef -> classDef.sourceFile == "FriendSettingsViewModel.kt" }
-}
+    ),
+    custom = { method, classDef -> classDef.sourceFile == "FriendSettingsViewModel.kt" }
+)

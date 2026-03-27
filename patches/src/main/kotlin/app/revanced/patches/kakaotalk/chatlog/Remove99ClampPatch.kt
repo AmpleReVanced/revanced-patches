@@ -3,8 +3,8 @@ package app.revanced.patches.kakaotalk.chatlog
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.bytecodePatch
-import app.revanced.patches.kakaotalk.chatlog.fingerprints.getWatermarkCountFromCacheFingerprint
-import app.revanced.patches.kakaotalk.chatlog.fingerprints.processWatermarkCountFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.GetWatermarkCountFromCacheFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.ProcessWatermarkCountFingerprint
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction10t
@@ -18,13 +18,13 @@ val remove99ClampPatch = bytecodePatch(
     compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        val processWatermarkCountMethod = processWatermarkCountFingerprint.method
+        val processWatermarkCountMethod = ProcessWatermarkCountFingerprint.method
 
         processWatermarkCountMethod.apply {
             replaceInstruction(instructions.size - 2, "nop")
         }
 
-        val getWatermarkCountFromCacheMethod = getWatermarkCountFromCacheFingerprint.method
+        val getWatermarkCountFromCacheMethod = GetWatermarkCountFromCacheFingerprint.method
 
         getWatermarkCountFromCacheMethod.instructions
             .filterIsInstance<BuilderInstruction22t>()

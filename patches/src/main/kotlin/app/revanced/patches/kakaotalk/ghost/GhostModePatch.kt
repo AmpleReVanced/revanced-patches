@@ -2,10 +2,6 @@ package app.revanced.patches.kakaotalk.ghost
 
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstructions
 import app.morphe.patcher.patch.bytecodePatch
-import app.revanced.patches.kakaotalk.ghost.fingerprints.actionJobMethodFingerprint
-import app.revanced.patches.kakaotalk.ghost.fingerprints.locoMethodClassFingerprint
-import app.revanced.patches.kakaotalk.ghost.fingerprints.protocolSuccessFingerprint
-import app.revanced.patches.kakaotalk.ghost.fingerprints.sendCurrentActionFingerprint
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 
 @Suppress("unused")
@@ -16,10 +12,10 @@ val ghostMode = bytecodePatch(
     compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        val locoMethodClass = locoMethodClassFingerprint.classDef
+        val locoMethodClass = LocoMethodClassFingerprint.classDef
         val actionJobClass = actionJobMethodFingerprint(locoMethodClass).classDef
         val sendActionMethod = sendCurrentActionFingerprint(actionJobClass).method
-        val protocolSuccessClass = protocolSuccessFingerprint.classDef
+        val protocolSuccessClass = ProtocolSuccessFingerprint.classDef
 
         sendActionMethod.replaceInstructions(
             0,

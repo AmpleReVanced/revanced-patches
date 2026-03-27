@@ -4,11 +4,11 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.removeInstructions
 import app.morphe.patcher.patch.bytecodePatch
-import app.revanced.patches.kakaotalk.tab.fingerprints.commonChatRoomListAdapterClassFingerprint
-import app.revanced.patches.kakaotalk.tab.fingerprints.initViewModelFingerprint
-import app.revanced.patches.kakaotalk.tab.fingerprints.setupAdapterFingerprint
 import app.morphe.util.getReference
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
+import app.revanced.patches.kakaotalk.tab.fingerprints.CommonChatRoomListAdapterClassFingerprint
+import app.revanced.patches.kakaotalk.tab.fingerprints.InitViewModelFingerprint
+import app.revanced.patches.kakaotalk.tab.fingerprints.SetupAdapterFingerprint
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.reference.TypeReference
@@ -21,7 +21,7 @@ val disableCommunityTabPatch = bytecodePatch(
     compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        setupAdapterFingerprint.method.apply {
+        SetupAdapterFingerprint.method.apply {
             val callSetAdapter = instructions.first {
                 it.opcode == Opcode.INVOKE_VIRTUAL && it.getReference<MethodReference>()?.name == "setAdapter"
             }
@@ -38,7 +38,7 @@ val disableCommunityTabPatch = bytecodePatch(
                 invokeVirtual.location.index - newInstanceRecyclerView.location.index + 1
             )
 
-            val adapterClass = commonChatRoomListAdapterClassFingerprint.classDef.type
+            val adapterClass = CommonChatRoomListAdapterClassFingerprint.classDef.type
 
             addInstructions(
                 newInstanceRecyclerView.location.index,
@@ -48,7 +48,7 @@ val disableCommunityTabPatch = bytecodePatch(
                 """.trimIndent()
             )
 
-            initViewModelFingerprint.method.apply {
+            InitViewModelFingerprint.method.apply {
                 removeInstructions(
                     instructions.filter { it.opcode == Opcode.INVOKE_VIRTUAL }[4].location.index,
                     1
