@@ -3,6 +3,7 @@ package app.revanced.patches.kakaotalk.tracker
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.common.fingerprints.kotlinUnitInstanceFingerprint
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.patches.kakaotalk.tracker.fingerprints.disableSaveS2EventFingerprint
 import app.revanced.patches.kakaotalk.tracker.fingerprints.sendS2EventFingerprint
 
@@ -11,7 +12,7 @@ val disableS2EventPatch = bytecodePatch(
     name = "Disable S2Event",
     description = "Disables Tracker",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
         disableSaveS2EventFingerprint.method.addInstructions(

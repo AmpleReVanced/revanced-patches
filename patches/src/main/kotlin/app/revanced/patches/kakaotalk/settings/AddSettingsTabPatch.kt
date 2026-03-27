@@ -14,6 +14,7 @@ import app.revanced.patches.kakaotalk.misc.sharedExtensionPatch
 import app.revanced.patches.kakaotalk.settings.fingerprints.mainSettingItemTypeFingerprint
 import app.revanced.patches.kakaotalk.settings.fingerprints.setupSettingsItemFingerprint
 import app.morphe.util.getReference
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.MutableMethodImplementation
@@ -32,7 +33,7 @@ val addSettingsTabPatch = bytecodePatch(
     description = "Adds a settings tab to the app.",
     default = false // Since the settings-related activity has not yet been developed, it will be disabled for the time being.
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
     dependsOn(
         addExtensionPatch,
         addResourcesPatch,

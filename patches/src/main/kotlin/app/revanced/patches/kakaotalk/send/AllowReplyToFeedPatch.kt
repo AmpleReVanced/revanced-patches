@@ -7,6 +7,7 @@ import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.send.fingerprints.allowSwipeReplyToFeedFingerprint
 import app.revanced.patches.kakaotalk.send.fingerprints.isCarouselTypeFingerprint
 import app.morphe.util.getReference
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
@@ -16,7 +17,7 @@ val allowReplyToFeedPatch = bytecodePatch(
     name = "Allow reply to feed",
     description = "Allows replying to feed messages",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
         allowSwipeReplyToFeedFingerprint.method.apply {

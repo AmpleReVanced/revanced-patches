@@ -6,6 +6,7 @@ import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.dcinside.ads.fingerprints.postReadImageAdViewFingerprint
 import app.revanced.patches.dcinside.ads.fingerprints.refreshImageAdFingerprint
 import app.morphe.util.getReference
+import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
@@ -15,7 +16,7 @@ val disableImageAdPatch = bytecodePatch(
     name = "Disable Image Ad",
     description = "Disables the image ad in the app.",
 ) {
-    compatibleWith("com.dcinside.app.android"("5.2.7"))
+    compatibleWith(COMPATIBILITY_DC_INSIDE)
 
     execute {
         postReadImageAdViewFingerprint.method.apply {

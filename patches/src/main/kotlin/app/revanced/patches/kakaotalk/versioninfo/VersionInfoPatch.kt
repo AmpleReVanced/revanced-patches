@@ -5,6 +5,7 @@ import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.removeInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.bytecodePatch
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.patches.kakaotalk.versioninfo.fingerprints.versionInfoFingerprint
 import app.revanced.patches.kakaotalk.versioninfo.fingerprints.versionInfoPreviewFingerprint
 import com.android.tools.smali.dexlib2.Opcode
@@ -18,7 +19,7 @@ val versionInfoPatch = bytecodePatch(
     name = "Version info patch",
     description = "Patches the version info to include '(ReVanced)' in the version string.",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
         val runPatch: (Fingerprint, Boolean) -> Unit = { fp, inDetail ->

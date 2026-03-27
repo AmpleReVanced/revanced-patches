@@ -6,6 +6,7 @@ import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.ads.fingerprints.adBigUIModelFingerprint
 import app.revanced.patches.kakaotalk.ads.fingerprints.addSectionToMoreTabUIFingerprint
 import app.morphe.util.getReference
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction21c
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction35c
@@ -16,7 +17,7 @@ val removeMoreTabAdPatch = bytecodePatch(
     name = "Remove More tab ad",
     description = "Removes the ad from the More tab.",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
         val method = addSectionToMoreTabUIFingerprint.method

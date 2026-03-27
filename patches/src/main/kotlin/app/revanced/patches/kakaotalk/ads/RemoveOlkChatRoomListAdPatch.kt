@@ -6,13 +6,14 @@ import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.ads.fingerprints.addOlkChatRoomListAdFingerprint
 import app.revanced.patches.kakaotalk.ads.fingerprints.openChatTabFragmentAdEnabledFingerprint
 import app.revanced.patches.kakaotalk.common.fingerprints.kotlinUnitInstanceFingerprint
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 
 @Suppress("unused")
 val removeOlkChatRoomListAdPatch = bytecodePatch(
     name = "Remove OpenLink chat room list ad",
     description = "Removes the OpenLink chat room list ad.",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
         val findUnit = kotlinUnitInstanceFingerprint.method

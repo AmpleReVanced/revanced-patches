@@ -7,6 +7,7 @@ import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.chatroom.fingerprints.getUnreadCountFingerprint
 import app.revanced.patches.kakaotalk.chatroom.fingerprints.limit300PlusBaseChatRoomFingerprint
 import app.revanced.patches.kakaotalk.chatroom.fingerprints.limit300PlusOpenChatRoomFingerprint
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction10t
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction22t
@@ -16,7 +17,7 @@ val remove300PlusLimitChatRoomPatch = bytecodePatch(
     name = "Disable 300+ unread limit",
     description = "Always show the real unread count instead of '300+' in chatroom list"
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
         limit300PlusBaseChatRoomFingerprint.method.apply {

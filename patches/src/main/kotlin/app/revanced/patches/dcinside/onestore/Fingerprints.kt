@@ -1,4 +1,4 @@
-package app.revanced.patches.dcinside.onestore.fingerprints
+package app.revanced.patches.dcinside.onestore
 
 import app.morphe.patcher.fingerprint
 import com.android.tools.smali.dexlib2.AccessFlags

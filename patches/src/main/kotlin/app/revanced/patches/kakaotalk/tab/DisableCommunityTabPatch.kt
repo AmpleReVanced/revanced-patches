@@ -8,6 +8,7 @@ import app.revanced.patches.kakaotalk.tab.fingerprints.commonChatRoomListAdapter
 import app.revanced.patches.kakaotalk.tab.fingerprints.initViewModelFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.setupAdapterFingerprint
 import app.morphe.util.getReference
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.reference.TypeReference
@@ -17,7 +18,7 @@ val disableCommunityTabPatch = bytecodePatch(
     name = "Disable Community Tab",
     description = "Disables Community Tab",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
         setupAdapterFingerprint.method.apply {

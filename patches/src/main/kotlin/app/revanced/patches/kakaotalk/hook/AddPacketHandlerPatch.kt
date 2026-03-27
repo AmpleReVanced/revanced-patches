@@ -4,6 +4,7 @@ import app.morphe.patcher.patch.resourcePatch
 import app.revanced.patches.kakaotalk.misc.addExtensionPatch
 import app.revanced.patches.kakaotalk.misc.addPineLibPatch
 import app.revanced.patches.kakaotalk.misc.sharedExtensionPatch
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import org.w3c.dom.Element
 
 @Suppress("unused")
@@ -13,7 +14,7 @@ val addPacketHandlerPatch = resourcePatch(
             "Conflicts may occur on some systems.",
     default = false
 ) {
-    compatibleWith("com.kakao.talk")
+    compatibleWith(COMPATIBILITY_KAKAO)
     dependsOn(sharedExtensionPatch, addExtensionPatch, addPineLibPatch)
 
     execute {

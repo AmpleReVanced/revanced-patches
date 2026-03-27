@@ -4,6 +4,7 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.dcinside.ads.fingerprints.postReadCommentAdViewFingerprint
 import app.revanced.patches.dcinside.ads.fingerprints.postReadCommentTopAdViewFingerprint
+import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
 import com.android.tools.smali.dexlib2.Opcode
 
 @Suppress("unused")
@@ -11,7 +12,7 @@ val disableCommentAdPatch = bytecodePatch(
     name = "Disable Comment Ad",
     description = "Disables the comment ad in the app.",
 ) {
-    compatibleWith("com.dcinside.app.android"("5.2.7"))
+    compatibleWith(COMPATIBILITY_DC_INSIDE)
 
     execute {
         val postReadCommentAdViewMethod = postReadCommentAdViewFingerprint.method
