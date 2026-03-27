@@ -1,7 +1,7 @@
 package app.revanced.patches.kakaotalk.ads
 
-import app.morphe.patcher.extensions.InstructionExtensions.replaceInstructions
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.util.returnEarly
 import app.revanced.patches.kakaotalk.ads.fingerprints.chatListAdHelperEnabledFingerprint
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 
@@ -13,13 +13,6 @@ val disableChatRoomListAdPatch = bytecodePatch(
     compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        val chatListAdHelperEnabledMethod = chatListAdHelperEnabledFingerprint.method
-        chatListAdHelperEnabledMethod.replaceInstructions(
-            0,
-            """
-                const/4 v0, 0x0
-                return v0
-            """.trimIndent()
-        )
+        chatListAdHelperEnabledFingerprint.method.returnEarly(false)
     }
 }
