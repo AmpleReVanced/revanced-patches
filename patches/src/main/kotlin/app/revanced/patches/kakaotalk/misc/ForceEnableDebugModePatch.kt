@@ -1,8 +1,8 @@
 package app.revanced.patches.kakaotalk.misc
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
-import app.revanced.patcher.extensions.InstructionExtensions.instructions
-import app.revanced.patcher.patch.bytecodePatch
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.misc.fingerprints.configConstructorFingerprint
 import com.android.tools.smali.dexlib2.Opcode
 

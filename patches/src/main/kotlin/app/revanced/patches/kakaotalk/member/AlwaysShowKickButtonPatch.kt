@@ -1,11 +1,11 @@
 package app.revanced.patches.kakaotalk.member
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstruction
-import app.revanced.patcher.extensions.InstructionExtensions.instructions
-import app.revanced.patcher.patch.bytecodePatch
+import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
+import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.member.fingerprints.containsUserByIdFingerprint
 import app.revanced.patches.kakaotalk.member.fingerprints.kickButtonManageMethodFingerprint
-import app.revanced.util.getReference
+import app.morphe.util.getReference
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction11n
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction

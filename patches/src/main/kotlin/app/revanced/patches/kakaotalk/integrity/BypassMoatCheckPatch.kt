@@ -1,13 +1,13 @@
 package app.revanced.patches.kakaotalk.integrity
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
-import app.revanced.patcher.extensions.InstructionExtensions.instructions
-import app.revanced.patcher.patch.bytecodePatch
-import app.revanced.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
 import app.revanced.patches.kakaotalk.integrity.fingerprints.checkApkChecksumsFingerprint
 import app.revanced.patches.kakaotalk.integrity.fingerprints.moatNativeStatusFingerprint
 import app.revanced.patches.kakaotalk.integrity.fingerprints.moatResultClassFingerprint
-import app.revanced.util.getReference
+import app.morphe.util.getReference
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.MutableMethodImplementation
@@ -19,7 +19,7 @@ import com.android.tools.smali.dexlib2.immutable.ImmutableMethodParameter
 val bypassMoatCheckPatch = bytecodePatch(
     name = "Bypass Moat check",
     description = "Bypass Moat check that prevents the app from running.",
-    use = false,
+    default = false,
 ) {
     compatibleWith("com.kakao.talk"("26.2.2"))
 

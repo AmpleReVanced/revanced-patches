@@ -1,17 +1,17 @@
 package app.revanced.patches.kakaotalk.tab
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstruction
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
-import app.revanced.patcher.extensions.InstructionExtensions.getInstruction
-import app.revanced.patcher.extensions.InstructionExtensions.instructions
-import app.revanced.patcher.extensions.InstructionExtensions.replaceInstructions
-import app.revanced.patcher.patch.bytecodePatch
+import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
+import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.extensions.InstructionExtensions.replaceInstructions
+import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.tab.fingerprints.chooseNowChildTabFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.getOpenLinkModuleFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.nowFragmentOnViewCreatedFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.nowTabPagerAdapterFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.transitionOpenLinkOrShortformMethodFingerprint
-import app.revanced.util.getReference
+import app.morphe.util.getReference
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction21c
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction21s

@@ -1,20 +1,19 @@
 package app.revanced.patches.kakaotalk.settings
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
-import app.revanced.patcher.extensions.InstructionExtensions.getInstruction
-import app.revanced.patcher.extensions.InstructionExtensions.instructions
-import app.revanced.patcher.extensions.InstructionExtensions.replaceInstruction
-import app.revanced.patcher.patch.PatchException
-import app.revanced.patcher.patch.bytecodePatch
-import app.revanced.patcher.util.proxy.mutableTypes.MutableField.Companion.toMutable
-import app.revanced.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
-import app.revanced.patches.all.misc.resources.addResources
-import app.revanced.patches.all.misc.resources.addResourcesPatch
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
+import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
+import app.morphe.patcher.patch.PatchException
+import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.util.proxy.mutableTypes.MutableField.Companion.toMutable
+import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
+import app.morphe.patches.all.misc.resources.addResourcesPatch
 import app.revanced.patches.kakaotalk.misc.addExtensionPatch
 import app.revanced.patches.kakaotalk.misc.sharedExtensionPatch
 import app.revanced.patches.kakaotalk.settings.fingerprints.mainSettingItemTypeFingerprint
 import app.revanced.patches.kakaotalk.settings.fingerprints.setupSettingsItemFingerprint
-import app.revanced.util.getReference
+import app.morphe.util.getReference
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.MutableMethodImplementation
@@ -29,9 +28,9 @@ import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
 
 @Suppress("unused")
 val addSettingsTabPatch = bytecodePatch(
-    name = "Add settings tab",
+//    name = "Add settings tab",
     description = "Adds a settings tab to the app.",
-    use = false // Since the settings-related activity has not yet been developed, it will be disabled for the time being.
+    default = false // Since the settings-related activity has not yet been developed, it will be disabled for the time being.
 ) {
     compatibleWith("com.kakao.talk"("26.2.2"))
     dependsOn(
@@ -41,7 +40,7 @@ val addSettingsTabPatch = bytecodePatch(
     )
 
     execute {
-        addResources("kakaotalk", "settings.revancedSettingsPatch")
+//        addResources("kakaotalk", "settings.revancedSettingsPatch")
 
         val mainSettingItemTypeClass = mainSettingItemTypeFingerprint.classDef
 
@@ -107,7 +106,7 @@ val addSettingsTabPatch = bytecodePatch(
             new-instance v0, ${mainSettingItemTypeClass.type}
             const-string v1, "REVANCED"
             const/16 v2, 0x15
-            const-string v3, "revanced_label_for_revanced_settings"
+            const-string v3, "morphe_label_for_ample_settings"
             const-string v4, "string"
             invoke-static {v4, v3}, Lapp/revanced/extension/kakaotalk/helper/ResourceHelper;->getResourceId(Ljava/lang/String;Ljava/lang/String;)I
             move-result v3

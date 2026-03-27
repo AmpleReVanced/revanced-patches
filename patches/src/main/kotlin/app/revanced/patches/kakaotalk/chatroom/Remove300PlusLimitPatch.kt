@@ -1,9 +1,9 @@
 package app.revanced.patches.kakaotalk.chatroom
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
-import app.revanced.patcher.extensions.InstructionExtensions.instructions
-import app.revanced.patcher.extensions.InstructionExtensions.replaceInstruction
-import app.revanced.patcher.patch.bytecodePatch
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
+import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.chatroom.fingerprints.getUnreadCountFingerprint
 import app.revanced.patches.kakaotalk.chatroom.fingerprints.limit300PlusBaseChatRoomFingerprint
 import app.revanced.patches.kakaotalk.chatroom.fingerprints.limit300PlusOpenChatRoomFingerprint

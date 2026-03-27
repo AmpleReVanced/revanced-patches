@@ -1,7 +1,7 @@
 package app.revanced.patches.kakaotalk.tracker
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
-import app.revanced.patcher.patch.bytecodePatch
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.common.fingerprints.kotlinUnitInstanceFingerprint
 import app.revanced.patches.kakaotalk.tracker.fingerprints.disableSaveS2EventFingerprint
 import app.revanced.patches.kakaotalk.tracker.fingerprints.sendS2EventFingerprint

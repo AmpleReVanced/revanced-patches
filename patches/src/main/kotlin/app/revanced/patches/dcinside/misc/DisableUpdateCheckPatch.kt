@@ -1,7 +1,7 @@
 package app.revanced.patches.dcinside.misc
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstruction
-import app.revanced.patcher.patch.bytecodePatch
+import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
+import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.dcinside.misc.fingerprints.disableUpdateCheckFingerprint
 
 @Suppress("unused")

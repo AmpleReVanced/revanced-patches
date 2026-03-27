@@ -1,13 +1,13 @@
 package app.revanced.patches.kakaotalk.misc
 
-import app.revanced.patcher.patch.resourcePatch
+import app.morphe.patcher.patch.resourcePatch
 import java.io.File
 
 @Suppress("unused")
 val addPineLibPatch = resourcePatch(
     name = "Add Pine Lib",
     description = "add libpine.so to the app's native libraries",
-    use = false
+    default = false
 ) {
     compatibleWith("com.kakao.talk")
 

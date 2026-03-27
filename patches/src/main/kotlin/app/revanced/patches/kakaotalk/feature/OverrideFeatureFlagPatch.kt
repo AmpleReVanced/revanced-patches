@@ -1,10 +1,10 @@
 package app.revanced.patches.kakaotalk.feature
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
-import app.revanced.patcher.extensions.InstructionExtensions.instructions
-import app.revanced.patcher.patch.bytecodePatch
-import app.revanced.patcher.patch.stringOption
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
+import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.stringOption
 import app.revanced.patches.kakaotalk.feature.fingerprints.getFeatureFlagValueFingerprint
 import app.revanced.patches.kakaotalk.feature.fingerprints.getFeatureFlagsInExtensionFingerprint
 import app.revanced.patches.kakaotalk.misc.addExtensionPatch
@@ -14,7 +14,7 @@ import com.android.tools.smali.dexlib2.Opcode
 val overrideFeatureFlagPatch = bytecodePatch(
     name = "Override feature flag",
     description = "Overrides the feature flag to enable the feature.",
-    use = false
+//    default = false
 ) {
     compatibleWith("com.kakao.talk"("26.2.2"))
     dependsOn(addExtensionPatch)

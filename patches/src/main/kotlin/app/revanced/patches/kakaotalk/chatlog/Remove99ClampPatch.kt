@@ -1,8 +1,8 @@
 package app.revanced.patches.kakaotalk.chatlog
 
-import app.revanced.patcher.extensions.InstructionExtensions.instructions
-import app.revanced.patcher.extensions.InstructionExtensions.replaceInstruction
-import app.revanced.patcher.patch.bytecodePatch
+import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
+import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.getWatermarkCountFromCacheFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.processWatermarkCountFingerprint
 import com.android.tools.smali.dexlib2.Opcode

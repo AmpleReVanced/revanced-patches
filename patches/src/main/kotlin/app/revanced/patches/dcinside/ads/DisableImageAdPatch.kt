@@ -1,11 +1,11 @@
 package app.revanced.patches.dcinside.ads
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstruction
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
-import app.revanced.patcher.patch.bytecodePatch
+import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.dcinside.ads.fingerprints.postReadImageAdViewFingerprint
 import app.revanced.patches.dcinside.ads.fingerprints.refreshImageAdFingerprint
-import app.revanced.util.getReference
+import app.morphe.util.getReference
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference

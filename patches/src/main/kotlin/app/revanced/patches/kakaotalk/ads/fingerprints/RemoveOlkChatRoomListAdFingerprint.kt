@@ -1,6 +1,6 @@
 package app.revanced.patches.kakaotalk.ads.fingerprints
 
-import app.revanced.patcher.fingerprint
+import app.morphe.patcher.fingerprint
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
@@ -28,7 +28,6 @@ internal val openChatTabFragmentAdEnabledFingerprint = fingerprint {
     accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
     parameters()
     returns("Z")
-    strings()
     opcodes(
         Opcode.INVOKE_VIRTUAL,
         Opcode.MOVE_RESULT_OBJECT,

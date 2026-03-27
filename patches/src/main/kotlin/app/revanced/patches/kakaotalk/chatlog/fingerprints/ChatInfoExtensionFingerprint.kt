@@ -1,6 +1,6 @@
 package app.revanced.patches.kakaotalk.chatlog.fingerprints
 
-import app.revanced.patcher.fingerprint
+import app.morphe.patcher.fingerprint
 
 internal const val CHAT_INFO_EXTENSION_TYPE = "Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;"
 

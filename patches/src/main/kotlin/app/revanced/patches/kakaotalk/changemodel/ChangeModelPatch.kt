@@ -1,6 +1,6 @@
 package app.revanced.patches.kakaotalk.changemodel
 
-import app.revanced.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.all.misc.build.BuildInfo
 import app.revanced.patches.all.misc.build.baseSpoofBuildInfoPatch
 

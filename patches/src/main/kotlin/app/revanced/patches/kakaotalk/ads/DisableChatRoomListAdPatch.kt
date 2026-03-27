@@ -1,7 +1,7 @@
 package app.revanced.patches.kakaotalk.ads
 
-import app.revanced.patcher.extensions.InstructionExtensions.replaceInstructions
-import app.revanced.patcher.patch.bytecodePatch
+import app.morphe.patcher.extensions.InstructionExtensions.replaceInstructions
+import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.ads.fingerprints.chatListAdHelperEnabledFingerprint
 
 @Suppress("unused")

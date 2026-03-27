@@ -1,9 +1,9 @@
 package app.revanced.patches.kakaotalk.tab
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstruction
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
-import app.revanced.patcher.extensions.InstructionExtensions.instructions
-import app.revanced.patcher.patch.bytecodePatch
+import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.tab.fingerprints.determineFeedOrListMethodFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.isHideFriendsTabSettingsFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.mainTabConfigFingerprint

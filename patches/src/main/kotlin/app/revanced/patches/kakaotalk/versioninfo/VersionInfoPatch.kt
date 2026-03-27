@@ -1,10 +1,10 @@
 package app.revanced.patches.kakaotalk.versioninfo
 
-import app.revanced.patcher.Fingerprint
-import app.revanced.patcher.extensions.InstructionExtensions.instructions
-import app.revanced.patcher.extensions.InstructionExtensions.removeInstruction
-import app.revanced.patcher.extensions.InstructionExtensions.replaceInstruction
-import app.revanced.patcher.patch.bytecodePatch
+import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.extensions.InstructionExtensions.removeInstruction
+import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
+import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.versioninfo.fingerprints.versionInfoFingerprint
 import app.revanced.patches.kakaotalk.versioninfo.fingerprints.versionInfoPreviewFingerprint
 import com.android.tools.smali.dexlib2.Opcode
