@@ -4,6 +4,12 @@
 
 TODO: Add showcase of patches and/or patch functionality.
 
+## Copyright Notice
+
+This app uses code from Morphe. To learn more, visit https://morphe.software
+
+It also uses code from ReVanced. To learn more, visit https://revanced.app
+
 ## 🚀 Get started
 
 To start using this template, follow these steps:
