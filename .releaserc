@@ -40,7 +40,7 @@
           "patches-bundle.json",
           "patches-list.json"
         ],
-        "message": "chore: Release v${nextRelease.version} [skip ci]"
+        "message": "chore: Release v${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
       }
     ],
     [
