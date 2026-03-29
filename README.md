@@ -2,9 +2,11 @@
 
 ## ❓ About
 
-TODO: Add showcase of patches and/or patch functionality.
+Ample Patches is a collection of patches mainly developed for apps such as KakaoTalk and DCinside, with a focus on customization and additional functionality.
 
-## Copyright Notice
+This project is built on Morphe, which is based on prior work from ReVanced. All modifications made in this repository, together with their dates, are available in the Git history.
+
+## ❕Copyright Notice
 
 This app uses code from Morphe. To learn more, visit https://morphe.software
 
@@ -48,10 +50,9 @@ patches to Morphe (update the links below after creating your new patches repo):
 
 #### How to use these patches
 
-<!-- TODO: Update this link -->
-Click here to add these patches to Morphe: https://morphe.software/add-source?github=xyz-user/xyz-patches
+Click here to add these patches to Morphe: https://morphe.software/add-source?github=AmpleReVanced/revanced-patches
 
-Or manually add this repository url as a patch source in Morphe: https://github.com/xyz-user/xyz-patches
+Or manually add this repository url as a patch source in Morphe: https://github.com/AmpleReVanced/revanced-patches
 
 ### 🛠️ Building
 
