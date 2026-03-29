@@ -1,14 +1,15 @@
 package app.revanced.patches.kakaotalk.send.fingerprints
 
-import app.revanced.patcher.fingerprint
+import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.OpcodesFilter
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
-internal val allowSwipeReplyToFeedFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
-    returns("Z")
-    strings("null cannot be cast to non-null type com.kakao.talk.db.model.chatlog.LeverageChatLog")
-    opcodes(
+internal object AllowSwipeReplyToFeedFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    returnType = "Z",
+    strings = listOf("null cannot be cast to non-null type com.kakao.talk.db.model.chatlog.LeverageChatLog"),
+    filters = OpcodesFilter.opcodesToFilters(
         Opcode.INVOKE_VIRTUAL,
         Opcode.MOVE_RESULT_OBJECT,
         Opcode.INVOKE_STATIC,
@@ -17,16 +18,15 @@ internal val allowSwipeReplyToFeedFingerprint = fingerprint {
         Opcode.IF_NEZ,
         Opcode.INVOKE_VIRTUAL,
         Opcode.MOVE_RESULT_OBJECT,
-    )
-    custom { method, classDef -> classDef.sourceFile == "ChatLogItemTouchHelperCallback.kt" }
-}
+    ),
+    custom = { _, classDef -> classDef.sourceFile == "ChatLogItemTouchHelperCallback.kt" }
+)
 
-internal val isCarouselTypeFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
-    returns("Z")
-    parameters()
-    strings()
-    opcodes(
+internal object IsCarouselTypeFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    returnType = "Z",
+    parameters = listOf(),
+    filters = OpcodesFilter.opcodesToFilters(
         Opcode.INVOKE_VIRTUAL,
         Opcode.MOVE_RESULT_OBJECT,
         Opcode.INVOKE_VIRTUAL,
@@ -39,6 +39,6 @@ internal val isCarouselTypeFingerprint = fingerprint {
         Opcode.RETURN,
         Opcode.CONST_4,
         Opcode.RETURN,
-    )
-    custom { method, classDef -> classDef.sourceFile == "LeverageChatLog.kt" }
-}
+    ),
+    custom = { _, classDef -> classDef.sourceFile == "LeverageChatLog.kt" }
+)

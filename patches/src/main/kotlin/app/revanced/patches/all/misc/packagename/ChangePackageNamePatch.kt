@@ -1,8 +1,8 @@
 package app.revanced.patches.all.misc.packagename
 
-import app.revanced.patcher.patch.*
-import app.revanced.util.asSequence
-import app.revanced.util.getNode
+import app.morphe.patcher.patch.*
+import app.morphe.util.asSequence
+import app.morphe.util.getNode
 import org.w3c.dom.Element
 import java.util.logging.Logger
 
@@ -27,10 +27,10 @@ fun setOrGetFallbackPackageName(fallbackPackageName: String): String {
 }
 
 val changePackageNamePatch = resourcePatch(
-    name = "Change package name",
+//    name = "Change package name",
     description = "Appends \".revanced\" to the package name by default. " +
         "Changing the package name of the app can lead to unexpected issues.",
-    use = false,
+    default = false,
 ) {
     packageNameOption = stringOption(
         key = "packageName",

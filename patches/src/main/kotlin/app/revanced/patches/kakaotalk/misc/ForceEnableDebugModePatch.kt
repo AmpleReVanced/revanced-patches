@@ -1,9 +1,10 @@
 package app.revanced.patches.kakaotalk.misc
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
-import app.revanced.patcher.extensions.InstructionExtensions.instructions
-import app.revanced.patcher.patch.bytecodePatch
-import app.revanced.patches.kakaotalk.misc.fingerprints.configConstructorFingerprint
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.patch.bytecodePatch
+import app.revanced.patches.kakaotalk.misc.fingerprints.ConfigConstructorFingerprint
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.Opcode
 
 @Suppress("unused")
@@ -11,10 +12,10 @@ val forceEnableDebugModePatch = bytecodePatch(
     name = "Force enable debug mode",
     description = "Enables debug mode in the app.",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        val method = configConstructorFingerprint.method
+        val method = ConfigConstructorFingerprint.method
         val insns = method.instructions
         val idxReturn = insns.indexOfFirst { it.opcode == Opcode.RETURN_VOID } // RETURN_VOID
 

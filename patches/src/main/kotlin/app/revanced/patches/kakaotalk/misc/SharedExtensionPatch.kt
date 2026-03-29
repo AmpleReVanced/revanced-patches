@@ -1,5 +1,12 @@
 package app.revanced.patches.kakaotalk.misc
 
-import app.revanced.patches.shared.misc.extension.sharedExtensionPatch
+import app.morphe.patches.shared.misc.extension.activityOnCreateExtensionHook
+import app.morphe.patches.shared.misc.extension.sharedExtensionPatch
 
-val sharedExtensionPatch = sharedExtensionPatch("kakaotalk", initHook)
+val sharedExtensionPatch = sharedExtensionPatch(
+    "kakaotalk",
+    activityOnCreateExtensionHook(
+        "Lcom/kakao/talk/application/App;",
+        false
+    )
+)

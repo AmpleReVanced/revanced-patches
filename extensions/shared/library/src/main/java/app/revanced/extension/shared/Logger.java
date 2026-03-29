@@ -13,15 +13,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import app.revanced.extension.shared.settings.BaseSettings;
-import app.revanced.extension.shared.settings.preference.LogBufferManager;
 
-/**
- * ReVanced specific logger.  Logging is done to standard device log (accessible thru ADB),
- * and additionally accessible thru {@link LogBufferManager}.
- *
- * All methods are thread safe, and are safe to call even
- * if {@link Utils#getContext()} is not available.
- */
 public class Logger {
 
     /**
@@ -45,7 +37,7 @@ public class Logger {
     /**
      * Log tag prefix. Only used for system logging.
      */
-    private static final String REVANCED_LOG_TAG_PREFIX = "revanced: ";
+    private static final String REVANCED_LOG_TAG_PREFIX = "morphe: ";
 
     private static final String LOGGER_CLASS_NAME = Logger.class.getName();
 
@@ -76,10 +68,6 @@ public class Logger {
     }
 
     /**
-     * Internal method to handle logging to Android Log and {@link LogBufferManager}.
-     * Appends the log message, stack trace (if enabled), and exception (if present) to logBuffer
-     * with class name but without 'revanced:' prefix.
-     *
      * @param logLevel          The log level.
      * @param message           Log message object.
      * @param ex                Optional exception.
@@ -116,7 +104,6 @@ public class Logger {
 
         // Do not include "revanced:" prefix in clipboard logs.
         String managerToastString = className + ": " + logText;
-        LogBufferManager.appendToLogBuffer(managerToastString);
 
         String logTag = REVANCED_LOG_TAG_PREFIX + className;
         switch (logLevel) {

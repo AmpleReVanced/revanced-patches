@@ -1,25 +1,18 @@
 package app.revanced.patches.kakaotalk.ads
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
-import app.revanced.patcher.patch.bytecodePatch
-import app.revanced.patches.kakaotalk.ads.fingerprints.checkDisableFriendListsAdFingerprint
+import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.util.returnEarly
+import app.revanced.patches.kakaotalk.ads.fingerprints.CheckDisableFriendListsAdFingerprint
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 
 @Suppress("unused")
 val disableFriendListsAdPatch = bytecodePatch(
     name = "Disable Friend Lists ad",
     description = "Disables the Friend Lists ad in KakaoTalk.",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        val checkDisableFriendListsAdMethod = checkDisableFriendListsAdFingerprint.method
-
-        checkDisableFriendListsAdMethod.addInstructions(
-            0,
-            """
-                const/4 v0, 0x1
-                return v0
-            """.trimIndent()
-        )
+        CheckDisableFriendListsAdFingerprint.method.returnEarly(true)
     }
 }

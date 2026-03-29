@@ -1,9 +1,10 @@
 package app.revanced.patches.kakaotalk.ads.fingerprints
 
-import app.revanced.patcher.fingerprint
+import app.morphe.patcher.Fingerprint
 
-internal val feedAdLayoutFingerprint = fingerprint {
-    parameters("Landroid/content/Context;", "Landroid/util/AttributeSet;", "I")
-    returns("V")
-    custom { method, classDef -> classDef.type == "Lcom/kakao/adfit/ads/feed/FeedAdLayout;" && method.name == "<init>" }
-}
+internal object FeedAdLayoutFingerprint : Fingerprint(
+    definingClass = "Lcom/kakao/adfit/ads/feed/FeedAdLayout;",
+    name = "<init>",
+    parameters = listOf("Landroid/content/Context;", "Landroid/util/AttributeSet;", "I"),
+    returnType = "V",
+)

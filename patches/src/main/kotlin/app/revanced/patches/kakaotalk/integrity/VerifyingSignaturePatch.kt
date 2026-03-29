@@ -1,33 +1,21 @@
 package app.revanced.patches.kakaotalk.integrity
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
-import app.revanced.patcher.extensions.InstructionExtensions.replaceInstructions
-import app.revanced.patcher.patch.bytecodePatch
-import app.revanced.patches.kakaotalk.integrity.fingerprints.intentResolveClientMethod
-import app.revanced.patches.kakaotalk.integrity.fingerprints.verifyingSignatureFingerprint
+import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.util.returnEarly
+import app.revanced.patches.kakaotalk.integrity.fingerprints.IntentResolveClientMethod
+import app.revanced.patches.kakaotalk.integrity.fingerprints.VerifyingSignatureFingerprint
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 
 @Suppress("unused")
 val verifyingSignaturePatch = bytecodePatch(
     name = "Disable verifying signature",
     description = "Disables the signature verification check that prevents the app from running.",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        verifyingSignatureFingerprint.method.addInstructions(
-            0,
-            """
-                const/4 v0, 0x1
-                return v0
-            """.trimIndent()
-        )
+        VerifyingSignatureFingerprint.method.returnEarly(true)
 
-        intentResolveClientMethod.method.replaceInstructions(
-            0,
-            """
-                const/4 v0, 0x1
-                return v0
-            """.trimIndent()
-        )
+        IntentResolveClientMethod.method.returnEarly(true)
     }
 }

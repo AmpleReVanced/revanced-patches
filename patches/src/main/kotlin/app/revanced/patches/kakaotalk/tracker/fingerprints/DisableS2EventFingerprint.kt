@@ -1,17 +1,18 @@
 package app.revanced.patches.kakaotalk.tracker.fingerprints
 
-import app.revanced.patcher.fingerprint
+import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.OpcodesFilter
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
-internal val disableSaveS2EventFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
-    returns("Ljava/lang/Object;")
-    strings(
+internal object DisableSaveS2EventFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    returnType = "Ljava/lang/Object;",
+    strings = listOf(
         "call to 'resume' before 'invoke' with coroutine",
         "AllDone"
-    )
-    opcodes(
+    ),
+    filters = OpcodesFilter.opcodesToFilters(
         Opcode.INSTANCE_OF,
         Opcode.IF_EQZ,
         Opcode.MOVE_OBJECT,
@@ -24,17 +25,17 @@ internal val disableSaveS2EventFingerprint = fingerprint {
         Opcode.IPUT,
         Opcode.GOTO,
         Opcode.NEW_INSTANCE,
-    )
-    custom { _, classDef -> classDef.sourceFile == "Tracker.kt" }
-}
+    ),
+    custom = { _, classDef -> classDef.sourceFile == "Tracker.kt" }
+)
 
-internal val sendS2EventFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
-    returns("Ljava/lang/Object;")
-    strings(
+internal object SendS2EventFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    returnType = "Ljava/lang/Object;",
+    strings = listOf(
         "call to \'resume\' before \'invoke\' with coroutine"
-    )
-    opcodes(
+    ),
+    filters = OpcodesFilter.opcodesToFilters(
         Opcode.INSTANCE_OF,
         Opcode.IF_EQZ,
         Opcode.MOVE_OBJECT,
@@ -63,6 +64,6 @@ internal val sendS2EventFingerprint = fingerprint {
         Opcode.IF_NE,
         Opcode.IGET_OBJECT,
         Opcode.CHECK_CAST
-    )
-    custom { _, classDef -> classDef.sourceFile == "S2EventRepository.kt" }
-}
+    ),
+    custom = { _, classDef -> classDef.sourceFile == "S2EventRepository.kt" }
+)

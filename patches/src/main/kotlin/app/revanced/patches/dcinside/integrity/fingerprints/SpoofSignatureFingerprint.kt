@@ -1,18 +1,18 @@
 package app.revanced.patches.dcinside.integrity.fingerprints
 
-import app.revanced.patcher.fingerprint
+import app.morphe.patcher.Fingerprint
 import com.android.tools.smali.dexlib2.AccessFlags
 
 // sh
-internal val nativeGetSignatureHexFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL, AccessFlags.NATIVE)
-    parameters("Landroid/content/Context;")
-    returns("Ljava/lang/String;")
-}
+internal object NativeGetSignatureHexFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL, AccessFlags.NATIVE),
+    parameters = listOf("Landroid/content/Context;"),
+    returnType = "Ljava/lang/String;",
+)
 
 // vd
-internal val nativeGetSignatureByTypeFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL, AccessFlags.NATIVE)
-    parameters("Ljava/lang/String;")
-    returns("Ljava/util/ArrayList;")
-}
+internal object NativeGetSignatureByTypeFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL, AccessFlags.NATIVE),
+    parameters = listOf("Ljava/lang/String;"),
+    returnType = "Ljava/util/ArrayList;",
+)

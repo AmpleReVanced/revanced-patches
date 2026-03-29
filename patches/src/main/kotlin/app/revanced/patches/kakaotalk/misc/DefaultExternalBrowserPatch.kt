@@ -1,10 +1,11 @@
 package app.revanced.patches.kakaotalk.misc
 
-import app.revanced.patcher.extensions.InstructionExtensions.getInstruction
-import app.revanced.patcher.extensions.InstructionExtensions.instructions
-import app.revanced.patcher.extensions.InstructionExtensions.replaceInstruction
-import app.revanced.patcher.patch.bytecodePatch
-import app.revanced.patches.kakaotalk.misc.fingerprints.defaultExternalBrowserFingerprint
+import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
+import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
+import app.morphe.patcher.patch.bytecodePatch
+import app.revanced.patches.kakaotalk.misc.fingerprints.DefaultExternalBrowserFingerprint
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction11n
 
@@ -13,17 +14,17 @@ val defaultExternalBrowserPatch = bytecodePatch(
     name = "Default external browser",
     description = "Sets the default external browser for KakaoTalk to the system's default browser.",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        defaultExternalBrowserFingerprint.method.instructions.indexOfFirst { it.opcode == Opcode.CONST_4 && (it as BuilderInstruction11n).narrowLiteral == 0x0 }
+        DefaultExternalBrowserFingerprint.method.instructions.indexOfFirst { it.opcode == Opcode.CONST_4 && (it as BuilderInstruction11n).narrowLiteral == 0x0 }
             .takeIf { it >= 0 }
             ?.let { index ->
-                defaultExternalBrowserFingerprint.method.replaceInstruction(
+                DefaultExternalBrowserFingerprint.method.replaceInstruction(
                     index,
                     BuilderInstruction11n(
                         Opcode.CONST_4,
-                        (defaultExternalBrowserFingerprint.method.getInstruction(index) as BuilderInstruction11n).registerA,
+                        (DefaultExternalBrowserFingerprint.method.getInstruction(index) as BuilderInstruction11n).registerA,
                         0x1
                     )
                 )
