@@ -1,3 +1,10 @@
+# [1.0.0-dev.2](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.1...v1.0.0-dev.2) (2026-03-29)
+
+
+### Reverts
+
+* Revert "chore: remove changelog on release temporarily" ([d2a1d05](https://github.com/AmpleReVanced/revanced-patches/commit/d2a1d053bc5dcd39b584c6ce8f52b4bd0d4979d4))
+
 # 1.0.0-dev.1 (2026-03-29)
 
 
