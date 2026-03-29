@@ -56,8 +56,6 @@ import java.util.regex.Pattern;
 import app.revanced.extension.shared.settings.AppLanguage;
 import app.revanced.extension.shared.settings.BaseSettings;
 import app.revanced.extension.shared.settings.BooleanSetting;
-import app.revanced.extension.shared.settings.preference.ReVancedAboutPreference;
-import app.revanced.extension.shared.ui.Dim;
 
 @SuppressWarnings("NewApi")
 public class Utils {
@@ -781,32 +779,6 @@ public class Utils {
     }
 
     /**
-     * Configures the parameters of a dialog window, including its width, gravity, vertical offset and background dimming.
-     * The width is calculated as a percentage of the screen's portrait width and the vertical offset is specified in DIP.
-     * The default dialog background is removed to allow for custom styling.
-     *
-     * @param window The {@link Window} object to configure.
-     * @param gravity The gravity for positioning the dialog (e.g., {@link Gravity#BOTTOM}).
-     * @param yOffsetDip The vertical offset from the gravity position in DIP.
-     * @param widthPercentage The width of the dialog as a percentage of the screen's portrait width (0-100).
-     * @param dimAmount If true, sets the background dim amount to 0 (no dimming); if false, leaves the default dim amount.
-     */
-    public static void setDialogWindowParameters(Window window, int gravity, int yOffsetDip, int widthPercentage, boolean dimAmount) {
-        WindowManager.LayoutParams params = window.getAttributes();
-
-        params.width = Dim.pctPortraitWidth(widthPercentage);
-        params.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        params.gravity = gravity;
-        params.y = yOffsetDip > 0 ? Dim.dp(yOffsetDip) : 0;
-        if (dimAmount) {
-            params.dimAmount = 0f;
-        }
-
-        window.setAttributes(params); // Apply window attributes.
-        window.setBackgroundDrawable(null); // Remove default dialog background
-    }
-
-    /**
      * Sets the theme light color used by the app.
      */
     public static void setThemeLightColor(@ColorInt int color) {
@@ -1060,8 +1032,7 @@ public class Utils {
             Preference pref = pair.second;
 
             // Move any screens, intents, and the one off About preference to the top.
-            if (pref instanceof PreferenceScreen || pref instanceof ReVancedAboutPreference
-                    || pref.getIntent() != null) {
+            if (pref instanceof PreferenceScreen || pref.getIntent() != null) {
                 // Any arbitrary large number.
                 order -= 1000;
             }

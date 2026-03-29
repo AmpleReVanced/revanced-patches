@@ -1,11 +1,13 @@
 package app.revanced.patches.kakaotalk.ads
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
-import app.revanced.patcher.extensions.InstructionExtensions.instructions
-import app.revanced.patcher.patch.bytecodePatch
-import app.revanced.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
-import app.revanced.patches.kakaotalk.ads.fingerprints.feedAdLayoutFingerprint
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
+import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
+import app.morphe.util.returnEarly
+import app.revanced.patches.kakaotalk.ads.fingerprints.FeedAdLayoutFingerprint
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.builder.MutableMethodImplementation
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
@@ -16,21 +18,18 @@ val removeFeedAdPatch = bytecodePatch(
     name = "Remove feed ad",
     description = "Removes the feed ad from the app.",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        val feedAdLayoutConstructor = feedAdLayoutFingerprint.method
-        val feedAdLayoutClass = feedAdLayoutFingerprint.classDef
-
         // We add setVisibility(View.GONE); before the constructor returns
-        feedAdLayoutConstructor.addInstructionsWithLabels(
-            feedAdLayoutConstructor.instructions.size - 1,
+        FeedAdLayoutFingerprint.method.addInstructionsWithLabels(
+            FeedAdLayoutFingerprint.method.instructions.size - 1,
             """
                 const/16 v0, 0x8
-                invoke-virtual {p0, v0}, ${feedAdLayoutConstructor.definingClass}->setVisibility(I)V
+                invoke-virtual {p0, v0}, ${FeedAdLayoutFingerprint.method.definingClass}->setVisibility(I)V
                 
                 # layoutParams = getLayoutParams()
-                invoke-virtual {p0}, ${feedAdLayoutConstructor.definingClass}->getLayoutParams()Landroid/view/ViewGroup${'$'}LayoutParams;
+                invoke-virtual {p0}, ${FeedAdLayoutFingerprint.method.definingClass}->getLayoutParams()Landroid/view/ViewGroup${'$'}LayoutParams;
                 move-result-object v0
                 if-eqz v0, :skipSet
         
@@ -39,22 +38,19 @@ val removeFeedAdPatch = bytecodePatch(
                 iput v1, v0, Landroid/view/ViewGroup${"$"}LayoutParams;->width:I
         
                 :skipSet
-                invoke-virtual {p0}, ${feedAdLayoutConstructor.definingClass}->requestLayout()V
+                invoke-virtual {p0}, ${FeedAdLayoutFingerprint.method.definingClass}->requestLayout()V
             """.trimIndent()
         )
 
-        feedAdLayoutClass.methods.filter { it.name == "setFeedAd" }.forEach { method ->
-            method.addInstructions(
-                0,
-                """
-                    return-void
-                """.trimIndent()
-            )
+        FeedAdLayoutFingerprint.classDef.methods.filter {
+            it.name == "setFeedAd"
+        }.forEach { method ->
+            method.returnEarly()
         }
 
-        feedAdLayoutClass.methods.add(
+        FeedAdLayoutFingerprint.classDef.methods.add(
             ImmutableMethod(
-                feedAdLayoutConstructor.definingClass,
+                FeedAdLayoutFingerprint.method.definingClass,
                 "onMeasure",
                 listOf(
                     ImmutableMethodParameter("I", null, null),
@@ -67,9 +63,10 @@ val removeFeedAdPatch = bytecodePatch(
                 MutableMethodImplementation(5)
             ).toMutable().apply {
                 addInstructions(
+                    0,
                     """
                         const/4 v0, 0x0
-                        invoke-virtual {p0, v0, v0}, ${feedAdLayoutClass.type}->setMeasuredDimension(II)V
+                        invoke-virtual {p0, v0, v0}, ${FeedAdLayoutFingerprint.classDef.type}->setMeasuredDimension(II)V
                         return-void
                     """.trimIndent()
                 )

@@ -1,19 +1,20 @@
 package app.revanced.patches.kakaotalk.ads.fingerprints
 
-import app.revanced.patcher.fingerprint
+import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.OpcodesFilter
+import app.morphe.patcher.fingerprint
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
-internal val checkDisableFriendListsAdFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
-    parameters()
-    returns("Z")
-    strings()
-    opcodes(
+internal object CheckDisableFriendListsAdFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf(),
+    returnType = "Z",
+    filters = OpcodesFilter.opcodesToFilters(
         Opcode.SGET_OBJECT,
         Opcode.INVOKE_VIRTUAL,
         Opcode.MOVE_RESULT,
         Opcode.RETURN,
-    )
-    custom { method, classDef -> classDef.sourceFile == "FriendListsAdViewController.kt" }
-}
+    ),
+   custom = { _, classDef -> classDef.sourceFile == "FriendListsAdViewController.kt" }
+)

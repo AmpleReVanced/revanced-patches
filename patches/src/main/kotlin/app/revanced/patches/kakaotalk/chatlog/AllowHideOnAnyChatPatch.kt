@@ -1,12 +1,13 @@
 package app.revanced.patches.kakaotalk.chatlog
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstruction
-import app.revanced.patcher.extensions.InstructionExtensions.getInstruction
-import app.revanced.patcher.extensions.InstructionExtensions.instructions
-import app.revanced.patcher.patch.bytecodePatch
-import app.revanced.patches.kakaotalk.chatlog.fingerprints.checkIsAllowedHideFingerprint
-import app.revanced.patches.kakaotalk.chatlog.fingerprints.checkIsEqualWithMyUserIdFingerprint
-import app.revanced.util.getReference
+import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
+import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
+import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.util.getReference
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.CheckIsAllowedHideFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.CheckIsEqualWithMyUserIdFingerprint
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction11n
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
@@ -17,11 +18,11 @@ val allowHideOnAnyChatPatch = bytecodePatch(
     name = "Allow Hide on Any Chat",
     description = "Users with hiding privileges can hide any chat, including their own messages.",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        val checkIsAllowedHideMethod = checkIsAllowedHideFingerprint.method
-        val checkIsEqualWithMyUserIdClass = checkIsEqualWithMyUserIdFingerprint.classDef
+        val checkIsAllowedHideMethod = CheckIsAllowedHideFingerprint.method
+        val checkIsEqualWithMyUserIdClass = CheckIsEqualWithMyUserIdFingerprint.classDef
 
         val index = checkIsAllowedHideMethod.instructions
             .indexOfFirst { it.opcode == Opcode.INVOKE_INTERFACE &&

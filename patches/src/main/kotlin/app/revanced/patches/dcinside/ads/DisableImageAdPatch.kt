@@ -1,11 +1,12 @@
 package app.revanced.patches.dcinside.ads
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstruction
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
-import app.revanced.patcher.patch.bytecodePatch
-import app.revanced.patches.dcinside.ads.fingerprints.postReadImageAdViewFingerprint
-import app.revanced.patches.dcinside.ads.fingerprints.refreshImageAdFingerprint
-import app.revanced.util.getReference
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.util.getReference
+import app.morphe.util.returnEarly
+import app.revanced.patches.dcinside.ads.fingerprints.PostReadImageAdViewFingerprint
+import app.revanced.patches.dcinside.ads.fingerprints.RefreshImageAdFingerprint
+import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
@@ -15,10 +16,10 @@ val disableImageAdPatch = bytecodePatch(
     name = "Disable Image Ad",
     description = "Disables the image ad in the app.",
 ) {
-    compatibleWith("com.dcinside.app.android"("5.2.7"))
+    compatibleWith(COMPATIBILITY_DC_INSIDE)
 
     execute {
-        postReadImageAdViewFingerprint.method.apply {
+        PostReadImageAdViewFingerprint.method.apply {
             val setGravityIndex = implementation!!.instructions.indexOfFirst {
                 it.opcode == Opcode.INVOKE_VIRTUAL &&
                         (it as? ReferenceInstruction)?.getReference<MethodReference>()?.name == "setGravity"
@@ -41,9 +42,6 @@ val disableImageAdPatch = bytecodePatch(
             )
         }
 
-        refreshImageAdFingerprint.method.addInstruction(
-            0,
-            "return-void"
-        )
+        RefreshImageAdFingerprint.method.returnEarly()
     }
 }

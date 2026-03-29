@@ -1,15 +1,16 @@
 package app.revanced.patches.kakaotalk.ads.fingerprints
 
-import app.revanced.patcher.fingerprint
+import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.OpcodesFilter
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
-internal val addOlkChatRoomListAdFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
-    parameters("Ljava/lang/Object;")
-    returns("Ljava/lang/Object;")
-    strings("call to \'resume\' before \'invoke\' with coroutine")
-    opcodes(
+internal object AddOlkChatRoomListAdFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf("Ljava/lang/Object;"),
+    returnType = "Ljava/lang/Object;",
+    strings = listOf("call to \'resume\' before \'invoke\' with coroutine"),
+    filters = OpcodesFilter.opcodesToFilters(
         Opcode.INVOKE_STATIC,
         Opcode.MOVE_RESULT_OBJECT,
         Opcode.IGET,
@@ -20,16 +21,15 @@ internal val addOlkChatRoomListAdFingerprint = fingerprint {
         Opcode.GOTO,
         Opcode.NEW_INSTANCE,
         Opcode.CONST_STRING,
-    )
-    custom { method, classDef -> classDef.sourceFile == "OlkChatRoomListViewModel.kt" }
-}
+    ),
+   custom = { _, classDef -> classDef.sourceFile == "OlkChatRoomListViewModel.kt" }
+)
 
-internal val openChatTabFragmentAdEnabledFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
-    parameters()
-    returns("Z")
-    strings()
-    opcodes(
+internal object OpenChatTabFragmentAdEnabledFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf(),
+    returnType = "Z",
+    filters = OpcodesFilter.opcodesToFilters(
         Opcode.INVOKE_VIRTUAL,
         Opcode.MOVE_RESULT_OBJECT,
         Opcode.INVOKE_VIRTUAL,
@@ -38,6 +38,6 @@ internal val openChatTabFragmentAdEnabledFingerprint = fingerprint {
         Opcode.CONST_4,
         Opcode.IF_NE,
         Opcode.SGET_OBJECT,
-    )
-    custom { method, classDef -> classDef.sourceFile == "OpenChatTabFragment.kt" }
-}
+    ),
+   custom = { _, classDef -> classDef.sourceFile == "OpenChatTabFragment.kt" }
+)

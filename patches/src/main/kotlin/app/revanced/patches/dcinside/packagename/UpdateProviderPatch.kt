@@ -1,17 +1,18 @@
 package app.revanced.patches.dcinside.packagename
 
-import app.revanced.patcher.patch.resourcePatch
+import app.morphe.patcher.patch.resourcePatch
 import app.revanced.patches.all.misc.packagename.changePackageNamePatch
 import app.revanced.patches.all.misc.packagename.packageNameOption
-import app.revanced.util.getNode
+import app.morphe.util.getNode
+import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
 
 @Suppress("unused")
 val updateProviderPatch = resourcePatch(
     name = "Update Provider Patch",
     description = "It allows you to install the clone app just like the original.",
-    use = false
+    default = false
 ) {
-    compatibleWith("com.dcinside.app.android"("5.2.7"))
+    compatibleWith(COMPATIBILITY_DC_INSIDE)
     dependsOn(changePackageNamePatch)
 
     execute {

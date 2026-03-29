@@ -1,10 +1,11 @@
 package app.revanced.patches.dcinside.integrity
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
-import app.revanced.patcher.patch.bytecodePatch
-import app.revanced.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
-import app.revanced.patches.dcinside.integrity.fingerprints.nativeGetSignatureByTypeFingerprint
-import app.revanced.patches.dcinside.integrity.fingerprints.nativeGetSignatureHexFingerprint
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
+import app.revanced.patches.dcinside.integrity.fingerprints.NativeGetSignatureByTypeFingerprint
+import app.revanced.patches.dcinside.integrity.fingerprints.NativeGetSignatureHexFingerprint
+import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.builder.MutableMethodImplementation
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
@@ -15,13 +16,13 @@ val spoofSignaturePatch = bytecodePatch(
     name = "Spoof Signature",
     description = "Spoofs the app signature to bypass integrity checks.",
 ) {
-    compatibleWith("com.dcinside.app.android"("5.2.7"))
+    compatibleWith(COMPATIBILITY_DC_INSIDE)
     extendWith("extensions/dcinside.rve")
 
     execute {
-        val nativeGetSignatureHexMethod = nativeGetSignatureHexFingerprint.method
-        nativeGetSignatureHexFingerprint.classDef.methods.remove(nativeGetSignatureHexMethod)
-        nativeGetSignatureHexFingerprint.classDef.methods.add(
+        val nativeGetSignatureHexMethod = NativeGetSignatureHexFingerprint.method
+        NativeGetSignatureHexFingerprint.classDef.methods.remove(nativeGetSignatureHexMethod)
+        NativeGetSignatureHexFingerprint.classDef.methods.add(
             ImmutableMethod(
                 nativeGetSignatureHexMethod.definingClass,
                 nativeGetSignatureHexMethod.name,
@@ -46,9 +47,9 @@ val spoofSignaturePatch = bytecodePatch(
             }
         )
 
-        val nativeGetSignatureByTypeMethod = nativeGetSignatureByTypeFingerprint.method
-        nativeGetSignatureByTypeFingerprint.classDef.methods.remove(nativeGetSignatureByTypeMethod)
-        nativeGetSignatureByTypeFingerprint.classDef.methods.add(
+        val nativeGetSignatureByTypeMethod = NativeGetSignatureByTypeFingerprint.method
+        NativeGetSignatureByTypeFingerprint.classDef.methods.remove(nativeGetSignatureByTypeMethod)
+        NativeGetSignatureByTypeFingerprint.classDef.methods.add(
             ImmutableMethod(
                 nativeGetSignatureByTypeMethod.definingClass,
                 nativeGetSignatureByTypeMethod.name,

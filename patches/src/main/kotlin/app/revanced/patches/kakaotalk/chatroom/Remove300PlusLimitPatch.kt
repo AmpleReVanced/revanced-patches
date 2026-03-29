@@ -1,12 +1,13 @@
 package app.revanced.patches.kakaotalk.chatroom
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
-import app.revanced.patcher.extensions.InstructionExtensions.instructions
-import app.revanced.patcher.extensions.InstructionExtensions.replaceInstruction
-import app.revanced.patcher.patch.bytecodePatch
-import app.revanced.patches.kakaotalk.chatroom.fingerprints.getUnreadCountFingerprint
-import app.revanced.patches.kakaotalk.chatroom.fingerprints.limit300PlusBaseChatRoomFingerprint
-import app.revanced.patches.kakaotalk.chatroom.fingerprints.limit300PlusOpenChatRoomFingerprint
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
+import app.morphe.patcher.patch.bytecodePatch
+import app.revanced.patches.kakaotalk.chatroom.fingerprints.GetUnreadCountFingerprint
+import app.revanced.patches.kakaotalk.chatroom.fingerprints.Limit300PlusBaseChatRoomFingerprint
+import app.revanced.patches.kakaotalk.chatroom.fingerprints.Limit300PlusOpenChatRoomFingerprint
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction10t
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction22t
@@ -16,10 +17,10 @@ val remove300PlusLimitChatRoomPatch = bytecodePatch(
     name = "Disable 300+ unread limit",
     description = "Always show the real unread count instead of '300+' in chatroom list"
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        limit300PlusBaseChatRoomFingerprint.method.apply {
+        Limit300PlusBaseChatRoomFingerprint.method.apply {
             val branches = instructions
                 .filterIsInstance<BuilderInstruction22t>()
                 .filter { it.opcode == Opcode.IF_LT }
@@ -35,7 +36,7 @@ val remove300PlusLimitChatRoomPatch = bytecodePatch(
             }
         }
 
-        limit300PlusOpenChatRoomFingerprint.method.apply {
+        Limit300PlusOpenChatRoomFingerprint.method.apply {
             instructions
                 .filterIsInstance<BuilderInstruction22t>()
                 .filter { it.opcode == Opcode.IF_LT }
@@ -47,7 +48,7 @@ val remove300PlusLimitChatRoomPatch = bytecodePatch(
                 }
         }
 
-        getUnreadCountFingerprint.method.apply {
+        GetUnreadCountFingerprint.method.apply {
             addInstructions(
                 0,
                 """

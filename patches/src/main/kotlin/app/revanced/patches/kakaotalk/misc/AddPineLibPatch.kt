@@ -1,15 +1,16 @@
 package app.revanced.patches.kakaotalk.misc
 
-import app.revanced.patcher.patch.resourcePatch
+import app.morphe.patcher.patch.resourcePatch
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import java.io.File
 
 @Suppress("unused")
 val addPineLibPatch = resourcePatch(
     name = "Add Pine Lib",
     description = "add libpine.so to the app's native libraries",
-    use = false
+    default = false
 ) {
-    compatibleWith("com.kakao.talk")
+    compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
         val targetArm32Lib = get("root/lib/armeabi-v7a/")

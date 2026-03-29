@@ -1,10 +1,12 @@
 package app.revanced.patches.kakaotalk.tracker.fingerprints
 
-import app.revanced.patcher.fingerprint
+import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.OpcodesFilter
+import app.morphe.patcher.fingerprint
 import com.android.tools.smali.dexlib2.Opcode
 
-internal val talkShareServiceInit = fingerprint {
-    opcodes(
+internal object TalkShareServiceInit : Fingerprint(
+    filters = OpcodesFilter.opcodesToFilters(
         Opcode.SGET_OBJECT,
         Opcode.SPUT_OBJECT,
         Opcode.SGET_OBJECT,
@@ -13,6 +15,6 @@ internal val talkShareServiceInit = fingerprint {
         Opcode.CONST_STRING,
         Opcode.INVOKE_VIRTUAL,
         Opcode.INVOKE_VIRTUAL,
-    )
-    custom { method, classDef -> classDef.sourceFile == "TalkShareService.kt" }
-}
+    ),
+    custom = { _, classDef -> classDef.sourceFile == "TalkShareService.kt" }
+)

@@ -120,7 +120,7 @@ public class ChatInfoExtension {
     private void createDeletedLayout() {
         if (deletedPaint == null) return;
 
-        String text = str("revanced_kakaotalk_chatlog_deleted");
+        String text = str("morphe_kakaotalk_chatlog_deleted");
         BoringLayout.Metrics metrics = BoringLayout.isBoring(text, deletedPaint);
 
         if (metrics == null) {

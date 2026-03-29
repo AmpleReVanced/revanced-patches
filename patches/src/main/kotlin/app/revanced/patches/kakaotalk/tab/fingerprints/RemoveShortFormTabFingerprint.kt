@@ -1,22 +1,23 @@
 package app.revanced.patches.kakaotalk.tab.fingerprints
 
-import app.revanced.patcher.fingerprint
+import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.OpcodesFilter
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
-internal val nowFragmentOnViewCreatedFingerprint = fingerprint {
-    parameters("Landroid/view/View;", "Landroid/os/Bundle;")
-    returns("V")
-    custom { method, classDef ->
+internal object NowFragmentOnViewCreatedFingerprint : Fingerprint(
+    parameters = listOf("Landroid/view/View;", "Landroid/os/Bundle;"),
+    returnType = "V",
+    custom = { method, classDef ->
         classDef.sourceFile == "NowFragment.kt" && method.name == "onViewCreated"
     }
-}
+)
 
-internal val nowTabPagerAdapterFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC)
-    parameters("I")
-    returns("Landroidx/fragment/app/Fragment;")
-    opcodes(
+internal object NowTabPagerAdapterFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC),
+    parameters = listOf("I"),
+    returnType = "Landroidx/fragment/app/Fragment;",
+    filters = OpcodesFilter.opcodesToFilters(
         Opcode.SGET_OBJECT,
         Opcode.INVOKE_VIRTUAL,
         Opcode.MOVE_RESULT,
@@ -24,32 +25,32 @@ internal val nowTabPagerAdapterFingerprint = fingerprint {
         Opcode.INVOKE_STATIC,
         Opcode.MOVE_RESULT_OBJECT,
         Opcode.INVOKE_INTERFACE,
-    )
-    custom { method, classDef ->
+    ),
+    custom = { method, classDef ->
         classDef.sourceFile == "NowTabPagerAdapter.kt"
     }
-}
+)
 
-internal val getOpenLinkModuleFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.FINAL)
-    parameters()
-    returns("Lcom/kakao/talk/module/openlink/contract/OpenLinkModuleFacade;")
-    opcodes(
+internal object GetOpenLinkModuleFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.FINAL),
+    parameters = listOf(),
+    returnType = "Lcom/kakao/talk/module/openlink/contract/OpenLinkModuleFacade;",
+    filters = OpcodesFilter.opcodesToFilters(
         Opcode.SGET_OBJECT,
         Opcode.INVOKE_INTERFACE,
         Opcode.MOVE_RESULT_OBJECT,
         Opcode.CHECK_CAST,
         Opcode.RETURN_OBJECT,
-    )
-    custom { method, classDef -> classDef.sourceFile == "ModuleFacades.kt" }
-}
+    ),
+    custom = { method, classDef -> classDef.sourceFile == "ModuleFacades.kt" }
+)
 
-internal val transitionOpenLinkOrShortformMethodFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC)
-    parameters()
-    returns("V")
-    strings("t", "n")
-    opcodes(
+internal object TransitionOpenLinkOrShortformMethodFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC),
+    parameters = listOf(),
+    returnType = "V",
+    strings = listOf("t", "n"),
+    filters = OpcodesFilter.opcodesToFilters(
         Opcode.IGET_OBJECT,
         Opcode.IF_EQZ,
         Opcode.INVOKE_VIRTUAL,
@@ -66,15 +67,22 @@ internal val transitionOpenLinkOrShortformMethodFingerprint = fingerprint {
         Opcode.INVOKE_VIRTUAL,
         Opcode.MOVE_RESULT,
         Opcode.AGET,
-    )
-    custom { method, classDef -> classDef.sourceFile == "NowFragment.kt" }
-}
+    ),
+    custom = { method, classDef -> classDef.sourceFile == "NowFragment.kt" }
+)
 
-internal val chooseNowChildTabFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
-    returns("Ljava/lang/Object;")
-    strings("call to 'resume' before 'invoke' with coroutine", "NOW_TAB", "binding", "viewpager", "hsv")
-    opcodes(
+internal object ChooseNowChildTabFingerprint : Fingerprint(
+    name = "invokeSuspend",
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    returnType = "Ljava/lang/Object;",
+    strings = listOf(
+        "call to 'resume' before 'invoke' with coroutine",
+        "NOW_TAB",
+        "binding",
+        "viewpager",
+        "hsv"
+    ),
+    filters = OpcodesFilter.opcodesToFilters(
         Opcode.INVOKE_STATIC,
         Opcode.MOVE_RESULT_OBJECT,
         Opcode.IGET,
@@ -92,6 +100,6 @@ internal val chooseNowChildTabFingerprint = fingerprint {
         Opcode.THROW,
         Opcode.INVOKE_STATIC,
         Opcode.MOVE_OBJECT
-    )
-    custom { method, classDef -> classDef.sourceFile == "NowFragment.kt" && method.name == "invokeSuspend" }
-}
+    ),
+    custom = { method, classDef -> classDef.sourceFile == "NowFragment.kt" }
+)
