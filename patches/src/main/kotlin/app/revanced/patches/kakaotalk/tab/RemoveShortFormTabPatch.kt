@@ -82,7 +82,7 @@ val removeShortFormTabPatch = bytecodePatch(
 
         NowTabPagerAdapterFingerprint.classDef.methods.first {
             it.name == "getItemCount"
-        }.returnEarly(0)
+        }.returnEarly(1)
 
         val getOpenLinkModuleMethod = GetOpenLinkModuleFingerprint.method
 
