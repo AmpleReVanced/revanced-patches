@@ -4,7 +4,7 @@
 
 Ample Patches is a collection of patches mainly developed for apps such as KakaoTalk and DCinside, with a focus on customization and additional functionality.
 
-This project is built on Morphe, which is based on prior work from ReVanced. All modifications made in this repository, together with their dates, are available in the Git history.
+This project is built on [Morphe](https://morphe.software), which is based on prior work from [ReVanced](https://revanced.app). All modifications made in this repository, together with their dates, are available in the Git history.
 
 ## ❕Copyright Notice
 
