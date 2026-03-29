@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0-dev.2",
+  "version": "1.0.0-dev.3",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -81,7 +81,9 @@
       "name": "Bypass getText",
       "description": "Bypasses the integrity check for getText.",
       "use": true,
-      "dependencies": [],
+      "dependencies": [
+        "BytecodePatch"
+      ],
       "compatiblePackages": {
         "com.dcinside.app.android": [
           "5.2.7"
@@ -360,7 +362,7 @@
     {
       "name": "Disable update check",
       "description": "Disables the app's update check.",
-      "use": true,
+      "use": false,
       "dependencies": [],
       "compatiblePackages": {
         "com.dcinside.app.android": [
@@ -688,7 +690,9 @@
       "name": "Spoof Signature",
       "description": "Spoofs the app signature to bypass integrity checks.",
       "use": true,
-      "dependencies": [],
+      "dependencies": [
+        "BytecodePatch"
+      ],
       "compatiblePackages": {
         "com.dcinside.app.android": [
           "5.2.7"

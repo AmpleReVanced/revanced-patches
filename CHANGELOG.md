@@ -1,3 +1,11 @@
+# [1.0.0-dev.3](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.2...v1.0.0-dev.3) (2026-03-29)
+
+### Bug Fixes
+
+* **dcinside:** fixed an issue finding invalid extensions ([b3445fd](https://github.com/AmpleReVanced/revanced-patches/commit/b3445fd9be8ee7e3e43e4be4f07269c6c3e1566a))
+* **kakaotalk:** remove changeVersionCodePatch dependency ([9b6132c](https://github.com/AmpleReVanced/revanced-patches/commit/9b6132ca1ed38f59f3ee322ea34c5092bf6930cb))
+* **kakaotalk:** should be getItemCount return 1 ([3712723](https://github.com/AmpleReVanced/revanced-patches/commit/371272390e34273af728e825fa23f0a1114c56fe))
+
 # [1.0.0-dev.2](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.1...v1.0.0-dev.2) (2026-03-29)
 
 ### Reverts
