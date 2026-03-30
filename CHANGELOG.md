@@ -1,3 +1,16 @@
+# [1.0.0-dev.5](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.4...v1.0.0-dev.5) (2026-03-30)
+
+
+### Bug Fixes
+
+* **dcinside:** fix update check not being disabled ([f70b97a](https://github.com/AmpleReVanced/revanced-patches/commit/f70b97a67e5630e9211f330f67d984429f54098b))
+* **kakaotalk:** replace REVANCED to MORPHE in settings ([68852c6](https://github.com/AmpleReVanced/revanced-patches/commit/68852c6514bb69307702e2b50405b5c0d073c41f))
+
+
+### Features
+
+* **dcinside:** add notification shortcut functionality and related resources ([761ab4a](https://github.com/AmpleReVanced/revanced-patches/commit/761ab4a630c0266c6a8de19401a077e5bd20c10e))
+
 # [1.0.0-dev.4](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.3...v1.0.0-dev.4) (2026-03-30)
 
 
