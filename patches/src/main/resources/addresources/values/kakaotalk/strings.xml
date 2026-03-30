@@ -17,5 +17,5 @@ Second \"item\" text"</string>
 <resources>
     <string name="morphe_kakaotalk_chatlog_deleted">Deleted</string>
     <string name="morphe_kakaotalk_chatlog_hidden">Hidden</string>
-    <string name="morphe_label_for_ample_settings">Ample Settings</string>
+    <string name="morphe_label_for_ample_settings">Morphe Settings</string>
 </resources>
