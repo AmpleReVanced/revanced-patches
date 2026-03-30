@@ -5,18 +5,24 @@ import app.morphe.patcher.OpcodesFilter
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
-internal object DisableUpdateCheckFingerprint : Fingerprint(
+internal object CheckIsRecentVersionFingerprint : Fingerprint(
     definingClass = "Lcom/dcinside/app/main",
     accessFlags = listOf(AccessFlags.PRIVATE, AccessFlags.FINAL),
     parameters = listOf("Ljava/lang/String;"),
-    strings = listOf("null cannot be cast to non-null type androidx.appcompat.app.AppCompatActivity"),
+    returnType = "Z",
+    strings = listOf("\\."),
     filters = OpcodesFilter.opcodesToFilters(
-        Opcode.SGET_OBJECT,
+        Opcode.CONST_4,
+        Opcode.IF_EQZ,
+        Opcode.INVOKE_STATIC,
+        Opcode.MOVE_RESULT_OBJECT,
         Opcode.INVOKE_VIRTUAL,
         Opcode.MOVE_RESULT_OBJECT,
-        Opcode.CONST_STRING,
-        Opcode.INVOKE_STATIC,
-        Opcode.CHECK_CAST,
-        Opcode.INVOKE_VIRTUAL
+        Opcode.IF_EQZ,
+        Opcode.INVOKE_INTERFACE,
+        Opcode.MOVE_RESULT,
+        Opcode.CONST_4,
+        Opcode.IF_LEZ,
+        Opcode.GOTO
     )
 )
