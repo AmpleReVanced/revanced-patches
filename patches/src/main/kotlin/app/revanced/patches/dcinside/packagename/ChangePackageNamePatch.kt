@@ -1,5 +1,6 @@
 package app.revanced.patches.dcinside.packagename
 
+import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.resourcePatch
 import app.morphe.util.getNode
 import app.revanced.patches.all.misc.packagename.changePackageNamePatch
@@ -8,8 +9,8 @@ import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
 import org.w3c.dom.Element
 
 @Suppress("unused")
-val updateProviderPatch = resourcePatch(
-    name = "Update Provider Patch",
+private val updateProviderPatch = resourcePatch(
+//    name = "Update Provider Patch",
     description = "It allows you to install the clone app just like the original.",
     default = false
 ) {
@@ -57,4 +58,15 @@ val updateProviderPatch = resourcePatch(
             }
         }
     }
+}
+
+@Suppress("unused")
+val changePackageNamePatch = bytecodePatch(
+    name = "Change package name",
+    description = "Appends \".revanced\" to the package name by default. " +
+            "For DCinside only",
+    default = false,
+) {
+    compatibleWith(COMPATIBILITY_DC_INSIDE)
+    dependsOn(changePackageNamePatch)
 }
