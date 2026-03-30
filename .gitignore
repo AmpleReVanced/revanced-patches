@@ -128,3 +128,6 @@ node_modules/
 # One package is called the same as the Gradle build folder
 !**/src/**/build/
 /local.properties
+
+# Internal Code
+**/internal/*
