@@ -1,7 +1,7 @@
 package app.revanced.patches.dcinside.ads
 
-import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.util.returnEarly
 import app.revanced.patches.dcinside.ads.fingerprints.DisableAdControllerFingerprint
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
 
@@ -13,11 +13,6 @@ val disableAdControllerPatch = bytecodePatch(
     compatibleWith(COMPATIBILITY_DC_INSIDE)
 
     execute {
-        DisableAdControllerFingerprint.method.addInstructions(
-            0,
-            """
-                return-void
-            """.trimIndent()
-        )
+        DisableAdControllerFingerprint.method.returnEarly()
     }
 }
