@@ -29,7 +29,6 @@ import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
 val addSettingsTabPatch = bytecodePatch(
     name = "Add settings tab",
     description = "Adds a settings tab to the app.",
-    default = false // Since the settings-related activity has not yet been developed, it will be disabled for the time being.
 ) {
     compatibleWith(COMPATIBILITY_KAKAO)
     dependsOn(
@@ -139,7 +138,7 @@ val addSettingsTabPatch = bytecodePatch(
             it.opcode == Opcode.SGET_OBJECT &&
                     it.getReference<FieldReference>()?.name == "CALL"
         }
-        val finishSetupSettingsModel = (setupSettingsItemMethod.getInstruction(sgetCallIndex - 5) as BuilderInstruction3rc).getReference<MethodReference>()
+        val finishSetupSettingsModel = (setupSettingsItemMethod.getInstruction(sgetCallIndex - 6) as BuilderInstruction3rc).getReference<MethodReference>()
 
         val lastNewInstanceIndex = setupSettingsItemMethod.instructions.indexOfLast {
             it.opcode == Opcode.NEW_INSTANCE
@@ -158,28 +157,29 @@ val addSettingsTabPatch = bytecodePatch(
         setupSettingsItemMethod.addInstructions(
             separatorIndex + 1,
             """
-                new-instance v15, ${finishSetupSettingsModel?.definingClass}
-                sget-object v16, ${mainSettingItemTypeClass.type}->MORPHE:${mainSettingItemTypeClass.type}
-                new-instance v4, ${finishSetupSettingsModel?.parameterTypes[2]}
-                invoke-virtual/range {v16 .. v16}, ${mainSettingItemTypeClass.type}->getStringResId()I
-                move-result v5
-                invoke-virtual {v0, v5}, Landroid/content/Context;->getString(I)Ljava/lang/String;
-                move-result-object v5
-                new-instance v9, Landroid/content/Intent;
-                const-class v12, Lcom/kakao/talk/activity/setting/laboratory/LaboratoryActivity;
-                invoke-direct {v9, v0, v12}, Landroid/content/Intent;-><init>(Landroid/content/Context;Ljava/lang/Class;)V
-                const/16 v12, 0x1e
-                invoke-virtual {v10, v12}, ${trackingAction.getReference<MethodReference>()}
-                move-result-object v12
-                sget-object v14, Lcom/kakao/talk/activity/setting/laboratory/LaboratoryActivity;->Q:Lcom/kakao/talk/activity/setting/laboratory/LaboratoryActivity${'$'}a;
-                invoke-direct {v4, v5, v9, v12, v14}, $initialSettingsItemReference
-                const/16 v19, 0x2
+                new-instance v18, ${finishSetupSettingsModel?.definingClass}
+                sget-object v19, ${mainSettingItemTypeClass.type}->MORPHE:${mainSettingItemTypeClass.type}
+                new-instance v3, ${finishSetupSettingsModel?.parameterTypes[2]}
+                invoke-virtual/range {v19 .. v19}, ${mainSettingItemTypeClass.type}->getStringResId()I
+                move-result v4
+                invoke-virtual {v1, v4}, Landroid/content/Context;->getString(I)Ljava/lang/String;
+                move-result-object v4
+                new-instance v6, Landroid/content/Intent;
+                const-class v10, Lcom/kakao/talk/activity/setting/laboratory/LaboratoryActivity;
+                invoke-direct {v6, v1, v10}, Landroid/content/Intent;-><init>(Landroid/content/Context;Ljava/lang/Class;)V
+                const/16 v10, 0x1e
+                invoke-virtual {v9, v10}, ${trackingAction.getReference<MethodReference>()}
+                move-result-object v10
+                sget-object v12, Lcom/kakao/talk/activity/setting/laboratory/LaboratoryActivity;->O:Lcom/kakao/talk/activity/setting/laboratory/LaboratoryActivity${'$'}a;
+                invoke-direct {v3, v4, v6, v10, v12}, $initialSettingsItemReference
+                const/16 v22, 0x2
+                const/16 v23, 0x0
                 const/16 v20, 0x0
-                const/16 v17, 0x0
-                move-object/from16 v18, v4
-                invoke-direct/range {v15 .. v20}, $finishSetupSettingsModel
-                invoke-virtual {v6, v15}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
-                new-instance v14, ${originalInstruction.getReference<TypeReference>()?.type} # stub
+                move-object/from16 v21, v3
+                invoke-direct/range {v18 .. v23}, $finishSetupSettingsModel
+                move-object/from16 v3, v18
+                invoke-virtual {v7, v3}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+                new-instance v18, ${originalInstruction.getReference<TypeReference>()?.type} # stub
             """.trimIndent()
         )
     }
