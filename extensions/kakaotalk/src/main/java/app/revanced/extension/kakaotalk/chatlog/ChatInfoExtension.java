@@ -150,7 +150,7 @@ public class ChatInfoExtension {
     private void createHiddenLayout() {
         if (hiddenPaint == null) return;
 
-        String text = str("revanced_kakaotalk_chatlog_hidden");
+        String text = str("morphe_kakaotalk_chatlog_hidden");
         BoringLayout.Metrics metrics = BoringLayout.isBoring(text, hiddenPaint);
 
         if (metrics == null) {
