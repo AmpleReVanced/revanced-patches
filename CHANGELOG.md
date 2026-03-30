@@ -1,3 +1,10 @@
+# [1.0.0-dev.7](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.6...v1.0.0-dev.7) (2026-03-30)
+
+
+### Bug Fixes
+
+* **dcinside:** fixed can't install clone variant ([f89e3e5](https://github.com/AmpleReVanced/revanced-patches/commit/f89e3e5259b1731b6e7cdf25f0f4903b6d2ddaf1))
+
 # [1.0.0-dev.6](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.5...v1.0.0-dev.6) (2026-03-30)
 
 
