@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0-dev.4",
+  "version": "v1.0.0-dev.4",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -22,6 +22,36 @@
       "description": "add libpine.so to the app's native libraries",
       "use": false,
       "dependencies": [],
+      "compatiblePackages": {
+        "com.kakao.talk": [
+          "26.2.2"
+        ]
+      },
+      "options": []
+    },
+    {
+      "name": "Add notification shortcut",
+      "description": "Adds a notification shortcut button above quick write in the post list.",
+      "use": true,
+      "dependencies": [
+        "BytecodePatch"
+      ],
+      "compatiblePackages": {
+        "com.dcinside.app.android": [
+          "5.2.7"
+        ]
+      },
+      "options": []
+    },
+    {
+      "name": "Add settings tab",
+      "description": "Adds a settings tab to the app.",
+      "use": false,
+      "dependencies": [
+        "BytecodePatch",
+        "ResourcePatch",
+        "BytecodePatch"
+      ],
       "compatiblePackages": {
         "com.kakao.talk": [
           "26.2.2"
@@ -362,7 +392,7 @@
     {
       "name": "Disable update check",
       "description": "Disables the app's update check.",
-      "use": false,
+      "use": true,
       "dependencies": [],
       "compatiblePackages": {
         "com.dcinside.app.android": [

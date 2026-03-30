@@ -105,7 +105,8 @@ private enum class BundledResourceType {
     // Add more resource xml files as needed.
     ARRAYS,
     COLORS,
-    STRINGS;
+    STRINGS,
+    IDS;
 
     override fun toString(): String {
         return super.toString().lowercase(Locale.US)
