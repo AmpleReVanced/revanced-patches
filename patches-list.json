@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0-dev.7",
+  "version": "1.0.0-dev.8",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -137,6 +137,34 @@
       "name": "Change model",
       "description": "Changes the device model to supporting subdevice features",
       "use": true,
+      "dependencies": [
+        "BytecodePatch"
+      ],
+      "compatiblePackages": {
+        "com.kakao.talk": [
+          "26.2.2"
+        ]
+      },
+      "options": []
+    },
+    {
+      "name": "Change package name",
+      "description": "Appends \".revanced\" to the package name by default. For DCinside only",
+      "use": false,
+      "dependencies": [
+        "ResourcePatch"
+      ],
+      "compatiblePackages": {
+        "com.dcinside.app.android": [
+          "5.2.7"
+        ]
+      },
+      "options": []
+    },
+    {
+      "name": "Change package name",
+      "description": "Appends \".revanced\" to the package name by default. For KakaoTalk only",
+      "use": false,
       "dependencies": [
         "BytecodePatch"
       ],
@@ -524,20 +552,6 @@
       "options": []
     },
     {
-      "name": "Ignore Check Package Name",
-      "description": "Ignores the package name check to allow installation of modified versions.",
-      "use": false,
-      "dependencies": [
-        "ResourcePatch"
-      ],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.2.2"
-        ]
-      },
-      "options": []
-    },
-    {
       "name": "Override feature flag",
       "description": "Overrides the feature flag to enable the feature.",
       "use": true,
@@ -750,20 +764,6 @@
       "compatiblePackages": {
         "com.kakao.talk": [
           "26.2.2"
-        ]
-      },
-      "options": []
-    },
-    {
-      "name": "Update Provider Patch",
-      "description": "It allows you to install the clone app just like the original.",
-      "use": false,
-      "dependencies": [
-        "ResourcePatch"
-      ],
-      "compatiblePackages": {
-        "com.dcinside.app.android": [
-          "5.2.7"
         ]
       },
       "options": []

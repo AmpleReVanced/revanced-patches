@@ -1,3 +1,10 @@
+# [1.0.0-dev.8](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.7...v1.0.0-dev.8) (2026-03-30)
+
+### Features
+
+* **dcinside:** refine ChangePackageNamePatch to modify KakaoTalk package name ([b964d5f](https://github.com/AmpleReVanced/revanced-patches/commit/b964d5f4347223322fa4c62172c5b8267a1bdb6b))
+* **kakaotalk:** refine ChangePackageNamePatch to modify KakaoTalk package name ([6c2f08f](https://github.com/AmpleReVanced/revanced-patches/commit/6c2f08f6279098a848b06c1df800a09b406ba2f0))
+
 # [1.0.0-dev.7](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.6...v1.0.0-dev.7) (2026-03-30)
 
 ### Bug Fixes
