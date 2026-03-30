@@ -77,7 +77,7 @@ val addSettingsTabPatch = bytecodePatch(
                 }
 
                 addInstructions(languageIndex + 1, """
-                    sget-object v22, ${mainSettingItemTypeClass.type}->REVANCED:${mainSettingItemTypeClass.type}
+                    sget-object v22, ${mainSettingItemTypeClass.type}->MORPHE:${mainSettingItemTypeClass.type}
                 """)
 
                 val arrayIndex = instructions.indexOfFirst {
@@ -112,7 +112,7 @@ val addSettingsTabPatch = bytecodePatch(
             invoke-static {v5, v4}, Lapp/revanced/extension/kakaotalk/helper/ResourceHelper;->getResourceId(Ljava/lang/String;Ljava/lang/String;)I
             move-result v4
             invoke-direct {v0, v1, v2, v3, v4}, ${mainSettingItemTypeClass.type}-><init>(Ljava/lang/String;III)V
-            sput-object v0, ${mainSettingItemTypeClass.type}->REVANCED:${mainSettingItemTypeClass.type}
+            sput-object v0, ${mainSettingItemTypeClass.type}->MORPHE:${mainSettingItemTypeClass.type}
         """)
 
         val setupSettingsItemMethod = SetupSettingsItemFingerprint.method
@@ -159,7 +159,7 @@ val addSettingsTabPatch = bytecodePatch(
             separatorIndex + 1,
             """
                 new-instance v15, ${finishSetupSettingsModel?.definingClass}
-                sget-object v16, ${mainSettingItemTypeClass.type}->REVANCED:${mainSettingItemTypeClass.type}
+                sget-object v16, ${mainSettingItemTypeClass.type}->MORPHE:${mainSettingItemTypeClass.type}
                 new-instance v4, ${finishSetupSettingsModel?.parameterTypes[2]}
                 invoke-virtual/range {v16 .. v16}, ${mainSettingItemTypeClass.type}->getStringResId()I
                 move-result v5
