@@ -1,3 +1,9 @@
+# [1.0.0-dev.4](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.3...v1.0.0-dev.4) (2026-03-30)
+
+### Bug Fixes
+
+* **kakaotalk:** update hidden message string reference ([569e91a](https://github.com/AmpleReVanced/revanced-patches/commit/569e91a2d809979adaf396660e19ceb4f5870783))
+
 # [1.0.0-dev.3](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.2...v1.0.0-dev.3) (2026-03-29)
 
 ### Bug Fixes
