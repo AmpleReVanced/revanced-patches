@@ -8,11 +8,10 @@ import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
 val disableUpdateCheckPatch = bytecodePatch(
     name = "Disable update check",
     description = "Disables the app's update check.",
-    default = false, // FIXME
 ) {
     compatibleWith(COMPATIBILITY_DC_INSIDE)
 
     execute {
-        DisableUpdateCheckFingerprint.method.returnEarly(false)
+        CheckIsRecentVersionFingerprint.method.returnEarly(false)
     }
 }
