@@ -27,7 +27,7 @@ import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
 
 @Suppress("unused")
 val addSettingsTabPatch = bytecodePatch(
-//    name = "Add settings tab",
+    name = "Add settings tab",
     description = "Adds a settings tab to the app.",
     default = false // Since the settings-related activity has not yet been developed, it will be disabled for the time being.
 ) {
