@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0-dev.5",
+  "version": "1.0.0-dev.6",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -46,7 +46,7 @@
     {
       "name": "Add settings tab",
       "description": "Adds a settings tab to the app.",
-      "use": false,
+      "use": true,
       "dependencies": [
         "BytecodePatch",
         "ResourcePatch",

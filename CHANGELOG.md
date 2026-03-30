@@ -1,3 +1,9 @@
+# [1.0.0-dev.6](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.5...v1.0.0-dev.6) (2026-03-30)
+
+### Features
+
+* **kakaotalk:** update settings tab patch and localize settings label ([cc35cdd](https://github.com/AmpleReVanced/revanced-patches/commit/cc35cddf4718d63d8468ea54b821a513eb3d24e4))
+
 # [1.0.0-dev.5](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.4...v1.0.0-dev.5) (2026-03-30)
 
 ### Bug Fixes
