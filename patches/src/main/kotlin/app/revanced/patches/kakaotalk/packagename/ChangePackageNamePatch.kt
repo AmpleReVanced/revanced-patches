@@ -14,13 +14,12 @@ import com.android.tools.smali.dexlib2.iface.reference.StringReference
 import com.android.tools.smali.dexlib2.immutable.reference.ImmutableStringReference
 
 @Suppress("unused")
-val ignoreCheckPackageNamePatch = bytecodePatch(
-    name = "Ignore Check Package Name",
+private val ignoreCheckPackageNamePatch = bytecodePatch(
+//    name = "Ignore Check Package Name",
     description = "Ignores the package name check to allow installation of modified versions.",
     default = false,
 ) {
     compatibleWith(COMPATIBILITY_KAKAO)
-
     dependsOn(changePackageNamePatch)
 
     execute {
@@ -50,4 +49,15 @@ val ignoreCheckPackageNamePatch = bytecodePatch(
             )
         }
     }
+}
+
+@Suppress("unused")
+val changePackageNamePatch = bytecodePatch(
+    name = "Change package name",
+    description = "Appends \".revanced\" to the package name by default. " +
+            "For KakaoTalk only",
+    default = false,
+) {
+    compatibleWith(COMPATIBILITY_KAKAO)
+    dependsOn(ignoreCheckPackageNamePatch)
 }
