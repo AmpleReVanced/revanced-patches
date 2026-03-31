@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:key="morphe_pref_category_chat"
+        android:title="@string/morphe_settings_section_chat">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="morphe_pref_show_deleted_hidden"
+            android:persistent="false"
+            android:summary="@string/morphe_settings_patch_deleted_hidden_summary"
+            android:title="@string/morphe_settings_patch_deleted_hidden" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="morphe_pref_ghost_mode"
+            android:persistent="false"
+            android:summary="@string/morphe_settings_patch_ghost_mode_summary"
+            android:title="@string/morphe_settings_patch_ghost_mode" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="morphe_pref_category_information"
+        android:title="@string/morphe_settings_section_information">
+
+        <Preference
+            android:key="morphe_pref_app_version"
+            android:title="@string/morphe_settings_app_version" />
+
+        <Preference
+            android:key="morphe_pref_patches_version"
+            android:title="@string/morphe_settings_patches_version" />
+
+        <Preference
+            android:key="morphe_pref_package_name"
+            android:title="@string/morphe_settings_package_name" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="morphe_pref_category_debug"
+        android:title="@string/morphe_settings_section_debug">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="morphe_pref_force_debug_mode"
+            android:persistent="false"
+            android:summary="@string/morphe_settings_patch_force_debug_mode_summary"
+            android:title="@string/morphe_settings_patch_force_debug_mode" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="morphe_pref_debug"
+            android:persistent="false"
+            android:summary="@string/morphe_settings_debug_summary"
+            android:title="@string/morphe_settings_debug" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:dependency="morphe_pref_debug"
+            android:key="morphe_pref_debug_stacktrace"
+            android:persistent="false"
+            android:summary="@string/morphe_settings_debug_stacktrace_summary"
+            android:title="@string/morphe_settings_debug_stacktrace" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="morphe_pref_debug_toast"
+            android:persistent="false"
+            android:summary="@string/morphe_settings_debug_toast_summary"
+            android:title="@string/morphe_settings_debug_toast" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="morphe_pref_category_manage"
+        android:title="@string/morphe_settings_section_manage">
+
+        <Preference
+            android:key="morphe_pref_reset"
+            android:summary="@string/morphe_settings_reset_all_summary"
+            android:title="@string/morphe_settings_reset_all" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="morphe_pref_category_links"
+        android:title="@string/morphe_settings_section_links">
+
+        <Preference
+            android:key="morphe_pref_github"
+            android:summary="@string/morphe_settings_link_github_summary"
+            android:title="@string/morphe_settings_link_github" />
+    </PreferenceCategory>
+</PreferenceScreen>
