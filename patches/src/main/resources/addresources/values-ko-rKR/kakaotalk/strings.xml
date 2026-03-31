@@ -56,4 +56,5 @@
     <string name="morphe_settings_link_github">GitHub</string>
     <string name="morphe_settings_link_github_summary">github.com/AmpleReVanced/revanced-patches</string>
     <string name="morphe_settings_restart_note">일부 설정은 즉시 반영되지만, 재시작이 필요한 훅이나 패치 시점 변경은 카카오톡을 다시 열거나 재시작해야 적용됩니다.</string>
+    <string name="morphe_settings_restart_required">설정을 적용하려면 재시작이 필요합니다.</string>
 </resources>
