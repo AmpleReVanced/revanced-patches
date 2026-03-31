@@ -7,13 +7,6 @@
 
         <SwitchPreference
             android:defaultValue="true"
-            android:key="morphe_pref_show_deleted_hidden"
-            android:persistent="false"
-            android:summary="@string/morphe_settings_patch_deleted_hidden_summary"
-            android:title="@string/morphe_settings_patch_deleted_hidden" />
-
-        <SwitchPreference
-            android:defaultValue="true"
             android:key="morphe_pref_ghost_mode"
             android:persistent="false"
             android:summary="@string/morphe_settings_patch_ghost_mode_summary"
