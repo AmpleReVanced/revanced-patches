@@ -59,6 +59,7 @@ val bypassMoatCheckPatch = bytecodePatch(
                 MutableMethodImplementation(5)
             ).toMutable().apply {
                 addInstructions(
+                    0,
                     """
                         const/4 v0, 0x0
                         new-array v0, v0, ${moatResultClass.type}

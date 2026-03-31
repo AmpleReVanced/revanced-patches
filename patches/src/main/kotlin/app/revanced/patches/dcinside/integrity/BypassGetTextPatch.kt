@@ -41,6 +41,7 @@ val bypassGetTextPath = bytecodePatch(
                 MutableMethodImplementation(5)
             ).toMutable().apply {
                 addInstructions(
+                    0,
                     """
                         invoke-static {p1, p2, p3, p4}, Lapp/revanced/extension/dcinside/api/AppId;->getAppId(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
                     

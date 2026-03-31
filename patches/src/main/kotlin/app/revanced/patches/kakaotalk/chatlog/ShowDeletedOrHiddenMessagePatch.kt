@@ -166,6 +166,7 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
                 MutableMethodImplementation(3),
             ).toMutable().apply {
                 addInstructions(
+                    0,
                     """
                             iget-object v0, p0, Lcom/kakao/talk/widget/chatlog/ChatInfoView;->extension:Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;
                             return-object v0
@@ -294,6 +295,7 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
                         MutableMethodImplementation(3),
                     ).toMutable().apply {
                         addInstructions(
+                            0,
                             """
                                 const-string v0, "_revanced_deleted"
                                 invoke-virtual {p0, v0, p1}, ${chatLogVFieldClass.type}->${putBooleanMethod.name}(Ljava/lang/String;Z)V
@@ -312,6 +314,7 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
                         MutableMethodImplementation(3),
                     ).toMutable().apply {
                         addInstructions(
+                            0,
                             """
                                 iget-object v0, p0, ${chatLogVFieldClass.type}->a:Lorg/json/JSONObject;
                                 const-string v1, "_revanced_deleted"
@@ -335,6 +338,7 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
                         MutableMethodImplementation(3),
                     ).toMutable().apply {
                         addInstructions(
+                            0,
                             """
                                 const-string v0, "_revanced_hidden"
                                 invoke-virtual {p0, v0, p1}, ${chatLogVFieldClass.type}->${putBooleanMethod.name}(Ljava/lang/String;Z)V
@@ -353,6 +357,7 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
                         MutableMethodImplementation(3),
                     ).toMutable().apply {
                         addInstructions(
+                            0,
                             """
                                 iget-object v0, p0, ${chatLogVFieldClass.type}->a:Lorg/json/JSONObject;
                                 const-string v1, "_revanced_hidden"
