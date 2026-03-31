@@ -37,6 +37,7 @@ val spoofSignaturePatch = bytecodePatch(
                 MutableMethodImplementation(5)
             ).toMutable().apply {
                 addInstructions(
+                    0,
                     """
                         invoke-static {}, Lapp/revanced/extension/dcinside/api/AppId;->getApkSignatureHex()Ljava/lang/String;
                     
@@ -64,6 +65,7 @@ val spoofSignaturePatch = bytecodePatch(
                 MutableMethodImplementation(5)
             ).toMutable().apply {
                 addInstructions(
+                    0,
                     """
                         invoke-static {p1}, Lapp/revanced/extension/dcinside/api/AppId;->getApkSignatureByType(Ljava/lang/String;)Ljava/util/ArrayList;
                     
