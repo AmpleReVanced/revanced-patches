@@ -13,6 +13,7 @@ val forceEnableDebugModePatch = bytecodePatch(
     description = "Enables debug mode in the app.",
 ) {
     compatibleWith(COMPATIBILITY_KAKAO)
+    dependsOn(addExtensionPatch)
 
     execute {
         val method = ConfigConstructorFingerprint.method
@@ -24,7 +25,8 @@ val forceEnableDebugModePatch = bytecodePatch(
         method.addInstructions(
             idxReturn,
             """
-                const/4 v0, 0x1
+                invoke-static {}, Lapp/revanced/extension/kakaotalk/settings/Settings;->forceDebugMode()Z
+                move-result v0
                 sput-boolean v0, $clazz->b:Z
             """.trimIndent()
         )

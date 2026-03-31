@@ -34,7 +34,9 @@ val addSettingsTabPatch = bytecodePatch(
     dependsOn(
         addExtensionPatch,
         addResourcesPatch,
-        sharedExtensionPatch
+        addSettingsResourcesPatch,
+        sharedExtensionPatch,
+        registerSettingsActivityPatch
     )
 
     execute {
@@ -165,7 +167,7 @@ val addSettingsTabPatch = bytecodePatch(
                 invoke-virtual {v1, v4}, Landroid/content/Context;->getString(I)Ljava/lang/String;
                 move-result-object v4
                 new-instance v6, Landroid/content/Intent;
-                const-class v10, Lcom/kakao/talk/activity/setting/laboratory/LaboratoryActivity;
+                const-class v10, Lapp/revanced/extension/kakaotalk/settings/SettingsActivity;
                 invoke-direct {v6, v1, v10}, Landroid/content/Intent;-><init>(Landroid/content/Context;Ljava/lang/Class;)V
                 const/16 v10, 0x1e
                 invoke-virtual {v9, v10}, ${trackingAction.getReference<MethodReference>()}

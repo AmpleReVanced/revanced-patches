@@ -1,1 +1,10 @@
-<manifest/>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <activity
+            android:name="app.revanced.extension.kakaotalk.settings.SettingsActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.DeviceDefault" />
+    </application>
+</manifest>

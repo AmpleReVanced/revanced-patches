@@ -6,9 +6,12 @@ import android.text.BoringLayout;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
+
 import com.kakao.talk.widget.chatlog.ChatInfoView;
 import com.kakao.talk.widget.chatlog.MyChatInfoView;
 import com.kakao.talk.widget.chatlog.OthersChatInfoView;
+
+import app.revanced.extension.kakaotalk.settings.Settings;
 
 import static app.revanced.extension.shared.StringRef.str;
 
@@ -88,6 +91,15 @@ public class ChatInfoExtension {
     }
 
     public void setDeleted(boolean deleted) {
+        if (!Settings.showDeletedHiddenMessages()) {
+            this.isDeleted = false;
+            deletedLayout = null;
+            deletedRect = null;
+            view.requestLayout();
+            view.invalidate();
+            return;
+        }
+
         if (this.isDeleted != deleted) {
             this.isDeleted = deleted;
             if (deleted) {
@@ -103,6 +115,15 @@ public class ChatInfoExtension {
     }
 
     public void setHidden(boolean hidden) {
+        if (!Settings.showDeletedHiddenMessages()) {
+            this.isHidden = false;
+            hiddenLayout = null;
+            hiddenRect = null;
+            view.requestLayout();
+            view.invalidate();
+            return;
+        }
+
         if (this.isHidden != hidden) {
             this.isHidden = hidden;
             if (hidden) {
@@ -178,12 +199,20 @@ public class ChatInfoExtension {
     }
 
     public int getAdditionalWidth() {
+        if (!Settings.showDeletedHiddenMessages()) {
+            return 0;
+        }
+
         int deletedWidth = (isDeleted && deletedLayout != null) ? deletedLayout.getWidth() : 0;
         int hiddenWidth = (isHidden && hiddenLayout != null) ? hiddenLayout.getWidth() : 0;
         return Math.max(deletedWidth, hiddenWidth);
     }
 
     public int getAdditionalHeight() {
+        if (!Settings.showDeletedHiddenMessages()) {
+            return 0;
+        }
+
         int extensionHeight = 0;
 
         if (isDeleted && deletedLayout != null) {
@@ -229,6 +258,12 @@ public class ChatInfoExtension {
     }
 
     public int calculateRect(int paddingLeft, int totalWidth, int currentTop) {
+        if (!Settings.showDeletedHiddenMessages()) {
+            deletedRect = null;
+            hiddenRect = null;
+            return currentTop;
+        }
+
         if (!isDeleted && !isHidden) {
             return currentTop;
         }
@@ -280,6 +315,10 @@ public class ChatInfoExtension {
     }
 
     public void draw(android.graphics.Canvas canvas) {
+        if (!Settings.showDeletedHiddenMessages()) {
+            return;
+        }
+
         if (isDeleted && deletedLayout != null && deletedRect != null) {
             canvas.save();
             canvas.translate(deletedRect.left, deletedRect.top);
