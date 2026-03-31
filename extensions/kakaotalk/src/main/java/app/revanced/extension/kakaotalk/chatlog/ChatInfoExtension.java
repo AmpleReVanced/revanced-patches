@@ -6,9 +6,12 @@ import android.text.BoringLayout;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
+
 import com.kakao.talk.widget.chatlog.ChatInfoView;
 import com.kakao.talk.widget.chatlog.MyChatInfoView;
 import com.kakao.talk.widget.chatlog.OthersChatInfoView;
+
+import app.revanced.extension.kakaotalk.settings.Settings;
 
 import static app.revanced.extension.shared.StringRef.str;
 
