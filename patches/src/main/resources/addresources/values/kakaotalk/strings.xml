@@ -22,6 +22,8 @@ Second \"item\" text"</string>
     <string name="morphe_settings_description">Preference-style controls for Morphe patches, runtime experiments, and diagnostics inside KakaoTalk.</string>
     <string name="morphe_settings_section_live">Live patch toggles</string>
     <string name="morphe_settings_section_chat">Chat</string>
+    <string name="morphe_settings_section_navigation">Navigation</string>
+    <string name="morphe_settings_section_features">Features</string>
     <string name="morphe_settings_live_hint">These switches control runtime-capable patches. If a matching patch was not applied, the switch behaves as a catalog item only.</string>
     <string name="morphe_settings_section_catalog">Patch catalog</string>
     <string name="morphe_settings_catalog_hint">These are good candidates for settings, but they still need to be applied when patching the app.</string>
@@ -45,6 +47,8 @@ Second \"item\" text"</string>
     <string name="morphe_settings_patch_recording_pause_resume_summary">Keeps the voice recording controls available when the patch is installed.</string>
     <string name="morphe_settings_patch_send_big_text">Enable send big text</string>
     <string name="morphe_settings_patch_send_big_text_summary">Lets large text messages pass through the patched send flow.</string>
+    <string name="morphe_settings_patch_play_youtube_player_in_chat_room">Play YouTube in chat room</string>
+    <string name="morphe_settings_patch_play_youtube_player_in_chat_room_summary">Keeps the in-chat YouTube player available when opening supported YouTube content in a chat room.</string>
     <string name="morphe_settings_patch_force_debug_mode">Force KakaoTalk debug mode</string>
     <string name="morphe_settings_patch_force_debug_mode_summary">Overrides the internal config flag that toggles KakaoTalk’s own debug mode.</string>
     <string name="morphe_settings_catalog_full_unread_count">Disable 99+ unread cap</string>

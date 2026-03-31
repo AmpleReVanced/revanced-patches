@@ -6,6 +6,8 @@
     <string name="morphe_settings_description">카카오톡 안에서 동작하는 Morphe 패치, 런타임 실험 기능, 진단 옵션을 preference 스타일로 정리했습니다.</string>
     <string name="morphe_settings_section_live">라이브 패치 토글</string>
     <string name="morphe_settings_section_chat">채팅</string>
+    <string name="morphe_settings_section_navigation">탭</string>
+    <string name="morphe_settings_section_features">기능</string>
     <string name="morphe_settings_live_hint">이 스위치는 런타임 전환이 가능한 패치를 제어합니다. 대응되는 패치가 적용되지 않았다면 안내용 목록처럼만 동작합니다.</string>
     <string name="morphe_settings_section_catalog">패치 카탈로그</string>
     <string name="morphe_settings_catalog_hint">설정으로 만들기 좋은 항목이지만, 아직은 앱을 패치할 때 함께 적용해야 합니다.</string>
@@ -29,6 +31,8 @@
     <string name="morphe_settings_patch_recording_pause_resume_summary">패치가 적용된 경우 음성 녹음 제어를 계속 사용할 수 있게 합니다.</string>
     <string name="morphe_settings_patch_send_big_text">긴 텍스트 전송 허용</string>
     <string name="morphe_settings_patch_send_big_text_summary">긴 텍스트 메시지도 패치된 전송 흐름으로 통과시킵니다.</string>
+    <string name="morphe_settings_patch_play_youtube_player_in_chat_room">채팅방에서 유튜브 재생</string>
+    <string name="morphe_settings_patch_play_youtube_player_in_chat_room_summary">지원되는 유튜브 콘텐츠를 채팅방에서 열 때 인앱 유튜브 플레이어를 사용할 수 있게 합니다.</string>
     <string name="morphe_settings_patch_force_debug_mode">카카오톡 디버그 모드 강제</string>
     <string name="morphe_settings_patch_force_debug_mode_summary">카카오톡 내부 설정 플래그를 덮어써서 디버그 모드를 강제로 켭니다.</string>
     <string name="morphe_settings_catalog_full_unread_count">99+ 미표시 제한 해제</string>
