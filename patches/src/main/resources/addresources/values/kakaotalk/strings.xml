@@ -45,8 +45,8 @@ Second \"item\" text"</string>
     <string name="morphe_settings_patch_external_browser_summary">Opens external links with the system default browser instead of KakaoTalk’s in-app routing.</string>
     <string name="morphe_settings_patch_recording_pause_resume">Enable recording pause and resume</string>
     <string name="morphe_settings_patch_recording_pause_resume_summary">Keeps the voice recording controls available when the patch is installed.</string>
-    <string name="morphe_settings_patch_send_big_text">Enable send big text</string>
-    <string name="morphe_settings_patch_send_big_text_summary">Lets large text messages pass through the patched send flow.</string>
+    <string name="morphe_settings_patch_send_big_text">Enable big text send</string>
+    <string name="morphe_settings_patch_send_big_text_summary">Lets you long-press the send button to send a single text message in an enlarged style.</string>
     <string name="morphe_settings_patch_play_youtube_player_in_chat_room">Play YouTube in chat room</string>
     <string name="morphe_settings_patch_play_youtube_player_in_chat_room_summary">Keeps the in-chat YouTube player available when opening supported YouTube content in a chat room.</string>
     <string name="morphe_settings_patch_force_debug_mode">Force KakaoTalk debug mode</string>
