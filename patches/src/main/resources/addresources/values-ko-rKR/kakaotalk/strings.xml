@@ -29,8 +29,8 @@
     <string name="morphe_settings_patch_external_browser_summary">외부 링크를 카카오톡 내부 라우팅 대신 시스템 기본 브라우저로 엽니다.</string>
     <string name="morphe_settings_patch_recording_pause_resume">녹음 일시정지/재개 활성화</string>
     <string name="morphe_settings_patch_recording_pause_resume_summary">패치가 적용된 경우 음성 녹음 제어를 계속 사용할 수 있게 합니다.</string>
-    <string name="morphe_settings_patch_send_big_text">긴 텍스트 전송 허용</string>
-    <string name="morphe_settings_patch_send_big_text_summary">긴 텍스트 메시지도 패치된 전송 흐름으로 통과시킵니다.</string>
+    <string name="morphe_settings_patch_send_big_text">큰 텍스트 전송 활성화</string>
+    <string name="morphe_settings_patch_send_big_text_summary">전송 버튼을 길게 눌러 단일 텍스트 메시지를 크게 보낼 수 있게 합니다.</string>
     <string name="morphe_settings_patch_play_youtube_player_in_chat_room">채팅방에서 유튜브 재생</string>
     <string name="morphe_settings_patch_play_youtube_player_in_chat_room_summary">지원되는 유튜브 콘텐츠를 채팅방에서 열 때 인앱 유튜브 플레이어를 사용할 수 있게 합니다.</string>
     <string name="morphe_settings_patch_force_debug_mode">카카오톡 디버그 모드 강제</string>
