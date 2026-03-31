@@ -21,6 +21,51 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:key="morphe_pref_category_navigation"
+        android:title="@string/morphe_settings_section_navigation">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="morphe_pref_remove_short_form_tab"
+            android:persistent="false"
+            android:summary="@string/morphe_settings_catalog_remove_short_form_tab_summary"
+            android:title="@string/morphe_settings_catalog_remove_short_form_tab" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="morphe_pref_category_features"
+        android:title="@string/morphe_settings_section_features">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="morphe_pref_default_external_browser"
+            android:persistent="false"
+            android:summary="@string/morphe_settings_patch_external_browser_summary"
+            android:title="@string/morphe_settings_patch_external_browser" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="morphe_pref_enable_recording_pause_resume"
+            android:persistent="false"
+            android:summary="@string/morphe_settings_patch_recording_pause_resume_summary"
+            android:title="@string/morphe_settings_patch_recording_pause_resume" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="morphe_pref_enable_send_big_text"
+            android:persistent="false"
+            android:summary="@string/morphe_settings_patch_send_big_text_summary"
+            android:title="@string/morphe_settings_patch_send_big_text" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="morphe_pref_play_youtube_player_in_chat_room"
+            android:persistent="false"
+            android:summary="@string/morphe_settings_patch_play_youtube_player_in_chat_room_summary"
+            android:title="@string/morphe_settings_patch_play_youtube_player_in_chat_room" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:key="morphe_pref_category_information"
         android:title="@string/morphe_settings_section_information">
 
