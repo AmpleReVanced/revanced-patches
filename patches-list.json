@@ -44,13 +44,27 @@
       "options": []
     },
     {
+      "name": "Add settings resources",
+      "description": "Adds Morphe settings layout resources to the app.",
+      "use": true,
+      "dependencies": [],
+      "compatiblePackages": {
+        "com.kakao.talk": [
+          "26.2.2"
+        ]
+      },
+      "options": []
+    },
+    {
       "name": "Add settings tab",
       "description": "Adds a settings tab to the app.",
       "use": true,
       "dependencies": [
         "BytecodePatch",
         "ResourcePatch",
-        "BytecodePatch"
+        "ResourcePatch",
+        "BytecodePatch",
+        "ResourcePatch"
       ],
       "compatiblePackages": {
         "com.kakao.talk": [
@@ -203,7 +217,9 @@
       "name": "Default external browser",
       "description": "Sets the default external browser for KakaoTalk to the system's default browser.",
       "use": true,
-      "dependencies": [],
+      "dependencies": [
+        "BytecodePatch"
+      ],
       "compatiblePackages": {
         "com.kakao.talk": [
           "26.2.2"
@@ -469,7 +485,9 @@
       "name": "Enable recording pause/resume feature",
       "description": "Enable recording pause/resume feature in KakaoTalk",
       "use": true,
-      "dependencies": [],
+      "dependencies": [
+        "BytecodePatch"
+      ],
       "compatiblePackages": {
         "com.kakao.talk": [
           "26.2.2"
@@ -480,8 +498,10 @@
     {
       "name": "Enable send big text",
       "description": "Allows sending big text messages in KakaoTalk.",
-      "use": false,
-      "dependencies": [],
+      "use": true,
+      "dependencies": [
+        "BytecodePatch"
+      ],
       "compatiblePackages": {
         "com.kakao.talk": [
           "26.2.2"
@@ -493,7 +513,9 @@
       "name": "Force enable debug mode",
       "description": "Enables debug mode in the app.",
       "use": true,
-      "dependencies": [],
+      "dependencies": [
+        "BytecodePatch"
+      ],
       "compatiblePackages": {
         "com.kakao.talk": [
           "26.2.2"
@@ -517,7 +539,9 @@
       "name": "Ghost Mode",
       "description": "Don't expose your typing status to the other party.",
       "use": true,
-      "dependencies": [],
+      "dependencies": [
+        "BytecodePatch"
+      ],
       "compatiblePackages": {
         "com.kakao.talk": [
           "26.2.2"
@@ -579,6 +603,20 @@
       "name": "Play YouTube player in chat room",
       "description": "Allows playing YouTube videos in KakaoTalk chat rooms.",
       "use": true,
+      "dependencies": [
+        "BytecodePatch"
+      ],
+      "compatiblePackages": {
+        "com.kakao.talk": [
+          "26.2.2"
+        ]
+      },
+      "options": []
+    },
+    {
+      "name": "Register settings activity",
+      "description": "Registers the Morphe settings activity in the app manifest.",
+      "use": true,
       "dependencies": [],
       "compatiblePackages": {
         "com.kakao.talk": [
@@ -627,7 +665,9 @@
       "name": "Remove Short-form Tab",
       "description": "Removes the Short-form tab from the now fragment.",
       "use": true,
-      "dependencies": [],
+      "dependencies": [
+        "BytecodePatch"
+      ],
       "compatiblePackages": {
         "com.kakao.talk": [
           "26.2.2"
