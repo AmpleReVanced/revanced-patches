@@ -37,6 +37,7 @@ public final class SettingsActivity extends Activity {
     private static final String PREF_PACKAGE_NAME = "morphe_pref_package_name";
     private static final String PREF_RESET = "morphe_pref_reset";
     private static final String PREF_GITHUB = "morphe_pref_github";
+    private static final String MESSAGE_RESTART_REQUIRED = "morphe_settings_restart_required";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +88,11 @@ public final class SettingsActivity extends Activity {
     public static final class SettingsFragment extends PreferenceFragment {
         private final List<SwitchBinding> switchBindings = new ArrayList<>();
         private final Set<BooleanSetting> resettableSettings = new LinkedHashSet<>();
+        private static final Set<String> RESTART_SENSITIVE_PREFERENCES = new LinkedHashSet<>();
+
+        static {
+            RESTART_SENSITIVE_PREFERENCES.add(PREF_REMOVE_SHORT_FORM_TAB);
+        }
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -132,9 +138,22 @@ public final class SettingsActivity extends Activity {
             resettableSettings.add(setting);
             preference.setOnPreferenceChangeListener((pref, newValue) -> {
                 setting.save((Boolean) newValue);
+                maybeShowRestartRequiredNotice(key);
                 refreshPreferences();
                 return true;
             });
+        }
+
+        private void maybeShowRestartRequiredNotice(String key) {
+            if (!RESTART_SENSITIVE_PREFERENCES.contains(key)) {
+                return;
+            }
+
+            int resourceId = ResourceHelper.getResourceId("string", MESSAGE_RESTART_REQUIRED);
+            String message = resourceId == 0
+                    ? "Restart is required to apply this setting."
+                    : requireActivity().getString(resourceId);
+            Utils.showToastLong(message);
         }
 
         private void bindInfoPreference(String key, String summary) {

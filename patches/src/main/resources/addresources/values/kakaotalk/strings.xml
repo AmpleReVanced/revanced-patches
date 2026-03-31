@@ -72,4 +72,5 @@ Second \"item\" text"</string>
     <string name="morphe_settings_link_github">GitHub</string>
     <string name="morphe_settings_link_github_summary">github.com/AmpleReVanced/revanced-patches</string>
     <string name="morphe_settings_restart_note">Some settings apply immediately, but restart-sensitive hooks and patch-time changes still require reopening or restarting KakaoTalk.</string>
+    <string name="morphe_settings_restart_required">Restart is required to apply this setting.</string>
 </resources>
