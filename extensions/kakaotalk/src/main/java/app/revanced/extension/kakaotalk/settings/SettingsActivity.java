@@ -115,7 +115,7 @@ public final class SettingsActivity extends Activity {
             bindInfoPreference(PREF_PATCHES_VERSION, Utils.getPatchesReleaseVersion());
             bindInfoPreference(PREF_PACKAGE_NAME, requireActivity().getPackageName());
             bindResetPreference();
-            bindLinkPreference(PREF_GITHUB, "https://github.com/MorpheApp/morphe-patches");
+            bindLinkPreference(PREF_GITHUB, "https://github.com/AmpleReVanced/revanced-patches");
 
             refreshPreferences();
         }
