@@ -31,6 +31,9 @@ public final class Settings extends BaseSettings {
     public static final BooleanSetting ENABLE_SEND_BIG_TEXT =
             new BooleanSetting("kakaotalk_enable_send_big_text", false);
 
+    public static final BooleanSetting ENABLE_MARKDOWN =
+            new BooleanSetting("kakaotalk_enable_markdown", false);
+
     public static final BooleanSetting PLAY_YOUTUBE_PLAYER_IN_CHAT_ROOM =
             new BooleanSetting("kakaotalk_play_youtube_player_in_chat_room", TRUE);
 
@@ -59,6 +62,10 @@ public final class Settings extends BaseSettings {
 
     public static boolean enableSendBigText() {
         return ENABLE_SEND_BIG_TEXT.get();
+    }
+
+    public static boolean enableMarkdown() {
+        return ENABLE_MARKDOWN.get();
     }
 
     public static boolean playYoutubePlayerInChatRoom() {

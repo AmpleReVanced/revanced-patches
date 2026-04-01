@@ -47,6 +47,8 @@ Second \"item\" text"</string>
     <string name="morphe_settings_patch_recording_pause_resume_summary">Keeps the voice recording controls available when the patch is installed.</string>
     <string name="morphe_settings_patch_send_big_text">Enable big text send</string>
     <string name="morphe_settings_patch_send_big_text_summary">Lets you long-press the send button to send a single text message in an enlarged style.</string>
+    <string name="morphe_settings_patch_markdown">Send markdown text</string>
+    <string name="morphe_settings_patch_markdown_summary">Sends regular text messages with markdown enabled instead of plain text only.</string>
     <string name="morphe_settings_patch_play_youtube_player_in_chat_room">Play YouTube in chat room</string>
     <string name="morphe_settings_patch_play_youtube_player_in_chat_room_summary">Keeps the in-chat YouTube player available when opening supported YouTube content in a chat room.</string>
     <string name="morphe_settings_patch_force_debug_mode">Force KakaoTalk debug mode</string>

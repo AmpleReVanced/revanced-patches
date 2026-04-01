@@ -31,6 +31,8 @@
     <string name="morphe_settings_patch_recording_pause_resume_summary">패치가 적용된 경우 음성 녹음 제어를 계속 사용할 수 있게 합니다.</string>
     <string name="morphe_settings_patch_send_big_text">큰 텍스트 전송 활성화</string>
     <string name="morphe_settings_patch_send_big_text_summary">전송 버튼을 길게 눌러 단일 텍스트 메시지를 크게 보낼 수 있게 합니다.</string>
+    <string name="morphe_settings_patch_markdown">마크다운 텍스트 전송</string>
+    <string name="morphe_settings_patch_markdown_summary">일반 텍스트 메시지를 평문 전용 대신 마크다운이 적용된 상태로 전송합니다.</string>
     <string name="morphe_settings_patch_play_youtube_player_in_chat_room">채팅방에서 유튜브 재생</string>
     <string name="morphe_settings_patch_play_youtube_player_in_chat_room_summary">지원되는 유튜브 콘텐츠를 채팅방에서 열 때 인앱 유튜브 플레이어를 사용할 수 있게 합니다.</string>
     <string name="morphe_settings_patch_force_debug_mode">카카오톡 디버그 모드 강제</string>
