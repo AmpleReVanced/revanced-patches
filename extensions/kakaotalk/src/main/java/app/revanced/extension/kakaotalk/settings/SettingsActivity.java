@@ -23,6 +23,7 @@ import app.revanced.extension.shared.settings.BooleanSetting;
 public final class SettingsActivity extends Activity {
     private static final String PREF_GHOST_MODE = "morphe_pref_ghost_mode";
     private static final String PREF_REMOVE_SHORT_FORM_TAB = "morphe_pref_remove_short_form_tab";
+    private static final String PREF_DISABLE_99_UNREAD_LIMIT = "morphe_pref_disable_99_unread_limit";
     private static final String PREF_DEFAULT_EXTERNAL_BROWSER = "morphe_pref_default_external_browser";
     private static final String PREF_ENABLE_RECORDING_PAUSE_RESUME = "morphe_pref_enable_recording_pause_resume";
     private static final String PREF_ENABLE_SEND_BIG_TEXT = "morphe_pref_enable_send_big_text";
@@ -101,6 +102,7 @@ public final class SettingsActivity extends Activity {
 
             bindSwitch(PREF_GHOST_MODE, Settings.GHOST_MODE);
             bindSwitch(PREF_REMOVE_SHORT_FORM_TAB, Settings.REMOVE_SHORT_FORM_TAB);
+            bindSwitch(PREF_DISABLE_99_UNREAD_LIMIT, Settings.DISABLE_99_UNREAD_LIMIT);
             bindSwitch(PREF_DEFAULT_EXTERNAL_BROWSER, Settings.DEFAULT_EXTERNAL_BROWSER);
             bindSwitch(PREF_ENABLE_RECORDING_PAUSE_RESUME, Settings.ENABLE_RECORDING_PAUSE_RESUME);
             bindSwitch(PREF_ENABLE_SEND_BIG_TEXT, Settings.ENABLE_SEND_BIG_TEXT);
