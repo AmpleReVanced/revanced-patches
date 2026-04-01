@@ -141,5 +141,10 @@
             android:key="morphe_pref_github"
             android:summary="@string/morphe_settings_link_github_summary"
             android:title="@string/morphe_settings_link_github" />
+
+        <Preference
+            android:key="morphe_pref_telegram"
+            android:summary="@string/morphe_settings_link_telegram_summary"
+            android:title="@string/morphe_settings_link_telegram" />
     </PreferenceCategory>
 </PreferenceScreen>
