@@ -1,3 +1,17 @@
+# [1.0.0-dev.9](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.8...v1.0.0-dev.9) (2026-04-01)
+
+
+### Bug Fixes
+
+* **kakaotalk:** update GitHub link to point to the correct repository ([5d5ef67](https://github.com/AmpleReVanced/revanced-patches/commit/5d5ef679893f6374a21df59adab64a6897a64152))
+
+
+### Features
+
+* **kakaotalk:** add markdown support for text messages and update settings ([a59f480](https://github.com/AmpleReVanced/revanced-patches/commit/a59f480890ded7bd3578183780be9377dafaa556))
+* **kakaotalk:** add option to disable 99 unread limit and update settings ([1c5fefe](https://github.com/AmpleReVanced/revanced-patches/commit/1c5fefeeb67c17fd8a5e0cb13dc24ba665dece2c))
+* **kakaotalk:** update Korean strings for clarity and consistency in settings ([07ecf0a](https://github.com/AmpleReVanced/revanced-patches/commit/07ecf0ae79aa5a52067ce75198f3bc05e2cf4b15))
+
 # [1.0.0-dev.8](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.7...v1.0.0-dev.8) (2026-03-31)
 
 

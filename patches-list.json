@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0-dev.8",
+  "version": "1.0.0-dev.9",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -257,7 +257,9 @@
       "name": "Disable 99 unread limit",
       "description": "Skip the 99-cap so unread count shows full value",
       "use": true,
-      "dependencies": [],
+      "dependencies": [
+        "BytecodePatch"
+      ],
       "compatiblePackages": {
         "com.kakao.talk": [
           "26.2.2"
@@ -450,6 +452,20 @@
       "description": "Disables the signature verification check that prevents the app from running.",
       "use": true,
       "dependencies": [],
+      "compatiblePackages": {
+        "com.kakao.talk": [
+          "26.2.2"
+        ]
+      },
+      "options": []
+    },
+    {
+      "name": "Enable Markdown",
+      "description": "Render plain text messages with markdown-style formatting.",
+      "use": true,
+      "dependencies": [
+        "BytecodePatch"
+      ],
       "compatiblePackages": {
         "com.kakao.talk": [
           "26.2.2"
