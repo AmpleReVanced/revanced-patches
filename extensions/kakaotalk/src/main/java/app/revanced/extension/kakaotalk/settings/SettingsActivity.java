@@ -38,6 +38,7 @@ public final class SettingsActivity extends Activity {
     private static final String PREF_PACKAGE_NAME = "morphe_pref_package_name";
     private static final String PREF_RESET = "morphe_pref_reset";
     private static final String PREF_GITHUB = "morphe_pref_github";
+    private static final String PREF_TELEGRAM = "morphe_pref_telegram";
     private static final String MESSAGE_RESTART_REQUIRED = "morphe_settings_restart_required";
 
     @Override
@@ -118,6 +119,7 @@ public final class SettingsActivity extends Activity {
             bindInfoPreference(PREF_PACKAGE_NAME, requireActivity().getPackageName());
             bindResetPreference();
             bindLinkPreference(PREF_GITHUB, "https://github.com/AmpleReVanced/revanced-patches");
+            bindLinkPreference(PREF_TELEGRAM, "https://example.com"); // TODO: input official channel link
 
             refreshPreferences();
         }
