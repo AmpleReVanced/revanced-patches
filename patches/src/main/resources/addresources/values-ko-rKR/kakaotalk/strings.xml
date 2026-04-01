@@ -25,6 +25,8 @@
     <string name="morphe_settings_patch_deleted_hidden_summary">채팅 로그 뷰에 삭제됨, 가려짐 표시를 직접 그려서 보여줍니다.</string>
     <string name="morphe_settings_patch_ghost_mode">고스트 모드</string>
     <string name="morphe_settings_patch_ghost_mode_summary">상대방에게 입력 중 상태나 현재 동작 정보가 전달되지 않도록 합니다.</string>
+    <string name="morphe_settings_patch_disable_99_unread_limit">읽지 않은 수 전체 표시</string>
+    <string name="morphe_settings_patch_disable_99_unread_limit_summary">읽지 않은 수를 99+로 줄이지 않고 실제 숫자로 표시합니다.</string>
     <string name="morphe_settings_patch_external_browser">외부 브라우저로 열기</string>
     <string name="morphe_settings_patch_external_browser_summary">외부 링크를 카카오톡 내부 브라우저 대신 기본 브라우저로 엽니다.</string>
     <string name="morphe_settings_patch_recording_pause_resume">녹음 일시중지/재개</string>

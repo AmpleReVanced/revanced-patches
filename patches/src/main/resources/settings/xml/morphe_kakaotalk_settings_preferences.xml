@@ -11,6 +11,13 @@
             android:persistent="false"
             android:summary="@string/morphe_settings_patch_ghost_mode_summary"
             android:title="@string/morphe_settings_patch_ghost_mode" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="morphe_pref_disable_99_unread_limit"
+            android:persistent="false"
+            android:summary="@string/morphe_settings_patch_disable_99_unread_limit_summary"
+            android:title="@string/morphe_settings_patch_disable_99_unread_limit" />
     </PreferenceCategory>
 
     <PreferenceCategory
