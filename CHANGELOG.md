@@ -1,3 +1,9 @@
+# [1.0.0-dev.10](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.9...v1.0.0-dev.10) (2026-04-02)
+
+### Features
+
+* **kakaotalk:** add telegram link in settings ([e02b1a3](https://github.com/AmpleReVanced/revanced-patches/commit/e02b1a39a990fcf6ec44c106bf998a3e3f591255))
+
 # [1.0.0-dev.9](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.8...v1.0.0-dev.9) (2026-04-01)
 
 ### Bug Fixes
