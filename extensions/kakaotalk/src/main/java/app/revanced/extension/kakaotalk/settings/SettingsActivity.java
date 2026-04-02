@@ -119,7 +119,7 @@ public final class SettingsActivity extends Activity {
             bindInfoPreference(PREF_PACKAGE_NAME, requireActivity().getPackageName());
             bindResetPreference();
             bindLinkPreference(PREF_GITHUB, "https://github.com/AmpleReVanced/revanced-patches");
-            bindLinkPreference(PREF_TELEGRAM, "https://example.com"); // TODO: input official channel link
+            bindLinkPreference(PREF_TELEGRAM, "https://t.me/ample_revanced_bot");
 
             refreshPreferences();
         }
