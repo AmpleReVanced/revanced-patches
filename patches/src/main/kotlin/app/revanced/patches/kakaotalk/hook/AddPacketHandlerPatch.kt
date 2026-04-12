@@ -19,7 +19,9 @@ val addPacketHandlerPatch = resourcePatch(
 
     execute {
         document("AndroidManifest.xml").use { document ->
+            val manifest = document.getElementsByTagName("manifest").item(0) as Element
             val application = document.getElementsByTagName("application").item(0) as Element
+            val packageName = manifest.getAttribute("package")
 
             val providers = application.getElementsByTagName("provider")
             var startupProvider: Element? = null
@@ -36,7 +38,7 @@ val addPacketHandlerPatch = resourcePatch(
                 startupProvider = document.createElement("provider")
                 startupProvider.setAttribute("android:name", "androidx.startup.InitializationProvider")
                 startupProvider.setAttribute("android:exported", "false")
-                startupProvider.setAttribute("android:authorities", "com.kakao.talk.androidx-startup")
+                startupProvider.setAttribute("android:authorities", "$packageName.androidx-startup")
                 application.appendChild(startupProvider)
             }
 

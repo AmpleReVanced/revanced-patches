@@ -1,64 +1,17 @@
 package app.revanced.patches.dcinside.packagename
 
+import app.morphe.patcher.patch.Option
+import app.morphe.patcher.patch.booleanOption
 import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.patch.stringOption
 import app.morphe.util.getNode
-import app.revanced.patches.all.misc.packagename.changePackageNamePatch
-import app.revanced.patches.all.misc.packagename.packageNameOption
+import app.revanced.patches.dcinside.integrity.bypassGetTextPath
+import app.revanced.patches.dcinside.integrity.spoofSignaturePatch
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
+import app.revanced.patches.shared.misc.packagename.baseChangePackageNamePatch
 import org.w3c.dom.Element
 
-@Suppress("unused")
-private val updateProviderPatch = resourcePatch(
-//    name = "Update Provider Patch",
-    description = "It allows you to install the clone app just like the original.",
-    default = false
-) {
-    compatibleWith(COMPATIBILITY_DC_INSIDE)
-    dependsOn(changePackageNamePatch)
-
-    execute {
-        val originalPackageName = "com.dcinside.app.android"
-        val replacementPackageName = packageNameOption.value
-        val newPackageName = if (replacementPackageName != packageNameOption.default) {
-            replacementPackageName!!
-        } else {
-            "$originalPackageName.revanced"
-        }
-
-        document("res/values/strings.xml").use { document ->
-            val resources = document.getNode("resources") as Element
-            val stringNodes = resources.getElementsByTagName("string")
-
-            for (i in 0 until stringNodes.length) {
-                val stringElement = stringNodes.item(i) as Element
-                val textContent = stringElement.textContent?.trim()
-
-                if (textContent != null && textContent.startsWith(originalPackageName)) {
-                    val updatedValue = textContent.replace(originalPackageName, newPackageName)
-                    stringElement.textContent = updatedValue
-                }
-            }
-        }
-
-        document("AndroidManifest.xml").use { document ->
-            val manifest = document.getNode("manifest") as Element
-            val providerNodes = manifest.getElementsByTagName("provider")
-
-            for (i in 0 until providerNodes.length) {
-                val provider = providerNodes.item(i) as Element
-                val authorities = provider.getAttribute("android:authorities")
-
-                if (authorities.startsWith(originalPackageName)) {
-                    provider.setAttribute(
-                        "android:authorities",
-                        authorities.replace(originalPackageName, newPackageName),
-                    )
-                }
-            }
-        }
-    }
-}
+lateinit var packageNameOption: Option<String>
 
 @Suppress("unused")
 val changePackageNamePatch = bytecodePatch(
@@ -67,6 +20,57 @@ val changePackageNamePatch = bytecodePatch(
             "For DCinside only",
     default = false,
 ) {
+    packageNameOption = stringOption(
+        key = "packageName",
+        default = "Default",
+        values = mapOf("Default" to "Default"),
+        title = "Package name",
+        description = "The name of the package to rename the app to.",
+        required = true,
+    ) {
+        it == "Default" || it!!.matches(Regex("^[a-z]\\w*(\\.[a-z]\\w*)+\$"))
+    }
+
+    val updatePermissions by booleanOption(
+        key = "updatePermissions",
+        default = false,
+        title = "Update permissions",
+        description = "Update compatibility receiver permissions. " +
+                "Enabling this can fix installation errors, but this can also break features in certain apps.",
+    )
+
+    val updateProviders by booleanOption(
+        key = "updateProviders",
+        default = false,
+        title = "Update providers",
+        description = "Update provider names declared by the app. " +
+                "Enabling this can fix installation errors, but this can also break features in certain apps.",
+    )
+
     compatibleWith(COMPATIBILITY_DC_INSIDE)
-    dependsOn(changePackageNamePatch)
+    dependsOn(
+        baseChangePackageNamePatch(
+            packageName = { packageNameOption },
+            updatePermissions = { updatePermissions == true },
+            updateProviders = { updateProviders == true },
+            extraChanges = { currentPackageName, newPackageName ->
+                if (updateProviders != true) return@baseChangePackageNamePatch
+
+                document("res/values/strings.xml").use { document ->
+                    val resources = document.getNode("resources") as Element
+                    val stringNodes = resources.getElementsByTagName("string")
+
+                    for (index in 0 until stringNodes.length) {
+                        val stringElement = stringNodes.item(index) as Element
+                        val textContent = stringElement.textContent?.trim() ?: continue
+                        if (!textContent.startsWith(currentPackageName)) continue
+
+                        stringElement.textContent = textContent.replace(currentPackageName, newPackageName)
+                    }
+                }
+            },
+        ),
+        bypassGetTextPath,
+        spoofSignaturePatch,
+    )
 }

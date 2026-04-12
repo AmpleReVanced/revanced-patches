@@ -2,16 +2,21 @@ package app.revanced.patches.kakaotalk.packagename
 
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
+import app.morphe.patcher.patch.Option
+import app.morphe.patcher.patch.booleanOption
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.stringOption
 import app.morphe.util.getReference
 import app.morphe.util.returnEarly
-import app.revanced.patches.all.misc.packagename.changePackageNamePatch
-import app.revanced.patches.all.misc.packagename.packageNameOption
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
+import app.revanced.patches.shared.misc.packagename.baseChangePackageNamePatch
+import app.revanced.patches.shared.misc.packagename.resolvePackageName
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction21c
 import com.android.tools.smali.dexlib2.iface.reference.StringReference
 import com.android.tools.smali.dexlib2.immutable.reference.ImmutableStringReference
+
+lateinit var packageNameOption: Option<String>
 
 @Suppress("unused")
 private val ignoreCheckPackageNamePatch = bytecodePatch(
@@ -20,18 +25,12 @@ private val ignoreCheckPackageNamePatch = bytecodePatch(
     default = false,
 ) {
     compatibleWith(COMPATIBILITY_KAKAO)
-    dependsOn(changePackageNamePatch)
 
     execute {
         CheckPackageNameFingerprint.method.returnEarly()
 
         GetInstallSourceInfoFingerprint.method.apply {
-            val replacementPackageName = packageNameOption.value
-            val newPackageName = if (replacementPackageName != packageNameOption.default) {
-                replacementPackageName!!
-            } else {
-                "com.kakao.talk.revanced"
-            }
+            val newPackageName = resolvePackageName(packageNameOption, "com.kakao.talk")
 
             val packageName = instructions
                 .filterIsInstance<BuilderInstruction21c>()
@@ -58,6 +57,40 @@ val changePackageNamePatch = bytecodePatch(
             "For KakaoTalk only",
     default = false,
 ) {
+    packageNameOption = stringOption(
+        key = "packageName",
+        default = "Default",
+        values = mapOf("Default" to "Default"),
+        title = "Package name",
+        description = "The name of the package to rename the app to.",
+        required = true,
+    ) {
+        it == "Default" || it!!.matches(Regex("^[a-z]\\w*(\\.[a-z]\\w*)+\$"))
+    }
+
+    val updatePermissions by booleanOption(
+        key = "updatePermissions",
+        default = false,
+        title = "Update permissions",
+        description = "Update compatibility receiver permissions. " +
+            "Enabling this can fix installation errors, but this can also break features in certain apps.",
+    )
+
+    val updateProviders by booleanOption(
+        key = "updateProviders",
+        default = false,
+        title = "Update providers",
+        description = "Update provider names declared by the app. " +
+            "Enabling this can fix installation errors, but this can also break features in certain apps.",
+    )
+
     compatibleWith(COMPATIBILITY_KAKAO)
-    dependsOn(ignoreCheckPackageNamePatch)
+    dependsOn(
+        baseChangePackageNamePatch(
+            packageName = { packageNameOption },
+            updatePermissions = { updatePermissions == true },
+            updateProviders = { updateProviders == true },
+        ),
+        ignoreCheckPackageNamePatch,
+    )
 }
