@@ -1,3 +1,13 @@
+# [1.0.0-dev.11](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.10...v1.0.0-dev.11) (2026-04-12)
+
+
+### Features
+
+* **dcinside:** add custom branding patch for app name and icon customization ([4bb298a](https://github.com/AmpleReVanced/revanced-patches/commit/4bb298a3b4258069cf1bf261150188debcd938fa))
+* **kakaotalk:** use manifest package name for androidx-startup ([9ad149b](https://github.com/AmpleReVanced/revanced-patches/commit/9ad149b2af4c1ed39d61c2904b77f1c922447720))
+* **shared:** add morphe's icon resource ([4da3b21](https://github.com/AmpleReVanced/revanced-patches/commit/4da3b21c609e07f8144ec1bbfe633856ba9301a6))
+* **shared:** add shared package rename support for DCinside and ([9235a66](https://github.com/AmpleReVanced/revanced-patches/commit/9235a66aa706a48909dd2b5b82a226107047d175))
+
 # [1.0.0-dev.10](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.9...v1.0.0-dev.10) (2026-04-02)
 
 
