@@ -368,7 +368,7 @@
     },
     {
       "name": "Disable ChatRoomAdController",
-      "description": "Disables the ChatRoomAdController to prevent ads from being shown in chat room list",
+      "description": "Disables the open-link chat room BizBoard ad controller.",
       "use": true,
       "dependencies": [],
       "compatiblePackages": {
@@ -428,7 +428,7 @@
     },
     {
       "name": "Disable Friend Lists ad",
-      "description": "Disables the Friend Lists ad in KakaoTalk.",
+      "description": "Disables the friend tab BizBoard ads in KakaoTalk.",
       "use": true,
       "dependencies": [],
       "compatiblePackages": {
@@ -446,6 +446,30 @@
       "compatiblePackages": {
         "com.dcinside.app.android": [
           "5.2.7"
+        ]
+      },
+      "options": []
+    },
+    {
+      "name": "Disable OpenChat feed ad",
+      "description": "Disables the OpenChat tab feed ad load and render paths.",
+      "use": true,
+      "dependencies": [],
+      "compatiblePackages": {
+        "com.kakao.talk": [
+          "26.3.1"
+        ]
+      },
+      "options": []
+    },
+    {
+      "name": "Disable Pay banner ad",
+      "description": "Disables the KakaoPay banner ad load and render paths.",
+      "use": true,
+      "dependencies": [],
+      "compatiblePackages": {
+        "com.kakao.talk": [
+          "26.3.1"
         ]
       },
       "options": []
@@ -496,6 +520,18 @@
       "use": false,
       "dependencies": [],
       "compatiblePackages": null,
+      "options": []
+    },
+    {
+      "name": "Disable ShortForm ad",
+      "description": "Disables the shortform ad load and render paths.",
+      "use": true,
+      "dependencies": [],
+      "compatiblePackages": {
+        "com.kakao.talk": [
+          "26.3.1"
+        ]
+      },
       "options": []
     },
     {
