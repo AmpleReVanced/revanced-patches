@@ -17,7 +17,6 @@ internal object AddSectionToMoreTabUIFingerprint : Fingerprint(
         "null cannot be cast to non-null type com.kakao.talk.moretab.ui.model.AdBigUiModel",
         "null cannot be cast to non-null type com.kakao.talk.moretab.ui.model.AdLocalUiModel",
         "null cannot be cast to non-null type com.kakao.talk.moretab.ui.model.MoreTabConfiguration",
-        "null cannot be cast to non-null type com.kakao.talk.moretab.ui.model.ShortcutServiceUiModel",
         "null cannot be cast to non-null type com.kakao.talk.moretab.ui.model.GamePlayUiModel",
         "null cannot be cast to non-null type kotlin.collections.List<com.kakao.talk.moretab.domain.model.MoreTabFeature>",
         "call to 'resume' before 'invoke' with coroutine",
@@ -28,7 +27,7 @@ internal object AddSectionToMoreTabUIFingerprint : Fingerprint(
         Opcode.MOVE_RESULT_OBJECT,
         Opcode.IGET,
         Opcode.CONST_4,
-        Opcode.CONST_4,
+        Opcode.IF_EQZ
     )
 )
 
