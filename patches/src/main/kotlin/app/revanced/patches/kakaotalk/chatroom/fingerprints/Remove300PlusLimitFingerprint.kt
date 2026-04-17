@@ -2,12 +2,11 @@ package app.revanced.patches.kakaotalk.chatroom.fingerprints
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.OpcodesFilter
-import app.morphe.patcher.fingerprint
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
 internal object Limit300PlusBaseChatRoomFingerprint : Fingerprint(
-    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    accessFlags = listOf(AccessFlags.PUBLIC),
     returnType = "V",
     strings = listOf("300+"),
     custom = { _, classDef -> classDef.sourceFile == "BaseChatRoomItemViewHolder.kt" }

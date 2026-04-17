@@ -89,7 +89,7 @@ val enableMarkdownPatch = bytecodePatch(
                 if-eqz v$flagRegister, :morphe_skip_markdown
                 invoke-virtual {v$chatMessageRegister}, $messageMethodReference
                 move-result-object v$scratchRegister
-                invoke-static {v$scratchRegister}, Lkotlin/text/StringsKt__StringsKt;->z0(Ljava/lang/CharSequence;)Z
+                invoke-static {v$scratchRegister}, Lkotlin/text/StringsKt__StringsKt;->A0(Ljava/lang/CharSequence;)Z
                 move-result v$flagRegister
                 if-nez v$flagRegister, :morphe_skip_markdown
                 const-string v$scratchRegister, "markdown"
