@@ -6,47 +6,42 @@ import app.morphe.util.hasMethodCall
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
-internal object FriendListChipBizBoardBindFingerprint : Fingerprint(
+internal object OpenChatFeedAdLoadFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     returnType = "V",
     filters = OpcodesFilter.opcodesToFilters(
-        Opcode.INVOKE_VIRTUAL,
-        Opcode.MOVE_RESULT,
+        Opcode.SGET_OBJECT,
         Opcode.INVOKE_VIRTUAL,
         Opcode.MOVE_RESULT_OBJECT,
-        Opcode.IGET_OBJECT,
         Opcode.INVOKE_VIRTUAL,
         Opcode.MOVE_RESULT_OBJECT,
     ),
     custom = { method, classDef ->
-        classDef.sourceFile == "FriendListChipBizBoardAdViewHolder.kt" &&
+        classDef.sourceFile == "OpenChatTabFeedAdViewHolder.kt" &&
                 method.parameterTypes.size == 2 &&
                 method.hasMethodCall(
-                    "Lcom/kakao/adfit/ads/talk/TalkNativeAdBinder;",
-                    "setPrivateAdEventListener",
-                    "V"
+                    "Lcom/kakao/adfit/ads/feed/FeedAdLoader;",
+                    "loadAd",
+                    "Z"
                 )
     }
 )
 
-internal object BirthdayFriendsBizBoardBindFingerprint : Fingerprint(
-    accessFlags = listOf(AccessFlags.PUBLIC),
+internal object OpenChatFeedAdRenderFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     returnType = "V",
-    strings = listOf("item"),
     filters = OpcodesFilter.opcodesToFilters(
-        Opcode.CONST_STRING,
-        Opcode.INVOKE_STATIC,
-        Opcode.INVOKE_SUPER,
-        Opcode.IGET_OBJECT,
         Opcode.INVOKE_VIRTUAL,
-        Opcode.MOVE_RESULT_OBJECT
+        Opcode.MOVE_RESULT_OBJECT,
+        Opcode.CHECK_CAST,
+        Opcode.IGET_OBJECT
     ),
     custom = { method, classDef ->
-        classDef.sourceFile == "FriendTabBirthdayFriendsBizBoardAdViewHolder.kt" &&
-                method.parameterTypes.size == 1 &&
+        classDef.sourceFile == "OpenChatTabFeedAdViewHolder.kt" &&
+                method.parameterTypes.size == 3 &&
                 method.hasMethodCall(
-                    "Lcom/kakao/adfit/ads/media/NativeAdBinder;",
-                    "bind",
+                    "Lcom/kakao/adfit/ads/feed/FeedAdLayout;",
+                    "setFeedAd",
                     "V"
                 )
     }

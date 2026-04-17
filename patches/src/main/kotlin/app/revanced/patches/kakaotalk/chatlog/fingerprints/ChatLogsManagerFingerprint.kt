@@ -2,7 +2,6 @@ package app.revanced.patches.kakaotalk.chatlog.fingerprints
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.OpcodesFilter
-import app.morphe.patcher.fingerprint
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
@@ -57,6 +56,7 @@ internal object PutDeletedMessageCacheFingerprint : Fingerprint(
     returnType = "V",
     filters = OpcodesFilter.opcodesToFilters(
         Opcode.SGET_OBJECT,
+        Opcode.MONITOR_ENTER,
         Opcode.INVOKE_STATIC,
         Opcode.MOVE_RESULT_OBJECT,
         Opcode.INVOKE_VIRTUAL,
@@ -67,11 +67,15 @@ internal object PutDeletedMessageCacheFingerprint : Fingerprint(
         Opcode.CONST_16,
         Opcode.INVOKE_DIRECT,
     ),
-    custom = { _, classDef -> classDef.sourceFile == "ChatLogsManager.kt" }
+    custom = { method, classDef ->
+        classDef.sourceFile == "ChatLogsManager.kt" &&
+                method.parameterTypes.size == 2
+    }
 )
 
 internal object GetDeletedMessageCacheFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf("Lcom/kakao/talk/db/model/chatlog/c;"),
     returnType = "Z",
     filters = OpcodesFilter.opcodesToFilters(
         Opcode.SGET_OBJECT,
@@ -87,6 +91,13 @@ internal object GetDeletedMessageCacheFingerprint : Fingerprint(
         Opcode.MOVE_RESULT_WIDE,
         Opcode.INVOKE_STATIC,
         Opcode.MOVE_RESULT_OBJECT,
+        Opcode.INVOKE_VIRTUAL,
+        Opcode.MOVE_RESULT_OBJECT,
+        Opcode.CHECK_CAST,
+        Opcode.IF_EQZ,
+        Opcode.INVOKE_VIRTUAL,
+        Opcode.MOVE_RESULT,
+        Opcode.RETURN,
     ),
     custom = { method, classDef -> classDef.sourceFile == "ChatLogsManager.kt" && method.parameterTypes.size == 1 }
 )
