@@ -166,14 +166,14 @@ val addSettingsTabPatch = bytecodePatch(
                 move-result v4
                 invoke-virtual {v1, v4}, Landroid/content/Context;->getString(I)Ljava/lang/String;
                 move-result-object v4
-                new-instance v6, Landroid/content/Intent;
-                const-class v10, Lapp/revanced/extension/kakaotalk/settings/SettingsActivity;
-                invoke-direct {v6, v1, v10}, Landroid/content/Intent;-><init>(Landroid/content/Context;Ljava/lang/Class;)V
-                const/16 v10, 0x1e
-                invoke-virtual {v9, v10}, ${trackingAction.getReference<MethodReference>()}
-                move-result-object v10
-                sget-object v12, Lcom/kakao/talk/activity/setting/laboratory/LaboratoryActivity;->O:Lcom/kakao/talk/activity/setting/laboratory/LaboratoryActivity${'$'}a;
-                invoke-direct {v3, v4, v6, v10, v12}, $initialSettingsItemReference
+                new-instance v10, Landroid/content/Intent;
+                const-class v11, Lapp/revanced/extension/kakaotalk/settings/SettingsActivity;
+                invoke-direct {v10, v1, v11}, Landroid/content/Intent;-><init>(Landroid/content/Context;Ljava/lang/Class;)V
+                const/16 v11, 0x1e
+                invoke-virtual {v9, v11}, ${trackingAction.getReference<MethodReference>()}
+                move-result-object v11
+                sget-object v13, Lcom/kakao/talk/activity/setting/laboratory/LaboratoryActivity;->O:Lcom/kakao/talk/activity/setting/laboratory/LaboratoryActivity${'$'}a;
+                invoke-direct {v3, v4, v10, v11, v13}, $initialSettingsItemReference
                 const/16 v22, 0x2
                 const/16 v23, 0x0
                 const/16 v20, 0x0

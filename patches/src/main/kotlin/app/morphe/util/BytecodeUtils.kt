@@ -1410,3 +1410,28 @@ fun customLiteral(literalSupplier: () -> Long): ((method: Method, classDef: Clas
     { method, _ ->
         method.containsLiteralInstruction(literalSupplier())
     }
+
+/**
+ * @author naijun0403
+ */
+internal fun Method.hasMethodCall(
+    definingClass: String,
+    name: String,
+    returnType: String? = null,
+): Boolean = implementation?.instructions?.any { instruction ->
+    val reference = instruction.getReference<MethodReference>() ?: return@any false
+    reference.definingClass == definingClass &&
+            reference.name == name &&
+            (returnType == null || reference.returnType == returnType)
+} == true
+
+/**
+ * @author naijun0403
+ */
+internal fun Method.hasFieldReference(
+    definingClass: String,
+    name: String,
+): Boolean = implementation?.instructions?.any { instruction ->
+    val reference = instruction.getReference<FieldReference>() ?: return@any false
+    reference.definingClass == definingClass && reference.name == name
+} == true
