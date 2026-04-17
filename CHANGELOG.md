@@ -1,3 +1,17 @@
+# [1.0.0-dev.12](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.11...v1.0.0-dev.12) (2026-04-17)
+
+### Bug Fixes
+
+* **kakaotalk:** adopt Remove300PlusLimitFingerprint to 26.3.0 ([60820ec](https://github.com/AmpleReVanced/revanced-patches/commit/60820ec5ea06be31e6ca96a827d9f526814233c1))
+
+### Features
+
+* **kakaotalk:** bump version kakaotalk patches to 26.3.0 ([45152ac](https://github.com/AmpleReVanced/revanced-patches/commit/45152ac2bd39462f3caa81ed9e1609c7d2ef4b46))
+* **kakaotalk:** bump version kakaotalk patches to 26.3.1 ([3e39c44](https://github.com/AmpleReVanced/revanced-patches/commit/3e39c4459b4208e2061c467d045ef6da31bcd4d1))
+* **kakaotalk:** make patches compatible with 26.3.1 ([cefd1c8](https://github.com/AmpleReVanced/revanced-patches/commit/cefd1c8f23f01cb0904b4e2e127c73b089d54183))
+* **kakaotalk:** update apkChecksum for 26.3.0 ([5e5b95c](https://github.com/AmpleReVanced/revanced-patches/commit/5e5b95c2e9132823374ba7845b3b0f7c1f6176b9))
+* **kakaotalk:** update apkChecksum for 26.3.1 ([79dfe44](https://github.com/AmpleReVanced/revanced-patches/commit/79dfe443070dbc91dd69efe88af71da26d410dce))
+
 # [1.0.0-dev.11](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.10...v1.0.0-dev.11) (2026-04-12)
 
 ### Features
