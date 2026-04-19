@@ -2,15 +2,9 @@
     <string name="morphe_kakaotalk_chatlog_deleted">삭제됨</string>
     <string name="morphe_kakaotalk_chatlog_hidden">가려짐</string>
     <string name="morphe_label_for_ample_settings">Morphe 설정</string>
-    <string name="morphe_settings_header_eyebrow">KakaoTalk</string>
-    <string name="morphe_settings_description">카카오톡에서 사용할 수 있는 Morphe 패치와 실험 기능, 진단 옵션을 설정 화면으로 정리했습니다.</string>
-    <string name="morphe_settings_section_live">라이브 패치 토글</string>
     <string name="morphe_settings_section_chat">채팅</string>
     <string name="morphe_settings_section_navigation">탭</string>
     <string name="morphe_settings_section_features">기능</string>
-    <string name="morphe_settings_live_hint">이 스위치는 런타임 전환이 가능한 패치를 제어합니다. 대응되는 패치가 적용되지 않았다면 안내용 목록처럼만 동작합니다.</string>
-    <string name="morphe_settings_section_catalog">패치 카탈로그</string>
-    <string name="morphe_settings_catalog_hint">설정으로 만들기 좋은 항목이지만, 아직은 앱을 패치할 때 함께 적용해야 합니다.</string>
     <string name="morphe_settings_section_information">정보</string>
     <string name="morphe_settings_app_version">앱 버전</string>
     <string name="morphe_settings_patches_version">패치 버전</string>
@@ -18,11 +12,6 @@
     <string name="morphe_settings_section_debug">디버그</string>
     <string name="morphe_settings_section_manage">관리</string>
     <string name="morphe_settings_section_links">링크</string>
-    <string name="morphe_settings_debug_hint">패치 동작이나 확장 오류를 추적할 때 사용하는 옵션입니다.</string>
-    <string name="morphe_settings_badge_restart">재시작</string>
-    <string name="morphe_settings_badge_build_time">패치 시 적용</string>
-    <string name="morphe_settings_patch_deleted_hidden">삭제/가려짐 표시 보기</string>
-    <string name="morphe_settings_patch_deleted_hidden_summary">채팅 로그 뷰에 삭제됨, 가려짐 표시를 직접 그려서 보여줍니다.</string>
     <string name="morphe_settings_patch_ghost_mode">고스트 모드</string>
     <string name="morphe_settings_patch_ghost_mode_summary">상대방에게 입력 중 상태나 현재 동작 정보가 전달되지 않도록 합니다.</string>
     <string name="morphe_settings_patch_disable_99_unread_limit">읽지 않은 수 전체 표시</string>
@@ -39,16 +28,8 @@
     <string name="morphe_settings_patch_play_youtube_player_in_chat_room_summary">지원되는 유튜브 링크를 채팅방 안에서 바로 재생할 수 있습니다.</string>
     <string name="morphe_settings_patch_force_debug_mode">카카오톡 디버그 모드 강제 사용</string>
     <string name="morphe_settings_patch_force_debug_mode_summary">카카오톡 내부 디버그 플래그를 강제로 켭니다.</string>
-    <string name="morphe_settings_catalog_full_unread_count">99+ 미표시 제한 해제</string>
-    <string name="morphe_settings_catalog_full_unread_count_summary">읽지 않은 수를 99+로 자르지 않고 실제 숫자로 표시합니다.</string>
-    <string name="morphe_settings_catalog_remove_shop_tab">샵 탭 제거</string>
-    <string name="morphe_settings_catalog_remove_shop_tab_summary">패치 단계에서 하단 네비게이션의 샵 탭을 제거합니다.</string>
-    <string name="morphe_settings_catalog_disable_community_tab">커뮤니티 탭 비활성화</string>
-    <string name="morphe_settings_catalog_disable_community_tab_summary">메인 탭 모델에서 커뮤니티 화면 진입점을 패치 시점에 제거합니다.</string>
-    <string name="morphe_settings_catalog_disable_friend_feed_tab">친구 피드 탭 비활성화</string>
-    <string name="morphe_settings_catalog_disable_friend_feed_tab_summary">친구 피드 진입점과 관련 라우팅을 패치 단계에서 끕니다.</string>
-    <string name="morphe_settings_catalog_remove_short_form_tab">숏폼 탭 제거</string>
-    <string name="morphe_settings_catalog_remove_short_form_tab_summary">탭 페이저와 메뉴 흐름에서 숏폼 진입점을 패치 단계에서 제거합니다.</string>
+    <string name="morphe_settings_catalog_remove_short_form_tab">숏폼 탭 숨기기</string>
+    <string name="morphe_settings_catalog_remove_short_form_tab_summary">탭 페이저와 관련 이동 흐름에서 숏폼 진입점을 숨깁니다. 이 설정을 바꾼 뒤에는 카카오톡을 다시 시작해야 합니다.</string>
     <string name="morphe_settings_debug">디버그 로그</string>
     <string name="morphe_settings_debug_summary">Morphe 패치의 추가 진단 로그를 기록합니다.</string>
     <string name="morphe_settings_debug_stacktrace">스택 트레이스 포함</string>
@@ -61,6 +42,5 @@
     <string name="morphe_settings_link_github_summary">GitHub에서 소스 코드를 확인해보세요.</string>
     <string name="morphe_settings_link_telegram">Telegram</string>
     <string name="morphe_settings_link_telegram_summary">텔레그램에서 공지와 업데이트를 확인해보세요.</string>
-    <string name="morphe_settings_restart_note">일부 설정은 즉시 반영되지만, 재시작이 필요한 훅이나 패치 시점 변경은 카카오톡을 다시 열거나 재시작해야 적용됩니다.</string>
     <string name="morphe_settings_restart_required">설정을 적용하려면 앱을 다시 시작해야 합니다.</string>
 </resources>

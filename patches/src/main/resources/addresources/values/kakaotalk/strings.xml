@@ -18,15 +18,9 @@ Second \"item\" text"</string>
     <string name="morphe_kakaotalk_chatlog_deleted">Deleted</string>
     <string name="morphe_kakaotalk_chatlog_hidden">Hidden</string>
     <string name="morphe_label_for_ample_settings">Morphe Settings</string>
-    <string name="morphe_settings_header_eyebrow">KakaoTalk</string>
-    <string name="morphe_settings_description">Settings for Morphe patches, experimental features, and diagnostics inside KakaoTalk.</string>
-    <string name="morphe_settings_section_live">Live patch toggles</string>
     <string name="morphe_settings_section_chat">Chat</string>
     <string name="morphe_settings_section_navigation">Navigation</string>
     <string name="morphe_settings_section_features">Features</string>
-    <string name="morphe_settings_live_hint">These switches control runtime-capable patches. If a matching patch was not applied, the switch behaves as a catalog item only.</string>
-    <string name="morphe_settings_section_catalog">Patch catalog</string>
-    <string name="morphe_settings_catalog_hint">These are good candidates for settings, but they still need to be applied when patching the app.</string>
     <string name="morphe_settings_section_information">Information</string>
     <string name="morphe_settings_app_version">App version</string>
     <string name="morphe_settings_patches_version">Patches version</string>
@@ -34,11 +28,6 @@ Second \"item\" text"</string>
     <string name="morphe_settings_section_debug">Debug</string>
     <string name="morphe_settings_section_manage">Manage</string>
     <string name="morphe_settings_section_links">Links</string>
-    <string name="morphe_settings_debug_hint">Use these when tracing patch behavior or extension errors.</string>
-    <string name="morphe_settings_badge_restart">Restart</string>
-    <string name="morphe_settings_badge_build_time">Build-time</string>
-    <string name="morphe_settings_patch_deleted_hidden">Show deleted or hidden markers</string>
-    <string name="morphe_settings_patch_deleted_hidden_summary">Draws deleted and hidden message indicators directly in the chat log view.</string>
     <string name="morphe_settings_patch_ghost_mode">Ghost mode</string>
     <string name="morphe_settings_patch_ghost_mode_summary">Prevents typing and activity updates from being sent to the other side.</string>
     <string name="morphe_settings_patch_disable_99_unread_limit">Show full unread count</string>
@@ -55,16 +44,8 @@ Second \"item\" text"</string>
     <string name="morphe_settings_patch_play_youtube_player_in_chat_room_summary">Allows supported YouTube links to play directly inside a chat room.</string>
     <string name="morphe_settings_patch_force_debug_mode">Force KakaoTalk debug mode</string>
     <string name="morphe_settings_patch_force_debug_mode_summary">Forces KakaoTalk’s internal debug flag on.</string>
-    <string name="morphe_settings_catalog_full_unread_count">Disable 99+ unread cap</string>
-    <string name="morphe_settings_catalog_full_unread_count_summary">Shows the full unread count instead of clamping badges to 99+.</string>
-    <string name="morphe_settings_catalog_remove_shop_tab">Remove Shop tab</string>
-    <string name="morphe_settings_catalog_remove_shop_tab_summary">Strips the Shop tab from the bottom navigation during patching.</string>
-    <string name="morphe_settings_catalog_disable_community_tab">Disable Community tab</string>
-    <string name="morphe_settings_catalog_disable_community_tab_summary">Removes the Community surface from the main tab model at patch time.</string>
-    <string name="morphe_settings_catalog_disable_friend_feed_tab">Disable Friend Feed tab</string>
-    <string name="morphe_settings_catalog_disable_friend_feed_tab_summary">Turns off the Friend Feed entry and related friend-tab routing during patching.</string>
-    <string name="morphe_settings_catalog_remove_short_form_tab">Remove Short-form tab</string>
-    <string name="morphe_settings_catalog_remove_short_form_tab_summary">Eliminates the short-form content entry point from the tab pager and menu flow.</string>
+    <string name="morphe_settings_catalog_remove_short_form_tab">Hide Short-form tab</string>
+    <string name="morphe_settings_catalog_remove_short_form_tab_summary">Hides the Short-form entry point from the tab pager and related navigation. Restart KakaoTalk after changing this setting.</string>
     <string name="morphe_settings_debug">Debug logging</string>
     <string name="morphe_settings_debug_summary">Writes additional diagnostic logs for Morphe patches.</string>
     <string name="morphe_settings_debug_stacktrace">Include stack traces</string>
@@ -77,6 +58,5 @@ Second \"item\" text"</string>
     <string name="morphe_settings_link_github_summary">Browse the source code on GitHub.</string>
     <string name="morphe_settings_link_telegram">Telegram</string>
     <string name="morphe_settings_link_telegram_summary">Check announcements and updates on Telegram.</string>
-    <string name="morphe_settings_restart_note">Some settings apply immediately, but restart-sensitive hooks and patch-time changes still require reopening or restarting KakaoTalk.</string>
     <string name="morphe_settings_restart_required">Restart the app to apply this setting.</string>
 </resources>
