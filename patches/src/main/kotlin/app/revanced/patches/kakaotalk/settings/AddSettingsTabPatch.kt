@@ -108,7 +108,7 @@ val addSettingsTabPatch = bytecodePatch(
             const-string v4, "string"
             invoke-static {v4, v3}, Lapp/revanced/extension/kakaotalk/helper/ResourceHelper;->getResourceId(Ljava/lang/String;Ljava/lang/String;)I
             move-result v3
-            const-string v4, "setting_ico_testroom"
+            const-string v4, "morphe_settings_icon_dynamic"
             const-string v5, "drawable"
             invoke-static {v5, v4}, Lapp/revanced/extension/kakaotalk/helper/ResourceHelper;->getResourceId(Ljava/lang/String;Ljava/lang/String;)I
             move-result v4

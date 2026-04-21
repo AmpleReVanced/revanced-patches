@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.Set;
 
 import app.revanced.extension.kakaotalk.helper.ResourceHelper;
-import app.revanced.extension.shared.Utils;
-import app.revanced.extension.shared.settings.BaseSettings;
-import app.revanced.extension.shared.settings.BooleanSetting;
+import app.morphe.extension.shared.Utils;
+import app.morphe.extension.shared.settings.BaseSettings;
+import app.morphe.extension.shared.settings.BooleanSetting;
 
 public final class SettingsActivity extends Activity {
     private static final String PREF_GHOST_MODE = "morphe_pref_ghost_mode";
@@ -37,8 +37,6 @@ public final class SettingsActivity extends Activity {
     private static final String PREF_PATCHES_VERSION = "morphe_pref_patches_version";
     private static final String PREF_PACKAGE_NAME = "morphe_pref_package_name";
     private static final String PREF_RESET = "morphe_pref_reset";
-    private static final String PREF_GITHUB = "morphe_pref_github";
-    private static final String PREF_TELEGRAM = "morphe_pref_telegram";
     private static final String MESSAGE_RESTART_REQUIRED = "morphe_settings_restart_required";
 
     @Override
@@ -119,8 +117,6 @@ public final class SettingsActivity extends Activity {
             bindInfoPreference(PREF_PATCHES_VERSION, Utils.getPatchesReleaseVersion());
             bindInfoPreference(PREF_PACKAGE_NAME, requireActivity().getPackageName());
             bindResetPreference();
-            bindLinkPreference(PREF_GITHUB, "https://github.com/AmpleReVanced/revanced-patches");
-            bindLinkPreference(PREF_TELEGRAM, "https://t.me/ample_revanced_bot");
 
             refreshPreferences();
         }
@@ -174,14 +170,6 @@ public final class SettingsActivity extends Activity {
                     setting.resetToDefault();
                 }
                 refreshPreferences();
-                return true;
-            });
-        }
-
-        private void bindLinkPreference(String key, String url) {
-            Preference preference = requirePreference(key, Preference.class);
-            preference.setOnPreferenceClickListener(pref -> {
-                Utils.openLink(url);
                 return true;
             });
         }
