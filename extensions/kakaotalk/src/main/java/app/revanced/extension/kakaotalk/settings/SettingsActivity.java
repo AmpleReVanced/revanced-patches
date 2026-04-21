@@ -92,7 +92,7 @@ public final class SettingsActivity extends Activity {
 
         static {
             RESTART_SENSITIVE_PREFERENCES.add(PREF_REMOVE_SHORT_FORM_TAB);
-            RESTART_SENSITIVE_PREFERENCES.add(PREF_DEBUG);
+            RESTART_SENSITIVE_PREFERENCES.add(PREF_FORCE_DEBUG_MODE);
         }
 
         @Override
