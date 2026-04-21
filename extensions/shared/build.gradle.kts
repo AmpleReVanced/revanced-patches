@@ -1,4 +1,17 @@
 dependencies {
     implementation(project(":extensions:shared:library"))
-    compileOnly(libs.okhttp)
+}
+
+android {
+    namespace = "app.revanced.extension.shared"
+    compileSdk = 36
+
+    defaultConfig {
+        minSdk = 26
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
 }

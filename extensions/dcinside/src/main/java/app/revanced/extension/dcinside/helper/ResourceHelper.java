@@ -1,6 +1,6 @@
 package app.revanced.extension.dcinside.helper;
 
-import app.revanced.extension.shared.Utils;
+import app.morphe.extension.shared.Utils;
 
 public final class ResourceHelper {
     private ResourceHelper() {

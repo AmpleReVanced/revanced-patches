@@ -1,6 +1,6 @@
 package app.revanced.extension.kakaotalk.helper;
 
-import app.revanced.extension.shared.Utils;
+import app.morphe.extension.shared.Utils;
 
 public class ResourceHelper {
 

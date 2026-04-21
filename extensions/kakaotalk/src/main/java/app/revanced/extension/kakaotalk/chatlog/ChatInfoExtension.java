@@ -13,7 +13,7 @@ import com.kakao.talk.widget.chatlog.OthersChatInfoView;
 
 import app.revanced.extension.kakaotalk.settings.Settings;
 
-import static app.revanced.extension.shared.StringRef.str;
+import static app.morphe.extension.shared.StringRef.str;
 
 public class ChatInfoExtension {
 
