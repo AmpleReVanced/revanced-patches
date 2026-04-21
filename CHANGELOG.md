@@ -1,3 +1,14 @@
+# [1.0.0-dev.13](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.12...v1.0.0-dev.13) (2026-04-21)
+
+### Bug Fixes
+
+* **kakaotalk:** add pref_debug to sensitive preferences ([f39d485](https://github.com/AmpleReVanced/revanced-patches/commit/f39d4857a4f44132efa2b2e8563fee74d6d40808))
+* **kakaotalk:** correct typo ([81c2e66](https://github.com/AmpleReVanced/revanced-patches/commit/81c2e6641f08f6b1ee447835ea125574935b18e8))
+
+### Features
+
+* Use shared morphe-patches-library for common code ([6b7c61e](https://github.com/AmpleReVanced/revanced-patches/commit/6b7c61ef5c8426b6a4480384341771a54b30be48))
+
 # [1.0.0-dev.12](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.11...v1.0.0-dev.12) (2026-04-17)
 
 ### Bug Fixes
