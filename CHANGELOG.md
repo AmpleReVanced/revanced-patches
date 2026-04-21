@@ -1,3 +1,10 @@
+# [1.0.0-dev.14](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.13...v1.0.0-dev.14) (2026-04-21)
+
+
+### Bug Fixes
+
+* keep morphe packages ([f03dcce](https://github.com/AmpleReVanced/revanced-patches/commit/f03dccea9d17ecf5525a8d90b20cb97822d69ece))
+
 # [1.0.0-dev.13](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.12...v1.0.0-dev.13) (2026-04-21)
 
 
