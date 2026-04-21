@@ -4,7 +4,7 @@ import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.ResourcePatchContext
 import app.morphe.patcher.patch.resourcePatch
 import app.morphe.patcher.patch.stringOption
-import app.morphe.patches.shared.misc.mapping.resourceMappingPatch
+import app.morphe.patches.all.misc.resources.resourceMappingPatch
 import app.morphe.util.ResourceGroup
 import app.morphe.util.copyResources
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE

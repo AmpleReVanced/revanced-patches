@@ -2,7 +2,7 @@ package app.revanced.patches.kakaotalk.ads.fingerprints
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.OpcodesFilter
-import app.morphe.util.hasMethodCall
+import app.revanced.util.hasMethodCall
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 

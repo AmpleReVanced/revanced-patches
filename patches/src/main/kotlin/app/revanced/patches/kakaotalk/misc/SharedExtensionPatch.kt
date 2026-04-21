@@ -1,12 +1,17 @@
 package app.revanced.patches.kakaotalk.misc
 
-import app.morphe.patches.shared.misc.extension.activityOnCreateExtensionHook
-import app.morphe.patches.shared.misc.extension.sharedExtensionPatch
+import app.morphe.patcher.Fingerprint
+import app.morphe.patches.all.misc.extension.ExtensionHook
+import app.morphe.patches.all.misc.extension.sharedExtensionPatch
 
 val sharedExtensionPatch = sharedExtensionPatch(
-    "kakaotalk",
-    activityOnCreateExtensionHook(
-        "Lcom/kakao/talk/application/App;",
-        false
+    listOf("kakaotalk"),
+    ExtensionHook(
+        Fingerprint(
+            definingClass = "Lcom/kakao/talk/application/App;",
+            name = "onCreate",
+            returnType = "V",
+            parameters = emptyList(),
+        )
     )
 )

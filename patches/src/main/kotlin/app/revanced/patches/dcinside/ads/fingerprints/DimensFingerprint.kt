@@ -3,7 +3,6 @@ package app.revanced.patches.dcinside.ads.fingerprints
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.OpcodesFilter
 import app.morphe.patcher.fingerprint
-import app.morphe.patches.shared.misc.extension.MorpheUtilsPatchesVersionFingerprint.accessFlags
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 

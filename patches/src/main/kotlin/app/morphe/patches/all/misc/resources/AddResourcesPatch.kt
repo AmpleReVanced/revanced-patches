@@ -34,7 +34,7 @@
 package app.morphe.patches.all.misc.resources
 
 import app.morphe.patcher.patch.resourcePatch
-import app.morphe.patches.all.misc.resources.StringResourceSanitizer.sanitizeAndroidResourceString
+import app.morphe.patches.util.resource.StringResourceSanitizer.sanitizeAndroidResourceString
 import app.morphe.util.forEachChildElement
 import app.morphe.util.getNode
 import app.morphe.util.inputStreamFromBundledResource
@@ -42,6 +42,7 @@ import org.w3c.dom.Element
 import org.w3c.dom.Node
 import java.util.Locale
 import java.util.logging.Logger
+import kotlin.collections.listOf
 
 /**
  * If any added string resources replace existing strings in the target app.
@@ -49,11 +50,176 @@ import java.util.logging.Logger
  */
 private const val PATCH_STRINGS_REPLACE_EXISTING = false
 
-internal val locales = listOf(
+internal val localesYouTube = listOf(
     AppLocale("", ""), // Default English locale. Must be first.
+    AppLocale("af-rZA", "af"),
+    AppLocale("am-rET", "am"),
+    AppLocale("ar-rSA", "ar"),
+    AppLocale("as-rIN", "as"),
+    AppLocale("az-rAZ", "az"),
+    AppLocale("be-rBY", "be"),
+    AppLocale("bg-rBG", "bg"),
+    AppLocale("bn-rBD", "bn"),
+    AppLocale("bs-rBA", "bs"),
+    AppLocale("ca-rES", "ca"),
+    AppLocale("cs-rCZ", "cs"),
+    AppLocale("da-rDK", "da"),
+    AppLocale("de-rDE", "de"),
+    AppLocale("el-rGR", "el"),
+    AppLocale("es-rES", "es"),
+    AppLocale("et-rEE", "et"),
+    AppLocale("eu-rES", "eu"),
+    AppLocale("fa-rIR", "fa"),
+    AppLocale("fi-rFI", "fi"),
+    AppLocale("fil-rPH", "tl"),
+    AppLocale("fr-rFR", "fr"),
+    AppLocale("gl-rES", "gl"),
+    AppLocale("gu-rIN", "gu"),
+    AppLocale("hi-rIN", "hi"),
+    AppLocale("hr-rHR", "hr"),
+    AppLocale("hu-rHU", "hu"),
+    AppLocale("hy-rAM", "hy"),
+    AppLocale("in-rID", "in"),
+    AppLocale("is-rIS", "is"),
+    AppLocale("it-rIT", "it"),
+    AppLocale("iw-rIL", "iw"),
+    AppLocale("ja-rJP", "ja"),
+    AppLocale("ka-rGE", "ka"),
+    AppLocale("kk-rKZ", "kk"),
+    AppLocale("km-rKH", "km"),
+    AppLocale("kn-rIN", "kn"),
     AppLocale("ko-rKR", "ko"),
-    // Add more languages as desired.
+    AppLocale("ky-rKG", "ky"),
+    AppLocale("lo-rLA", "lo"),
+    AppLocale("lt-rLT", "lt"),
+    AppLocale("lv-rLV", "lv"),
+    AppLocale("mk-rMK", "mk"),
+    AppLocale("ml-rIN", "ml"),
+    AppLocale("mn-rMN", "mn"),
+    AppLocale("mr-rIN", "mr"),
+    AppLocale("ms-rMY", "ms"),
+    AppLocale("my-rMM", "my"),
+    AppLocale("nb-rNO", "nb"),
+    AppLocale("ne-rNP", "ne"),
+    AppLocale("nl-rNL", "nl"),
+    AppLocale("or-rIN", "or"),
+    AppLocale("pa-rIN", "pa"),
+    AppLocale("pl-rPL", "pl"),
+    AppLocale("pt-rBR", "pt-rBR"),
+    AppLocale("pt-rPT", "pt-rPT"),
+    AppLocale("ro-rRO", "ro"),
+    AppLocale("ru-rRU", "ru"),
+    AppLocale("si-rLK", "si"),
+    AppLocale("sk-rSK", "sk"),
+    AppLocale("sl-rSI", "sl"),
+    AppLocale("sq-rAL", "sq"),
+    AppLocale("sr-rCS", "b+sr+Latn"),
+    AppLocale("sr-rSP", "sr"),
+    AppLocale("sv-rSE", "sv"),
+    AppLocale("sw-rKE", "sw"),
+    AppLocale("ta-rIN", "ta"),
+    AppLocale("te-rIN", "te"),
+    AppLocale("th-rTH", "th"),
+    AppLocale("tr-rTR", "tr"),
+    AppLocale("uk-rUA", "uk"),
+    AppLocale("ur-rIN", "ur"),
+    AppLocale("uz-rUZ", "uz"),
+    AppLocale("vi-rVN", "vi"),
+    AppLocale("zh-rCN", "zh-rCN"),
+    AppLocale("zh-rTW", "zh-rTW"),
+    AppLocale("zu-rZA", "zu"),
+    // Languages not found in YouTube.
+    AppLocale("ga-rIE", "ga", false),
+    AppLocale("kmr-rTR", "kmr", false),
+    AppLocale("ckb-rIR", "ckb", false)
 )
+
+internal val localesReddit = listOf(
+    AppLocale("", ""), // Default English locale. Must be first.
+    AppLocale("ar-rSA", "ar"),
+    AppLocale("de-rDE", "de"),
+    AppLocale("es-rES", "es"),
+    AppLocale("fi-rFI", "fi"),
+    AppLocale("fr-rFR", "fr"),
+    AppLocale("hi-rIN", "hi"),
+    AppLocale("hu-rHU", "hu"),
+    AppLocale("it-rIT", "it"),
+    AppLocale("ja-rJP", "ja"),
+    AppLocale("ko-rKR", "ko"),
+    AppLocale("ms-rMY", "ms"),
+    AppLocale("nl-rNL", "nl"),
+    AppLocale("pl-rPL", "pl"),
+    AppLocale("pt-rBR", "pt-rBR"),
+    AppLocale("pt-rPT", "pt-rPT"),
+    AppLocale("ru-rRU", "ru"),
+    AppLocale("th-rTH", "th"),
+    AppLocale("tr-rTR", "tr"),
+    AppLocale("uk-rUA", "uk"),
+    AppLocale("vi-rVN", "vi"),
+    AppLocale("zh-rCN", "zh-rCN"),
+    AppLocale("zh-rTW", "zh-rTW"),
+
+    // Languages not found in Reddit.
+    AppLocale("af-rZA", "af", false),
+    AppLocale("am-rET", "am", false),
+    AppLocale("as-rIN", "as", false),
+    AppLocale("az-rAZ", "az", false),
+    AppLocale("be-rBY", "be", false),
+    AppLocale("bg-rBG", "bg", false),
+    AppLocale("bn-rBD", "bn", false),
+    AppLocale("bs-rBA", "bs", false),
+    AppLocale("ca-rES", "ca", false),
+    AppLocale("cs-rCZ", "cs", false),
+    AppLocale("da-rDK", "da", false),
+    AppLocale("el-rGR", "el", false),
+    AppLocale("et-rEE", "et", false),
+    AppLocale("eu-rES", "eu", false),
+    AppLocale("fa-rIR", "fa", false),
+    AppLocale("fil-rPH", "tl", false),
+    AppLocale("gl-rES", "gl", false),
+    AppLocale("gu-rIN", "gu", false),
+    AppLocale("hr-rHR", "hr", false),
+    AppLocale("hy-rAM", "hy", false),
+    AppLocale("in-rID", "in", false),
+    AppLocale("is-rIS", "is", false),
+    AppLocale("iw-rIL", "iw", false),
+    AppLocale("ka-rGE", "ka", false),
+    AppLocale("kk-rKZ", "kk", false),
+    AppLocale("km-rKH", "km", false),
+    AppLocale("kn-rIN", "kn", false),
+    AppLocale("ky-rKG", "ky", false),
+    AppLocale("lo-rLA", "lo", false),
+    AppLocale("lt-rLT", "lt", false),
+    AppLocale("lv-rLV", "lv", false),
+    AppLocale("mk-rMK", "mk", false),
+    AppLocale("ml-rIN", "ml", false),
+    AppLocale("mn-rMN", "mn", false),
+    AppLocale("mr-rIN", "mr", false),
+    AppLocale("my-rMM", "my", false),
+    AppLocale("nb-rNO", "nb", false),
+    AppLocale("ne-rNP", "ne", false),
+    AppLocale("or-rIN", "or", false),
+    AppLocale("pa-rIN", "pa", false),
+    AppLocale("ro-rRO", "ro", false),
+    AppLocale("sk-rSK", "sk", false),
+    AppLocale("si-rLK", "si", false),
+    AppLocale("sl-rSI", "sl", false),
+    AppLocale("sq-rAL", "sq", false),
+    AppLocale("sr-rCS", "b+sr+Latn", false),
+    AppLocale("sr-rSP", "sr", false),
+    AppLocale("sv-rSE", "sv", false),
+    AppLocale("sw-rKE", "sw", false),
+    AppLocale("ta-rIN", "ta", false),
+    AppLocale("te-rIN", "te", false),
+    AppLocale("ur-rIN", "ur", false),
+    AppLocale("uz-rUZ", "uz", false),
+    AppLocale("zu-rZA", "zu", false),
+    AppLocale("ga-rIE", "ga", false),
+    AppLocale("kmr-rTR", "kmr", false),
+    AppLocale("ckb-rIR", "ckb", false)
+)
+
+internal val localesAll by lazy { (localesYouTube + localesReddit).distinct() }
 
 internal class AppLocale(
     private val srcLocale: String,
@@ -88,7 +254,7 @@ internal class AppLocale(
         return result
     }
 
-    private companion object {
+    companion object {
         private fun getValuesFolderName(localeName: String): String {
             val folderName = "values"
 
@@ -102,7 +268,7 @@ internal class AppLocale(
 }
 
 private enum class BundledResourceType {
-    // Add more resource xml files as needed.
+    // Add more resource XML files as needed.
     ARRAYS,
     COLORS,
     STRINGS,
@@ -114,6 +280,12 @@ private enum class BundledResourceType {
 }
 
 private val appsToInclude = mutableSetOf<String>()
+
+internal lateinit var locales : List<AppLocale>
+
+internal fun setAddResourceLocale(appLocale: List<AppLocale>) {
+    locales = appLocale
+}
 
 /**
  * Add all resources for the given app.
@@ -129,7 +301,7 @@ internal val addResourcesPatch = resourcePatch(
     val defaultResourcesAdded = mutableSetOf<String>()
 
     finalize {
-        fun getLogger(): Logger = Logger.getLogger(AppLocale.javaClass.name)
+        fun getLogger(): Logger = Logger.getLogger(AppLocale.Companion::class.java.name)
 
         fun addResourcesFromFile(
             appId: String,
@@ -261,56 +433,3 @@ internal val addResourcesPatch = resourcePatch(
         }
     }
 }
-
-internal object StringResourceSanitizer {
-    // Matches unescaped double quotes.
-    private val UNESCAPED_DOUBLE_QUOTE = Regex("(?<!\\\\)\"")
-
-    // Matches unescaped single or double quotes.
-    private val UNESCAPED_QUOTE = Regex("(?<!\\\\)['\"]")
-
-    /**
-     * @param key String key
-     * @param value Text to validate and sanitize
-     * @param filePath Path to include in any exception thrown.
-     * @param throwException If true, will throw an exception on problems; otherwise, sanitizes.
-     * @return sanitized string
-     */
-    fun sanitizeAndroidResourceString(
-        key: String,
-        value: String,
-        filePath: String? = null,
-        throwException: Boolean = false
-    ): String {
-        val logger = Logger.getLogger(StringResourceSanitizer::class.java.name)
-        var sanitized = value
-
-        // Could check for other invalid strings, but for now just check quotes.
-        if (value.startsWith('"') && value.endsWith('"')) {
-            // Raw strings allow unescaped single quotes but not double quotes.
-            val inner = value.substring(1, value.length - 1)
-            if (UNESCAPED_DOUBLE_QUOTE.containsMatchIn(inner)) {
-                val message = "$filePath String $key contains unescaped double quotes: $value"
-                if (throwException) throw IllegalArgumentException(message)
-                logger.warning(message)
-                sanitized = "\"" + UNESCAPED_DOUBLE_QUOTE.replace(inner, "") + "\""
-            }
-        } else {
-            if (value.contains('\n')) {
-                val message = "$filePath String $key is not raw but contains newline characters: $value"
-                if (throwException) throw IllegalArgumentException(message)
-                logger.warning(message)
-            }
-
-            if (UNESCAPED_QUOTE.containsMatchIn(value)) {
-                val message = "$filePath String $key contains unescaped quotes: $value"
-                if (throwException) throw IllegalArgumentException(message)
-                logger.warning(message)
-                sanitized = UNESCAPED_QUOTE.replace(value, "")
-            }
-        }
-
-        return sanitized
-    }
-}
-

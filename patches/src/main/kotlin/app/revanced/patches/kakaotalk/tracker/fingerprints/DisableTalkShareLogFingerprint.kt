@@ -1,7 +1,7 @@
 package app.revanced.patches.kakaotalk.tracker.fingerprints
 
 import app.morphe.patcher.Fingerprint
-import app.morphe.util.hasFieldReference
+import app.revanced.util.hasFieldReference
 import com.android.tools.smali.dexlib2.AccessFlags
 
 internal object TalkShareLogAsyncFlagFingerprint : Fingerprint(

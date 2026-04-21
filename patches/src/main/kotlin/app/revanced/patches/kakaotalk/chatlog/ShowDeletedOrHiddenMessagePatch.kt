@@ -8,7 +8,6 @@ import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.stringOption
 import app.morphe.patcher.util.proxy.mutableTypes.MutableField.Companion.toMutable
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
-import app.morphe.patches.all.misc.resources.addAppResources
 import app.morphe.patches.all.misc.resources.addResourcesPatch
 import app.morphe.util.getReference
 import app.morphe.util.returnEarly
@@ -33,6 +32,7 @@ import app.revanced.patches.kakaotalk.chatlog.fingerprints.ReplaceToFeedFingerpr
 import app.revanced.patches.kakaotalk.misc.addExtensionPatch
 import app.revanced.patches.kakaotalk.misc.sharedExtensionPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
+import app.revanced.patches.kakaotalk.shared.addKakaoTalkResources
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.MutableMethodImplementation
@@ -85,7 +85,7 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
     )
 
     execute {
-        addAppResources("kakaotalk")
+        addKakaoTalkResources()
 
         val deletedInt = parseArgb32ToInt(deletedColorText!!)
         val deletedLit = toSmaliIntLiteral(deletedInt)

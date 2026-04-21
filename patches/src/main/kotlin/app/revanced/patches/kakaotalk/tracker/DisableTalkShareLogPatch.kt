@@ -3,7 +3,7 @@ package app.revanced.patches.kakaotalk.tracker
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.util.findMutableMethodOf
-import app.morphe.util.hasMethodCall
+import app.revanced.util.hasMethodCall
 import app.morphe.util.returnEarly
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.patches.kakaotalk.tracker.fingerprints.TalkShareLogAsyncFlagFingerprint

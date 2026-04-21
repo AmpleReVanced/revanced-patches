@@ -19,6 +19,8 @@ dependencies {
     // Required due to smali, or build fails. Can be removed once smali is bumped.
     implementation(libs.guava)
 
+    implementation(libs.morphe.patches.library)
+
     implementation(libs.apksig)
 
     // Android API stubs defined here.
@@ -26,6 +28,15 @@ dependencies {
 }
 
 tasks {
+    register<JavaExec>("checkStringResources") {
+        description = "Checks resource strings for invalid formatting"
+
+        dependsOn(build)
+
+        classpath = sourceSets["main"].runtimeClasspath
+        mainClass.set("app.morphe.patches.util.resource.CheckStringResourcesKt")
+    }
+
     register<JavaExec>("generatePatchesList") {
         description = "Build patch with patch list"
 
@@ -42,7 +53,7 @@ tasks {
 
 kotlin {
     compilerOptions {
-        freeCompilerArgs = listOf("-Xcontext-receivers")
+        freeCompilerArgs = listOf("-Xcontext-parameters")
     }
 }
 

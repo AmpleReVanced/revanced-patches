@@ -1,12 +1,17 @@
 package app.revanced.patches.dcinside.misc
 
-import app.morphe.patches.shared.misc.extension.activityOnCreateExtensionHook
-import app.morphe.patches.shared.misc.extension.sharedExtensionPatch
+import app.morphe.patcher.Fingerprint
+import app.morphe.patches.all.misc.extension.ExtensionHook
+import app.morphe.patches.all.misc.extension.sharedExtensionPatch
 
 val sharedExtensionPatch = sharedExtensionPatch(
-    "dcinside",
-    activityOnCreateExtensionHook(
-        "Lcom/dcinside/app/Application;",
-        false
+    listOf("dcinside"),
+    ExtensionHook(
+        Fingerprint(
+            definingClass = "Lcom/dcinside/app/Application;",
+            name = "onCreate",
+            returnType = "V",
+            parameters = emptyList(),
+        )
     )
 )
