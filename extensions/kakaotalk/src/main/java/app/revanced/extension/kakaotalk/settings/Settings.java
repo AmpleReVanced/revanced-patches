@@ -2,8 +2,8 @@ package app.revanced.extension.kakaotalk.settings;
 
 import static java.lang.Boolean.TRUE;
 
-import app.revanced.extension.shared.settings.BaseSettings;
-import app.revanced.extension.shared.settings.BooleanSetting;
+import app.morphe.extension.shared.settings.BaseSettings;
+import app.morphe.extension.shared.settings.BooleanSetting;
 
 /**
  * KakaoTalk-specific Morphe settings, modeled after Morphe's central settings bundles.
