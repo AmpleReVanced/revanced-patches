@@ -2,6 +2,7 @@ package app.revanced.patches.kakaotalk.settings
 
 import app.revanced.patches.kakaotalk.settings.preference.BasePreference
 import app.revanced.patches.kakaotalk.settings.preference.BasePreferenceScreen
+import app.revanced.patches.kakaotalk.settings.preference.EditTextPreference
 import app.revanced.patches.kakaotalk.settings.preference.IntentPreference
 import app.revanced.patches.kakaotalk.settings.preference.SwitchPreference
 import app.revanced.patches.kakaotalk.settings.preference.TextPreference
@@ -34,6 +35,11 @@ internal fun addDefaultKakaoTalkSettingsPreferences() {
             titleKey = "morphe_settings_patch_open_chat_room_comment_disabled",
             summaryKey = "morphe_settings_patch_open_chat_room_comment_disabled_summary",
             defaultValue = false,
+        ),
+        EditTextPreference(
+            key = "morphe_pref_feature_flag_overrides",
+            titleKey = "morphe_settings_patch_feature_flag_overrides",
+            summaryKey = "morphe_settings_patch_feature_flag_overrides_summary",
         ),
     )
 

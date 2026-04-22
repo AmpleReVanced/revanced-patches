@@ -62,8 +62,22 @@ internal class SwitchPreference(
     override fun serialize(document: Document): Element =
         super.serialize(document).apply {
             setAttribute("android:defaultValue", defaultValue)
-        }
+    }
 }
+
+internal class EditTextPreference(
+    key: String,
+    titleKey: String,
+    summaryKey: String,
+    dependency: String? = null,
+) : BasePreference(
+    key = key,
+    titleKey = titleKey,
+    summaryKey = summaryKey,
+    persistent = false,
+    dependency = dependency,
+    tag = "EditTextPreference",
+)
 
 internal class TextPreference(
     key: String,
