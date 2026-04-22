@@ -4,6 +4,7 @@ import static java.lang.Boolean.TRUE;
 
 import app.morphe.extension.shared.settings.BaseSettings;
 import app.morphe.extension.shared.settings.BooleanSetting;
+import app.morphe.extension.shared.settings.StringSetting;
 
 /**
  * KakaoTalk-specific Morphe settings, modeled after Morphe's central settings bundles.
@@ -42,6 +43,9 @@ public final class Settings extends BaseSettings {
 
     public static final BooleanSetting OPEN_CHAT_ROOM_COMMENT_DISABLED =
             new BooleanSetting("kakaotalk_open_chat_room_comment_disabled", false);
+
+    public static final StringSetting FEATURE_FLAG_OVERRIDES =
+            new StringSetting("kakaotalk_feature_flag_overrides", "");
 
     public static final BooleanSetting FORCE_DEBUG_MODE =
             new BooleanSetting("kakaotalk_force_debug_mode", TRUE, true);
@@ -84,6 +88,10 @@ public final class Settings extends BaseSettings {
 
     public static boolean openChatRoomCommentDisabled() {
         return OPEN_CHAT_ROOM_COMMENT_DISABLED.get();
+    }
+
+    public static String featureFlagOverrides() {
+        return FEATURE_FLAG_OVERRIDES.get();
     }
 
     public static boolean forceDebugMode() {

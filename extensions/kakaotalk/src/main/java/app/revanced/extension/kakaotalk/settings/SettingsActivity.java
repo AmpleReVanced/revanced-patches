@@ -3,6 +3,7 @@ package app.revanced.extension.kakaotalk.settings;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
@@ -19,6 +20,7 @@ import app.revanced.extension.kakaotalk.helper.ResourceHelper;
 import app.morphe.extension.shared.Utils;
 import app.morphe.extension.shared.settings.BaseSettings;
 import app.morphe.extension.shared.settings.BooleanSetting;
+import app.morphe.extension.shared.settings.StringSetting;
 
 public final class SettingsActivity extends Activity {
     private static final String PREF_GHOST_MODE = "morphe_pref_ghost_mode";
@@ -30,6 +32,7 @@ public final class SettingsActivity extends Activity {
     private static final String PREF_ENABLE_MARKDOWN = "morphe_pref_enable_markdown";
     private static final String PREF_PLAY_YOUTUBE_PLAYER_IN_CHAT_ROOM = "morphe_pref_play_youtube_player_in_chat_room";
     private static final String PREF_OPEN_CHAT_ROOM_COMMENT_DISABLED = "morphe_pref_open_chat_room_comment_disabled";
+    private static final String PREF_FEATURE_FLAG_OVERRIDES = "morphe_pref_feature_flag_overrides";
     private static final String PREF_FORCE_DEBUG_MODE = "morphe_pref_force_debug_mode";
     private static final String PREF_DEBUG = "morphe_pref_debug";
     private static final String PREF_DEBUG_STACKTRACE = "morphe_pref_debug_stacktrace";
@@ -88,7 +91,9 @@ public final class SettingsActivity extends Activity {
 
     public static final class SettingsFragment extends PreferenceFragment {
         private final List<SwitchBinding> switchBindings = new ArrayList<>();
+        private final List<TextBinding> textBindings = new ArrayList<>();
         private final Set<BooleanSetting> resettableSettings = new LinkedHashSet<>();
+        private final Set<StringSetting> resettableTextSettings = new LinkedHashSet<>();
         private static final Set<String> RESTART_SENSITIVE_PREFERENCES = new LinkedHashSet<>();
 
         static {
@@ -110,6 +115,7 @@ public final class SettingsActivity extends Activity {
             bindSwitch(PREF_ENABLE_MARKDOWN, Settings.ENABLE_MARKDOWN);
             bindSwitch(PREF_PLAY_YOUTUBE_PLAYER_IN_CHAT_ROOM, Settings.PLAY_YOUTUBE_PLAYER_IN_CHAT_ROOM);
             bindSwitch(PREF_OPEN_CHAT_ROOM_COMMENT_DISABLED, Settings.OPEN_CHAT_ROOM_COMMENT_DISABLED);
+            bindText(PREF_FEATURE_FLAG_OVERRIDES, Settings.FEATURE_FLAG_OVERRIDES);
             bindSwitch(PREF_FORCE_DEBUG_MODE, Settings.FORCE_DEBUG_MODE);
             bindSwitch(PREF_DEBUG, BaseSettings.DEBUG);
             bindSwitch(PREF_DEBUG_STACKTRACE, BaseSettings.DEBUG_STACKTRACE);
@@ -147,6 +153,17 @@ public final class SettingsActivity extends Activity {
             });
         }
 
+        private void bindText(String key, StringSetting setting) {
+            EditTextPreference preference = requirePreference(key, EditTextPreference.class);
+            textBindings.add(new TextBinding(preference, setting, preference.getSummary()));
+            resettableTextSettings.add(setting);
+            preference.setOnPreferenceChangeListener((pref, newValue) -> {
+                setting.save((String) newValue);
+                refreshPreferences();
+                return true;
+            });
+        }
+
         private void maybeShowRestartRequiredNotice(String key) {
             if (!RESTART_SENSITIVE_PREFERENCES.contains(key)) {
                 return;
@@ -171,6 +188,9 @@ public final class SettingsActivity extends Activity {
                 for (BooleanSetting setting : resettableSettings) {
                     setting.resetToDefault();
                 }
+                for (StringSetting setting : resettableTextSettings) {
+                    setting.resetToDefault();
+                }
                 refreshPreferences();
                 return true;
             });
@@ -179,6 +199,14 @@ public final class SettingsActivity extends Activity {
         private void refreshPreferences() {
             for (SwitchBinding binding : switchBindings) {
                 binding.preference.setChecked(binding.setting.get());
+                binding.preference.setEnabled(binding.setting.isAvailable());
+            }
+            for (TextBinding binding : textBindings) {
+                String value = binding.setting.get();
+                binding.preference.setText(value);
+                binding.preference.setSummary(value == null || value.trim().isEmpty()
+                        ? binding.defaultSummary
+                        : normalizeSummary(value));
                 binding.preference.setEnabled(binding.setting.isAvailable());
             }
         }
@@ -256,6 +284,18 @@ public final class SettingsActivity extends Activity {
         private SwitchBinding(SwitchPreference preference, BooleanSetting setting) {
             this.preference = preference;
             this.setting = setting;
+        }
+    }
+
+    private static final class TextBinding {
+        private final EditTextPreference preference;
+        private final StringSetting setting;
+        private final CharSequence defaultSummary;
+
+        private TextBinding(EditTextPreference preference, StringSetting setting, CharSequence defaultSummary) {
+            this.preference = preference;
+            this.setting = setting;
+            this.defaultSummary = defaultSummary;
         }
     }
 }
