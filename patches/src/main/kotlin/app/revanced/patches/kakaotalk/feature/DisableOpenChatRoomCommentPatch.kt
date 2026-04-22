@@ -1,6 +1,7 @@
 package app.revanced.patches.kakaotalk.feature
 
 import app.morphe.patcher.patch.bytecodePatch
+import app.revanced.patches.kakaotalk.misc.addExtensionPatch
 import app.revanced.patches.kakaotalk.settings.addSettingsTabPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 
@@ -10,7 +11,7 @@ val disableOpenChatRoomCommentPatch = bytecodePatch(
     description = "Adds a setting to disable comments in open chat rooms.",
 ) {
     compatibleWith(COMPATIBILITY_KAKAO)
-    dependsOn(addSettingsTabPatch, overrideFeatureFlagPatch)
+    dependsOn(addSettingsTabPatch, addExtensionPatch)
 
     execute {}
 }
