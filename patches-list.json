@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0-dev.14",
+  "version": "v1.0.0-dev.14",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -563,6 +563,21 @@
       "description": "Disable the chat room list ad.",
       "use": true,
       "dependencies": [],
+      "compatiblePackages": {
+        "com.kakao.talk": [
+          "26.3.1"
+        ]
+      },
+      "options": []
+    },
+    {
+      "name": "Disable open chat room comments",
+      "description": "Adds a setting to disable comments in open chat rooms.",
+      "use": true,
+      "dependencies": [
+        "BytecodePatch",
+        "BytecodePatch"
+      ],
       "compatiblePackages": {
         "com.kakao.talk": [
           "26.3.1"
