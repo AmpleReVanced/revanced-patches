@@ -1,3 +1,13 @@
+# [1.0.0-dev.16](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.15...v1.0.0-dev.16) (2026-04-22)
+
+### Bug Fixes
+
+* **kakaotalk:** remove dependency of disableOpenChatRoomCommentPatch on overrideFeatureFlagPatch ([2ee7897](https://github.com/AmpleReVanced/revanced-patches/commit/2ee78973734dd043440fed0a737150e5a0761200))
+
+### Features
+
+* **kakaotalk:** add dynamic feature flag overrides ([9d4c5ad](https://github.com/AmpleReVanced/revanced-patches/commit/9d4c5adf1ee706bce382564d8ec8dae9733a464d))
+
 # [1.0.0-dev.15](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.14...v1.0.0-dev.15) (2026-04-22)
 
 ### Bug Fixes
