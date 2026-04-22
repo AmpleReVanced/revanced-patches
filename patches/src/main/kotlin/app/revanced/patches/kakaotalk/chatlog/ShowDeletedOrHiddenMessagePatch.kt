@@ -398,7 +398,9 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
                     const/4 v1, 0x1
                     invoke-virtual {v0, v1}, ${chatLogVFieldClass.type}->putDeleted(Z)V
                     invoke-virtual {p0, p1}, ${it.definingClass}->${flushToDBMethod.name}(${chatLogClass.type})Z
+                    return-void
                     
+                    # TODO: I suspect the code below is causing a bug, but I don't remember why I included it in the first place.
                     sget-object v0, ${chatRoomListManagerGetInstanceMethod.returnType}->o:${chatRoomListManagerGetInstanceMethod.definingClass}
                     invoke-virtual {v0}, $chatRoomListManagerGetInstanceMethod
                     move-result-object v0
@@ -427,7 +429,9 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
                     const/4 v1, 0x1
                     invoke-virtual {v0, v1}, ${chatLogVFieldClass.type}->putHidden(Z)V
                     invoke-virtual {p0, p1}, ${it.definingClass}->${flushToDBMethod.name}(${chatLogClass.type})Z
+                    return-void
                     
+                    # TODO: I suspect the code below is causing a bug, but I don't remember why I included it in the first place.
                     sget-object v0, ${chatRoomListManagerGetInstanceMethod.returnType}->o:${chatRoomListManagerGetInstanceMethod.definingClass}
                     invoke-virtual {v0}, $chatRoomListManagerGetInstanceMethod
                     move-result-object v0
