@@ -29,6 +29,7 @@ public final class SettingsActivity extends Activity {
     private static final String PREF_ENABLE_SEND_BIG_TEXT = "morphe_pref_enable_send_big_text";
     private static final String PREF_ENABLE_MARKDOWN = "morphe_pref_enable_markdown";
     private static final String PREF_PLAY_YOUTUBE_PLAYER_IN_CHAT_ROOM = "morphe_pref_play_youtube_player_in_chat_room";
+    private static final String PREF_OPEN_CHAT_ROOM_COMMENT_DISABLED = "morphe_pref_open_chat_room_comment_disabled";
     private static final String PREF_FORCE_DEBUG_MODE = "morphe_pref_force_debug_mode";
     private static final String PREF_DEBUG = "morphe_pref_debug";
     private static final String PREF_DEBUG_STACKTRACE = "morphe_pref_debug_stacktrace";
@@ -108,6 +109,7 @@ public final class SettingsActivity extends Activity {
             bindSwitch(PREF_ENABLE_SEND_BIG_TEXT, Settings.ENABLE_SEND_BIG_TEXT);
             bindSwitch(PREF_ENABLE_MARKDOWN, Settings.ENABLE_MARKDOWN);
             bindSwitch(PREF_PLAY_YOUTUBE_PLAYER_IN_CHAT_ROOM, Settings.PLAY_YOUTUBE_PLAYER_IN_CHAT_ROOM);
+            bindSwitch(PREF_OPEN_CHAT_ROOM_COMMENT_DISABLED, Settings.OPEN_CHAT_ROOM_COMMENT_DISABLED);
             bindSwitch(PREF_FORCE_DEBUG_MODE, Settings.FORCE_DEBUG_MODE);
             bindSwitch(PREF_DEBUG, BaseSettings.DEBUG);
             bindSwitch(PREF_DEBUG_STACKTRACE, BaseSettings.DEBUG_STACKTRACE);

@@ -3,7 +3,11 @@ package app.revanced.extension.kakaotalk.feature;
 import java.util.HashMap;
 import java.util.Map;
 
+import app.revanced.extension.kakaotalk.settings.Settings;
+
 public class Flag {
+    private static final String OPEN_CHAT_ROOM_COMMENT_DISABLED = "OPEN_CHAT_ROOM_COMMENT_DISABLED";
+
     private static final Map<String, Boolean> flags = new HashMap<>();
 
     static {
@@ -56,7 +60,7 @@ public class Flag {
     }
 
     public static boolean canIntercept(String key) {
-        return key != null && flags.containsKey(key);
+        return key != null && (isOpenChatRoomCommentDisabled(key) || flags.containsKey(key));
     }
 
     public static boolean intercept(String key) {
@@ -64,7 +68,16 @@ public class Flag {
             return false;
         }
 
+        if (isOpenChatRoomCommentDisabled(key)) {
+            return true;
+        }
+
         Boolean value = flags.get(key);
         return value != null && value;
+    }
+
+    private static boolean isOpenChatRoomCommentDisabled(String key) {
+        return Settings.openChatRoomCommentDisabled()
+                && OPEN_CHAT_ROOM_COMMENT_DISABLED.equalsIgnoreCase(key);
     }
 }

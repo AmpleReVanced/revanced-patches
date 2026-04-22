@@ -29,6 +29,12 @@ internal fun addDefaultKakaoTalkSettingsPreferences() {
             summaryKey = "morphe_settings_patch_disable_99_unread_limit_summary",
             defaultValue = true,
         ),
+        SwitchPreference(
+            key = "morphe_pref_open_chat_room_comment_disabled",
+            titleKey = "morphe_settings_patch_open_chat_room_comment_disabled",
+            summaryKey = "morphe_settings_patch_open_chat_room_comment_disabled_summary",
+            defaultValue = false,
+        ),
     )
 
     PreferenceScreen.NAVIGATION.addPreferences(

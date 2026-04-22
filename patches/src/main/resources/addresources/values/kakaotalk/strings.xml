@@ -32,6 +32,8 @@ Second \"item\" text"</string>
     <string name="morphe_settings_patch_ghost_mode_summary">Prevents typing and activity updates from being sent to the other side.</string>
     <string name="morphe_settings_patch_disable_99_unread_limit">Show full unread count</string>
     <string name="morphe_settings_patch_disable_99_unread_limit_summary">Shows the full unread count instead of limiting the badge to 99+.</string>
+    <string name="morphe_settings_patch_open_chat_room_comment_disabled">Disable comments in open chat</string>
+    <string name="morphe_settings_patch_open_chat_room_comment_disabled_summary">Uses replies instead of comments in open chat when enabled.</string>
     <string name="morphe_settings_patch_external_browser">Open in external browser</string>
     <string name="morphe_settings_patch_external_browser_summary">Opens external links in the default browser instead of KakaoTalk’s in-app browser.</string>
     <string name="morphe_settings_patch_recording_pause_resume">Recording pause/resume</string>

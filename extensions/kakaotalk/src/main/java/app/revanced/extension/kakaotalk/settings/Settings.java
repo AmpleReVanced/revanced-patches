@@ -40,6 +40,9 @@ public final class Settings extends BaseSettings {
     public static final BooleanSetting PLAY_YOUTUBE_PLAYER_IN_CHAT_ROOM =
             new BooleanSetting("kakaotalk_play_youtube_player_in_chat_room", TRUE);
 
+    public static final BooleanSetting OPEN_CHAT_ROOM_COMMENT_DISABLED =
+            new BooleanSetting("kakaotalk_open_chat_room_comment_disabled", false);
+
     public static final BooleanSetting FORCE_DEBUG_MODE =
             new BooleanSetting("kakaotalk_force_debug_mode", TRUE, true);
 
@@ -77,6 +80,10 @@ public final class Settings extends BaseSettings {
 
     public static boolean playYoutubePlayerInChatRoom() {
         return PLAY_YOUTUBE_PLAYER_IN_CHAT_ROOM.get();
+    }
+
+    public static boolean openChatRoomCommentDisabled() {
+        return OPEN_CHAT_ROOM_COMMENT_DISABLED.get();
     }
 
     public static boolean forceDebugMode() {
