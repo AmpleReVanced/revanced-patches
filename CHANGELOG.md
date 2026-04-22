@@ -1,3 +1,14 @@
+# [1.0.0-dev.15](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.14...v1.0.0-dev.15) (2026-04-22)
+
+### Bug Fixes
+
+* **kakaotalk:** avoid syncing deleted logs as chat list preview ([d5e8a05](https://github.com/AmpleReVanced/revanced-patches/commit/d5e8a0522b7aa95fdf6f94cc60d5bf8b8f492e21))
+
+### Features
+
+* **kakaotalk:** add open chat comment disable setting ([be3012a](https://github.com/AmpleReVanced/revanced-patches/commit/be3012aea14f5f93dded862ed9baec2d2df71446))
+* **kakaotalk:** update kakaotalk patches for version 26.3.2 ([e9b92b7](https://github.com/AmpleReVanced/revanced-patches/commit/e9b92b781100badaf4ea8b78bc3ce378e6d18d77))
+
 # [1.0.0-dev.14](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.13...v1.0.0-dev.14) (2026-04-21)
 
 ### Bug Fixes
