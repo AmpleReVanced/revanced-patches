@@ -15,7 +15,7 @@ import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 private data class OverwriteFeedBranch(
     val name: String,
     val flag: ChatLogFlag,
-    val index: Int?,
+    val indices: List<Int>,
     val required: Boolean = true,
 )
 
@@ -27,39 +27,41 @@ internal fun hookDirectOverwriteFeeds(chatLog: ResolvedChatLogModel) {
         OverwriteFeedBranch(
             name = "DELETE_TO_ALL",
             flag = ChatLogFlag.Deleted,
-            index = ReplaceToFeedFingerprint.instructionMatches.first().index,
+            indices = listOf(ReplaceToFeedFingerprint.instructionMatches.first().index),
         ),
         OverwriteFeedBranch(
             name = "Feed",
             flag = ChatLogFlag.Hidden,
-            index = replaceToFeedMethod.indexOfFeedTypeFieldOrNull("Feed"),
+            indices = replaceToFeedMethod.indicesOfFeedTypeField("Feed"),
         ),
         OverwriteFeedBranch(
             name = "TIMECHAT_SAFE_BOT_BLIND",
             flag = ChatLogFlag.Hidden,
-            index = replaceToFeedMethod.indexOfTimeChatSafeBotBlindOrNull(chatLog),
+            indices = listOfNotNull(replaceToFeedMethod.indexOfTimeChatSafeBotBlindOrNull(chatLog)),
             required = false,
         ),
     )
 
     branches.forEach { branch ->
-        if (branch.index == null && branch.required) {
+        if (branch.indices.isEmpty() && branch.required) {
             throw PatchException("Could not find ${branch.name} branch in ChatLogsManager.")
         }
     }
 
-    branches.mapNotNull { branch -> branch.index?.let { index -> branch to index } }
+    branches.flatMap { branch -> branch.indices.map { index -> branch to index } }
         .sortedByDescending { (_, index) -> index }
         .forEach { (branch, index) ->
             replaceToFeedMethod.replaceOverwriteBranchWithFlag(index, branch.flag, chatLog)
         }
 }
 
-private fun MutableMethod.indexOfFeedTypeFieldOrNull(fieldName: String) =
-    instructions.indexOfFirst { instruction ->
-        instruction.opcode == Opcode.SGET_OBJECT &&
-                instruction.getReference<FieldReference>()?.name == fieldName
-    }.takeIf { it >= 0 }
+private fun MutableMethod.indicesOfFeedTypeField(fieldName: String) =
+    instructions.mapIndexedNotNull { index, instruction ->
+        index.takeIf {
+            instruction.opcode == Opcode.SGET_OBJECT &&
+                    instruction.getReference<FieldReference>()?.name == fieldName
+        }
+    }
 
 private fun MutableMethod.indexOfTimeChatSafeBotBlindOrNull(chatLog: ResolvedChatLogModel) =
     instructions.indexOfFirst {
