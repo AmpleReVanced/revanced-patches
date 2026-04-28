@@ -43,7 +43,9 @@ public final class SettingsActivity extends Activity {
     private static final String PREF_PATCHES_VERSION = "morphe_pref_patches_version";
     private static final String PREF_PACKAGE_NAME = "morphe_pref_package_name";
     private static final String PREF_RESET = "morphe_pref_reset";
+    private static final String MESSAGE_RESTART_REQUIRED_TITLE = "morphe_settings_restart_required_title";
     private static final String MESSAGE_RESTART_REQUIRED = "morphe_settings_restart_required";
+    private static final String MESSAGE_RESTART_REQUIRED_RESTART = "morphe_settings_restart_required_restart";
     private static final String MESSAGE_BYPASS_MOAT_CONFIRM_TITLE = "morphe_settings_patch_bypass_moat_check_confirm_title";
     private static final String MESSAGE_BYPASS_MOAT_CONFIRM_MESSAGE = "morphe_settings_patch_bypass_moat_check_confirm_message";
     private static final String MESSAGE_BYPASS_MOAT_CONFIRM_ENABLE = "morphe_settings_patch_bypass_moat_check_confirm_enable";
@@ -168,11 +170,12 @@ public final class SettingsActivity extends Activity {
                 boolean enabled = (Boolean) newValue;
                 if (!enabled) {
                     setting.save(false);
+                    maybeShowRestartRequiredNotice(key);
                     refreshPreferences();
                     return true;
                 }
 
-                showMoatBypassConfirmation(setting);
+                showMoatBypassConfirmation(key, setting);
                 return false;
             });
         }
@@ -193,14 +196,24 @@ public final class SettingsActivity extends Activity {
                 return;
             }
 
-            int resourceId = ResourceHelper.getResourceId("string", MESSAGE_RESTART_REQUIRED);
-            String message = resourceId == 0
-                    ? "Restart is required to apply this setting."
-                    : requireActivity().getString(resourceId);
-            Utils.showToastLong(message);
+            new AlertDialog.Builder(requireActivity())
+                    .setTitle(resString(
+                            MESSAGE_RESTART_REQUIRED_TITLE,
+                            "Restart required"
+                    ))
+                    .setMessage(resString(
+                            MESSAGE_RESTART_REQUIRED,
+                            "Restart is required to apply this setting."
+                    ))
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .setPositiveButton(resString(
+                            MESSAGE_RESTART_REQUIRED_RESTART,
+                            "Restart"
+                    ), (dialog, which) -> Utils.restartApp(requireActivity()))
+                    .show();
         }
 
-        private void showMoatBypassConfirmation(BooleanSetting setting) {
+        private void showMoatBypassConfirmation(String key, BooleanSetting setting) {
             new AlertDialog.Builder(requireActivity())
                     .setTitle(resString(
                             MESSAGE_BYPASS_MOAT_CONFIRM_TITLE,
@@ -216,6 +229,7 @@ public final class SettingsActivity extends Activity {
                             "Enable"
                     ), (dialog, which) -> {
                         setting.save(true);
+                        maybeShowRestartRequiredNotice(key);
                         refreshPreferences();
                     })
                     .show();

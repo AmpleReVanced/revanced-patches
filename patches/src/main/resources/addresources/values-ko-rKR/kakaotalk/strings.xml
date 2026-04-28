@@ -51,5 +51,7 @@
     <string name="morphe_settings_link_github_summary">GitHub에서 소스 코드를 확인해보세요.</string>
     <string name="morphe_settings_link_telegram">Telegram</string>
     <string name="morphe_settings_link_telegram_summary">텔레그램에서 공지와 업데이트를 확인해보세요.</string>
-    <string name="morphe_settings_restart_required">설정을 적용하려면 앱을 다시 시작해야 합니다.</string>
+    <string name="morphe_settings_restart_required_title">재시작 필요</string>
+    <string name="morphe_settings_restart_required">이 변경사항을 적용하려면 앱을 다시 시작해야 합니다.</string>
+    <string name="morphe_settings_restart_required_restart">재시작</string>
 </resources>
