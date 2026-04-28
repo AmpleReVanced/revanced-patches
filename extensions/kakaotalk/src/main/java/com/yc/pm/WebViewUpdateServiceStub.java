@@ -68,6 +68,11 @@ public class WebViewUpdateServiceStub extends MethodInvocationProxy<MethodInvoca
             if (result != null) {
                 PackageInfo inf = Reflect.on(result).get("packageInfo");
                 if (inf != null) {
+                    String packageName = Reflect.on(inf).get("packageName");
+                    if (packageName != null && WebViewUtils.isWebViewPackage(packageName)) {
+                        return result;
+                    }
+
                     Signature[] sigs = Reflect.on(inf).get("signatures");
                     Spoofer.replaceSignature(sigs);
 
@@ -81,8 +86,7 @@ public class WebViewUpdateServiceStub extends MethodInvocationProxy<MethodInvoca
                         }
                     }
 
-                    String packageName = Reflect.on(inf).get("packageName");
-                    if (packageName != null && !WebViewUtils.isWebViewPackage(packageName)) {
+                    if (packageName != null) {
                         Reflect.on(inf).set("packageName", Spoofer.PACKAGE_NAME);
                     }
                 }
