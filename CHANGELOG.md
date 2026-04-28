@@ -1,3 +1,11 @@
+# [1.0.0-dev.18](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.17...v1.0.0-dev.18) (2026-04-28)
+
+
+### Features
+
+* **kakaotalk:** add configurable Moat integrity bypass ([a86f254](https://github.com/AmpleReVanced/revanced-patches/commit/a86f2542e761ef76b9d69bc165a10d63eb543c66))
+* **kakaotalk:** add restart prompt for sensitive settings ([f18c934](https://github.com/AmpleReVanced/revanced-patches/commit/f18c9341a84d2b73d196aac1170957a842320357))
+
 # [1.0.0-dev.17](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.16...v1.0.0-dev.17) (2026-04-28)
 
 
