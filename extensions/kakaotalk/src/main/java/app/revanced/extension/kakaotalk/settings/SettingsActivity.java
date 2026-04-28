@@ -2,6 +2,7 @@ package app.revanced.extension.kakaotalk.settings;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
@@ -32,6 +33,7 @@ public final class SettingsActivity extends Activity {
     private static final String PREF_ENABLE_MARKDOWN = "morphe_pref_enable_markdown";
     private static final String PREF_PLAY_YOUTUBE_PLAYER_IN_CHAT_ROOM = "morphe_pref_play_youtube_player_in_chat_room";
     private static final String PREF_OPEN_CHAT_ROOM_COMMENT_DISABLED = "morphe_pref_open_chat_room_comment_disabled";
+    private static final String PREF_BYPASS_MOAT_INTEGRITY_CHECK = "morphe_pref_bypass_moat_integrity_check";
     private static final String PREF_FEATURE_FLAG_OVERRIDES = "morphe_pref_feature_flag_overrides";
     private static final String PREF_FORCE_DEBUG_MODE = "morphe_pref_force_debug_mode";
     private static final String PREF_DEBUG = "morphe_pref_debug";
@@ -42,6 +44,9 @@ public final class SettingsActivity extends Activity {
     private static final String PREF_PACKAGE_NAME = "morphe_pref_package_name";
     private static final String PREF_RESET = "morphe_pref_reset";
     private static final String MESSAGE_RESTART_REQUIRED = "morphe_settings_restart_required";
+    private static final String MESSAGE_BYPASS_MOAT_CONFIRM_TITLE = "morphe_settings_patch_bypass_moat_check_confirm_title";
+    private static final String MESSAGE_BYPASS_MOAT_CONFIRM_MESSAGE = "morphe_settings_patch_bypass_moat_check_confirm_message";
+    private static final String MESSAGE_BYPASS_MOAT_CONFIRM_ENABLE = "morphe_settings_patch_bypass_moat_check_confirm_enable";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +120,7 @@ public final class SettingsActivity extends Activity {
             bindSwitch(PREF_ENABLE_MARKDOWN, Settings.ENABLE_MARKDOWN);
             bindSwitch(PREF_PLAY_YOUTUBE_PLAYER_IN_CHAT_ROOM, Settings.PLAY_YOUTUBE_PLAYER_IN_CHAT_ROOM);
             bindSwitch(PREF_OPEN_CHAT_ROOM_COMMENT_DISABLED, Settings.OPEN_CHAT_ROOM_COMMENT_DISABLED);
+            bindRiskySwitch(PREF_BYPASS_MOAT_INTEGRITY_CHECK, Settings.BYPASS_MOAT_INTEGRITY_CHECK);
             bindText(PREF_FEATURE_FLAG_OVERRIDES, Settings.FEATURE_FLAG_OVERRIDES);
             bindSwitch(PREF_FORCE_DEBUG_MODE, Settings.FORCE_DEBUG_MODE);
             bindSwitch(PREF_DEBUG, BaseSettings.DEBUG);
@@ -153,6 +159,23 @@ public final class SettingsActivity extends Activity {
             });
         }
 
+        private void bindRiskySwitch(String key, BooleanSetting setting) {
+            SwitchPreference preference = requirePreference(key, SwitchPreference.class);
+            switchBindings.add(new SwitchBinding(preference, setting));
+            resettableSettings.add(setting);
+            preference.setOnPreferenceChangeListener((pref, newValue) -> {
+                boolean enabled = (Boolean) newValue;
+                if (!enabled) {
+                    setting.save(false);
+                    refreshPreferences();
+                    return true;
+                }
+
+                showMoatBypassConfirmation(setting);
+                return false;
+            });
+        }
+
         private void bindText(String key, StringSetting setting) {
             EditTextPreference preference = requirePreference(key, EditTextPreference.class);
             textBindings.add(new TextBinding(preference, setting, preference.getSummary()));
@@ -174,6 +197,27 @@ public final class SettingsActivity extends Activity {
                     ? "Restart is required to apply this setting."
                     : requireActivity().getString(resourceId);
             Utils.showToastLong(message);
+        }
+
+        private void showMoatBypassConfirmation(BooleanSetting setting) {
+            new AlertDialog.Builder(requireActivity())
+                    .setTitle(resString(
+                            MESSAGE_BYPASS_MOAT_CONFIRM_TITLE,
+                            "Enable Moat integrity detection bypass?"
+                    ))
+                    .setMessage(resString(
+                            MESSAGE_BYPASS_MOAT_CONFIRM_MESSAGE,
+                            "This bypass is required for some KakaoPay flows, but it disables an integrity detection path. Use at your own risk."
+                    ))
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .setPositiveButton(resString(
+                            MESSAGE_BYPASS_MOAT_CONFIRM_ENABLE,
+                            "Enable"
+                    ), (dialog, which) -> {
+                        setting.save(true);
+                        refreshPreferences();
+                    })
+                    .show();
         }
 
         private void bindInfoPreference(String key, String summary) {
@@ -258,6 +302,11 @@ public final class SettingsActivity extends Activity {
 
             String trimmed = summary.trim();
             return trimmed.isEmpty() ? "-" : trimmed;
+        }
+
+        private String resString(String name, String fallback) {
+            int resourceId = ResourceHelper.getResourceId("string", name);
+            return resourceId == 0 ? fallback : requireActivity().getString(resourceId);
         }
 
         private Activity requireActivity() {

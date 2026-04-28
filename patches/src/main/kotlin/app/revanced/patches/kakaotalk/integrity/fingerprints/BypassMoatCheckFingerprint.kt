@@ -5,6 +5,8 @@ import app.morphe.patcher.OpcodesFilter
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
+private const val PRIVATE_MOAT_FLAG_TYPE = "Lcom/kakaopay/kpsd/moat/sdk/MoatFlag\$PrivateMoatFlag;"
+
 internal object CheckApkChecksumsFingerprint : Fingerprint(
     definingClass = "Lcom/kakaopay/kpsd/moat/sdk/",
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
@@ -21,26 +23,15 @@ internal object CheckApkChecksumsFingerprint : Fingerprint(
     )
 )
 
-internal object MoatNativeStatusFingerprint : Fingerprint(
-    name = "a", // Hard coded obfuscated method name.
-    accessFlags = listOf(
-        AccessFlags.PUBLIC,
-        AccessFlags.STATIC,
-        AccessFlags.FINAL,
-        AccessFlags.NATIVE
-    ),
-    parameters = listOf("I", "I")
-)
-
 internal object MoatResultClassFingerprint : Fingerprint(
     name = "<init>",
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.CONSTRUCTOR),
     parameters = listOf(
-        "Lcom/kakaopay/kpsd/moat/sdk/MoatFlag\$PrivateMoatFlag;",
+        PRIVATE_MOAT_FLAG_TYPE,
         "Ljava/lang/String;",
         "Ljava/lang/String;",
         "Ljava/lang/String;",
-        "Z"
+        "Z",
     ),
     returnType = "V",
     filters = OpcodesFilter.opcodesToFilters(
@@ -50,6 +41,6 @@ internal object MoatResultClassFingerprint : Fingerprint(
         Opcode.IPUT_OBJECT,
         Opcode.IPUT_OBJECT,
         Opcode.IPUT_BOOLEAN,
-        Opcode.RETURN_VOID
+        Opcode.RETURN_VOID,
     )
 )

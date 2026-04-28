@@ -30,6 +30,11 @@
     <string name="morphe_settings_patch_markdown_summary">일반 텍스트를 마크다운이 적용된 형태로 전송합니다.</string>
     <string name="morphe_settings_patch_play_youtube_player_in_chat_room">채팅방에서 유튜브 재생</string>
     <string name="morphe_settings_patch_play_youtube_player_in_chat_room_summary">지원되는 유튜브 링크를 채팅방 안에서 바로 재생할 수 있습니다.</string>
+    <string name="morphe_settings_patch_bypass_moat_check">Moat 무결성 감지 우회</string>
+    <string name="morphe_settings_patch_bypass_moat_check_summary">카카오페이를 실행하는 데 필요할 수 있습니다. 무결성 감지 경로를 우회하므로 위험을 이해한 경우에만 사용하세요.</string>
+    <string name="morphe_settings_patch_bypass_moat_check_confirm_title">Moat 무결성 감지 우회를 켤까요?</string>
+    <string name="morphe_settings_patch_bypass_moat_check_confirm_message">이 기능은 카카오페이 실행에 필요할 수 있지만, 무결성 감지 경로를 우회하므로 보안 또는 계정 관련 위험이 있을 수 있습니다. 위험을 이해한 경우에만 켜세요.</string>
+    <string name="morphe_settings_patch_bypass_moat_check_confirm_enable">위험을 이해하고 켜기</string>
     <string name="morphe_settings_patch_force_debug_mode">카카오톡 디버그 모드 강제 사용</string>
     <string name="morphe_settings_patch_force_debug_mode_summary">카카오톡 내부 디버그 플래그를 강제로 켭니다.</string>
     <string name="morphe_settings_catalog_remove_short_form_tab">숏폼 탭 숨기기</string>

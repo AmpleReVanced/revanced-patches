@@ -83,6 +83,12 @@ internal fun addDefaultKakaoTalkSettingsPreferences() {
             summaryKey = "morphe_settings_patch_play_youtube_player_in_chat_room_summary",
             defaultValue = true,
         ),
+        SwitchPreference(
+            key = "morphe_pref_bypass_moat_integrity_check",
+            titleKey = "morphe_settings_patch_bypass_moat_check",
+            summaryKey = "morphe_settings_patch_bypass_moat_check_summary",
+            defaultValue = false,
+        ),
     )
 
     PreferenceScreen.INFORMATION.addPreferences(

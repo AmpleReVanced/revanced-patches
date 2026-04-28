@@ -46,6 +46,11 @@ Second \"item\" text"</string>
     <string name="morphe_settings_patch_markdown_summary">Sends regular text messages with markdown enabled.</string>
     <string name="morphe_settings_patch_play_youtube_player_in_chat_room">Play YouTube in chat room</string>
     <string name="morphe_settings_patch_play_youtube_player_in_chat_room_summary">Allows supported YouTube links to play directly inside a chat room.</string>
+    <string name="morphe_settings_patch_bypass_moat_check">Bypass Moat integrity detection</string>
+    <string name="morphe_settings_patch_bypass_moat_check_summary">May be required to launch KakaoPay. This bypasses an integrity detection path. Use at your own risk.</string>
+    <string name="morphe_settings_patch_bypass_moat_check_confirm_title">Enable Moat integrity detection bypass?</string>
+    <string name="morphe_settings_patch_bypass_moat_check_confirm_message">This bypass may be required to launch KakaoPay, but it disables an integrity detection path and may carry security or account risk. Enable it only if you understand the risk.</string>
+    <string name="morphe_settings_patch_bypass_moat_check_confirm_enable">Enable anyway</string>
     <string name="morphe_settings_patch_force_debug_mode">Force KakaoTalk debug mode</string>
     <string name="morphe_settings_patch_force_debug_mode_summary">Forces KakaoTalk’s internal debug flag on.</string>
     <string name="morphe_settings_catalog_remove_short_form_tab">Hide Short-form tab</string>
