@@ -44,6 +44,9 @@ public final class Settings extends BaseSettings {
     public static final BooleanSetting OPEN_CHAT_ROOM_COMMENT_DISABLED =
             new BooleanSetting("kakaotalk_open_chat_room_comment_disabled", false);
 
+    public static final BooleanSetting BYPASS_MOAT_INTEGRITY_CHECK =
+            new BooleanSetting("kakaotalk_bypass_moat_integrity_check", false);
+
     public static final StringSetting FEATURE_FLAG_OVERRIDES =
             new StringSetting("kakaotalk_feature_flag_overrides", "");
 
@@ -88,6 +91,10 @@ public final class Settings extends BaseSettings {
 
     public static boolean openChatRoomCommentDisabled() {
         return OPEN_CHAT_ROOM_COMMENT_DISABLED.get();
+    }
+
+    public static boolean bypassMoatIntegrityCheck() {
+        return BYPASS_MOAT_INTEGRITY_CHECK.get();
     }
 
     public static String featureFlagOverrides() {
