@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0-dev.17",
+  "version": "1.0.0-dev.18",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -111,9 +111,11 @@
     },
     {
       "name": "Bypass Moat check",
-      "description": "Bypass Moat check that prevents the app from running.",
-      "use": false,
-      "dependencies": [],
+      "description": "Add a setting to bypass the Moat integrity check that can prevent KakaoPay from running.",
+      "use": true,
+      "dependencies": [
+        "BytecodePatch"
+      ],
       "compatiblePackages": {
         "com.kakao.talk": [
           "26.3.2"
