@@ -1,3 +1,9 @@
+# [1.0.0-dev.17](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.16...v1.0.0-dev.17) (2026-04-28)
+
+### Bug Fixes
+
+* **kakaotalk:** preserve external package info for themes ([3ee5444](https://github.com/AmpleReVanced/revanced-patches/commit/3ee54442c061c26f897681f417dcdf394afef14c))
+
 # [1.0.0-dev.16](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.15...v1.0.0-dev.16) (2026-04-22)
 
 ### Bug Fixes
