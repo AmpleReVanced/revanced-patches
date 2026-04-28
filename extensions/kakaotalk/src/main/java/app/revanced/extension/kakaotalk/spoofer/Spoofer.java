@@ -14,6 +14,47 @@ public class Spoofer {
 
     public static String PACKAGE_NAME = "com.kakao.talk";
 
+    private static String currentPackageName;
+
+    public static void setCurrentPackageName(String packageName) {
+        if (packageName != null && !packageName.isEmpty()) {
+            currentPackageName = packageName;
+        }
+    }
+
+    public static String getCurrentPackageName() {
+        if (currentPackageName != null) {
+            return currentPackageName;
+        }
+
+        try {
+            String packageName = (String) invokeStaticMethod(
+                    "android.app.ActivityThread",
+                    "currentPackageName",
+                    new Class[]{},
+                    new Object[]{}
+            );
+            setCurrentPackageName(packageName);
+        } catch (Exception e) {
+            Log.w("PATCHER", "Failed to get current package name", e);
+        }
+
+        return currentPackageName;
+    }
+
+    public static boolean shouldSpoofPackage(String packageName) {
+        if (packageName == null) {
+            return false;
+        }
+
+        if (PACKAGE_NAME.equals(packageName)) {
+            return true;
+        }
+
+        String currentPackageName = getCurrentPackageName();
+        return currentPackageName != null && currentPackageName.equals(packageName);
+    }
+
     public static void setStaticField(String clz, String fieldName, Object value) throws Exception {
         Field f = Class.forName(clz).getDeclaredField(fieldName);
         f.setAccessible(true);
@@ -54,6 +95,10 @@ public class Spoofer {
     }
 
     public static void replaceSignature(Signature[] signatures) {
+        if (signatures == null || signatures.length == 0) {
+            return;
+        }
+
         if (SIGNATURE_HEX.isEmpty())
             Log.w("PATCHER", "SIG 로드 전 replaceSignature 호출");
         signatures[0] = new Signature(SIGNATURE_HEX);
