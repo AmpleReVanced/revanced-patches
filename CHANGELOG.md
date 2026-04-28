@@ -1,3 +1,10 @@
+# [1.0.0-dev.19](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.18...v1.0.0-dev.19) (2026-04-28)
+
+
+### Bug Fixes
+
+* **kakaotalk:** restore hidden message feed handling ([f670c35](https://github.com/AmpleReVanced/revanced-patches/commit/f670c35478d697c315fc2552bb2079d80340dc84))
+
 # [1.0.0-dev.18](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.17...v1.0.0-dev.18) (2026-04-28)
 
 
