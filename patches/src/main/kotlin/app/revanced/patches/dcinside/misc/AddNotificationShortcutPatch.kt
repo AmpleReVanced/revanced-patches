@@ -51,8 +51,10 @@ private val addNotificationShortcutBytecodePatch = bytecodePatch {
 
         PostListOnViewCreatedFingerprint.method.apply {
             val quickWriteSetupIndex = instructions.indexOfLast {
-                it.getReference<MethodReference>()?.name == "S" &&
-                    it.getReference<MethodReference>()?.definingClass == "Lcom/dcinside/app/internal/r;"
+                val reference = it.getReference<MethodReference>() ?: return@indexOfLast false
+
+                reference.returnType == "V" &&
+                    reference.parameterTypes.firstOrNull() == "Landroid/view/View;"
             }
 
             check(quickWriteSetupIndex >= 0) {
