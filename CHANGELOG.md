@@ -1,3 +1,10 @@
+# [1.0.0-dev.20](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.19...v1.0.0-dev.20) (2026-05-01)
+
+
+### Reverts
+
+* Revert "refactor(kakaotalk): restructure deleted message patch hooks" ([5bc2a0a](https://github.com/AmpleReVanced/revanced-patches/commit/5bc2a0a92752394642a1bad34787cdd93a80b9c2))
+
 # [1.0.0-dev.19](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.18...v1.0.0-dev.19) (2026-04-28)
 
 
