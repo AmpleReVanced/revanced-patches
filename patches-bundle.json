@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-04-28T15:13:40",
-  "description": "# [1.0.0-dev.19](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.18...v1.0.0-dev.19) (2026-04-28)\n\n### Bug Fixes\n\n* **kakaotalk:** restore hidden message feed handling ([f670c35](https://github.com/AmpleReVanced/revanced-patches/commit/f670c35478d697c315fc2552bb2079d80340dc84))",
-  "download_url": "https://github.com/AmpleReVanced/revanced-patches/releases/download/v1.0.0-dev.19/patches-1.0.0-dev.19.mpp",
-  "signature_download_url": "https://github.com/AmpleReVanced/revanced-patches/releases/download/v1.0.0-dev.19/patches-1.0.0-dev.19.mpp.asc",
-  "version": "1.0.0-dev.19"
+  "created_at": "2026-05-01T10:56:45",
+  "description": "# [1.0.0-dev.20](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.19...v1.0.0-dev.20) (2026-05-01)\n\n### Reverts\n\n* Revert \"refactor(kakaotalk): restructure deleted message patch hooks\" ([5bc2a0a](https://github.com/AmpleReVanced/revanced-patches/commit/5bc2a0a92752394642a1bad34787cdd93a80b9c2))",
+  "download_url": "https://github.com/AmpleReVanced/revanced-patches/releases/download/v1.0.0-dev.20/patches-1.0.0-dev.20.mpp",
+  "signature_download_url": "https://github.com/AmpleReVanced/revanced-patches/releases/download/v1.0.0-dev.20/patches-1.0.0-dev.20.mpp.asc",
+  "version": "1.0.0-dev.20"
 }
