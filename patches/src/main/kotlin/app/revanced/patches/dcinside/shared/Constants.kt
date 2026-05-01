@@ -14,7 +14,7 @@ object Constants {
             // "version = null" means the patch works with the latest app target
             // and is expected to work with all future app targets
             AppTarget(
-                version = "5.2.7"
+                version = "5.2.8"
             )
         )
     )

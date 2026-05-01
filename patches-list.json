@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0-dev.20",
+  "version": "v1.0.0-dev.20",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -38,7 +38,7 @@
       ],
       "compatiblePackages": {
         "com.dcinside.app.android": [
-          "5.2.7"
+          "5.2.8"
         ]
       },
       "options": []
@@ -132,7 +132,7 @@
       ],
       "compatiblePackages": {
         "com.dcinside.app.android": [
-          "5.2.7"
+          "5.2.8"
         ]
       },
       "options": []
@@ -174,7 +174,7 @@
       ],
       "compatiblePackages": {
         "com.dcinside.app.android": [
-          "5.2.7"
+          "5.2.8"
         ]
       },
       "options": [
@@ -263,7 +263,7 @@
       ],
       "compatiblePackages": {
         "com.dcinside.app.android": [
-          "5.2.7"
+          "5.2.8"
         ]
       },
       "options": [
@@ -337,7 +337,7 @@
       ],
       "compatiblePackages": {
         "com.dcinside.app.android": [
-          "5.2.7"
+          "5.2.8"
         ]
       },
       "options": []
@@ -399,7 +399,7 @@
       "dependencies": [],
       "compatiblePackages": {
         "com.dcinside.app.android": [
-          "5.2.7"
+          "5.2.8"
         ]
       },
       "options": []
@@ -447,7 +447,7 @@
       "dependencies": [],
       "compatiblePackages": {
         "com.dcinside.app.android": [
-          "5.2.7"
+          "5.2.8"
         ]
       },
       "options": []
@@ -555,7 +555,7 @@
       "dependencies": [],
       "compatiblePackages": {
         "com.dcinside.app.android": [
-          "5.2.7"
+          "5.2.8"
         ]
       },
       "options": []
@@ -594,7 +594,7 @@
       "dependencies": [],
       "compatiblePackages": {
         "com.dcinside.app.android": [
-          "5.2.7"
+          "5.2.8"
         ]
       },
       "options": []
@@ -632,7 +632,7 @@
       "dependencies": [],
       "compatiblePackages": {
         "com.dcinside.app.android": [
-          "5.2.7"
+          "5.2.8"
         ]
       },
       "options": []
@@ -724,7 +724,7 @@
       "dependencies": [],
       "compatiblePackages": {
         "com.dcinside.app.android": [
-          "5.2.7"
+          "5.2.8"
         ]
       },
       "options": []
@@ -947,7 +947,7 @@
       ],
       "compatiblePackages": {
         "com.dcinside.app.android": [
-          "5.2.7"
+          "5.2.8"
         ]
       },
       "options": []
