@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/morphe_settings_section_features">
+        <Preference
+            android:key="morphe_pref_apply_user_memo_preset"
+            android:summary="@string/morphe_settings_user_memo_preset_summary"
+            android:title="@string/morphe_settings_user_memo_preset" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/morphe_settings_section_information">
+        <Preference
+            android:key="morphe_pref_app_version"
+            android:selectable="false"
+            android:title="@string/morphe_settings_app_version" />
+        <Preference
+            android:key="morphe_pref_patches_version"
+            android:selectable="false"
+            android:title="@string/morphe_settings_patches_version" />
+        <Preference
+            android:key="morphe_pref_package_name"
+            android:selectable="false"
+            android:title="@string/morphe_settings_package_name" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/morphe_settings_section_debug">
+        <SwitchPreference
+            android:key="morphe_pref_debug"
+            android:summary="@string/morphe_settings_debug_summary"
+            android:title="@string/morphe_settings_debug" />
+        <SwitchPreference
+            android:key="morphe_pref_debug_stacktrace"
+            android:summary="@string/morphe_settings_debug_stacktrace_summary"
+            android:title="@string/morphe_settings_debug_stacktrace" />
+        <SwitchPreference
+            android:key="morphe_pref_debug_toast"
+            android:summary="@string/morphe_settings_debug_toast_summary"
+            android:title="@string/morphe_settings_debug_toast" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/morphe_settings_section_manage">
+        <Preference
+            android:key="morphe_pref_reset"
+            android:summary="@string/morphe_settings_reset_all_summary"
+            android:title="@string/morphe_settings_reset_all" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/morphe_settings_section_links">
+        <Preference
+            android:key="morphe_pref_github"
+            android:summary="@string/morphe_settings_link_github_summary"
+            android:title="@string/morphe_settings_link_github">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/AmpleReVanced/revanced-patches" />
+        </Preference>
+        <Preference
+            android:key="morphe_pref_telegram"
+            android:summary="@string/morphe_settings_link_telegram_summary"
+            android:title="@string/morphe_settings_link_telegram">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://t.me/ample_revanced_bot" />
+        </Preference>
+    </PreferenceCategory>
+</PreferenceScreen>
