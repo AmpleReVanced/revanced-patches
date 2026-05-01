@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0-dev.21",
+  "version": "1.0.0-dev.22",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -36,6 +36,36 @@
       "dependencies": [
         "BytecodePatch"
       ],
+      "compatiblePackages": {
+        "com.dcinside.app.android": [
+          "5.2.8"
+        ]
+      },
+      "options": []
+    },
+    {
+      "name": "Add settings",
+      "description": "Adds a Morphe settings entry to the DCInside settings screen.",
+      "use": true,
+      "dependencies": [
+        "BytecodePatch",
+        "ResourcePatch",
+        "ResourcePatch",
+        "ResourcePatch",
+        "BytecodePatch"
+      ],
+      "compatiblePackages": {
+        "com.dcinside.app.android": [
+          "5.2.8"
+        ]
+      },
+      "options": []
+    },
+    {
+      "name": "Add settings resources",
+      "description": "Adds Morphe settings resources to the app.",
+      "use": true,
+      "dependencies": [],
       "compatiblePackages": {
         "com.dcinside.app.android": [
           "5.2.8"
@@ -777,6 +807,18 @@
       "compatiblePackages": {
         "com.kakao.talk": [
           "26.3.2"
+        ]
+      },
+      "options": []
+    },
+    {
+      "name": "Register settings activity",
+      "description": "Registers the Morphe settings activity in the app manifest.",
+      "use": true,
+      "dependencies": [],
+      "compatiblePackages": {
+        "com.dcinside.app.android": [
+          "5.2.8"
         ]
       },
       "options": []

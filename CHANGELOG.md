@@ -1,3 +1,10 @@
+# [1.0.0-dev.22](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.21...v1.0.0-dev.22) (2026-05-01)
+
+
+### Features
+
+* **dcinside:** add settings UI and carrier IP memo preset ([aa76b84](https://github.com/AmpleReVanced/revanced-patches/commit/aa76b841ec6efd78f6973ceb1faf49b51064a746))
+
 # [1.0.0-dev.21](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.20...v1.0.0-dev.21) (2026-05-01)
 
 
