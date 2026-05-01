@@ -131,3 +131,6 @@ node_modules/
 
 # Internal Code
 **/internal/*
+
+# (Experiment) Tmoney patch
+**/tmoney/*
