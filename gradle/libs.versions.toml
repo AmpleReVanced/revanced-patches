@@ -1,6 +1,6 @@
 [versions]
-morphe-patcher = "1.4.2"
-morphe-patches-library = "1.0.4"
+morphe-patcher = "1.5.0"
+morphe-patches-library = "1.2.0"
 smali = "d92701d947"
 agp = "9.1.0"
 annotation = "1.9.1"
