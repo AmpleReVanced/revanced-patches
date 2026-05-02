@@ -1,3 +1,9 @@
+# [1.0.0-dev.23](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.22...v1.0.0-dev.23) (2026-05-02)
+
+### Features
+
+* **dcinside:** add selectable user memo presets ([26bbb1c](https://github.com/AmpleReVanced/revanced-patches/commit/26bbb1c39f1359e1dbeb1db45456e5c1050fe4d3))
+
 # [1.0.0-dev.22](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.21...v1.0.0-dev.22) (2026-05-01)
 
 ### Features

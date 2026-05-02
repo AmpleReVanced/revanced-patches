@@ -1,52 +1,91 @@
 {
-  "version": "1.0.0-dev.22",
+  "version": "1.0.0-dev.23",
   "patches": [
     {
       "name": "Add Packet Handler",
       "description": "Adding the Loco Packet Handler allows external applications to handle the app's packets, which may compromise security.\nConflicts may occur on some systems.",
-      "use": false,
+      "default": false,
       "dependencies": [
         "BytecodePatch",
         "BytecodePatch",
         "ResourcePatch"
       ],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Add Pine Lib",
       "description": "add libpine.so to the app's native libraries",
-      "use": false,
+      "default": false,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Add notification shortcut",
       "description": "Adds a notification shortcut button above quick write in the post list.",
-      "use": true,
+      "default": true,
       "dependencies": [
         "BytecodePatch"
       ],
-      "compatiblePackages": {
-        "com.dcinside.app.android": [
-          "5.2.8"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.dcinside.app.android",
+          "name": "dcinside",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#3D4491",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "5.2.8",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Add settings",
       "description": "Adds a Morphe settings entry to the DCInside settings screen.",
-      "use": true,
+      "default": true,
       "dependencies": [
         "BytecodePatch",
         "ResourcePatch",
@@ -54,41 +93,80 @@
         "ResourcePatch",
         "BytecodePatch"
       ],
-      "compatiblePackages": {
-        "com.dcinside.app.android": [
-          "5.2.8"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.dcinside.app.android",
+          "name": "dcinside",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#3D4491",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "5.2.8",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Add settings resources",
       "description": "Adds Morphe settings resources to the app.",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.dcinside.app.android": [
-          "5.2.8"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.dcinside.app.android",
+          "name": "dcinside",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#3D4491",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "5.2.8",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Add settings resources",
       "description": "Adds Morphe settings layout resources to the app.",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Add settings tab",
       "description": "Adds a settings tab to the app.",
-      "use": true,
+      "default": true,
       "dependencies": [
         "BytecodePatch",
         "ResourcePatch",
@@ -96,117 +174,234 @@
         "BytecodePatch",
         "ResourcePatch"
       ],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Allow Hide on Any Chat",
       "description": "Users with hiding privileges can hide any chat, including their own messages.",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Allow reply to feed",
       "description": "Allows replying to feed messages",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Always Show Kick Button",
       "description": "Always shows the kick button in group member management.",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Bypass Moat check",
       "description": "Add a setting to bypass the Moat integrity check that can prevent KakaoPay from running.",
-      "use": true,
+      "default": true,
       "dependencies": [
         "BytecodePatch"
       ],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Bypass getText",
       "description": "Bypasses the integrity check for getText.",
-      "use": true,
+      "default": true,
       "dependencies": [
         "BytecodePatch"
       ],
-      "compatiblePackages": {
-        "com.dcinside.app.android": [
-          "5.2.8"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.dcinside.app.android",
+          "name": "dcinside",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#3D4491",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "5.2.8",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Bypass input mention limit in non-multichat",
       "description": "Bypass the limit of input mentions in non-multichat rooms",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Change model",
       "description": "Changes the device model to supporting subdevice features",
-      "use": true,
+      "default": true,
       "dependencies": [
         "BytecodePatch"
       ],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Change package name",
       "description": "Appends \".revanced\" to the package name by default. For DCinside only",
-      "use": false,
+      "default": false,
       "dependencies": [
         "ResourcePatch",
         "BytecodePatch",
         "BytecodePatch"
       ],
-      "compatiblePackages": {
-        "com.dcinside.app.android": [
-          "5.2.8"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.dcinside.app.android",
+          "name": "dcinside",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#3D4491",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "5.2.8",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": [
         {
           "key": "packageName",
@@ -242,16 +437,29 @@
     {
       "name": "Change package name",
       "description": "Appends \".revanced\" to the package name by default. For KakaoTalk only",
-      "use": false,
+      "default": false,
       "dependencies": [
         "ResourcePatch",
         "BytecodePatch"
       ],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": [
         {
           "key": "packageName",
@@ -287,15 +495,28 @@
     {
       "name": "Custom branding",
       "description": "Customize app branding (name and icon)",
-      "use": false,
+      "default": false,
       "dependencies": [
         "ResourcePatch"
       ],
-      "compatiblePackages": {
-        "com.dcinside.app.android": [
-          "5.2.8"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.dcinside.app.android",
+          "name": "dcinside",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#3D4491",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "5.2.8",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": [
         {
           "key": "customName",
@@ -323,15 +544,28 @@
     {
       "name": "Custom branding",
       "description": "Customize app branding (name)",
-      "use": false,
+      "default": false,
       "dependencies": [
         "ResourcePatch"
       ],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": [
         {
           "key": "customName",
@@ -347,209 +581,417 @@
     {
       "name": "Default external browser",
       "description": "Sets the default external browser for KakaoTalk to the system's default browser.",
-      "use": true,
+      "default": true,
       "dependencies": [
         "BytecodePatch"
       ],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Dimens Patch",
       "description": "reassigns ad_minimum_height to 0dp to remove ads from the app.",
-      "use": true,
+      "default": true,
       "dependencies": [
         "BytecodePatch"
       ],
-      "compatiblePackages": {
-        "com.dcinside.app.android": [
-          "5.2.8"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.dcinside.app.android",
+          "name": "dcinside",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#3D4491",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "5.2.8",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Disable 300+ unread limit",
       "description": "Always show the real unread count instead of '300+' in chatroom list",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Disable 99 unread limit",
       "description": "Skip the 99-cap so unread count shows full value",
-      "use": true,
+      "default": true,
       "dependencies": [
         "BytecodePatch"
       ],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Disable ChatRoomAdController",
       "description": "Disables the open-link chat room BizBoard ad controller.",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Disable Collapse Button",
       "description": "Disable collapse button on OpenChatList",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Disable Comment Ad",
       "description": "Disables the comment ad in the app.",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.dcinside.app.android": [
-          "5.2.8"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.dcinside.app.android",
+          "name": "dcinside",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#3D4491",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "5.2.8",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Disable Community Tab",
       "description": "Disables Community Tab",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Disable Friend Feed tab",
       "description": "Disables the Friend Feed tab in KakaoTalk.",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Disable Friend Lists ad",
       "description": "Disables the friend tab BizBoard ads in KakaoTalk.",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Disable Image Ad",
       "description": "Disables the image ad in the app.",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.dcinside.app.android": [
-          "5.2.8"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.dcinside.app.android",
+          "name": "dcinside",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#3D4491",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "5.2.8",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Disable OpenChat feed ad",
       "description": "Disables the OpenChat tab feed ad load and render paths.",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Disable Pay banner ad",
       "description": "Disables the KakaoPay banner ad load and render paths.",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Disable S2Event",
       "description": "Disables Tracker",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Disable SDK Tracker",
       "description": "Disables the SDK Tracker in KakaoTalk.",
-      "use": true,
+      "default": true,
       "dependencies": [
         "BytecodePatch"
       ],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Disable Sentry",
       "description": "Disables Sentry error reporting in KakaoTalk.",
-      "use": true,
+      "default": true,
       "dependencies": [
         "ResourcePatch"
       ],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Disable Sentry telemetry",
       "description": "Disables Sentry telemetry. See https://sentry.io/for/android/ for more information.",
-      "use": false,
+      "default": false,
       "dependencies": [],
       "compatiblePackages": null,
       "options": []
@@ -557,234 +999,468 @@
     {
       "name": "Disable ShortForm ad",
       "description": "Disables the shortform ad load and render paths.",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Disable Talk Share Log",
       "description": "Disable talk share log",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Disable ad controller",
       "description": "Disables the ad controller that manages ads in the app.",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.dcinside.app.android": [
-          "5.2.8"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.dcinside.app.android",
+          "name": "dcinside",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#3D4491",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "5.2.8",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Disable chat room list ad",
       "description": "Disable the chat room list ad.",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Disable open chat room comments",
       "description": "Adds a setting to disable comments in open chat rooms.",
-      "use": true,
+      "default": true,
       "dependencies": [
         "BytecodePatch",
         "BytecodePatch"
       ],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Disable update check",
       "description": "Disables the app's update check.",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.dcinside.app.android": [
-          "5.2.8"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.dcinside.app.android",
+          "name": "dcinside",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#3D4491",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "5.2.8",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Disable verifying signature",
       "description": "Disables the signature verification check that prevents the app from running.",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Enable Markdown",
       "description": "Render plain text messages with markdown-style formatting.",
-      "use": true,
+      "default": true,
       "dependencies": [
         "BytecodePatch"
       ],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Enable OneStore feature",
       "description": "Enables the OneStore feature in DC Inside app.",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.dcinside.app.android": [
-          "5.2.8"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.dcinside.app.android",
+          "name": "dcinside",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#3D4491",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "5.2.8",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Enable reaction mention flag",
       "description": "Enables the reaction mention flag in KakaoTalk chat logs.",
-      "use": false,
+      "default": false,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Enable recording pause/resume feature",
       "description": "Enable recording pause/resume feature in KakaoTalk",
-      "use": true,
+      "default": true,
       "dependencies": [
         "BytecodePatch"
       ],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Enable send big text",
       "description": "Allows sending big text messages in KakaoTalk.",
-      "use": true,
+      "default": true,
       "dependencies": [
         "BytecodePatch"
       ],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Force enable debug mode",
       "description": "Enables debug mode in the app.",
-      "use": true,
+      "default": true,
       "dependencies": [
         "BytecodePatch"
       ],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Force enable emoticon plus feature",
       "description": "Force enable emoticon plus feature (Unpurchased emoticon can be sent once per day)",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Ghost Mode",
       "description": "Don't expose your typing status to the other party.",
-      "use": true,
+      "default": true,
       "dependencies": [
         "BytecodePatch"
       ],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Hide Main Ad",
       "description": "Hides the main ad in the app.",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.dcinside.app.android": [
-          "5.2.8"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.dcinside.app.android",
+          "name": "dcinside",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#3D4491",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "5.2.8",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Hook Package Manager",
       "description": "Hooks the Package Manager to bypass integrity checks.",
-      "use": true,
+      "default": true,
       "dependencies": [
         "BytecodePatch"
       ],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Override feature flag",
       "description": "Overrides the feature flag to enable the feature.",
-      "use": true,
+      "default": true,
       "dependencies": [
         "BytecodePatch"
       ],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": [
         {
           "key": "featureFlags",
@@ -800,153 +1476,309 @@
     {
       "name": "Play YouTube player in chat room",
       "description": "Allows playing YouTube videos in KakaoTalk chat rooms.",
-      "use": true,
+      "default": true,
       "dependencies": [
         "BytecodePatch"
       ],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Register settings activity",
       "description": "Registers the Morphe settings activity in the app manifest.",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.dcinside.app.android": [
-          "5.2.8"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.dcinside.app.android",
+          "name": "dcinside",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#3D4491",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "5.2.8",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Register settings activity",
       "description": "Registers the Morphe settings activity in the app manifest.",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Remove BizBoard ads",
       "description": "Removes the BizBoard ad by forcing its dimensions to 0x0 and visibility to GONE in onMeasure.",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Remove More tab ad",
       "description": "Removes the ad from the More tab.",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Remove OpenLink chat room list ad",
       "description": "Removes the OpenLink chat room list ad.",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Remove Short-form Tab",
       "description": "Removes the Short-form tab from the now fragment.",
-      "use": true,
+      "default": true,
       "dependencies": [
         "BytecodePatch"
       ],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Remove feed ad",
       "description": "Removes the feed ad from the app.",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Remove focus ad",
       "description": "Removes the focus ad from the app.",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Remove native ad",
       "description": "Removes the native ad from the app.",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Remove shop tab",
       "description": "Removes the shop tab from the bottom navigation bar.",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Show deleted or hidden messages",
       "description": "Allows you to see deleted/hidden messages in chat logs.",
-      "use": true,
+      "default": true,
       "dependencies": [
         "BytecodePatch",
         "ResourcePatch",
         "BytecodePatch"
       ],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": [
         {
           "key": "deletedColor",
@@ -971,63 +1803,128 @@
     {
       "name": "Spoof App ID",
       "description": "Spoofs the App ID to bypass integrity checks. (to bypass biometric auth etc.)",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Spoof Signature",
       "description": "Spoofs the app signature to bypass integrity checks.",
-      "use": true,
+      "default": true,
       "dependencies": [
         "BytecodePatch"
       ],
-      "compatiblePackages": {
-        "com.dcinside.app.android": [
-          "5.2.8"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.dcinside.app.android",
+          "name": "dcinside",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#3D4491",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "5.2.8",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Spoof apk checksums",
       "description": "Spoofs the apk checksums to pass integrity checks.",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Spoof signature",
       "description": "Spoofs the app signature to pass integrity checks.",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     },
     {
       "name": "Version info patch",
       "description": "Patches the version info to include '(ReVanced)' in the version string.",
-      "use": true,
+      "default": true,
       "dependencies": [],
-      "compatiblePackages": {
-        "com.kakao.talk": [
-          "26.3.2"
-        ]
-      },
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
       "options": []
     }
   ]
