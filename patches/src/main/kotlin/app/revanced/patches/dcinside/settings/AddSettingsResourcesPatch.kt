@@ -1,18 +1,15 @@
 package app.revanced.patches.dcinside.settings
 
-import app.morphe.patcher.patch.ResourcePatchContext
 import app.morphe.patcher.patch.resourcePatch
 import app.morphe.util.ResourceGroup
 import app.morphe.util.asSequence
 import app.morphe.util.copyResources
-import app.morphe.util.inputStreamFromBundledResource
 import app.revanced.patches.dcinside.shared.addDcInsideResources
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
 import org.w3c.dom.Document
 import org.w3c.dom.Element
 
 private const val SETTINGS_SHORTCUT_ID = "morphe_dcinside_settings"
-private const val USER_MEMO_PRESET_RESOURCE = "user_memo_preset_1.txt"
 
 internal val addSettingsResourcesPatch = resourcePatch(
     name = "Add settings resources",
@@ -34,23 +31,9 @@ internal val addSettingsResourcesPatch = resourcePatch(
                 "morphe_dcinside_settings_preferences.xml",
             ),
         )
-        copyUserMemoPresetResource()
 
         document("res/layout/fragment_settings.xml").use { document ->
             document.addSettingsShortcut()
-        }
-    }
-}
-
-private fun ResourcePatchContext.copyUserMemoPresetResource() {
-    val source = inputStreamFromBundledResource("dcinside", USER_MEMO_PRESET_RESOURCE)
-        ?: error("Could not find bundled resource: dcinside/$USER_MEMO_PRESET_RESOURCE")
-    val destination = this["res/raw/$USER_MEMO_PRESET_RESOURCE"]
-
-    destination.parentFile?.mkdirs()
-    source.use { input ->
-        destination.outputStream().use { output ->
-            input.copyTo(output)
         }
     }
 }

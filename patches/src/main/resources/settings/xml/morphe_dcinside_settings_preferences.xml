@@ -36,6 +36,10 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/morphe_settings_section_manage">
         <Preference
+            android:key="morphe_pref_clear_user_memos"
+            android:summary="@string/morphe_settings_user_memo_clear_summary"
+            android:title="@string/morphe_settings_user_memo_clear" />
+        <Preference
             android:key="morphe_pref_reset"
             android:summary="@string/morphe_settings_reset_all_summary"
             android:title="@string/morphe_settings_reset_all" />
