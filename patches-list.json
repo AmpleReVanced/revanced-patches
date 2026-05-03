@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0-dev.24",
+  "version": "1.0.0-dev.25",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -1375,6 +1375,33 @@
           "targets": [
             {
               "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Hide DC official notices",
+      "description": "Hides official DCInside operator notices from gallery notice lists.",
+      "default": true,
+      "dependencies": [
+        "BytecodePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "com.dcinside.app.android",
+          "name": "dcinside",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#3D4491",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "5.2.8",
               "isExperimental": false,
               "minSdk": null,
               "description": null
