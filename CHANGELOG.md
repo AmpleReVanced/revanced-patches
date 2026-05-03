@@ -1,3 +1,10 @@
+# [1.0.0-dev.24](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.23...v1.0.0-dev.24) (2026-05-03)
+
+
+### Bug Fixes
+
+* **dcinside:** restore in-app YouTube video search ([594bdaf](https://github.com/AmpleReVanced/revanced-patches/commit/594bdafc666cb5b0a30c3b04cfb0cf92defc5f86)), closes [#72](https://github.com/AmpleReVanced/revanced-patches/issues/72)
+
 # [1.0.0-dev.23](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.22...v1.0.0-dev.23) (2026-05-02)
 
 
