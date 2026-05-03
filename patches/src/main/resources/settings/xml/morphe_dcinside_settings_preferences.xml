@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="@string/morphe_settings_section_features">
+        <SwitchPreference
+            android:key="morphe_pref_hide_official_notices"
+            android:summary="@string/morphe_settings_hide_official_notices_summary"
+            android:title="@string/morphe_settings_hide_official_notices" />
         <Preference
             android:key="morphe_pref_apply_user_memo_preset"
             android:summary="@string/morphe_settings_user_memo_preset_summary"
