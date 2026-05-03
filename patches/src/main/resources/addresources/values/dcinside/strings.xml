@@ -1,6 +1,8 @@
 <resources>
     <string name="morphe_label_for_ample_settings">Morphe Settings</string>
     <string name="morphe_settings_section_features">Features</string>
+    <string name="morphe_settings_hide_official_notices">Hide official notices</string>
+    <string name="morphe_settings_hide_official_notices_summary">Removes DCInside operator notices from gallery notice lists.</string>
     <string name="morphe_settings_user_memo_preset">Register user memo preset</string>
     <string name="morphe_settings_user_memo_preset_summary">Choose a bundled preset and register it to global user memo immediately.</string>
     <string name="morphe_settings_user_memo_preset_select_title">Select user memo preset</string>
