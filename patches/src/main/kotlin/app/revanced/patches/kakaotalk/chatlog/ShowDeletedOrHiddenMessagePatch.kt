@@ -43,24 +43,32 @@ import com.android.tools.smali.dexlib2.immutable.ImmutableField
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethodParameter
 
+private const val ARGB_32_MASK = 0xFFFF_FFFFL
+private const val OPAQUE_ALPHA = 0xFF00_0000L
+
 private fun parseArgb32ToInt(input: String): Int {
     val t = input.trim().replace("_", "")
     val value = when {
+        t.startsWith("#") -> parseHashColor(t)
         t.startsWith("0x", ignoreCase = true) -> t.substring(2).toLong(16)
         t.startsWith("-0x", ignoreCase = true) -> -t.substring(3).toLong(16)
         else -> t.toLong()
     }
-    return (value and 0xFFFF_FFFFL).toInt()
+    return (value and ARGB_32_MASK).toInt()
 }
 
-private fun toSmaliIntLiteral(v: Int): String {
-    return if (v < 0) {
-        val absHex = kotlin.math.abs(v.toLong()).toString(16)
-        "-0x$absHex"
-    } else {
-        "0x" + v.toString(16)
+private fun parseHashColor(input: String): Long {
+    val hex = input.substring(1)
+    require(hex.length == 6 || hex.length == 8) {
+        "Color must be #RRGGBB, #AARRGGBB, 0xAARRGGBB, or signed decimal."
     }
+
+    val color = hex.toLong(16)
+    return if (hex.length == 6) color or OPAQUE_ALPHA else color
 }
+
+private fun toSmaliIntLiteral(value: Int) =
+    "0x" + (value.toLong() and ARGB_32_MASK).toString(16).padStart(8, '0')
 
 @Suppress("unused")
 val showDeletedOrHiddenMessagePatch = bytecodePatch(
@@ -73,14 +81,14 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
     val deletedColorText by stringOption(
         key = "deletedColor",
         title = "Deleted color",
-        description = "32-bit ARGB. Accepts 0xAARRGGBB or signed decimal.",
+        description = "32-bit ARGB. Accepts #RRGGBB, #AARRGGBB, 0xAARRGGBB, or signed decimal.",
         default = "0xFFFF4444",
     )
 
     val hiddenColorText by stringOption(
         key = "hiddenColor",
         title = "Hidden color",
-        description = "32-bit ARGB. Accepts 0xAARRGGBB or signed decimal.",
+        description = "32-bit ARGB. Accepts #RRGGBB, #AARRGGBB, 0xAARRGGBB, or signed decimal.",
         default = "0xFF999999",
     )
 
