@@ -1837,7 +1837,7 @@
         {
           "key": "deletedColor",
           "title": "Deleted color",
-          "description": "32-bit ARGB. Accepts 0xAARRGGBB or signed decimal.",
+          "description": "32-bit ARGB. Accepts #RRGGBB, #AARRGGBB, 0xAARRGGBB, or signed decimal.",
           "required": false,
           "type": "kotlin.String",
           "default": "0xFFFF4444",
@@ -1846,7 +1846,7 @@
         {
           "key": "hiddenColor",
           "title": "Hidden color",
-          "description": "32-bit ARGB. Accepts 0xAARRGGBB or signed decimal.",
+          "description": "32-bit ARGB. Accepts #RRGGBB, #AARRGGBB, 0xAARRGGBB, or signed decimal.",
           "required": false,
           "type": "kotlin.String",
           "default": "0xFF999999",
