@@ -1,3 +1,9 @@
+# [1.0.0-dev.27](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.26...v1.0.0-dev.27) (2026-05-04)
+
+### Bug Fixes
+
+* **dcinside:** disable DCCon blocker by default ([8be17b0](https://github.com/AmpleReVanced/revanced-patches/commit/8be17b05801bdff59bfe0eb4ca198b207ace6452))
+
 # [1.0.0-dev.26](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.25...v1.0.0-dev.26) (2026-05-04)
 
 ### Features
