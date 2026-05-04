@@ -1,3 +1,9 @@
+# [1.0.0-dev.28](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.27...v1.0.0-dev.28) (2026-05-04)
+
+### Bug Fixes
+
+* **kakaotalk:** accept hash color values for hidden message patch ([929e9a2](https://github.com/AmpleReVanced/revanced-patches/commit/929e9a2a9305b15db9d3647ae412a0f798e21ffa)), closes [#78](https://github.com/AmpleReVanced/revanced-patches/issues/78)
+
 # [1.0.0-dev.27](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.26...v1.0.0-dev.27) (2026-05-04)
 
 ### Bug Fixes
