@@ -89,7 +89,7 @@ def patches_table(patches):
             opts_cell = "<br>".join(f"• {t}" for t in parts)
         else:
             opts_cell = ""
-        desc = p.get("description") or ""
+        desc = (p.get("description") or "").replace("\n", "<br>")
         rows.append(f"| [{p['name']}](#{a}) | {desc} | {opts_cell} |")
     return "\n".join(rows)
 
@@ -113,7 +113,7 @@ def versions_table(targets):
     rows   = [header, sep]
 
     # Optional description row — only rendered if at least one target has one
-    descs = [t.get("description") or "" for t in targets]
+    descs = [(t.get("description") or "").replace("\n", "<br>") for t in targets]
     if any(descs):
         rows.append("| " + " | ".join(descs) + " |")
 
