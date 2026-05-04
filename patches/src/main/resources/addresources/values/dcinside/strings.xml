@@ -3,6 +3,10 @@
     <string name="morphe_settings_section_features">Features</string>
     <string name="morphe_settings_hide_official_notices">Hide official notices</string>
     <string name="morphe_settings_hide_official_notices_summary">Removes DCInside operator notices from gallery notice lists.</string>
+    <string name="morphe_settings_block_post_dccon_loading">Block DCCon loading in posts</string>
+    <string name="morphe_settings_block_post_dccon_loading_summary">Prevents DCCon images from loading in post bodies.</string>
+    <string name="morphe_settings_block_reply_dccon_loading">Block DCCon loading in replies</string>
+    <string name="morphe_settings_block_reply_dccon_loading_summary">Prevents DCCon images from loading in reply lists.</string>
     <string name="morphe_settings_user_memo_preset">Register user memo preset</string>
     <string name="morphe_settings_user_memo_preset_summary">Choose a bundled preset and register it to global user memo immediately.</string>
     <string name="morphe_settings_user_memo_preset_select_title">Select user memo preset</string>

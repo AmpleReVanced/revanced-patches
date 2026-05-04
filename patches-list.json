@@ -785,6 +785,33 @@
       "options": []
     },
     {
+      "name": "Disable DCCon loading",
+      "description": "Adds settings to block DCCon image loading in posts and replies.",
+      "default": true,
+      "dependencies": [
+        "BytecodePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "com.dcinside.app.android",
+          "name": "dcinside",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#3D4491",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "5.2.8",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
       "name": "Disable Friend Feed tab",
       "description": "Disables the Friend Feed tab in KakaoTalk.",
       "default": true,

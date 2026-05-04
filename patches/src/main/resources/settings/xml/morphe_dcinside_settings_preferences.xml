@@ -5,6 +5,14 @@
             android:key="morphe_pref_hide_official_notices"
             android:summary="@string/morphe_settings_hide_official_notices_summary"
             android:title="@string/morphe_settings_hide_official_notices" />
+        <SwitchPreference
+            android:key="morphe_pref_block_post_dccon_loading"
+            android:summary="@string/morphe_settings_block_post_dccon_loading_summary"
+            android:title="@string/morphe_settings_block_post_dccon_loading" />
+        <SwitchPreference
+            android:key="morphe_pref_block_reply_dccon_loading"
+            android:summary="@string/morphe_settings_block_reply_dccon_loading_summary"
+            android:title="@string/morphe_settings_block_reply_dccon_loading" />
         <Preference
             android:key="morphe_pref_apply_user_memo_preset"
             android:summary="@string/morphe_settings_user_memo_preset_summary"
