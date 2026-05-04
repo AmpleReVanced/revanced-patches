@@ -1,3 +1,10 @@
+# [1.0.0-dev.26](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.25...v1.0.0-dev.26) (2026-05-04)
+
+### Features
+
+* **dcinside:** add DCCon loading blocker ([0273a52](https://github.com/AmpleReVanced/revanced-patches/commit/0273a52e07130ca817c7ee54d52d0cf085fe8837))
+* **dcinside:** update dcinside patches for version 5.2.9 ([68f3b1b](https://github.com/AmpleReVanced/revanced-patches/commit/68f3b1b3904fb88137788b77de7c4a62173b9cec))
+
 # [1.0.0-dev.25](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.24...v1.0.0-dev.25) (2026-05-03)
 
 ### Features
