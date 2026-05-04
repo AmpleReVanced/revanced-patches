@@ -34,6 +34,8 @@ import app.revanced.extension.dcinside.helper.ResourceHelper;
 public final class SettingsActivity extends Activity {
     private static final String SETTINGS_SHORTCUT_ID = "morphe_dcinside_settings";
     private static final String PREF_HIDE_OFFICIAL_NOTICES = "morphe_pref_hide_official_notices";
+    private static final String PREF_BLOCK_POST_DCCON_LOADING = "morphe_pref_block_post_dccon_loading";
+    private static final String PREF_BLOCK_REPLY_DCCON_LOADING = "morphe_pref_block_reply_dccon_loading";
     private static final String PREF_APPLY_USER_MEMO_PRESET = "morphe_pref_apply_user_memo_preset";
     private static final String PREF_CLEAR_USER_MEMOS = "morphe_pref_clear_user_memos";
     private static final String PREF_DEBUG = "morphe_pref_debug";
@@ -125,6 +127,8 @@ public final class SettingsActivity extends Activity {
             addPreferencesFromResource(requireResourceId("xml", "morphe_dcinside_settings_preferences"));
 
             bindSwitch(PREF_HIDE_OFFICIAL_NOTICES, Settings.HIDE_OFFICIAL_NOTICES);
+            bindSwitch(PREF_BLOCK_POST_DCCON_LOADING, Settings.BLOCK_POST_DCCON_LOADING);
+            bindSwitch(PREF_BLOCK_REPLY_DCCON_LOADING, Settings.BLOCK_REPLY_DCCON_LOADING);
             bindUserMemoPresetPreference();
             bindSwitch(PREF_DEBUG, BaseSettings.DEBUG);
             bindSwitch(PREF_DEBUG_STACKTRACE, BaseSettings.DEBUG_STACKTRACE);
