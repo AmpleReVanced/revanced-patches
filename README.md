@@ -4,15 +4,116 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
+> **[v1.0.0-dev.26](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.0.0-dev.26)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;72 patches total
+<details open>
+<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;54 patches</summary>
+<br>
 
-<!-- Do not modify this section by hand. The patch list is generated when release.yml creates a new release.
+**🎯 Supported versions:**
 
-     If you wish for the patches list to be collapsed, then remove the word 'EXPANDED' from the comment tag above.
+| 26.3.2 |
+| :---: |
 
-     If you wish to manually keep this list updated then remove the PATCHES_START and PATCHES_END
-     comment blocks entirely. -->
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Add Packet Handler](#add-packet-handler) | Adding the Loco Packet Handler allows external applications to handle the app's packets, which may compromise security.
+Conflicts may occur on some systems. |  |
+| [Add Pine Lib](#add-pine-lib) | add libpine.so to the app's native libraries |  |
+| [Add settings resources](#add-settings-resources) | Adds Morphe settings layout resources to the app. |  |
+| [Add settings tab](#add-settings-tab) | Adds a settings tab to the app. |  |
+| [Allow Hide on Any Chat](#allow-hide-on-any-chat) | Users with hiding privileges can hide any chat, including their own messages. |  |
+| [Allow reply to feed](#allow-reply-to-feed) | Allows replying to feed messages |  |
+| [Always Show Kick Button](#always-show-kick-button) | Always shows the kick button in group member management. |  |
+| [Bypass Moat check](#bypass-moat-check) | Add a setting to bypass the Moat integrity check that can prevent KakaoPay from running. |  |
+| [Bypass input mention limit in non-multichat](#bypass-input-mention-limit-in-non-multichat) | Bypass the limit of input mentions in non-multichat rooms |  |
+| [Change model](#change-model) | Changes the device model to supporting subdevice features |  |
+| [Change package name](#change-package-name) | Appends ".revanced" to the package name by default. For KakaoTalk only | • Package name<br>• Update permissions<br>• Update providers |
+| [Custom branding](#custom-branding) | Customize app branding (name) | • Custom app name |
+| [Default external browser](#default-external-browser) | Sets the default external browser for KakaoTalk to the system's default browser. |  |
+| [Disable 300+ unread limit](#disable-300-unread-limit) | Always show the real unread count instead of '300+' in chatroom list |  |
+| [Disable 99 unread limit](#disable-99-unread-limit) | Skip the 99-cap so unread count shows full value |  |
+| [Disable ChatRoomAdController](#disable-chatroomadcontroller) | Disables the open-link chat room BizBoard ad controller. |  |
+| [Disable Collapse Button](#disable-collapse-button) | Disable collapse button on OpenChatList |  |
+| [Disable Community Tab](#disable-community-tab) | Disables Community Tab |  |
+| [Disable Friend Feed tab](#disable-friend-feed-tab) | Disables the Friend Feed tab in KakaoTalk. |  |
+| [Disable Friend Lists ad](#disable-friend-lists-ad) | Disables the friend tab BizBoard ads in KakaoTalk. |  |
+| [Disable OpenChat feed ad](#disable-openchat-feed-ad) | Disables the OpenChat tab feed ad load and render paths. |  |
+| [Disable Pay banner ad](#disable-pay-banner-ad) | Disables the KakaoPay banner ad load and render paths. |  |
+| [Disable S2Event](#disable-s2event) | Disables Tracker |  |
+| [Disable SDK Tracker](#disable-sdk-tracker) | Disables the SDK Tracker in KakaoTalk. |  |
+| [Disable Sentry](#disable-sentry) | Disables Sentry error reporting in KakaoTalk. |  |
+| [Disable ShortForm ad](#disable-shortform-ad) | Disables the shortform ad load and render paths. |  |
+| [Disable Talk Share Log](#disable-talk-share-log) | Disable talk share log |  |
+| [Disable chat room list ad](#disable-chat-room-list-ad) | Disable the chat room list ad. |  |
+| [Disable open chat room comments](#disable-open-chat-room-comments) | Adds a setting to disable comments in open chat rooms. |  |
+| [Disable verifying signature](#disable-verifying-signature) | Disables the signature verification check that prevents the app from running. |  |
+| [Enable Markdown](#enable-markdown) | Render plain text messages with markdown-style formatting. |  |
+| [Enable reaction mention flag](#enable-reaction-mention-flag) | Enables the reaction mention flag in KakaoTalk chat logs. |  |
+| [Enable recording pause/resume feature](#enable-recording-pause-resume-feature) | Enable recording pause/resume feature in KakaoTalk |  |
+| [Enable send big text](#enable-send-big-text) | Allows sending big text messages in KakaoTalk. |  |
+| [Force enable debug mode](#force-enable-debug-mode) | Enables debug mode in the app. |  |
+| [Force enable emoticon plus feature](#force-enable-emoticon-plus-feature) | Force enable emoticon plus feature (Unpurchased emoticon can be sent once per day) |  |
+| [Ghost Mode](#ghost-mode) | Don't expose your typing status to the other party. |  |
+| [Hook Package Manager](#hook-package-manager) | Hooks the Package Manager to bypass integrity checks. |  |
+| [Override feature flag](#override-feature-flag) | Overrides the feature flag to enable the feature. | • Feature flag overrides |
+| [Play YouTube player in chat room](#play-youtube-player-in-chat-room) | Allows playing YouTube videos in KakaoTalk chat rooms. |  |
+| [Register settings activity](#register-settings-activity) | Registers the Morphe settings activity in the app manifest. |  |
+| [Remove BizBoard ads](#remove-bizboard-ads) | Removes the BizBoard ad by forcing its dimensions to 0x0 and visibility to GONE in onMeasure. |  |
+| [Remove More tab ad](#remove-more-tab-ad) | Removes the ad from the More tab. |  |
+| [Remove OpenLink chat room list ad](#remove-openlink-chat-room-list-ad) | Removes the OpenLink chat room list ad. |  |
+| [Remove Short-form Tab](#remove-short-form-tab) | Removes the Short-form tab from the now fragment. |  |
+| [Remove feed ad](#remove-feed-ad) | Removes the feed ad from the app. |  |
+| [Remove focus ad](#remove-focus-ad) | Removes the focus ad from the app. |  |
+| [Remove native ad](#remove-native-ad) | Removes the native ad from the app. |  |
+| [Remove shop tab](#remove-shop-tab) | Removes the shop tab from the bottom navigation bar. |  |
+| [Show deleted or hidden messages](#show-deleted-or-hidden-messages) | Allows you to see deleted/hidden messages in chat logs. | • Deleted color<br>• Hidden color |
+| [Spoof App ID](#spoof-app-id) | Spoofs the App ID to bypass integrity checks. (to bypass biometric auth etc.) |  |
+| [Spoof apk checksums](#spoof-apk-checksums) | Spoofs the apk checksums to pass integrity checks. |  |
+| [Spoof signature](#spoof-signature) | Spoofs the app signature to pass integrity checks. |  |
+| [Version info patch](#version-info-patch) | Patches the version info to include '(ReVanced)' in the version string. |  |
 
-#### A list of patches will be automatically shown here after a patches release is created.
+</details>
+
+<details open>
+<summary>📦 dcinside&nbsp;&nbsp;•&nbsp;&nbsp;17 patches</summary>
+<br>
+
+**🎯 Supported versions:**
+
+| 5.2.9 |
+| :---: |
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Add notification shortcut](#add-notification-shortcut) | Adds a notification shortcut button above quick write in the post list. |  |
+| [Add settings](#add-settings) | Adds a Morphe settings entry to the DCInside settings screen. |  |
+| [Add settings resources](#add-settings-resources) | Adds Morphe settings resources to the app. |  |
+| [Bypass getText](#bypass-gettext) | Bypasses the integrity check for getText. |  |
+| [Change package name](#change-package-name) | Appends ".revanced" to the package name by default. For DCinside only | • Package name<br>• Update permissions<br>• Update providers |
+| [Custom branding](#custom-branding) | Customize app branding (name and icon) | • Custom app name<br>• Custom app icon |
+| [Dimens Patch](#dimens-patch) | reassigns ad_minimum_height to 0dp to remove ads from the app. |  |
+| [Disable Comment Ad](#disable-comment-ad) | Disables the comment ad in the app. |  |
+| [Disable DCCon loading](#disable-dccon-loading) | Adds settings to block DCCon image loading in posts and replies. |  |
+| [Disable Image Ad](#disable-image-ad) | Disables the image ad in the app. |  |
+| [Disable ad controller](#disable-ad-controller) | Disables the ad controller that manages ads in the app. |  |
+| [Disable update check](#disable-update-check) | Disables the app's update check. |  |
+| [Enable OneStore feature](#enable-onestore-feature) | Enables the OneStore feature in DC Inside app. |  |
+| [Hide DC official notices](#hide-dc-official-notices) | Hides official DCInside operator notices from gallery notice lists. |  |
+| [Hide Main Ad](#hide-main-ad) | Hides the main ad in the app. |  |
+| [Register settings activity](#register-settings-activity) | Registers the Morphe settings activity in the app manifest. |  |
+| [Spoof Signature](#spoof-signature) | Spoofs the app signature to bypass integrity checks. |  |
+
+</details>
+
+<details open>
+<summary>🌐 Universal&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<br>
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Disable Sentry telemetry](#disable-sentry-telemetry) | Disables Sentry telemetry. See https://sentry.io/for/android/ for more information. |  |
+
+</details>
 
 <!-- PATCHES_END -->
 
