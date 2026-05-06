@@ -1,20 +1,18 @@
 package app.revanced.patches.kakaotalk.settings
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
-import app.revanced.patcher.extensions.InstructionExtensions.getInstruction
-import app.revanced.patcher.extensions.InstructionExtensions.instructions
-import app.revanced.patcher.extensions.InstructionExtensions.replaceInstruction
-import app.revanced.patcher.patch.PatchException
-import app.revanced.patcher.patch.bytecodePatch
-import app.revanced.patcher.util.proxy.mutableTypes.MutableField.Companion.toMutable
-import app.revanced.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
-import app.revanced.patches.all.misc.resources.addResources
-import app.revanced.patches.all.misc.resources.addResourcesPatch
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
+import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
+import app.morphe.patcher.patch.PatchException
+import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.util.proxy.mutableTypes.MutableField.Companion.toMutable
+import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
+import app.morphe.patches.all.misc.resources.addResourcesPatch
+import app.morphe.util.getReference
 import app.revanced.patches.kakaotalk.misc.addExtensionPatch
 import app.revanced.patches.kakaotalk.misc.sharedExtensionPatch
-import app.revanced.patches.kakaotalk.settings.fingerprints.mainSettingItemTypeFingerprint
-import app.revanced.patches.kakaotalk.settings.fingerprints.setupSettingsItemFingerprint
-import app.revanced.util.getReference
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.MutableMethodImplementation
@@ -31,24 +29,23 @@ import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
 val addSettingsTabPatch = bytecodePatch(
     name = "Add settings tab",
     description = "Adds a settings tab to the app.",
-    use = false // Since the settings-related activity has not yet been developed, it will be disabled for the time being.
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
     dependsOn(
         addExtensionPatch,
         addResourcesPatch,
-        sharedExtensionPatch
+        addSettingsResourcesPatch,
+        sharedExtensionPatch,
+        registerSettingsActivityPatch
     )
 
     execute {
-        addResources("kakaotalk", "settings.revancedSettingsPatch")
-
-        val mainSettingItemTypeClass = mainSettingItemTypeFingerprint.classDef
+        val mainSettingItemTypeClass = MainSettingItemTypeFingerprint.classDef
 
         mainSettingItemTypeClass.fields.add(
             ImmutableField(
                 mainSettingItemTypeClass.type,
-                "REVANCED",
+                "MORPHE",
                 mainSettingItemTypeClass.type,
                 AccessFlags.PUBLIC.value or AccessFlags.STATIC.value or AccessFlags.FINAL.value or AccessFlags.ENUM.value,
                 null,
@@ -81,7 +78,7 @@ val addSettingsTabPatch = bytecodePatch(
                 }
 
                 addInstructions(languageIndex + 1, """
-                    sget-object v22, ${mainSettingItemTypeClass.type}->REVANCED:${mainSettingItemTypeClass.type}
+                    sget-object v22, ${mainSettingItemTypeClass.type}->MORPHE:${mainSettingItemTypeClass.type}
                 """)
 
                 val arrayIndex = instructions.indexOfFirst {
@@ -105,21 +102,21 @@ val addSettingsTabPatch = bytecodePatch(
 
         clinitMethod.addInstructions(insertIndex, """
             new-instance v0, ${mainSettingItemTypeClass.type}
-            const-string v1, "REVANCED"
+            const-string v1, "MORPHE"
             const/16 v2, 0x15
-            const-string v3, "revanced_label_for_revanced_settings"
+            const-string v3, "morphe_label_for_ample_settings"
             const-string v4, "string"
             invoke-static {v4, v3}, Lapp/revanced/extension/kakaotalk/helper/ResourceHelper;->getResourceId(Ljava/lang/String;Ljava/lang/String;)I
             move-result v3
-            const-string v4, "setting_ico_testroom"
+            const-string v4, "morphe_settings_icon_dynamic"
             const-string v5, "drawable"
             invoke-static {v5, v4}, Lapp/revanced/extension/kakaotalk/helper/ResourceHelper;->getResourceId(Ljava/lang/String;Ljava/lang/String;)I
             move-result v4
             invoke-direct {v0, v1, v2, v3, v4}, ${mainSettingItemTypeClass.type}-><init>(Ljava/lang/String;III)V
-            sput-object v0, ${mainSettingItemTypeClass.type}->REVANCED:${mainSettingItemTypeClass.type}
+            sput-object v0, ${mainSettingItemTypeClass.type}->MORPHE:${mainSettingItemTypeClass.type}
         """)
 
-        val setupSettingsItemMethod = setupSettingsItemFingerprint.method
+        val setupSettingsItemMethod = SetupSettingsItemFingerprint.method
 
         var separatorIndex = -1
         for (i in 0 until setupSettingsItemMethod.instructions.size - 1) {
@@ -143,7 +140,7 @@ val addSettingsTabPatch = bytecodePatch(
             it.opcode == Opcode.SGET_OBJECT &&
                     it.getReference<FieldReference>()?.name == "CALL"
         }
-        val finishSetupSettingsModel = (setupSettingsItemMethod.getInstruction(sgetCallIndex - 5) as BuilderInstruction3rc).getReference<MethodReference>()
+        val finishSetupSettingsModel = (setupSettingsItemMethod.getInstruction(sgetCallIndex - 6) as BuilderInstruction3rc).getReference<MethodReference>()
 
         val lastNewInstanceIndex = setupSettingsItemMethod.instructions.indexOfLast {
             it.opcode == Opcode.NEW_INSTANCE
@@ -162,28 +159,29 @@ val addSettingsTabPatch = bytecodePatch(
         setupSettingsItemMethod.addInstructions(
             separatorIndex + 1,
             """
-                new-instance v15, ${finishSetupSettingsModel?.definingClass}
-                sget-object v16, ${mainSettingItemTypeClass.type}->REVANCED:${mainSettingItemTypeClass.type}
-                new-instance v4, ${finishSetupSettingsModel?.parameterTypes[2]}
-                invoke-virtual/range {v16 .. v16}, ${mainSettingItemTypeClass.type}->getStringResId()I
-                move-result v5
-                invoke-virtual {v0, v5}, Landroid/content/Context;->getString(I)Ljava/lang/String;
-                move-result-object v5
-                new-instance v9, Landroid/content/Intent;
-                const-class v12, Lcom/kakao/talk/activity/setting/laboratory/LaboratoryActivity;
-                invoke-direct {v9, v0, v12}, Landroid/content/Intent;-><init>(Landroid/content/Context;Ljava/lang/Class;)V
-                const/16 v12, 0x1e
-                invoke-virtual {v10, v12}, ${trackingAction.getReference<MethodReference>()}
-                move-result-object v12
-                sget-object v14, Lcom/kakao/talk/activity/setting/laboratory/LaboratoryActivity;->Q:Lcom/kakao/talk/activity/setting/laboratory/LaboratoryActivity${'$'}a;
-                invoke-direct {v4, v5, v9, v12, v14}, $initialSettingsItemReference
-                const/16 v19, 0x2
+                new-instance v18, ${finishSetupSettingsModel?.definingClass}
+                sget-object v19, ${mainSettingItemTypeClass.type}->MORPHE:${mainSettingItemTypeClass.type}
+                new-instance v3, ${finishSetupSettingsModel?.parameterTypes[2]}
+                invoke-virtual/range {v19 .. v19}, ${mainSettingItemTypeClass.type}->getStringResId()I
+                move-result v4
+                invoke-virtual {v1, v4}, Landroid/content/Context;->getString(I)Ljava/lang/String;
+                move-result-object v4
+                new-instance v10, Landroid/content/Intent;
+                const-class v11, Lapp/revanced/extension/kakaotalk/settings/SettingsActivity;
+                invoke-direct {v10, v1, v11}, Landroid/content/Intent;-><init>(Landroid/content/Context;Ljava/lang/Class;)V
+                const/16 v11, 0x1e
+                invoke-virtual {v9, v11}, ${trackingAction.getReference<MethodReference>()}
+                move-result-object v11
+                sget-object v13, Lcom/kakao/talk/activity/setting/laboratory/LaboratoryActivity;->O:Lcom/kakao/talk/activity/setting/laboratory/LaboratoryActivity${'$'}a;
+                invoke-direct {v3, v4, v10, v11, v13}, $initialSettingsItemReference
+                const/16 v22, 0x2
+                const/16 v23, 0x0
                 const/16 v20, 0x0
-                const/16 v17, 0x0
-                move-object/from16 v18, v4
-                invoke-direct/range {v15 .. v20}, $finishSetupSettingsModel
-                invoke-virtual {v6, v15}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
-                new-instance v14, ${originalInstruction.getReference<TypeReference>()?.type} # stub
+                move-object/from16 v21, v3
+                invoke-direct/range {v18 .. v23}, $finishSetupSettingsModel
+                move-object/from16 v3, v18
+                invoke-virtual {v7, v3}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+                new-instance v18, ${originalInstruction.getReference<TypeReference>()?.type} # stub
             """.trimIndent()
         )
     }

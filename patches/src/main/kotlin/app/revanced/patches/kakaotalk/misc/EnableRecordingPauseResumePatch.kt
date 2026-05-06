@@ -1,10 +1,13 @@
 package app.revanced.patches.kakaotalk.misc
 
-import app.revanced.patcher.extensions.InstructionExtensions.getInstruction
-import app.revanced.patcher.extensions.InstructionExtensions.instructions
-import app.revanced.patcher.extensions.InstructionExtensions.replaceInstruction
-import app.revanced.patcher.patch.bytecodePatch
-import app.revanced.patches.kakaotalk.misc.fingerprints.isRecordingPauseResumeEnabled
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
+import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.extensions.InstructionExtensions.removeInstructions
+import app.morphe.patcher.patch.PatchException
+import app.morphe.patcher.patch.bytecodePatch
+import app.revanced.patches.kakaotalk.misc.fingerprints.IsRecordingPauseResumeEnabled
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction11n
 
@@ -13,20 +16,28 @@ val enableRecordingPauseResumePatch = bytecodePatch(
     name = "Enable recording pause/resume feature",
     description = "Enable recording pause/resume feature in KakaoTalk",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
+    dependsOn(addExtensionPatch)
 
     execute {
-        isRecordingPauseResumeEnabled.method.instructions.indexOfFirst { it.opcode == Opcode.CONST_4 && (it as BuilderInstruction11n).narrowLiteral == 0x0 }
-            .takeIf { it >= 0 }
-            ?.let { index ->
-                isRecordingPauseResumeEnabled.method.replaceInstruction(
-                    index,
-                    BuilderInstruction11n(
-                        Opcode.CONST_4,
-                        (isRecordingPauseResumeEnabled.method.getInstruction(index) as BuilderInstruction11n).registerA,
-                        0x1
-                    )
-                )
-            }
+        val method = IsRecordingPauseResumeEnabled.method
+        val index = method.instructions.indexOfFirst {
+            it.opcode == Opcode.CONST_4 && (it as BuilderInstruction11n).narrowLiteral in listOf(0x0, 0x1)
+        }
+
+        if (index < 0) {
+            throw PatchException("Could not find const/4 default value in is_enable_recording_pause_resume_enabled")
+        }
+
+        val register = (method.getInstruction(index) as BuilderInstruction11n).registerA
+
+        method.removeInstructions(index, 1)
+        method.addInstructions(
+            index,
+            """
+                invoke-static {}, Lapp/revanced/extension/kakaotalk/settings/Settings;->enableRecordingPauseResume()Z
+                move-result v$register
+            """.trimIndent()
+        )
     }
 }

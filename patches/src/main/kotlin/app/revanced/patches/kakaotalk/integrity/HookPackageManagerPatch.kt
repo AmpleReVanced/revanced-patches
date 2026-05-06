@@ -1,8 +1,9 @@
 package app.revanced.patches.kakaotalk.integrity
 
-import app.revanced.patcher.patch.PatchException
-import app.revanced.patcher.patch.resourcePatch
+import app.morphe.patcher.patch.PatchException
+import app.morphe.patcher.patch.resourcePatch
 import app.revanced.patches.kakaotalk.misc.addExtensionPatch
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import java.io.File
 
 @Suppress("unused")
@@ -10,7 +11,7 @@ val hookPackageManagerPatch = resourcePatch(
     name = "Hook Package Manager",
     description = "Hooks the Package Manager to bypass integrity checks.",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
     dependsOn(addExtensionPatch)
 
     execute {

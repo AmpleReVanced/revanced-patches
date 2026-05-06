@@ -2,17 +2,16 @@ rootProject.name = "revanced-patches"
 
 pluginManagement {
     repositories {
+        mavenLocal()
         gradlePluginPortal()
         google()
         maven {
-            name = "githubPackages"
-            url = uri("https://maven.pkg.github.com/amplerevanced/registry")
-            credentials(PasswordCredentials::class)
-        }
-        maven {
-            name = "githubPackagesOfficial"
-            url = uri("https://maven.pkg.github.com/revanced/registry")
-            credentials(PasswordCredentials::class)
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/MorpheApp/registry")
+            credentials {
+                username = providers.gradleProperty("gpr.user").getOrElse(System.getenv("GITHUB_ACTOR"))
+                password = providers.gradleProperty("gpr.key").getOrElse(System.getenv("GITHUB_TOKEN"))
+            }
         }
     }
 }
@@ -20,21 +19,23 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.PREFER_PROJECT)
     repositories {
+        mavenLocal()
+        gradlePluginPortal()
+        google()
         maven {
-            name = "githubPackages"
-            url = uri("https://maven.pkg.github.com/amplerevanced/registry")
-            credentials(PasswordCredentials::class)
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/MorpheApp/registry")
+            credentials {
+                username = providers.gradleProperty("gpr.user").getOrElse(System.getenv("GITHUB_ACTOR"))
+                password = providers.gradleProperty("gpr.key").getOrElse(System.getenv("GITHUB_TOKEN"))
+            }
         }
-        maven {
-            name = "githubPackagesOfficial"
-            url = uri("https://maven.pkg.github.com/revanced/registry")
-            credentials(PasswordCredentials::class)
-        }
+        maven { url = uri("https://jitpack.io") }
     }
 }
 
 plugins {
-    id("app.revanced.patches") version "1.0.0-dev.7"
+    id("app.morphe.patches") version "1.3.2"
 }
 
 settings {

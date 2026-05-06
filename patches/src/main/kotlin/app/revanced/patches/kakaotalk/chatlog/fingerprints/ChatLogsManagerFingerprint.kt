@@ -1,38 +1,39 @@
 package app.revanced.patches.kakaotalk.chatlog.fingerprints
 
-import app.revanced.patcher.fingerprint
+import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.OpcodesFilter
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
-internal val replaceToFeedFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
-    returns("V")
-    strings(
+internal object ReplaceToFeedFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    returnType = "V",
+    strings = listOf(
         "chatLog",
         "feedType",
         "byHost",
-    )
-    custom { method, classDef -> classDef.sourceFile == "ChatLogsManager.kt" }
-}
+    ),
+    custom = { _, classDef -> classDef.sourceFile == "ChatLogsManager.kt" }
+)
 
-internal val chatLogVFieldPutBooleanFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL, AccessFlags.DECLARED_SYNCHRONIZED)
-    parameters("Ljava/lang/String;", "Z")
-    returns("V")
-    opcodes(
+internal object ChatLogVFieldPutBooleanFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL, AccessFlags.DECLARED_SYNCHRONIZED),
+    parameters = listOf("Ljava/lang/String;", "Z"),
+    returnType = "V",
+    filters = OpcodesFilter.opcodesToFilters(
         Opcode.MONITOR_ENTER,
         Opcode.IGET_OBJECT,
         Opcode.INVOKE_VIRTUAL,
         Opcode.GOTO,
         Opcode.MOVE_EXCEPTION
-    )
-    custom { method, classDef -> classDef.sourceFile == "VField.kt" && classDef.instanceFields.count() == 1 }
-}
+    ),
+    custom = { _, classDef -> classDef.sourceFile == "VField.kt" && classDef.instanceFields.count() == 1 }
+)
 
-internal val flushToDBChatLogFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
-    returns("Z")
-    opcodes(
+internal object FlushToDBChatLogFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    returnType = "Z",
+    filters = OpcodesFilter.opcodesToFilters(
         Opcode.SGET_OBJECT,
         Opcode.NEW_INSTANCE,
         Opcode.INVOKE_DIRECT,
@@ -42,16 +43,20 @@ internal val flushToDBChatLogFingerprint = fingerprint {
         Opcode.INVOKE_VIRTUAL,
         Opcode.CONST_4,
         Opcode.RETURN
-    )
-    custom { method, classDef -> classDef.sourceFile == "ChatLogsManager.kt" && method.parameterTypes.size == 1 }
-}
+    ),
+    custom = { method, classDef ->
+        classDef.sourceFile == "ChatLogsManager.kt"
+                && method.parameterTypes.size == 1
+    }
+)
 
-internal val putDeletedMessageCacheFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
-    parameters("J", "J")
-    returns("V")
-    opcodes(
+internal object PutDeletedMessageCacheFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf("J", "J"),
+    returnType = "V",
+    filters = OpcodesFilter.opcodesToFilters(
         Opcode.SGET_OBJECT,
+        Opcode.MONITOR_ENTER,
         Opcode.INVOKE_STATIC,
         Opcode.MOVE_RESULT_OBJECT,
         Opcode.INVOKE_VIRTUAL,
@@ -61,14 +66,18 @@ internal val putDeletedMessageCacheFingerprint = fingerprint {
         Opcode.NEW_INSTANCE,
         Opcode.CONST_16,
         Opcode.INVOKE_DIRECT,
-    )
-    custom { method, classDef -> classDef.sourceFile == "ChatLogsManager.kt" }
-}
+    ),
+    custom = { method, classDef ->
+        classDef.sourceFile == "ChatLogsManager.kt" &&
+                method.parameterTypes.size == 2
+    }
+)
 
-internal val getDeletedMessageCacheFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
-    returns("Z")
-    opcodes(
+internal object GetDeletedMessageCacheFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf("Lcom/kakao/talk/db/model/chatlog/c;"),
+    returnType = "Z",
+    filters = OpcodesFilter.opcodesToFilters(
         Opcode.SGET_OBJECT,
         Opcode.INVOKE_VIRTUAL,
         Opcode.MOVE_RESULT_WIDE,
@@ -82,6 +91,13 @@ internal val getDeletedMessageCacheFingerprint = fingerprint {
         Opcode.MOVE_RESULT_WIDE,
         Opcode.INVOKE_STATIC,
         Opcode.MOVE_RESULT_OBJECT,
-    )
-    custom { method, classDef -> classDef.sourceFile == "ChatLogsManager.kt" && method.parameterTypes.size == 1 }
-}
+        Opcode.INVOKE_VIRTUAL,
+        Opcode.MOVE_RESULT_OBJECT,
+        Opcode.CHECK_CAST,
+        Opcode.IF_EQZ,
+        Opcode.INVOKE_VIRTUAL,
+        Opcode.MOVE_RESULT,
+        Opcode.RETURN,
+    ),
+    custom = { method, classDef -> classDef.sourceFile == "ChatLogsManager.kt" && method.parameterTypes.size == 1 }
+)

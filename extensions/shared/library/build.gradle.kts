@@ -4,10 +4,10 @@ plugins {
 
 android {
     namespace = "app.revanced.extension"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
-        minSdk = 23
+        minSdk = 26
     }
 
     compileOptions {
@@ -17,6 +17,6 @@ android {
 }
 
 dependencies {
+    api(libs.morphe.extensions.library)
     compileOnly(libs.annotation)
-    compileOnly(libs.okhttp)
 }

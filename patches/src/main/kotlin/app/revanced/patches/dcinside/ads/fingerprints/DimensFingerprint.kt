@@ -1,15 +1,17 @@
 package app.revanced.patches.dcinside.ads.fingerprints
 
-import app.revanced.patcher.fingerprint
+import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.OpcodesFilter
+import app.morphe.patcher.fingerprint
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
-val getMinimumDimensFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
-    parameters("Ljava/util/List;")
-    returns("I")
-    strings("list")
-    opcodes(
+object GetMinimumDimensFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf("Ljava/util/List;"),
+    returnType = "I",
+    strings = listOf("list"),
+    filters = OpcodesFilter.opcodesToFilters(
         Opcode.CONST_STRING,
         Opcode.INVOKE_STATIC,
         Opcode.CHECK_CAST,
@@ -22,13 +24,14 @@ val getMinimumDimensFingerprint = fingerprint {
         Opcode.MOVE_RESULT,
         Opcode.IF_EQZ
     )
-}
+)
 
-val readFooterAdContainerSetupFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
-    returns("V")
-    strings("lifecycleOwner", "readFooterAdContainer")
-    opcodes(
+object ReadFooterAdContainerSetupFingerprint : Fingerprint(
+    definingClass = "Lcom/dcinside/app/view",
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    returnType = "V",
+    strings = listOf("lifecycleOwner", "readFooterAdContainer"),
+    filters = OpcodesFilter.opcodesToFilters(
         Opcode.CONST_STRING,
         Opcode.INVOKE_STATIC,
         Opcode.IGET_BOOLEAN,
@@ -41,5 +44,4 @@ val readFooterAdContainerSetupFingerprint = fingerprint {
         Opcode.IPUT_OBJECT,
         Opcode.IGET_OBJECT,
     )
-    custom { method, classDef -> classDef.type.startsWith("Lcom/dcinside/app/view") }
-}
+)

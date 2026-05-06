@@ -502,6 +502,10 @@ public final class app/revanced/patches/kakaotalk/emoticon/ForceEnableEmoticonPl
 	public static final fun getForceEnableEmoticonPlusPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
 }
 
+public final class app/revanced/patches/kakaotalk/feature/DisableOpenChatRoomCommentPatchKt {
+	public static final fun getDisableOpenChatRoomCommentPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
+}
+
 public final class app/revanced/patches/kakaotalk/feature/OverrideFeatureFlagPatchKt {
 	public static final fun getOverrideFeatureFlagPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
 }

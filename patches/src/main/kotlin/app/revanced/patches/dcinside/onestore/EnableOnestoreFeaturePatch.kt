@@ -1,8 +1,8 @@
 package app.revanced.patches.dcinside.onestore
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
-import app.revanced.patcher.patch.bytecodePatch
-import app.revanced.patches.dcinside.onestore.fingerprints.applicationConfigClassFingerprint
+import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.util.returnEarly
+import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction11n
 
@@ -11,12 +11,10 @@ val enableOnestoreFeaturePatch = bytecodePatch(
     name = "Enable OneStore feature",
     description = "Enables the OneStore feature in DC Inside app.",
 ) {
-    compatibleWith("com.dcinside.app.android"("5.2.7"))
+    compatibleWith(COMPATIBILITY_DC_INSIDE)
 
     execute {
-        val applicationConfigClass = applicationConfigClassFingerprint.classDef
-
-        applicationConfigClass.methods.forEach { method ->
+        ApplicationConfigClassFingerprint.classDef.methods.forEach { method ->
             val isMatch = method.run {
                         parameterTypes.isEmpty() &&
                         returnType == "Z" &&
@@ -27,13 +25,7 @@ val enableOnestoreFeaturePatch = bytecodePatch(
             }
 
             if (isMatch) {
-                method.addInstructions(
-                    0,
-                    """
-                        const/4 v0, 0x1
-                        return v0
-                    """.trimIndent()
-                )
+                method.returnEarly(true)
             }
         }
     }

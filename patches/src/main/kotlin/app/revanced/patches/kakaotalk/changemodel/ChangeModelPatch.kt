@@ -1,8 +1,9 @@
 package app.revanced.patches.kakaotalk.changemodel
 
-import app.revanced.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.all.misc.build.BuildInfo
 import app.revanced.patches.all.misc.build.baseSpoofBuildInfoPatch
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 
 val spoofBuildInfoPatch = baseSpoofBuildInfoPatch {
     BuildInfo(
@@ -20,7 +21,7 @@ val changeModelPatch = bytecodePatch(
     name = "Change model",
     description = "Changes the device model to supporting subdevice features",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
     dependsOn(spoofBuildInfoPatch)
 
     execute {

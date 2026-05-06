@@ -1,20 +1,38 @@
 package app.revanced.patches.kakaotalk.emoticon
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstruction
-import app.revanced.patcher.patch.bytecodePatch
-import app.revanced.patches.kakaotalk.emoticon.fingerprints.emoticonPlusMeResultConstructorFingerprint
+import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
+import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.util.getReference
+import app.morphe.util.returnEarly
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
+import com.android.tools.smali.dexlib2.Opcode
+import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
 @Suppress("unused")
 val forceEnableEmoticonPlusPatch = bytecodePatch(
     name = "Force enable emoticon plus feature",
     description = "Force enable emoticon plus feature (Unpurchased emoticon can be sent once per day)",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        emoticonPlusMeResultConstructorFingerprint.method.addInstruction(
+        EmoticonPlusMeResultConstructorFingerprint.method.addInstruction(
             1,
             "const/4 p1, 0x1"
         )
+
+        UserPreferenceIsActiveEmoticonPlusFingerprint.method.returnEarly(true)
+
+        val caller = EmoticonPlusManagerIsActiveFingerprint.method.instructions
+            .first { it.opcode == Opcode.INVOKE_VIRTUAL }
+            .getReference<MethodReference>()
+        if (caller!!.definingClass != "Lcom/kakao/talk/emoticon/itemstore/plus/EmoticonPlusMeResult;") {
+            error("Force enable emoticon plus feature is not supported")
+        }
+
+        EmoticonPlusMeResultConstructorFingerprint.classDef.methods
+            .first { it.name == caller.name }
+            .returnEarly(true)
     }
 }

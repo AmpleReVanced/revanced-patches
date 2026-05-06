@@ -1,12 +1,14 @@
 package app.revanced.patches.kakaotalk.tab
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstruction
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
-import app.revanced.patcher.extensions.InstructionExtensions.instructions
-import app.revanced.patcher.patch.bytecodePatch
-import app.revanced.patches.kakaotalk.tab.fingerprints.determineFeedOrListMethodFingerprint
-import app.revanced.patches.kakaotalk.tab.fingerprints.isHideFriendsTabSettingsFingerprint
-import app.revanced.patches.kakaotalk.tab.fingerprints.mainTabConfigFingerprint
+import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.util.returnEarly
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
+import app.revanced.patches.kakaotalk.tab.fingerprints.DetermineFeedOrListMethodFingerprint
+import app.revanced.patches.kakaotalk.tab.fingerprints.IsHideFriendsTabSettingsFingerprint
+import app.revanced.patches.kakaotalk.tab.fingerprints.MainTabConfigFingerprint
 import com.android.tools.smali.dexlib2.Opcode
 
 @Suppress("unused")
@@ -14,26 +16,20 @@ val disableFriendFeedTabPatch = bytecodePatch(
     name = "Disable Friend Feed tab",
     description = "Disables the Friend Feed tab in KakaoTalk.",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        mainTabConfigFingerprint.method.addInstructions(
-            mainTabConfigFingerprint.method.instructions.size - 1,
+        MainTabConfigFingerprint.method.addInstructions(
+            MainTabConfigFingerprint.method.instructions.size - 1,
             """
                 const/4 p1, 0x0
-                iput-boolean p1, p0, ${mainTabConfigFingerprint.method.definingClass}->a:Z
+                iput-boolean p1, p0, ${MainTabConfigFingerprint.method.definingClass}->a:Z
             """.trimIndent()
         )
 
-        isHideFriendsTabSettingsFingerprint.method.addInstructions(
-            0,
-            """
-                const/4 v1, 0x0
-                return v1
-            """.trimIndent()
-        )
+        IsHideFriendsTabSettingsFingerprint.method.returnEarly(false)
 
-        determineFeedOrListMethodFingerprint.method.apply {
+        DetermineFeedOrListMethodFingerprint.method.apply {
             val instIndex = instructions.indexOfLast { it.opcode == Opcode.IF_EQZ }
             addInstruction(
                 instIndex,

@@ -1,23 +1,18 @@
 package app.revanced.patches.kakaotalk.ads
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
-import app.revanced.patcher.patch.bytecodePatch
-import app.revanced.patches.kakaotalk.ads.fingerprints.loadFocusAdFingerprint
+import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.util.returnEarly
+import app.revanced.patches.kakaotalk.ads.fingerprints.LoadFocusAdFingerprint
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 
 @Suppress("unused")
 val removeFocusAdPatch = bytecodePatch(
     name = "Remove focus ad",
     description = "Removes the focus ad from the app.",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        loadFocusAdFingerprint.method.addInstructions(
-            0,
-            """
-                const/4 v0, 0x1
-                return v0
-            """.trimIndent()
-        )
+        LoadFocusAdFingerprint.method.returnEarly(true)
     }
 }

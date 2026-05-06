@@ -1,20 +1,21 @@
 package app.revanced.patches.kakaotalk.tracker
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
-import app.revanced.patcher.patch.bytecodePatch
-import app.revanced.patches.kakaotalk.common.fingerprints.kotlinUnitInstanceFingerprint
-import app.revanced.patches.kakaotalk.tracker.fingerprints.disableSaveS2EventFingerprint
-import app.revanced.patches.kakaotalk.tracker.fingerprints.sendS2EventFingerprint
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.patch.bytecodePatch
+import app.revanced.patches.kakaotalk.common.fingerprints.KotlinUnitInstanceFingerprint
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
+import app.revanced.patches.kakaotalk.tracker.fingerprints.DisableSaveS2EventFingerprint
+import app.revanced.patches.kakaotalk.tracker.fingerprints.SendS2EventFingerprint
 
 @Suppress("unused")
 val disableS2EventPatch = bytecodePatch(
     name = "Disable S2Event",
     description = "Disables Tracker",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        disableSaveS2EventFingerprint.method.addInstructions(
+        DisableSaveS2EventFingerprint.method.addInstructions(
             0,
             """
                 const/4 v0, 0x0
@@ -24,11 +25,11 @@ val disableS2EventPatch = bytecodePatch(
             """.trimIndent()
         )
 
-        val findUnit = kotlinUnitInstanceFingerprint.method
+        val findUnit = KotlinUnitInstanceFingerprint.method
         val unitClass = findUnit.definingClass
         // I tried to find the field name, but it's pretty obvious to me, so I hardcode it.
         // If it changes, we need to fix it
-        sendS2EventFingerprint.method.addInstructions(
+        SendS2EventFingerprint.method.addInstructions(
             0,
             """
                 sget-object v0, $unitClass->a:$unitClass

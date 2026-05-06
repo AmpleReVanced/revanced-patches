@@ -1,18 +1,20 @@
 package app.revanced.patches.kakaotalk.tab
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
-import app.revanced.patcher.patch.bytecodePatch
-import app.revanced.patches.kakaotalk.tab.fingerprints.isChatListCollapseButtonEnabledFingerprint
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.patch.bytecodePatch
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
+import app.revanced.patches.kakaotalk.tab.fingerprints.IsChatListCollapseButtonEnabledFingerprint
 
 @Suppress("unused")
 val disableCollapseButtonPatch = bytecodePatch(
     name = "Disable Collapse Button",
     description = "Disable collapse button on OpenChatList",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        isChatListCollapseButtonEnabledFingerprint.method.apply {
+        // TODO: use returnEarly
+        IsChatListCollapseButtonEnabledFingerprint.method.apply {
             addInstructions(
                 0,
                 """

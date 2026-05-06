@@ -1,15 +1,15 @@
 package app.revanced.patches.shared.misc.privacy
 
-import app.revanced.patcher.patch.resourcePatch
-import app.revanced.util.asSequence
-import app.revanced.util.getNode
+import app.morphe.patcher.patch.resourcePatch
+import app.morphe.util.asSequence
+import app.morphe.util.getNode
 import org.w3c.dom.Element
 
 @Suppress("unused")
 val disableSentryTelemetryPatch = resourcePatch(
     name = "Disable Sentry telemetry",
     description = "Disables Sentry telemetry. See https://sentry.io/for/android/ for more information.",
-    use = false,
+    default = false,
 ) {
     execute {
         fun Element.replaceOrCreate(tagName: String, attributeName: String, attributeValue: String) {
