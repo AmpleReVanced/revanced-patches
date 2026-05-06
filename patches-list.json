@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0-dev.32",
+  "version": "1.0.0",
   "patches": [
     {
       "name": "Add Packet Handler",
