@@ -4,7 +4,7 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.0.0-dev.28](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.0.0-dev.28)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;72 patches total
+> **[v1.0.0-dev.29](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.0.0-dev.29)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;72 patches total
 <details open>
 <summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;54 patches</summary>
 <br>
@@ -16,8 +16,7 @@
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
-| [Add Packet Handler](#add-packet-handler) | Adding the Loco Packet Handler allows external applications to handle the app's packets, which may compromise security.
-Conflicts may occur on some systems. |  |
+| [Add Packet Handler](#add-packet-handler) | Adding the Loco Packet Handler allows external applications to handle the app's packets, which may compromise security.<br>Conflicts may occur on some systems. |  |
 | [Add Pine Lib](#add-pine-lib) | add libpine.so to the app's native libraries |  |
 | [Add settings resources](#add-settings-resources) | Adds Morphe settings layout resources to the app. |  |
 | [Add settings tab](#add-settings-tab) | Adds a settings tab to the app. |  |
