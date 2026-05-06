@@ -1,3 +1,9 @@
+# [1.0.0-dev.29](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.28...v1.0.0-dev.29) (2026-05-06)
+
+### Bug Fixes
+
+* **kakaotalk:** restore force emoticon plus activation ([a6a8a27](https://github.com/AmpleReVanced/revanced-patches/commit/a6a8a27878b176b008db4a75dc9800d8d1712cd2)), closes [#40](https://github.com/AmpleReVanced/revanced-patches/issues/40)
+
 # [1.0.0-dev.28](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.27...v1.0.0-dev.28) (2026-05-04)
 
 ### Bug Fixes
