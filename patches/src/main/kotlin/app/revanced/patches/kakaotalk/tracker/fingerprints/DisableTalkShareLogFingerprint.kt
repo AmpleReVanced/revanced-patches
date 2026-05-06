@@ -1,18 +1,15 @@
 package app.revanced.patches.kakaotalk.tracker.fingerprints
 
-import app.revanced.patcher.fingerprint
-import com.android.tools.smali.dexlib2.Opcode
+import app.morphe.patcher.Fingerprint
+import app.revanced.util.hasFieldReference
+import com.android.tools.smali.dexlib2.AccessFlags
 
-internal val talkShareServiceInit = fingerprint {
-    opcodes(
-        Opcode.SGET_OBJECT,
-        Opcode.SPUT_OBJECT,
-        Opcode.SGET_OBJECT,
-        Opcode.NEW_INSTANCE,
-        Opcode.INVOKE_DIRECT,
-        Opcode.CONST_STRING,
-        Opcode.INVOKE_VIRTUAL,
-        Opcode.INVOKE_VIRTUAL,
-    )
-    custom { method, classDef -> classDef.sourceFile == "TalkShareService.kt" }
-}
+internal object TalkShareLogAsyncFlagFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC),
+    parameters = listOf("Lkotlin/coroutines/Continuation;"),
+    returnType = "Ljava/lang/Object;",
+    custom = { method, classDef ->
+        classDef.sourceFile == "Available2.kt" &&
+                method.hasFieldReference("Lbr/c\$b;", "USE_TALK_SHARE_LOG")
+    }
+)

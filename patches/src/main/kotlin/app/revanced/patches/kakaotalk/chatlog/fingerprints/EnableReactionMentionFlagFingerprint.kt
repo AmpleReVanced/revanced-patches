@@ -1,20 +1,21 @@
 package app.revanced.patches.kakaotalk.chatlog.fingerprints
 
-import app.revanced.patcher.fingerprint
+import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.OpcodesFilter
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
-internal val reactionMentionFlagFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
-    returns("Ljava/lang/Object;")
-    parameters("Ljava/lang/Object;")
-    strings("reaction_mention_flag")
-    opcodes(
+internal object ReactionMentionFlagFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    returnType = "Ljava/lang/Object;",
+    parameters = listOf("Ljava/lang/Object;"),
+    strings = listOf("reaction_mention_flag"),
+    filters = OpcodesFilter.opcodesToFilters(
         Opcode.SGET_OBJECT,
         Opcode.IGET,
         Opcode.CONST_4,
         Opcode.IF_EQZ,
         Opcode.IF_NE,
-    )
-    custom { method, classDef -> classDef.sourceFile == "CbtPreferencesWithBlocking.kt" }
-}
+    ),
+   custom = { method, classDef -> classDef.sourceFile == "CbtPreferencesWithBlocking.kt" }
+)

@@ -1,21 +1,22 @@
 package app.revanced.patches.dcinside.ads
 
-import app.revanced.patcher.extensions.InstructionExtensions.instructions
-import app.revanced.patcher.extensions.InstructionExtensions.replaceInstructions
-import app.revanced.patcher.patch.bytecodePatch
-import app.revanced.patcher.patch.resourcePatch
-import app.revanced.patches.dcinside.ads.fingerprints.getMinimumDimensFingerprint
-import app.revanced.patches.dcinside.ads.fingerprints.readFooterAdContainerSetupFingerprint
-import app.revanced.util.asSequence
-import app.revanced.util.returnEarly
+import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.extensions.InstructionExtensions.replaceInstructions
+import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.resourcePatch
+import app.revanced.patches.dcinside.ads.fingerprints.GetMinimumDimensFingerprint
+import app.revanced.patches.dcinside.ads.fingerprints.ReadFooterAdContainerSetupFingerprint
+import app.morphe.util.asSequence
+import app.morphe.util.returnEarly
+import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
 import com.android.tools.smali.dexlib2.Opcode
 
 @Suppress("unused")
 internal val dimensBytecodePatch = bytecodePatch {
     execute {
-        getMinimumDimensFingerprint.method.returnEarly(0)
+        GetMinimumDimensFingerprint.method.returnEarly(0)
 
-        readFooterAdContainerSetupFingerprint.method.apply {
+        ReadFooterAdContainerSetupFingerprint.method.apply {
             val ifLez = instructions.indexOfFirst { it.opcode == Opcode.IF_LEZ }
             replaceInstructions(
                 ifLez + 2,
@@ -33,7 +34,7 @@ val dimensPatch = resourcePatch(
     name = "Dimens Patch",
     description = "reassigns ad_minimum_height to 0dp to remove ads from the app.",
 ) {
-    compatibleWith("com.dcinside.app.android"("5.2.7"))
+    compatibleWith(COMPATIBILITY_DC_INSIDE)
     dependsOn(dimensBytecodePatch)
 
     execute {

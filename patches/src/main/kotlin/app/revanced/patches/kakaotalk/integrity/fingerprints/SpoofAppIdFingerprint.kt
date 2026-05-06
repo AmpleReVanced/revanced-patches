@@ -1,25 +1,28 @@
 package app.revanced.patches.kakaotalk.integrity.fingerprints
 
-import app.revanced.patcher.fingerprint
+import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.OpcodesFilter
+import app.morphe.patcher.fingerprint
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
-internal val getAppIdFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.STATIC)
-    parameters("Landroid/content/Context;")
-    returns("Ljava/lang/String;")
-    strings("@\u0015s1w\u0000N4", "??-98", "OnePassManager")
-    opcodes(
+internal object GetAppIdFingerprint : Fingerprint(
+    name = "GetAppID",
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC),
+    parameters = listOf("Landroid/content/Context;"),
+    returnType = "Ljava/lang/String;",
+    strings = listOf("@\u0015s1w\u0000N4", "??-98", "OnePassManager"),
+    filters = OpcodesFilter.opcodesToFilters(
         Opcode.CONST_STRING,
         Opcode.INVOKE_STATIC,
         Opcode.MOVE_RESULT_OBJECT
-    )
-    custom { method, classDef -> classDef.sourceFile == "OnePassManager.java" && method.name == "GetAppID" }
-}
+    ),
+    custom = { _, classDef -> classDef.sourceFile == "OnePassManager.java" }
+)
 
-internal val uaffacetidMethodFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.STATIC)
-    parameters("Landroid/content/Context;", "Ljava/lang/String;", "Ljava/lang/String;")
-    returns("Ljava/lang/String;")
-    custom { method, classDef -> classDef.sourceFile == "UAFFacetID.java" }
-}
+internal object UaffacetidMethodFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC),
+    parameters = listOf("Landroid/content/Context;", "Ljava/lang/String;", "Ljava/lang/String;"),
+    returnType = "Ljava/lang/String;",
+    custom = { _, classDef -> classDef.sourceFile == "UAFFacetID.java" }
+)

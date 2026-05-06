@@ -6,7 +6,6 @@ import android.content.pm.Signature;
 import android.os.IBinder;
 import android.os.IInterface;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import android.util.Log;
@@ -74,30 +73,35 @@ public class PackageManagerStub extends MethodInvocationProxy<MethodInvocationSt
         @Override
         public Object call(Object who, Method method, Object... args) throws Throwable {
             PackageInfo result = (PackageInfo) method.invoke(who, args);
-            if (result != null) {
+            if (shouldSpoof(result)) {
                 if (result.signatures != null) {
                     Spoofer.replaceSignature(result.signatures);
                 }
 
                 if (result.signingInfo != null) {
-                     Object mSigningDetails = Reflect.on(result.signingInfo).get("mSigningDetails");
-                     Object mSignatures;
-                     if (isAndroid13OrAbove()) {
-                         mSignatures = Reflect.on(mSigningDetails).get("mSignatures");
-                     } else {
-                         mSignatures = Reflect.on(mSigningDetails).get("signatures");
-                     }
-                     if (mSignatures != null && mSignatures.getClass().isArray()) {
-                         Signature[] sigs = (Signature[]) mSignatures;
-                         Spoofer.replaceSignature(sigs);
-                     }
+                    Object mSigningDetails = Reflect.on(result.signingInfo).get("mSigningDetails");
+                    Object mSignatures;
+                    if (isAndroid13OrAbove()) {
+                        mSignatures = Reflect.on(mSigningDetails).get("mSignatures");
+                    } else {
+                        mSignatures = Reflect.on(mSigningDetails).get("signatures");
+                    }
+                    if (mSignatures != null && mSignatures.getClass().isArray()) {
+                        Signature[] sigs = (Signature[]) mSignatures;
+                        Spoofer.replaceSignature(sigs);
+                    }
                 }
 
-                if (result.packageName != null && !WebViewUtils.isWebViewPackage(result.packageName)) {
-                    result.packageName = Spoofer.PACKAGE_NAME;
-                }
+                result.packageName = Spoofer.PACKAGE_NAME;
             }
             return result;
+        }
+
+        private boolean shouldSpoof(PackageInfo packageInfo) {
+            return packageInfo != null
+                    && packageInfo.packageName != null
+                    && !WebViewUtils.isWebViewPackage(packageInfo.packageName)
+                    && Spoofer.shouldSpoofPackage(packageInfo.packageName);
         }
 
         private boolean isAndroid13OrAbove() {

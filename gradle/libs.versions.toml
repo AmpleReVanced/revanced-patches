@@ -1,19 +1,17 @@
 [versions]
-revanced-patcher = "21.1.5"
-# Tracking https://github.com/google/smali/issues/64.
-#noinspection GradleDependency
-smali = "3.0.9"
-# 8.3.0 causes java verifier error: https://github.com/ReVanced/revanced-patches/issues/2818.
-#noinspection GradleDependency
-agp = "8.2.2"
+morphe-patcher = "1.5.0"
+morphe-patches-library = "1.2.0"
+smali = "d92701d947"
+agp = "9.1.0"
 annotation = "1.9.1"
 appcompat = "1.7.0"
 okhttp = "5.0.0-alpha.14"
 retrofit = "2.11.0"
+gson = "2.13.2"
 guava = "33.5.0-jre"
 protobuf-javalite = "4.32.0"
-protoc = "4.32.0"
-protobuf = "0.9.5"
+protoc = "4.34.1"
+protobuf = "0.9.6"
 antlr4 = "4.13.2"
 nanohttpd = "2.3.1"
 apksig = "8.10.1"
@@ -22,6 +20,8 @@ pine = "0.3.0"
 netty = "4.1.128.Final"
 
 [libraries]
+morphe-patches-library = { module = "app.morphe:morphe-patches-library", version.ref = "morphe-patches-library" }
+morphe-extensions-library = { module = "app.morphe:morphe-extensions-library", version.ref = "morphe-patches-library" }
 annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
 antlr4 = { module = "org.antlr:antlr4", version.ref = "antlr4" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
@@ -30,9 +30,9 @@ okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 protobuf-javalite = { module = "com.google.protobuf:protobuf-javalite", version.ref = "protobuf-javalite" }
 protobuf-protoc = { module = "com.google.protobuf:protoc", version.ref = "protoc" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
 apksig = { group = "com.android.tools.build", name = "apksig", version.ref = "apksig" }
-revanced-patcher = { module = "app.revanced.experiment:revanced-patcher", version.ref = "revanced-patcher" }
 hiddenapibypass = { module = "org.lsposed.hiddenapibypass:hiddenapibypass", version.ref = "hiddenapibypass" }
 pine = { group = "top.canyie.pine", name = "core", version.ref = "pine" }
 netty-all = { module = "io.netty:netty-all", version.ref = "netty" }

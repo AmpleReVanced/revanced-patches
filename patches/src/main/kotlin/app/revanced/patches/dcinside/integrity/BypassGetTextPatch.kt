@@ -1,9 +1,11 @@
 package app.revanced.patches.dcinside.integrity
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
-import app.revanced.patcher.patch.bytecodePatch
-import app.revanced.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
-import app.revanced.patches.dcinside.integrity.fingerprints.nativeGetTextFingerprint
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
+import app.revanced.patches.dcinside.integrity.fingerprints.NativeGetTextFingerprint
+import app.revanced.patches.dcinside.misc.addExtensionPatch
+import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.builder.MutableMethodImplementation
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
@@ -14,15 +16,15 @@ val bypassGetTextPath = bytecodePatch(
     name = "Bypass getText",
     description = "Bypasses the integrity check for getText.",
 ) {
-    compatibleWith("com.dcinside.app.android"("5.2.7"))
-    extendWith("extensions/dcinside.rve")
+    compatibleWith(COMPATIBILITY_DC_INSIDE)
+    dependsOn(addExtensionPatch)
 
     execute {
-        val nativeGetTextMethod = nativeGetTextFingerprint.method
+        val nativeGetTextMethod = NativeGetTextFingerprint.method
 
-        nativeGetTextFingerprint.classDef.methods.remove(nativeGetTextMethod)
+        NativeGetTextFingerprint.classDef.methods.remove(nativeGetTextMethod)
 
-        nativeGetTextFingerprint.classDef.methods.add(
+        NativeGetTextFingerprint.classDef.methods.add(
             ImmutableMethod(
                 nativeGetTextMethod.definingClass,
                 "gt",
@@ -39,6 +41,7 @@ val bypassGetTextPath = bytecodePatch(
                 MutableMethodImplementation(5)
             ).toMutable().apply {
                 addInstructions(
+                    0,
                     """
                         invoke-static {p1, p2, p3, p4}, Lapp/revanced/extension/dcinside/api/AppId;->getAppId(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
                     

@@ -1,15 +1,16 @@
 package app.revanced.patches.kakaotalk.ads.fingerprints
 
-import app.revanced.patcher.fingerprint
+import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.OpcodesFilter
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
-internal val chatListAdHelperEnabledFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
-    parameters("Landroid/content/Context;")
-    returns("Z")
-    strings("context")
-    opcodes(
+internal object ChatListAdHelperEnabledFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf("Landroid/content/Context;"),
+    returnType = "Z",
+    strings = listOf("context"),
+    filters = OpcodesFilter.opcodesToFilters(
         Opcode.CONST_STRING,
         Opcode.INVOKE_STATIC,
         Opcode.INVOKE_VIRTUAL,
@@ -20,7 +21,7 @@ internal val chatListAdHelperEnabledFingerprint = fingerprint {
         Opcode.CONST_4,
         Opcode.IF_NE,
         Opcode.SGET_OBJECT,
-        Opcode.INVOKE_STATIC,
-    )
-    custom { method, classDef -> classDef.sourceFile == "ChatListAdHelper.kt" }
-}
+        Opcode.INVOKE_VIRTUAL,
+    ),
+   custom = { _, classDef -> classDef.sourceFile == "ChatListAdHelper.kt" }
+)

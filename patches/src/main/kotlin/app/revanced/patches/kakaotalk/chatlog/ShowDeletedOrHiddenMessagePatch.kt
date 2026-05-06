@@ -1,36 +1,38 @@
 package app.revanced.patches.kakaotalk.chatlog
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
-import app.revanced.patcher.extensions.InstructionExtensions.instructions
-import app.revanced.patcher.extensions.InstructionExtensions.replaceInstruction
-import app.revanced.patcher.patch.bytecodePatch
-import app.revanced.patcher.patch.stringOption
-import app.revanced.patcher.util.proxy.mutableTypes.MutableField.Companion.toMutable
-import app.revanced.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
-import app.revanced.patches.all.misc.resources.addResources
-import app.revanced.patches.all.misc.resources.addResourcesPatch
-import app.revanced.patches.kakaotalk.chatlog.fingerprints.chatInfoViewClassFingerprint
-import app.revanced.patches.kakaotalk.chatlog.fingerprints.chatLogFingerprint
-import app.revanced.patches.kakaotalk.chatlog.fingerprints.chatLogItemViewHolderFingerprint
-import app.revanced.patches.kakaotalk.chatlog.fingerprints.chatLogVFieldPutBooleanFingerprint
-import app.revanced.patches.kakaotalk.chatlog.fingerprints.chatLogViewHolderSetupChatInfoViewFingerprint
-import app.revanced.patches.kakaotalk.chatlog.fingerprints.chatRoomListManagerGetInstanceFingerprint
-import app.revanced.patches.kakaotalk.chatlog.fingerprints.checkViewableChatLogFingerprint
-import app.revanced.patches.kakaotalk.chatlog.fingerprints.filterChatLogItemFingerprint
-import app.revanced.patches.kakaotalk.chatlog.fingerprints.flushToDBChatLogFingerprint
-import app.revanced.patches.kakaotalk.chatlog.fingerprints.getChatRoomByChannelIdFingerprint
-import app.revanced.patches.kakaotalk.chatlog.fingerprints.getDeletedColorFingerprint
-import app.revanced.patches.kakaotalk.chatlog.fingerprints.getDeletedMessageCacheFingerprint
-import app.revanced.patches.kakaotalk.chatlog.fingerprints.getHiddenColorFingerprint
-import app.revanced.patches.kakaotalk.chatlog.fingerprints.myChatInfoViewClassFingerprint
-import app.revanced.patches.kakaotalk.chatlog.fingerprints.originalSyncMethodFingerprint
-import app.revanced.patches.kakaotalk.chatlog.fingerprints.othersChatInfoViewClassFingerprint
-import app.revanced.patches.kakaotalk.chatlog.fingerprints.putDeletedMessageCacheFingerprint
-import app.revanced.patches.kakaotalk.chatlog.fingerprints.replaceToFeedFingerprint
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
+import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
+import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.stringOption
+import app.morphe.patcher.util.proxy.mutableTypes.MutableField.Companion.toMutable
+import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
+import app.morphe.patches.all.misc.resources.addResourcesPatch
+import app.morphe.util.getReference
+import app.morphe.util.returnEarly
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.ChatInfoViewClassFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.ChatLogFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.ChatLogItemViewHolderFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.ChatLogVFieldPutBooleanFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.ChatLogViewHolderSetupChatInfoViewFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.ChatRoomListManagerGetInstanceFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.CheckViewableChatLogFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.FilterChatLogItemFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.FlushToDBChatLogFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.GetChatRoomByChannelIdFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.GetDeletedColorFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.GetDeletedMessageCacheFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.GetHiddenColorFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.MyChatInfoViewClassFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.OriginalSyncMethodFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.OthersChatInfoViewClassFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.PutDeletedMessageCacheFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.ReplaceToFeedFingerprint
 import app.revanced.patches.kakaotalk.misc.addExtensionPatch
 import app.revanced.patches.kakaotalk.misc.sharedExtensionPatch
-import app.revanced.util.getReference
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
+import app.revanced.patches.kakaotalk.shared.addKakaoTalkResources
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.MutableMethodImplementation
@@ -41,59 +43,67 @@ import com.android.tools.smali.dexlib2.immutable.ImmutableField
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethodParameter
 
+private const val ARGB_32_MASK = 0xFFFF_FFFFL
+private const val OPAQUE_ALPHA = 0xFF00_0000L
+
 private fun parseArgb32ToInt(input: String): Int {
     val t = input.trim().replace("_", "")
     val value = when {
+        t.startsWith("#") -> parseHashColor(t)
         t.startsWith("0x", ignoreCase = true) -> t.substring(2).toLong(16)
         t.startsWith("-0x", ignoreCase = true) -> -t.substring(3).toLong(16)
         else -> t.toLong()
     }
-    return (value and 0xFFFF_FFFFL).toInt()
+    return (value and ARGB_32_MASK).toInt()
 }
 
-private fun toSmaliIntLiteral(v: Int): String {
-    return if (v < 0) {
-        val absHex = kotlin.math.abs(v.toLong()).toString(16)
-        "-0x$absHex"
-    } else {
-        "0x" + v.toString(16)
+private fun parseHashColor(input: String): Long {
+    val hex = input.substring(1)
+    require(hex.length == 6 || hex.length == 8) {
+        "Color must be #RRGGBB, #AARRGGBB, 0xAARRGGBB, or signed decimal."
     }
+
+    val color = hex.toLong(16)
+    return if (hex.length == 6) color or OPAQUE_ALPHA else color
 }
+
+private fun toSmaliIntLiteral(value: Int) =
+    "0x" + (value.toLong() and ARGB_32_MASK).toString(16).padStart(8, '0')
 
 @Suppress("unused")
 val showDeletedOrHiddenMessagePatch = bytecodePatch(
     name = "Show deleted or hidden messages",
     description = "Allows you to see deleted/hidden messages in chat logs.",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
     dependsOn(addExtensionPatch, addResourcesPatch, sharedExtensionPatch)
 
     val deletedColorText by stringOption(
         key = "deletedColor",
         title = "Deleted color",
-        description = "32-bit ARGB. Accepts 0xAARRGGBB or signed decimal.",
+        description = "32-bit ARGB. Accepts #RRGGBB, #AARRGGBB, 0xAARRGGBB, or signed decimal.",
         default = "0xFFFF4444",
     )
 
     val hiddenColorText by stringOption(
         key = "hiddenColor",
         title = "Hidden color",
-        description = "32-bit ARGB. Accepts 0xAARRGGBB or signed decimal.",
+        description = "32-bit ARGB. Accepts #RRGGBB, #AARRGGBB, 0xAARRGGBB, or signed decimal.",
         default = "0xFF999999",
     )
 
     execute {
-        addResources("kakaotalk", "chatlog.showDeletedOrHiddenMessagePatch")
+        addKakaoTalkResources()
 
         val deletedInt = parseArgb32ToInt(deletedColorText!!)
         val deletedLit = toSmaliIntLiteral(deletedInt)
         val hiddenInt = parseArgb32ToInt(hiddenColorText!!)
         val hiddenLit = toSmaliIntLiteral(hiddenInt)
 
-        getDeletedColorFingerprint.method.replaceInstruction(0, "const v0, $deletedLit")
-        getHiddenColorFingerprint.method.replaceInstruction(0, "const v0, $hiddenLit")
+        GetDeletedColorFingerprint.method.replaceInstruction(0, "const v0, $deletedLit")
+        GetHiddenColorFingerprint.method.replaceInstruction(0, "const v0, $hiddenLit")
 
-        val chatInfoViewClass = chatInfoViewClassFingerprint.classDef
+        val chatInfoViewClass = ChatInfoViewClassFingerprint.classDef
 
         chatInfoViewClass.fields.add(
             ImmutableField(
@@ -164,6 +174,7 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
                 MutableMethodImplementation(3),
             ).toMutable().apply {
                 addInstructions(
+                    0,
                     """
                             iget-object v0, p0, Lcom/kakao/talk/widget/chatlog/ChatInfoView;->extension:Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;
                             return-object v0
@@ -183,7 +194,7 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
             )
         }
 
-        val otherChatInfoViewClass = othersChatInfoViewClassFingerprint.classDef
+        val otherChatInfoViewClass = OthersChatInfoViewClassFingerprint.classDef
         otherChatInfoViewClass.let {
             val getTotalWidthMethod = otherChatInfoViewClass.methods.first { it.name == "getTotalWidth" }
             val getPaddingLeftIndex = getTotalWidthMethod.instructions.first {
@@ -227,9 +238,8 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
             )
         }
 
-        val myChatInfoViewClass = myChatInfoViewClassFingerprint.classDef
-        myChatInfoViewClass.let {
-            val getTotalWidthMethod = myChatInfoViewClass.methods.first { it.name == "getTotalWidth" }
+        MyChatInfoViewClassFingerprint.classDef.let {
+            val getTotalWidthMethod = it.methods.first { it.name == "getTotalWidth" }
             val getPaddingLeftIndex = getTotalWidthMethod.instructions.first {
                 it.opcode == Opcode.INVOKE_VIRTUAL && it.getReference<MethodReference>()?.name == "getPaddingLeft"
             }.location.index
@@ -248,7 +258,8 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
                 """.trimIndent()
             )
 
-            val makeRectMethod = myChatInfoViewClass.methods.first { it.name == "makeRect" }
+            val makeRectMethod =
+                MyChatInfoViewClassFingerprint.classDef.methods.first { it.name == "makeRect" }
             val getDateLayoutIndex = makeRectMethod.instructions.first {
                 it.opcode == Opcode.INVOKE_VIRTUAL && it.getReference<MethodReference>()?.name == "getDateLayout"
             }.location.index
@@ -273,9 +284,9 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
             )
         }
 
-        val chatLogVFieldClass = chatLogVFieldPutBooleanFingerprint.classDef
+        val chatLogVFieldClass = ChatLogVFieldPutBooleanFingerprint.classDef
         chatLogVFieldClass.let {
-            val putBooleanMethod = chatLogVFieldPutBooleanFingerprint.method
+            val putBooleanMethod = ChatLogVFieldPutBooleanFingerprint.method
 
             it.methods.addAll(
                 listOf(
@@ -292,6 +303,7 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
                         MutableMethodImplementation(3),
                     ).toMutable().apply {
                         addInstructions(
+                            0,
                             """
                                 const-string v0, "_revanced_deleted"
                                 invoke-virtual {p0, v0, p1}, ${chatLogVFieldClass.type}->${putBooleanMethod.name}(Ljava/lang/String;Z)V
@@ -310,6 +322,7 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
                         MutableMethodImplementation(3),
                     ).toMutable().apply {
                         addInstructions(
+                            0,
                             """
                                 iget-object v0, p0, ${chatLogVFieldClass.type}->a:Lorg/json/JSONObject;
                                 const-string v1, "_revanced_deleted"
@@ -333,6 +346,7 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
                         MutableMethodImplementation(3),
                     ).toMutable().apply {
                         addInstructions(
+                            0,
                             """
                                 const-string v0, "_revanced_hidden"
                                 invoke-virtual {p0, v0, p1}, ${chatLogVFieldClass.type}->${putBooleanMethod.name}(Ljava/lang/String;Z)V
@@ -351,6 +365,7 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
                         MutableMethodImplementation(3),
                     ).toMutable().apply {
                         addInstructions(
+                            0,
                             """
                                 iget-object v0, p0, ${chatLogVFieldClass.type}->a:Lorg/json/JSONObject;
                                 const-string v1, "_revanced_hidden"
@@ -365,15 +380,15 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
             )
         }
 
-        val chatLogClass = chatLogFingerprint.classDef
+        val chatLogClass = ChatLogFingerprint.classDef
         val vFieldField = chatLogClass.fields.first { it.type == chatLogVFieldClass.type }
 
-        val replaceToFeedMethod = replaceToFeedFingerprint.method
+        val replaceToFeedMethod = ReplaceToFeedFingerprint.method
         replaceToFeedMethod.let {
-            val flushToDBMethod = flushToDBChatLogFingerprint.method
-            val chatRoomListManagerGetInstanceMethod = chatRoomListManagerGetInstanceFingerprint.method
-            val getChatRoomByChannelIdMethod = getChatRoomByChannelIdFingerprint.method
-            val originalSyncMethod = originalSyncMethodFingerprint.method
+            val flushToDBMethod = FlushToDBChatLogFingerprint.method
+            val chatRoomListManagerGetInstanceMethod = ChatRoomListManagerGetInstanceFingerprint.method
+            val getChatRoomByChannelIdMethod = GetChatRoomByChannelIdFingerprint.method
+            val originalSyncMethod = OriginalSyncMethodFingerprint.method
 
             val invokeVirtualInst = originalSyncMethod.instructions.last { it.opcode == Opcode.INVOKE_VIRTUAL }
             val invokeStaticInst = originalSyncMethod.instructions.last { it.opcode == Opcode.INVOKE_STATIC }
@@ -391,7 +406,9 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
                     const/4 v1, 0x1
                     invoke-virtual {v0, v1}, ${chatLogVFieldClass.type}->putDeleted(Z)V
                     invoke-virtual {p0, p1}, ${it.definingClass}->${flushToDBMethod.name}(${chatLogClass.type})Z
+                    return-void
                     
+                    # TODO: I suspect the code below is causing a bug, but I don't remember why I included it in the first place.
                     sget-object v0, ${chatRoomListManagerGetInstanceMethod.returnType}->o:${chatRoomListManagerGetInstanceMethod.definingClass}
                     invoke-virtual {v0}, $chatRoomListManagerGetInstanceMethod
                     move-result-object v0
@@ -420,7 +437,9 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
                     const/4 v1, 0x1
                     invoke-virtual {v0, v1}, ${chatLogVFieldClass.type}->putHidden(Z)V
                     invoke-virtual {p0, p1}, ${it.definingClass}->${flushToDBMethod.name}(${chatLogClass.type})Z
+                    return-void
                     
+                    # TODO: I suspect the code below is causing a bug, but I don't remember why I included it in the first place.
                     sget-object v0, ${chatRoomListManagerGetInstanceMethod.returnType}->o:${chatRoomListManagerGetInstanceMethod.definingClass}
                     invoke-virtual {v0}, $chatRoomListManagerGetInstanceMethod
                     move-result-object v0
@@ -437,18 +456,11 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
             )
         }
 
-        val checkViewableChatLogMethod = checkViewableChatLogFingerprint.method
-        checkViewableChatLogMethod.addInstructions(
-            0,
-            """
-                const/4 v0, 0x1
-                return v0
-            """.trimIndent()
-        )
+        CheckViewableChatLogFingerprint.method.returnEarly(true)
 
-        val chatLogViewHolderSetupChatInfoViewMethod = chatLogViewHolderSetupChatInfoViewFingerprint.method
+        val chatLogViewHolderSetupChatInfoViewMethod = ChatLogViewHolderSetupChatInfoViewFingerprint.method
         chatLogViewHolderSetupChatInfoViewMethod.let {
-            val getChatLogItemMethod = chatLogItemViewHolderFingerprint.method
+            val getChatLogItemMethod = ChatLogItemViewHolderFingerprint.method
 
             val setModifyIndex = it.instructions.indexOfFirst {
                 it.opcode == Opcode.INVOKE_VIRTUAL &&
@@ -495,27 +507,10 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
             )
         }
 
-        filterChatLogItemFingerprint.method.addInstructions(
-            0,
-            """
-                const/4 v0, 0x1
-                return v0
-            """.trimIndent()
-        )
+        FilterChatLogItemFingerprint.method.returnEarly(true)
 
-        putDeletedMessageCacheFingerprint.method.addInstructions(
-            0,
-            """
-                return-void
-            """.trimIndent()
-        )
+        PutDeletedMessageCacheFingerprint.method.returnEarly()
 
-        getDeletedMessageCacheFingerprint.method.addInstructions(
-            0,
-            """
-                const/4 v0, 0x0
-                return v0
-            """.trimIndent()
-        )
+        GetDeletedMessageCacheFingerprint.method.returnEarly(false)
     }
 }

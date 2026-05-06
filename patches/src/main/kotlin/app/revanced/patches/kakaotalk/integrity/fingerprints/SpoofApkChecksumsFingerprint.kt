@@ -1,14 +1,16 @@
 package app.revanced.patches.kakaotalk.integrity.fingerprints
 
-import app.revanced.patcher.fingerprint
+import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.OpcodesFilter
+import app.morphe.patcher.fingerprint
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
-internal val getApkChecksumsFingerprint = fingerprint {
-    accessFlags(AccessFlags.PUBLIC, AccessFlags.FINAL)
-    returns("Ljava/lang/Object;")
-    strings("call to \'resume\' before \'invoke\' with coroutine")
-    opcodes(
+internal object GetApkChecksumsFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    returnType = "Ljava/lang/Object;",
+    strings = listOf("call to \'resume\' before \'invoke\' with coroutine"),
+    filters = OpcodesFilter.opcodesToFilters(
         Opcode.INSTANCE_OF,
         Opcode.IF_EQZ,
         Opcode.MOVE_OBJECT,
@@ -20,6 +22,6 @@ internal val getApkChecksumsFingerprint = fingerprint {
         Opcode.SUB_INT_2ADDR,
         Opcode.IPUT,
         Opcode.GOTO
-    )
-    custom { method, classDef -> classDef.sourceFile == "AbuseDetectUtil.kt" && method.parameters.size == 2 }
-}
+    ),
+    custom = { method, classDef -> classDef.sourceFile == "AbuseDetectUtil.kt" && method.parameters.size == 2 }
+)

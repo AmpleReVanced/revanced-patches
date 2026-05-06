@@ -1,11 +1,12 @@
 package app.revanced.patches.kakaotalk.ads
 
-import app.revanced.patcher.extensions.InstructionExtensions.instructions
-import app.revanced.patcher.extensions.InstructionExtensions.removeInstruction
-import app.revanced.patcher.patch.bytecodePatch
-import app.revanced.patches.kakaotalk.ads.fingerprints.adBigUIModelFingerprint
-import app.revanced.patches.kakaotalk.ads.fingerprints.addSectionToMoreTabUIFingerprint
-import app.revanced.util.getReference
+import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.extensions.InstructionExtensions.removeInstruction
+import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.util.getReference
+import app.revanced.patches.kakaotalk.ads.fingerprints.AdBigUIModelFingerprint
+import app.revanced.patches.kakaotalk.ads.fingerprints.AddSectionToMoreTabUIFingerprint
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction21c
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction35c
@@ -16,13 +17,13 @@ val removeMoreTabAdPatch = bytecodePatch(
     name = "Remove More tab ad",
     description = "Removes the ad from the More tab.",
 ) {
-    compatibleWith("com.kakao.talk"("26.2.2"))
+    compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        val method = addSectionToMoreTabUIFingerprint.method
+        val method = AddSectionToMoreTabUIFingerprint.method
         val insns = method.instructions
 
-        val adBigWrapperClass = adBigUIModelFingerprint.classDef.toString()
+        val adBigWrapperClass = AdBigUIModelFingerprint.classDef.toString()
 
         val removalGroups = mutableListOf<List<Int>>()
 

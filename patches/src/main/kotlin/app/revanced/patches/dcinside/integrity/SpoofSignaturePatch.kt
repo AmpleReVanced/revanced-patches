@@ -1,11 +1,16 @@
 package app.revanced.patches.dcinside.integrity
 
-import app.revanced.patcher.extensions.InstructionExtensions.addInstructions
-import app.revanced.patcher.patch.bytecodePatch
-import app.revanced.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
-import app.revanced.patches.dcinside.integrity.fingerprints.nativeGetSignatureByTypeFingerprint
-import app.revanced.patches.dcinside.integrity.fingerprints.nativeGetSignatureHexFingerprint
+import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
+import app.revanced.patches.dcinside.integrity.fingerprints.GenerateXAndroidCertFingerprint
+import app.revanced.patches.dcinside.integrity.fingerprints.NativeGetSignatureByTypeFingerprint
+import app.revanced.patches.dcinside.integrity.fingerprints.NativeGetSignatureHexFingerprint
+import app.revanced.patches.dcinside.misc.addExtensionPatch
+import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
 import com.android.tools.smali.dexlib2.AccessFlags
+import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.MutableMethodImplementation
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethodParameter
@@ -15,13 +20,13 @@ val spoofSignaturePatch = bytecodePatch(
     name = "Spoof Signature",
     description = "Spoofs the app signature to bypass integrity checks.",
 ) {
-    compatibleWith("com.dcinside.app.android"("5.2.7"))
-    extendWith("extensions/dcinside.rve")
+    compatibleWith(COMPATIBILITY_DC_INSIDE)
+    dependsOn(addExtensionPatch)
 
     execute {
-        val nativeGetSignatureHexMethod = nativeGetSignatureHexFingerprint.method
-        nativeGetSignatureHexFingerprint.classDef.methods.remove(nativeGetSignatureHexMethod)
-        nativeGetSignatureHexFingerprint.classDef.methods.add(
+        val nativeGetSignatureHexMethod = NativeGetSignatureHexFingerprint.method
+        NativeGetSignatureHexFingerprint.classDef.methods.remove(nativeGetSignatureHexMethod)
+        NativeGetSignatureHexFingerprint.classDef.methods.add(
             ImmutableMethod(
                 nativeGetSignatureHexMethod.definingClass,
                 nativeGetSignatureHexMethod.name,
@@ -35,6 +40,7 @@ val spoofSignaturePatch = bytecodePatch(
                 MutableMethodImplementation(5)
             ).toMutable().apply {
                 addInstructions(
+                    0,
                     """
                         invoke-static {}, Lapp/revanced/extension/dcinside/api/AppId;->getApkSignatureHex()Ljava/lang/String;
                     
@@ -46,9 +52,9 @@ val spoofSignaturePatch = bytecodePatch(
             }
         )
 
-        val nativeGetSignatureByTypeMethod = nativeGetSignatureByTypeFingerprint.method
-        nativeGetSignatureByTypeFingerprint.classDef.methods.remove(nativeGetSignatureByTypeMethod)
-        nativeGetSignatureByTypeFingerprint.classDef.methods.add(
+        val nativeGetSignatureByTypeMethod = NativeGetSignatureByTypeFingerprint.method
+        NativeGetSignatureByTypeFingerprint.classDef.methods.remove(nativeGetSignatureByTypeMethod)
+        NativeGetSignatureByTypeFingerprint.classDef.methods.add(
             ImmutableMethod(
                 nativeGetSignatureByTypeMethod.definingClass,
                 nativeGetSignatureByTypeMethod.name,
@@ -62,6 +68,7 @@ val spoofSignaturePatch = bytecodePatch(
                 MutableMethodImplementation(5)
             ).toMutable().apply {
                 addInstructions(
+                    0,
                     """
                         invoke-static {p1}, Lapp/revanced/extension/dcinside/api/AppId;->getApkSignatureByType(Ljava/lang/String;)Ljava/util/ArrayList;
                     
@@ -72,5 +79,13 @@ val spoofSignaturePatch = bytecodePatch(
                 )
             }
         )
+
+        GenerateXAndroidCertFingerprint.method.apply {
+            val moveResultObjectIdx = implementation!!.instructions.last { it.opcode == Opcode.MOVE_RESULT_OBJECT }
+            addInstruction(
+                moveResultObjectIdx.location.index + 1,
+                "const-string v0, \"43bd70dfc365ec1749f0424d28174da44ee7659d\""
+            )
+        }
     }
 }

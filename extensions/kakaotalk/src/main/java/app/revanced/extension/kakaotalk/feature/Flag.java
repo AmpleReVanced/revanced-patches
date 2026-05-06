@@ -3,18 +3,27 @@ package app.revanced.extension.kakaotalk.feature;
 import java.util.HashMap;
 import java.util.Map;
 
+import app.revanced.extension.kakaotalk.settings.Settings;
+
 public class Flag {
+    private static final String OPEN_CHAT_ROOM_COMMENT_DISABLED = "OPEN_CHAT_ROOM_COMMENT_DISABLED";
+
     private static final Map<String, Boolean> flags = new HashMap<>();
+    private static String loadedFeatureFlags;
 
     static {
-        loadFlags();
+        reloadFlagsIfNeeded();
     }
 
-    private static void loadFlags() {
-        String raw = getFeatureFlags();
+    private static void reloadFlagsIfNeeded() {
+        String raw = getEffectiveFeatureFlags();
         if (raw == null) {
-            return;
+            raw = "";
         }
+        if (raw.equals(loadedFeatureFlags)) return;
+
+        loadedFeatureFlags = raw;
+        flags.clear();
 
         raw = raw.trim();
         if (raw.isEmpty()) {
@@ -51,20 +60,40 @@ public class Flag {
         }
     }
 
+    private static String getEffectiveFeatureFlags() {
+        String settingValue = Settings.featureFlagOverrides();
+        if (settingValue != null && !settingValue.trim().isEmpty()) {
+            return settingValue;
+        }
+
+        return getFeatureFlags();
+    }
+
     public static String getFeatureFlags() {
         return null; // Modified during patching.
     }
 
     public static boolean canIntercept(String key) {
-        return key != null && flags.containsKey(key);
+        reloadFlagsIfNeeded();
+        return key != null && (isOpenChatRoomCommentDisabled(key) || flags.containsKey(key));
     }
 
     public static boolean intercept(String key) {
+        reloadFlagsIfNeeded();
         if (key == null) {
             return false;
         }
 
+        if (isOpenChatRoomCommentDisabled(key)) {
+            return true;
+        }
+
         Boolean value = flags.get(key);
         return value != null && value;
+    }
+
+    private static boolean isOpenChatRoomCommentDisabled(String key) {
+        return Settings.openChatRoomCommentDisabled()
+                && OPEN_CHAT_ROOM_COMMENT_DISABLED.equalsIgnoreCase(key);
     }
 }
