@@ -43,7 +43,7 @@
           "patches-list.json",
           "README.md"
         ],
-        "message": "chore: Release v${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+        "message": "chore: Release v${nextRelease.version} [skip ci]"
       }
     ],
     [
@@ -54,8 +54,7 @@
             "path": "patches/build/libs/patches-!(*sources*|*javadoc*).mpp?(.asc)"
           }
         ],
-        "successComment": false,
-        "releaseNotes": "Full changelog available in CHANGELOG.md"
+        "successComment": false
       }
     ],
     [
