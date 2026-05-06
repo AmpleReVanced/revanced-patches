@@ -54,7 +54,8 @@
             "path": "patches/build/libs/patches-!(*sources*|*javadoc*).mpp?(.asc)"
           }
         ],
-        "successComment": false
+        "successComment": false,
+        "releaseNotes": "Full changelog available in CHANGELOG.md"
       }
     ],
     [
