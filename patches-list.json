@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0-dev.29",
+  "version": "1.0.0-dev.30",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -193,6 +193,41 @@
         }
       ],
       "options": []
+    },
+    {
+      "name": "Adjust image download menu",
+      "description": "Moves the image download menu buttons upward by adding bottom padding.",
+      "default": false,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.dcinside.app.android",
+          "name": "dcinside",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#3D4491",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "5.2.9",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "key": "bottomPadding",
+          "title": "Bottom padding",
+          "description": "Bottom padding in dp for the image download menu.",
+          "required": true,
+          "type": "kotlin.Int",
+          "default": 180,
+          "values": null
+        }
+      ]
     },
     {
       "name": "Allow Hide on Any Chat",

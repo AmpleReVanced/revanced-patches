@@ -1,3 +1,10 @@
+# [1.0.0-dev.30](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.29...v1.0.0-dev.30) (2026-05-06)
+
+
+### Features
+
+* **dcinside:** add adjustable image download menu padding ([75d61cb](https://github.com/AmpleReVanced/revanced-patches/commit/75d61cbf2054775f225e2a98be443db647581e9d)), closes [#53](https://github.com/AmpleReVanced/revanced-patches/issues/53)
+
 # [1.0.0-dev.29](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.28...v1.0.0-dev.29) (2026-05-06)
 
 

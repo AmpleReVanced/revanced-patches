@@ -4,7 +4,7 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.0.0-dev.29](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.0.0-dev.29)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;72 patches total
+> **[v1.0.0-dev.30](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.0.0-dev.30)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;73 patches total
 <details open>
 <summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;54 patches</summary>
 <br>
@@ -74,7 +74,7 @@
 </details>
 
 <details open>
-<summary>📦 dcinside&nbsp;&nbsp;•&nbsp;&nbsp;17 patches</summary>
+<summary>📦 dcinside&nbsp;&nbsp;•&nbsp;&nbsp;18 patches</summary>
 <br>
 
 **🎯 Supported versions:**
@@ -87,6 +87,7 @@
 | [Add notification shortcut](#add-notification-shortcut) | Adds a notification shortcut button above quick write in the post list. |  |
 | [Add settings](#add-settings) | Adds a Morphe settings entry to the DCInside settings screen. |  |
 | [Add settings resources](#add-settings-resources) | Adds Morphe settings resources to the app. |  |
+| [Adjust image download menu](#adjust-image-download-menu) | Moves the image download menu buttons upward by adding bottom padding. | • Bottom padding |
 | [Bypass getText](#bypass-gettext) | Bypasses the integrity check for getText. |  |
 | [Change package name](#change-package-name) | Appends ".revanced" to the package name by default. For DCinside only | • Package name<br>• Update permissions<br>• Update providers |
 | [Custom branding](#custom-branding) | Customize app branding (name and icon) | • Custom app name<br>• Custom app icon |
