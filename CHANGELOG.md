@@ -1,3 +1,9 @@
+## [1.0.1](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0...v1.0.1) (2026-05-06)
+
+### Bug Fixes
+
+* **releaserc:** add releaseNotes to GitHub release configuration ([ffa81f4](https://github.com/AmpleReVanced/revanced-patches/commit/ffa81f4fd4c05ae2d43a519d7269b6351fe73c95))
+
 # 1.0.0 (2026-05-06)
 
 ### Bug Fixes
