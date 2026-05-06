@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0-dev.30",
+  "version": "1.0.0-dev.31",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -221,7 +221,7 @@
         {
           "key": "bottomPadding",
           "title": "Bottom padding",
-          "description": "Bottom padding in dp for the image download menu.",
+          "description": "Bottom padding in dp for the image download menu. The original value is 10dp.",
           "required": true,
           "type": "kotlin.Int",
           "default": 180,

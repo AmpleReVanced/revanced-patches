@@ -1,3 +1,9 @@
+# [1.0.0-dev.31](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.30...v1.0.0-dev.31) (2026-05-06)
+
+### Bug Fixes
+
+* **dcinside:** target image download menu padding wrapper ([102f850](https://github.com/AmpleReVanced/revanced-patches/commit/102f850785329fae00ffaa3b7896c33c8bfae484))
+
 # [1.0.0-dev.30](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0-dev.29...v1.0.0-dev.30) (2026-05-06)
 
 ### Features
