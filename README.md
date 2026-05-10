@@ -4,7 +4,7 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.0.1](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.0.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;73 patches total
+> **[v1.1.0-dev.1](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.1.0-dev.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;74 patches total
 <details open>
 <summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;54 patches</summary>
 <br>
@@ -74,7 +74,7 @@
 </details>
 
 <details open>
-<summary>📦 dcinside&nbsp;&nbsp;•&nbsp;&nbsp;18 patches</summary>
+<summary>📦 dcinside&nbsp;&nbsp;•&nbsp;&nbsp;19 patches</summary>
 <br>
 
 **🎯 Supported versions:**
@@ -100,6 +100,7 @@
 | [Enable OneStore feature](#enable-onestore-feature) | Enables the OneStore feature in DC Inside app. |  |
 | [Hide DC official notices](#hide-dc-official-notices) | Hides official DCInside operator notices from gallery notice lists. |  |
 | [Hide Main Ad](#hide-main-ad) | Hides the main ad in the app. |  |
+| [Hide home components](#hide-home-components) | Adds settings to hide selected DCInside home screen components. |  |
 | [Register settings activity](#register-settings-activity) | Registers the Morphe settings activity in the app manifest. |  |
 | [Spoof Signature](#spoof-signature) | Spoofs the app signature to bypass integrity checks. |  |
 
