@@ -1,3 +1,10 @@
+# [1.1.0-dev.1](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.1...v1.1.0-dev.1) (2026-05-10)
+
+
+### Features
+
+* **dcinside:** add home component hiding options ([91cf697](https://github.com/AmpleReVanced/revanced-patches/commit/91cf69769484119426df6dae67db658b9f15073c))
+
 ## [1.0.1](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0...v1.0.1) (2026-05-06)
 
 
