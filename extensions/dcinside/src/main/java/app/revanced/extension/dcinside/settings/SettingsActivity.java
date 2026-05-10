@@ -36,6 +36,12 @@ public final class SettingsActivity extends Activity {
     private static final String PREF_HIDE_OFFICIAL_NOTICES = "morphe_pref_hide_official_notices";
     private static final String PREF_BLOCK_POST_DCCON_LOADING = "morphe_pref_block_post_dccon_loading";
     private static final String PREF_BLOCK_REPLY_DCCON_LOADING = "morphe_pref_block_reply_dccon_loading";
+    private static final String PREF_HIDE_HOME_SEARCH_MENU = "morphe_pref_hide_home_search_menu";
+    private static final String PREF_HIDE_HOME_RECENT_GALLERIES = "morphe_pref_hide_home_recent_galleries";
+    private static final String PREF_HIDE_HOME_RECOMMENDED_GALLERIES = "morphe_pref_hide_home_recommended_galleries";
+    private static final String PREF_HIDE_HOME_GALLERY_RANKING = "morphe_pref_hide_home_gallery_ranking";
+    private static final String PREF_HIDE_HOME_LIVE_BEST = "morphe_pref_hide_home_live_best";
+    private static final String PREF_HIDE_HOME_RECOMMENDED_POSTS = "morphe_pref_hide_home_recommended_posts";
     private static final String PREF_APPLY_USER_MEMO_PRESET = "morphe_pref_apply_user_memo_preset";
     private static final String PREF_CLEAR_USER_MEMOS = "morphe_pref_clear_user_memos";
     private static final String PREF_DEBUG = "morphe_pref_debug";
@@ -129,6 +135,12 @@ public final class SettingsActivity extends Activity {
             bindSwitch(PREF_HIDE_OFFICIAL_NOTICES, Settings.HIDE_OFFICIAL_NOTICES);
             bindSwitch(PREF_BLOCK_POST_DCCON_LOADING, Settings.BLOCK_POST_DCCON_LOADING);
             bindSwitch(PREF_BLOCK_REPLY_DCCON_LOADING, Settings.BLOCK_REPLY_DCCON_LOADING);
+            bindSwitch(PREF_HIDE_HOME_SEARCH_MENU, Settings.HIDE_HOME_SEARCH_MENU);
+            bindSwitch(PREF_HIDE_HOME_RECENT_GALLERIES, Settings.HIDE_HOME_RECENT_GALLERIES);
+            bindSwitch(PREF_HIDE_HOME_RECOMMENDED_GALLERIES, Settings.HIDE_HOME_RECOMMENDED_GALLERIES);
+            bindSwitch(PREF_HIDE_HOME_GALLERY_RANKING, Settings.HIDE_HOME_GALLERY_RANKING);
+            bindSwitch(PREF_HIDE_HOME_LIVE_BEST, Settings.HIDE_HOME_LIVE_BEST);
+            bindSwitch(PREF_HIDE_HOME_RECOMMENDED_POSTS, Settings.HIDE_HOME_RECOMMENDED_POSTS);
             bindUserMemoPresetPreference();
             bindSwitch(PREF_DEBUG, BaseSettings.DEBUG);
             bindSwitch(PREF_DEBUG_STACKTRACE, BaseSettings.DEBUG_STACKTRACE);

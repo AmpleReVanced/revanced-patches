@@ -1,5 +1,5 @@
 {
-  "version": "1.0.1",
+  "version": "v1.0.1",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -1478,6 +1478,33 @@
       "description": "Hides the main ad in the app.",
       "default": true,
       "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.dcinside.app.android",
+          "name": "dcinside",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#3D4491",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "5.2.9",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Hide home components",
+      "description": "Adds settings to hide selected DCInside home screen components.",
+      "default": true,
+      "dependencies": [
+        "BytecodePatch"
+      ],
       "compatiblePackages": [
         {
           "packageName": "com.dcinside.app.android",
