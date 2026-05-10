@@ -12,6 +12,8 @@ dependencies {
 }
 
 android {
+    compileSdk = 36
+
     defaultConfig {
         minSdk = 28 // to enable app component factory
     }

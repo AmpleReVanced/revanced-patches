@@ -8,6 +8,8 @@ dependencies {
 }
 
 android {
+    compileSdk = 36
+
     defaultConfig {
         minSdk = 26
     }
