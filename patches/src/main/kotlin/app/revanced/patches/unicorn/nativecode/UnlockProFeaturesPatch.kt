@@ -17,7 +17,7 @@ import com.android.tools.smali.dexlib2.immutable.reference.ImmutableMethodRefere
 import java.security.MessageDigest
 import java.util.Locale
 
-private const val BRIDGE_CLASS = "Lapp/revanced/extension/unicorn/core/NativeBridge;"
+private const val NATIVE_BRIDGE_CLASS = "Lapp/revanced/extension/unicorn/core/NativeBridge;"
 private const val EXTENSION_PACKAGE = "Lapp/revanced/extension/unicorn/"
 
 private val invokeOpcodes = setOf(
@@ -54,44 +54,22 @@ private val implementedNativeReferences = setOf(
     "Lcom/unicornsoft/android/unicornpro/core/LicenseManager\$Companion;->native_GetLicense(J)J:false",
     "Lcom/unicornsoft/android/unicornpro/core/LicenseManager\$Companion;->native_SignIn(JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/unicornsoft/android/unicornpro/core/CallbackL;Lcom/unicornsoft/android/unicornpro/core/CallbackL;)V:false",
     "Lcom/unicornsoft/android/unicornpro/core/LicenseManager\$Companion;->native_StartAppProcess(JLcom/unicornsoft/android/unicornpro/core/CallbackL;Lcom/unicornsoft/android/unicornpro/core/CallbackL;)V:false",
-    "Lcom/unicornsoft/android/unicornpro/core/LicenseManager\$Companion;->native_delete(J)V:false",
-    "Lcom/unicornsoft/android/unicornpro/core/LicenseManager\$Companion;->native_new(JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/unicornsoft/android/unicornpro/core/CallbackV;)J:false",
     "Lcom/unicornsoft/android/unicornpro/core/LicenseManager\$Device\$Companion;->native_GetServerId(J)Ljava/lang/String;:false",
     "Lcom/unicornsoft/android/unicornpro/core/LicenseManager\$Device\$Companion;->native_delete(J)V:false",
+    "Lcom/unicornsoft/android/unicornpro/core/LicenseTracker\$Companion;->native_Interrupt(J)V:false",
+    "Lcom/unicornsoft/android/unicornpro/core/LicenseTracker\$Companion;->native_delete(J)V:false",
+    "Lcom/unicornsoft/android/unicornpro/core/LicenseTracker\$Companion;->native_new(JJLcom/unicornsoft/android/unicornpro/core/CallbackV;Lcom/unicornsoft/android/unicornpro/core/CallbackV;)J:false",
     "Lcom/unicornsoft/android/unicornpro/core/LicenseManager\$SignInRequireException\$Companion;->native_GetTypeId()J:false",
     "Lcom/unicornsoft/android/unicornpro/core/LicenseManager\$UnconfirmedEmailException\$Companion;->native_GetTypeId()J:false",
     "Lcom/unicornsoft/android/unicornpro/core/LicenseManager\$UnconfirmedEmailException\$Companion;->native_GetUserId(J)Ljava/lang/String;:false",
     "Lcom/unicornsoft/android/unicornpro/core/std/ExceptionPtr\$Companion;->native_GetTypeId(J)J:false",
     "Lcom/unicornsoft/android/unicornpro/core/std/ExceptionPtr\$Companion;->native_delete(J)J:false",
-    "Lcom/unicornsoft/android/unicornpro/core/std/NativeString\$Companion;->native_ToJString(J)Ljava/lang/String;:false",
-    "Lcom/unicornsoft/android/unicornpro/core/std/NativeString\$Companion;->native_delete(J)J:false",
-    "Lcom/unicornsoft/android/unicornpro/core/std/NativeString\$Companion;->native_new(Ljava/lang/String;)J:false",
-    "Lcom/unicornsoft/android/unicornpro/core/std/PairLL\$Companion;->native_GetFirst(J)J:false",
-    "Lcom/unicornsoft/android/unicornpro/core/std/PairLL\$Companion;->native_GetSecond(J)J:false",
-    "Lcom/unicornsoft/android/unicornpro/core/std/PairLL\$Companion;->native_delete(J)V:false",
-    "Lcom/unicornsoft/android/unicornpro/core/std/PairSL\$Companion;->native_GetFirst(J)Ljava/lang/String;:false",
-    "Lcom/unicornsoft/android/unicornpro/core/std/PairSL\$Companion;->native_GetSecond(J)J:false",
-    "Lcom/unicornsoft/android/unicornpro/core/std/PairSL\$Companion;->native_delete(J)V:false",
     "Lcom/unicornsoft/android/unicornpro/core/std/PairSS\$Companion;->native_GetFirst(J)Ljava/lang/String;:false",
     "Lcom/unicornsoft/android/unicornpro/core/std/PairSS\$Companion;->native_GetSecond(J)Ljava/lang/String;:false",
     "Lcom/unicornsoft/android/unicornpro/core/std/PairSS\$Companion;->native_delete(J)V:false",
-    "Lcom/unicornsoft/android/unicornpro/core/std/PairSS\$Companion;->native_new(Ljava/lang/String;Ljava/lang/String;)J:false",
-    "Lcom/unicornsoft/android/unicornpro/core/std/TupleLLL\$Companion;->native_Get0(J)J:false",
-    "Lcom/unicornsoft/android/unicornpro/core/std/TupleLLL\$Companion;->native_Get1(J)J:false",
-    "Lcom/unicornsoft/android/unicornpro/core/std/TupleLLL\$Companion;->native_Get2(J)J:false",
-    "Lcom/unicornsoft/android/unicornpro/core/std/TupleLLL\$Companion;->native_delete(J)V:false",
-    "Lcom/unicornsoft/android/unicornpro/core/std/UnorderedMapSL\$Companion;->native_GetBegin(J)J:false",
-    "Lcom/unicornsoft/android/unicornpro/core/std/UnorderedMapSL\$Companion;->native_GetEnd(J)J:false",
-    "Lcom/unicornsoft/android/unicornpro/core/std/UnorderedMapSL\$Companion;->native_delete(J)V:false",
-    "Lcom/unicornsoft/android/unicornpro/core/std/UnorderedMapSL\$Companion;->native_new()J:false",
-    "Lcom/unicornsoft/android/unicornpro/core/std/UnorderedMapSL\$Iterator\$Companion;->native_Get(J)J:false",
-    "Lcom/unicornsoft/android/unicornpro/core/std/UnorderedMapSL\$Iterator\$Companion;->native_GetNext(J)J:false",
-    "Lcom/unicornsoft/android/unicornpro/core/std/UnorderedMapSL\$Iterator\$Companion;->native_IsEquals(JJ)Z:false",
-    "Lcom/unicornsoft/android/unicornpro/core/std/UnorderedMapSL\$Iterator\$Companion;->native_delete(J)V:false",
     "Lcom/unicornsoft/android/unicornpro/core/std/UnorderedMapSS\$Companion;->native_GetBegin(J)J:false",
     "Lcom/unicornsoft/android/unicornpro/core/std/UnorderedMapSS\$Companion;->native_GetEnd(J)J:false",
     "Lcom/unicornsoft/android/unicornpro/core/std/UnorderedMapSS\$Companion;->native_delete(J)V:false",
-    "Lcom/unicornsoft/android/unicornpro/core/std/UnorderedMapSS\$Companion;->native_new()J:false",
     "Lcom/unicornsoft/android/unicornpro/core/std/UnorderedMapSS\$Iterator\$Companion;->native_Get(J)J:false",
     "Lcom/unicornsoft/android/unicornpro/core/std/UnorderedMapSS\$Iterator\$Companion;->native_GetNext(J)J:false",
     "Lcom/unicornsoft/android/unicornpro/core/std/UnorderedMapSS\$Iterator\$Companion;->native_IsEquals(JJ)Z:false",
@@ -99,22 +77,16 @@ private val implementedNativeReferences = setOf(
     "Lcom/unicornsoft/android/unicornpro/core/std/UnorderedSetS\$Companion;->native_GetBegin(J)J:false",
     "Lcom/unicornsoft/android/unicornpro/core/std/UnorderedSetS\$Companion;->native_GetEnd(J)J:false",
     "Lcom/unicornsoft/android/unicornpro/core/std/UnorderedSetS\$Companion;->native_delete(J)V:false",
-    "Lcom/unicornsoft/android/unicornpro/core/std/UnorderedSetS\$Companion;->native_new()J:false",
     "Lcom/unicornsoft/android/unicornpro/core/std/UnorderedSetS\$Iterator\$Companion;->native_Get(J)Ljava/lang/String;:false",
     "Lcom/unicornsoft/android/unicornpro/core/std/UnorderedSetS\$Iterator\$Companion;->native_GetNext(J)J:false",
     "Lcom/unicornsoft/android/unicornpro/core/std/UnorderedSetS\$Iterator\$Companion;->native_IsEquals(JJ)Z:false",
     "Lcom/unicornsoft/android/unicornpro/core/std/UnorderedSetS\$Iterator\$Companion;->native_delete(J)V:false",
-    "Lcom/unicornsoft/android/unicornpro/core/std/VectorLong\$Companion;->native_At(JI)J:false",
-    "Lcom/unicornsoft/android/unicornpro/core/std/VectorLong\$Companion;->native_GetSize(J)J:false",
-    "Lcom/unicornsoft/android/unicornpro/core/std/VectorLong\$Companion;->native_PushBack(JJ)V:false",
-    "Lcom/unicornsoft/android/unicornpro/core/std/VectorLong\$Companion;->native_delete(J)V:false",
-    "Lcom/unicornsoft/android/unicornpro/core/std/VectorLong\$Companion;->native_new()J:false",
 )
 
 @Suppress("unused")
 val unlockProFeaturesPatch = bytecodePatch(
     name = "Unlock Pro features",
-    description = "Makes Unicorn Pro report an active Pro license so subscription-only functionality is available.",
+    description = "Makes Unicorn Pro report an active Pro license while preserving the original native object graph.",
 ) {
     compatibleWith(COMPATIBILITY_UNICORN)
     dependsOn(addExtensionPatch)
@@ -135,7 +107,6 @@ val unlockProFeaturesPatch = bytecodePatch(
             methods.map(mutableClass::findMutableMethodOf).forEach { method ->
                 method.instructions.forEachIndexed { index, instruction ->
                     val replacement = instruction.toBridgeInstructionOrNull() ?: return@forEachIndexed
-
                     method.replaceInstruction(index, replacement)
                 }
             }
@@ -175,11 +146,7 @@ private fun Instruction.bridgeReferenceOrNull(): MethodReference? {
     if (opcode !in invokeOpcodes) return null
 
     val reference = getReference<MethodReference>() ?: return null
-    return if (reference.isUnicornNativeReference()) reference else null
-}
-
-private fun MethodReference.isUnicornNativeReference(): Boolean {
-    return signatureKey(false) in implementedNativeReferences
+    return if (reference.signatureKey(false) in implementedNativeReferences) reference else null
 }
 
 private fun MethodReference.toBridgeReference(isStatic: Boolean): MethodReference {
@@ -189,7 +156,7 @@ private fun MethodReference.toBridgeReference(isStatic: Boolean): MethodReferenc
     }
 
     return ImmutableMethodReference(
-        BRIDGE_CLASS,
+        NATIVE_BRIDGE_CLASS,
         bridgeName(isStatic),
         bridgeParameterTypes,
         returnType,

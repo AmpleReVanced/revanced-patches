@@ -112,21 +112,24 @@ public final class NativeBridge {
         callVoid(NativeOwners.LICENSE_MANAGER, "native_StartAppProcess", p0, p1, p2, p3);
     }
 
-    public static void m036cfc8d0c599368(Object p0, long p1) {
-        callVoid(NativeOwners.LICENSE_MANAGER, "native_delete", p0, p1);
-    }
-
-    public static long m8414452a7a5c3930(Object p0, long p1, Object p2, Object p3, Object p4,
-            Object p5, Object p6, Object p7) {
-        return callLong(NativeOwners.LICENSE_MANAGER, "native_new", p0, p1, p2, p3, p4, p5, p6, p7);
-    }
-
     public static String ma5b4c0801a777cf5(Object p0, long p1) {
         return callString(NativeOwners.LICENSE_DEVICE, "native_GetServerId", p0, p1);
     }
 
     public static void m96ba8afb9ae6c92a(Object p0, long p1) {
         callVoid(NativeOwners.LICENSE_DEVICE, "native_delete", p0, p1);
+    }
+
+    public static void m2439bfc7ef160335(Object p0, long p1) {
+        callVoid(NativeOwners.LICENSE_TRACKER, "native_Interrupt", p0, p1);
+    }
+
+    public static void mff4b3a6b883b3088(Object p0, long p1) {
+        callVoid(NativeOwners.LICENSE_TRACKER, "native_delete", p0, p1);
+    }
+
+    public static long m89642d75e6470427(Object p0, long p1, long p2, Object p3, Object p4) {
+        return callLong(NativeOwners.LICENSE_TRACKER, "native_new", p0, p1, p2, p3, p4);
     }
 
     public static long m7c366fc365c7dd33(Object p0) {
@@ -149,42 +152,6 @@ public final class NativeBridge {
         return callLong(NativeOwners.STD_EXCEPTION_PTR, "native_delete", p0, p1);
     }
 
-    public static String mded00a3efd9acf9c(Object p0, long p1) {
-        return callString(NativeOwners.STD_NATIVE_STRING, "native_ToJString", p0, p1);
-    }
-
-    public static long m1b94789ade2e492a(Object p0, long p1) {
-        return callLong(NativeOwners.STD_NATIVE_STRING, "native_delete", p0, p1);
-    }
-
-    public static long m288f4c0abe283226(Object p0, Object p1) {
-        return callLong(NativeOwners.STD_NATIVE_STRING, "native_new", p0, p1);
-    }
-
-    public static long m0414dc6a9bc49ee9(Object p0, long p1) {
-        return callLong(NativeOwners.STD_PAIR_LL, "native_GetFirst", p0, p1);
-    }
-
-    public static long mee4ac0151d673ab2(Object p0, long p1) {
-        return callLong(NativeOwners.STD_PAIR_LL, "native_GetSecond", p0, p1);
-    }
-
-    public static void m61fef9aaf108c7c3(Object p0, long p1) {
-        callVoid(NativeOwners.STD_PAIR_LL, "native_delete", p0, p1);
-    }
-
-    public static String m397b089ea138cd29(Object p0, long p1) {
-        return callString(NativeOwners.STD_PAIR_SL, "native_GetFirst", p0, p1);
-    }
-
-    public static long m569e230fc0318c93(Object p0, long p1) {
-        return callLong(NativeOwners.STD_PAIR_SL, "native_GetSecond", p0, p1);
-    }
-
-    public static void m7ff90b74073040c2(Object p0, long p1) {
-        callVoid(NativeOwners.STD_PAIR_SL, "native_delete", p0, p1);
-    }
-
     public static String m65f34785626099c6(Object p0, long p1) {
         return callString(NativeOwners.STD_PAIR_SS, "native_GetFirst", p0, p1);
     }
@@ -197,58 +164,6 @@ public final class NativeBridge {
         callVoid(NativeOwners.STD_PAIR_SS, "native_delete", p0, p1);
     }
 
-    public static long mebf6797e8545e6a5(Object p0, Object p1, Object p2) {
-        return callLong(NativeOwners.STD_PAIR_SS, "native_new", p0, p1, p2);
-    }
-
-    public static long m06e91d155565a540(Object p0, long p1) {
-        return callLong(NativeOwners.STD_TUPLE_LLL, "native_Get0", p0, p1);
-    }
-
-    public static long m10a20e26bbd48719(Object p0, long p1) {
-        return callLong(NativeOwners.STD_TUPLE_LLL, "native_Get1", p0, p1);
-    }
-
-    public static long me710004cdfdf947b(Object p0, long p1) {
-        return callLong(NativeOwners.STD_TUPLE_LLL, "native_Get2", p0, p1);
-    }
-
-    public static void m1f1006bb63fd3841(Object p0, long p1) {
-        callVoid(NativeOwners.STD_TUPLE_LLL, "native_delete", p0, p1);
-    }
-
-    public static long ma996701e03132fd1(Object p0, long p1) {
-        return callLong(NativeOwners.STD_UNORDERED_MAP_SL, "native_GetBegin", p0, p1);
-    }
-
-    public static long m98ca91632f85a9aa(Object p0, long p1) {
-        return callLong(NativeOwners.STD_UNORDERED_MAP_SL, "native_GetEnd", p0, p1);
-    }
-
-    public static void m44b710204fdc3bd0(Object p0, long p1) {
-        callVoid(NativeOwners.STD_UNORDERED_MAP_SL, "native_delete", p0, p1);
-    }
-
-    public static long m3ebe969c98b73c5c(Object p0) {
-        return callLong(NativeOwners.STD_UNORDERED_MAP_SL, "native_new", p0);
-    }
-
-    public static long m29ebe0b9b1cdb67a(Object p0, long p1) {
-        return callLong(NativeOwners.STD_UNORDERED_MAP_SL_ITERATOR, "native_Get", p0, p1);
-    }
-
-    public static long m7a4f9aaac8c5a3e0(Object p0, long p1) {
-        return callLong(NativeOwners.STD_UNORDERED_MAP_SL_ITERATOR, "native_GetNext", p0, p1);
-    }
-
-    public static boolean m1438279c5c776ffa(Object p0, long p1, long p2) {
-        return callBoolean(NativeOwners.STD_UNORDERED_MAP_SL_ITERATOR, "native_IsEquals", p0, p1, p2);
-    }
-
-    public static void m8c65c280b3b3463b(Object p0, long p1) {
-        callVoid(NativeOwners.STD_UNORDERED_MAP_SL_ITERATOR, "native_delete", p0, p1);
-    }
-
     public static long m95cf28573c2b4d9a(Object p0, long p1) {
         return callLong(NativeOwners.STD_UNORDERED_MAP_SS, "native_GetBegin", p0, p1);
     }
@@ -259,10 +174,6 @@ public final class NativeBridge {
 
     public static void m463c8317904e0501(Object p0, long p1) {
         callVoid(NativeOwners.STD_UNORDERED_MAP_SS, "native_delete", p0, p1);
-    }
-
-    public static long m81faf8058d9310fa(Object p0) {
-        return callLong(NativeOwners.STD_UNORDERED_MAP_SS, "native_new", p0);
     }
 
     public static long m92cedfb5899f083c(Object p0, long p1) {
@@ -293,10 +204,6 @@ public final class NativeBridge {
         callVoid(NativeOwners.STD_UNORDERED_SET_S, "native_delete", p0, p1);
     }
 
-    public static long mabb931869d6ef608(Object p0) {
-        return callLong(NativeOwners.STD_UNORDERED_SET_S, "native_new", p0);
-    }
-
     public static String m33f40b3da2403949(Object p0, long p1) {
         return callString(NativeOwners.STD_UNORDERED_SET_S_ITERATOR, "native_Get", p0, p1);
     }
@@ -311,25 +218,5 @@ public final class NativeBridge {
 
     public static void m5c7c4bbec5b7d68a(Object p0, long p1) {
         callVoid(NativeOwners.STD_UNORDERED_SET_S_ITERATOR, "native_delete", p0, p1);
-    }
-
-    public static long mb0b16083c158aa96(Object p0, long p1, int p2) {
-        return callLong(NativeOwners.STD_VECTOR_LONG, "native_At", p0, p1, p2);
-    }
-
-    public static long m5aa5803178466933(Object p0, long p1) {
-        return callLong(NativeOwners.STD_VECTOR_LONG, "native_GetSize", p0, p1);
-    }
-
-    public static void m936d1d111d75c4de(Object p0, long p1, long p2) {
-        callVoid(NativeOwners.STD_VECTOR_LONG, "native_PushBack", p0, p1, p2);
-    }
-
-    public static void mfb9cb632a9f77ca1(Object p0, long p1) {
-        callVoid(NativeOwners.STD_VECTOR_LONG, "native_delete", p0, p1);
-    }
-
-    public static long m9ea6b30cf5d67361(Object p0) {
-        return callLong(NativeOwners.STD_VECTOR_LONG, "native_new", p0);
     }
 }

@@ -80,20 +80,6 @@ final class NativeRuntime {
         return Arrays.copyOfRange(args, 1, args.length);
     }
 
-    static String propertyName(String nativeMethod, String prefix) {
-        String name = nativeMethod.substring(prefix.length());
-        if (name.isEmpty()) {
-            return name;
-        }
-        return Character.toLowerCase(name.charAt(0)) + name.substring(1);
-    }
-
-    static String componentName(String owner) {
-        int start = owner.lastIndexOf('/') + 1;
-        int end = owner.endsWith("$Companion;") ? owner.length() - "$Companion;".length() : owner.length() - 1;
-        return owner.substring(start, end).replace('$', '.');
-    }
-
     static void invoke(Object callback, Object... args) {
         if (callback == null) {
             return;
@@ -123,51 +109,12 @@ final class NativeRuntime {
         return new UnsupportedOperationException(name + " needs the original C++ engine/API implementation");
     }
 
-    static Object defaultValue(String returnType) {
-        if (returnType == null) {
-            return null;
-        }
-        switch (returnType) {
-            case "V":
-                return null;
-            case "Z":
-                return Boolean.FALSE;
-            case "B":
-            case "S":
-            case "C":
-            case "I":
-                return Integer.valueOf(0);
-            case "J":
-                return Long.valueOf(0L);
-            case "F":
-                return Float.valueOf(0f);
-            case "D":
-                return Double.valueOf(0d);
-            case "Ljava/lang/String;":
-                return "";
-            case "[J":
-                return new long[0];
-            case "[I":
-                return new int[0];
-            case "[Ljava/lang/String;":
-                return new String[0];
-            case "[B":
-                return new byte[0];
-            default:
-                return null;
-        }
-    }
-
     static String string(Object value) {
         return value == null ? null : String.valueOf(value);
     }
 
     static long longValue(Object value) {
         return value instanceof Number ? ((Number) value).longValue() : 0L;
-    }
-
-    static int intValue(Object value) {
-        return value instanceof Number ? ((Number) value).intValue() : 0;
     }
 
     private static boolean accepts(Class<?>[] parameterTypes, Object[] args) {
