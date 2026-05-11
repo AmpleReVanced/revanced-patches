@@ -112,9 +112,9 @@ private val implementedNativeReferences = setOf(
 )
 
 @Suppress("unused")
-val reimplementNativePatch = bytecodePatch(
-    name = "Reimplement native core",
-    description = "Routes Unicorn Pro core native calls to Java implementations bundled in the extension.",
+val unlockProFeaturesPatch = bytecodePatch(
+    name = "Unlock Pro features",
+    description = "Makes Unicorn Pro report an active Pro license so subscription-only functionality is available.",
 ) {
     compatibleWith(COMPATIBILITY_UNICORN)
     dependsOn(addExtensionPatch)
