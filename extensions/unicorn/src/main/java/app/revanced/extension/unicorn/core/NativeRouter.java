@@ -7,18 +7,15 @@ public final class NativeRouter {
     public static Object call(String owner, String method, String returnType, boolean hasReceiver, Object... rawArgs) {
         Object[] args = NativeRuntime.stripReceiver(hasReceiver, rawArgs);
 
-        try {
-            if (owner.startsWith("Lcom/unicornsoft/android/unicornpro/core/std/")) {
-                return StdNative.call(owner, method, args);
-            }
-            if (LicenseNative.handles(owner)) {
-                return LicenseNative.call(owner, method, args);
-            }
-            throw NativeRuntime.unsupported(owner + "." + method);
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Throwable t) {
-            throw new RuntimeException(t);
+        if (owner.startsWith(NativeOwners.STD_PREFIX)) {
+            return StdNative.call(owner, method, args);
         }
+        if (LicenseNative.handles(owner)) {
+            return LicenseNative.call(owner, method, args);
+        }
+        if (ConfigNative.handles(owner)) {
+            return ConfigNative.call(owner, method, returnType, args);
+        }
+        throw NativeRuntime.unsupported(owner + "." + method);
     }
 }

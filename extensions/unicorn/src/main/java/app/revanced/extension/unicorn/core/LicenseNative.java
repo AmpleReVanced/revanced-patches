@@ -1,224 +1,247 @@
 package app.revanced.extension.unicorn.core;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 final class LicenseNative {
-    private static final String LICENSE = "Lcom/unicornsoft/android/unicornpro/core/License$Companion;";
-    private static final String MANAGER = "Lcom/unicornsoft/android/unicornpro/core/LicenseManager$Companion;";
-    private static final String AUTH = "Lcom/unicornsoft/android/unicornpro/core/LicenseManager$Auth$Companion;";
-    private static final String DEVICE = "Lcom/unicornsoft/android/unicornpro/core/LicenseManager$Device$Companion;";
-    private static final String SIGN_IN_REQUIRE =
-            "Lcom/unicornsoft/android/unicornpro/core/LicenseManager$SignInRequireException$Companion;";
-    private static final String UNCONFIRMED_EMAIL =
-            "Lcom/unicornsoft/android/unicornpro/core/LicenseManager$UnconfirmedEmailException$Companion;";
+    private static final String DEFAULT_AUTH_ID = "revanced-auth";
+    private static final String DEFAULT_AUTH_EMAIL = "revanced@example.com";
+    private static final String DEFAULT_DEVICE_ID = "revanced-device";
+    private static final String DEFAULT_LANGUAGE_CODE = "en";
+    private static final String DEFAULT_COUNTRY_CODE = "US";
+    private static final String DEFAULT_OS_TYPE = "android";
+    private static final String DEFAULT_LICENSE_ID = "revanced-license";
+    private static final String DEFAULT_LICENSE_NAME = "Unicorn Pro";
+    private static final String DEFAULT_LICENSE_EXPIRES_AT = "2099-12-31T23:59:59.000Z";
+    private static final String DEFAULT_LICENSE_SCOPE = "pro";
 
     private LicenseNative() {
     }
 
     static boolean handles(String owner) {
-        return owner.equals(LICENSE)
-                || owner.equals(MANAGER)
-                || owner.equals(AUTH)
-                || owner.equals(DEVICE)
-                || owner.equals(SIGN_IN_REQUIRE)
-                || owner.equals(UNCONFIRMED_EMAIL);
+        return NativeOwners.LICENSE.equals(owner)
+                || NativeOwners.LICENSE_MANAGER.equals(owner)
+                || NativeOwners.LICENSE_AUTH.equals(owner)
+                || NativeOwners.LICENSE_DEVICE.equals(owner)
+                || NativeOwners.SIGN_IN_REQUIRE.equals(owner)
+                || NativeOwners.UNCONFIRMED_EMAIL.equals(owner);
     }
 
     static Object call(String owner, String method, Object[] args) {
-        if (owner.equals(LICENSE)) return callLicense(method, args);
-        if (owner.equals(MANAGER)) return callManager(method, args);
-        if (owner.equals(AUTH)) return callAuth(method, args);
-        if (owner.equals(DEVICE)) return callDevice(method, args);
+        if (NativeOwners.LICENSE.equals(owner)) return callLicense(method, args);
+        if (NativeOwners.LICENSE_MANAGER.equals(owner)) return callManager(method, args);
+        if (NativeOwners.LICENSE_AUTH.equals(owner)) return callAuth(method, args);
+        if (NativeOwners.LICENSE_DEVICE.equals(owner)) return callDevice(method, args);
 
-        if (owner.equals(UNCONFIRMED_EMAIL) && "native_GetUserId".equals(method)) {
+        if (NativeOwners.UNCONFIRMED_EMAIL.equals(owner) && "native_GetUserId".equals(method)) {
             Throwable throwable = NativeRuntime.throwable(NativeRuntime.longValue(args[0]));
             return throwable instanceof UserIdException ? ((UserIdException) throwable).userId : null;
         }
 
-        if ("native_GetTypeId".equals(method)) return Long.valueOf(NativeRuntime.typeId(owner));
+        if ("native_GetTypeId".equals(method)) {
+            return NativeRuntime.longObject(NativeRuntime.typeId(owner));
+        }
 
         throw NativeRuntime.unsupported(owner + "." + method);
     }
 
+    @SuppressWarnings("unused")
     static long newLicenseFromJson(String json) {
-        Map<String, Object> root = Json.object(json);
-        Map<String, Object> newLicense = Json.objectAt(root, "newLicense");
+        Map<String, Object> root = NativeJson.object(json);
+        Map<String, Object> newLicense = NativeJson.objectAt(root, "newLicense");
 
         LinkedHashSet<String> deviceIds = new LinkedHashSet<>();
-        for (Object item : Json.arrayAt(root, "devices")) {
-            if (item instanceof Map) {
-                @SuppressWarnings("unchecked")
-                Map<String, Object> device = (Map<String, Object>) item;
-                if (device.containsKey("clientId")) {
-                    deviceIds.add(Json.stringAt(device, "clientId", ""));
-                }
+        for (Map<String, Object> device : NativeJson.objectListAt(root, "devices")) {
+            if (device.containsKey("clientId")) {
+                deviceIds.add(NativeJson.stringAt(device, "clientId", ""));
             }
         }
 
         LinkedHashMap<String, String> localizations = new LinkedHashMap<>();
         if (newLicense != null) {
-            for (Object item : Json.arrayAt(newLicense, "localizations")) {
-                if (item instanceof Map) {
-                    @SuppressWarnings("unchecked")
-                    Map<String, Object> localization = (Map<String, Object>) item;
-                    localizations.put(
-                            Json.stringAt(localization, "langCode", ""),
-                            Json.stringAt(localization, "name", ""));
-                }
+            for (Map<String, Object> localization : NativeJson.objectListAt(newLicense, "localizations")) {
+                localizations.put(
+                        NativeJson.stringAt(localization, "langCode", ""),
+                        NativeJson.stringAt(localization, "name", ""));
             }
         }
 
         return NativeRuntime.put(new LicenseRec(
-                Json.stringAt(root, "id", ""),
+                NativeJson.stringAt(root, "id", ""),
                 deviceIds,
-                Json.stringAt(root, "expAt", ""),
-                Json.booleanAt(root, "expired", false),
-                Json.booleanAt(root, "trial", false),
-                newLicense == null ? 0 : Json.intAt(newLicense, "life", 0),
+                NativeJson.stringAt(root, "expAt", ""),
+                NativeJson.booleanAt(root, "expired", false),
+                NativeJson.booleanAt(root, "trial", false),
+                newLicense == null ? 0 : NativeJson.intAt(newLicense, "life", 0),
                 localizations,
-                newLicense == null ? 0 : Json.intAt(newLicense, "maxDevicesCount", 0),
-                newLicense == null ? "" : Json.stringAt(newLicense, "scope", "")));
+                newLicense == null ? 0 : NativeJson.intAt(newLicense, "maxDevicesCount", 0),
+                newLicense == null ? "" : NativeJson.stringAt(newLicense, "scope", "")));
     }
 
+    @SuppressWarnings("unused")
     static long newAuthFromJson(String json) {
-        Map<String, Object> root = Json.object(json);
+        Map<String, Object> root = NativeJson.object(json);
         return NativeRuntime.put(new AuthRec(
-                Json.stringAt(root, "id", ""),
-                Json.stringAt(root, "email", ""),
-                Json.stringAt(root, "accessToken", ""),
-                Json.stringAt(root, "refreshToken", ""),
-                Json.intAt(root, "scope", 0),
-                Json.longAt(root, "exp", 0L)));
+                NativeJson.stringAt(root, "id", ""),
+                NativeJson.stringAt(root, "email", ""),
+                NativeJson.stringAt(root, "accessToken", ""),
+                NativeJson.stringAt(root, "refreshToken", ""),
+                NativeJson.intAt(root, "scope", 0),
+                NativeJson.longAt(root, "exp", 0L)));
     }
 
+    @SuppressWarnings("unused")
     static long newDeviceFromJson(String json) {
-        Map<String, Object> root = Json.object(json);
+        Map<String, Object> root = NativeJson.object(json);
         return NativeRuntime.put(new DeviceRec(
-                Json.stringAt(root, "clientId", ""),
-                Json.stringAt(root, "id", ""),
-                Json.stringAt(root, "osType", "android"),
-                Json.stringAt(root, "osVersion", ""),
-                Json.stringAt(root, "languageCode", ""),
-                Json.stringAt(root, "countryCode", "").toUpperCase(),
-                root.containsKey("pushToken") ? Json.stringAt(root, "pushToken", null) : null,
-                Json.booleanAt(root, "pushEnabled", false)));
+                NativeJson.stringAt(root, "clientId", ""),
+                NativeJson.stringAt(root, "id", ""),
+                NativeJson.stringAt(root, "osType", DEFAULT_OS_TYPE),
+                NativeJson.stringAt(root, "osVersion", ""),
+                NativeJson.stringAt(root, "languageCode", ""),
+                NativeJson.stringAt(root, "countryCode", "").toUpperCase(Locale.US),
+                root.containsKey("pushToken") ? NativeJson.stringAt(root, "pushToken", null) : null,
+                NativeJson.booleanAt(root, "pushEnabled", false)));
     }
 
     private static Object callLicense(String method, Object[] args) {
         long handle = NativeRuntime.longValue(args[0]);
         LicenseRec license = NativeRuntime.get(handle, LicenseRec.class);
-        if ("native_GetId".equals(method)) return license.id;
-        if ("native_GetDeviceIds".equals(method)) return Long.valueOf(NativeRuntime.put(new LinkedHashSet<>(license.deviceIds)));
-        if ("native_GetExpiredAt".equals(method)) return license.expiredAt;
-        if ("native_GetIsExpired".equals(method)) return Boolean.valueOf(license.expired);
-        if ("native_GetIsTrial".equals(method)) return Boolean.valueOf(license.trial);
-        if ("native_GetLife".equals(method)) return Integer.valueOf(license.life);
-        if ("native_GetLocalizations".equals(method)) return Long.valueOf(NativeRuntime.put(new LinkedHashMap<>(license.localizations)));
-        if ("native_GetMaxDevice".equals(method)) return Integer.valueOf(license.maxDevice);
-        if ("native_GetScope".equals(method)) return license.scope;
-        NativeRuntime.delete(handle);
-        return null;
+
+        switch (method) {
+            case "native_GetId":
+                return license.id();
+            case "native_GetDeviceIds":
+                return NativeRuntime.handle(new LinkedHashSet<>(license.deviceIds()));
+            case "native_GetExpiredAt":
+                return license.expiredAt();
+            case "native_GetIsExpired":
+                return Boolean.valueOf(license.expired());
+            case "native_GetIsTrial":
+                return Boolean.valueOf(license.trial());
+            case "native_GetLife":
+                return Integer.valueOf(license.life());
+            case "native_GetLocalizations":
+                return NativeRuntime.handle(new LinkedHashMap<>(license.localizations()));
+            case "native_GetMaxDevice":
+                return Integer.valueOf(license.maxDevice());
+            case "native_GetScope":
+                return license.scope();
+            case "native_delete":
+                NativeRuntime.delete(handle);
+                return null;
+            default:
+                throw NativeRuntime.unsupported(NativeOwners.LICENSE + "." + method);
+        }
     }
 
     private static Object callManager(String method, Object[] args) {
         if ("native_new".equals(method)) {
-            return Long.valueOf(NativeRuntime.put(new ManagerRec(
+            return NativeRuntime.handle(new ManagerRec(
                     NativeRuntime.longValue(args[0]),
                     NativeRuntime.string(args[1]),
                     NativeRuntime.string(args[2]),
                     NativeRuntime.string(args[3]),
                     NativeRuntime.string(args[4]),
                     NativeRuntime.string(args[5]),
-                    args.length > 6 ? args[6] : null)));
+                    args.length > 6 ? args[6] : null));
         }
 
         long handle = NativeRuntime.longValue(args[0]);
         ManagerRec manager = NativeRuntime.get(handle, ManagerRec.class);
 
-        if ("native_GetLicense".equals(method)) {
-            if (manager.auth == null || manager.license == null) {
-                return Long.valueOf(0L);
-            }
-            if (manager.device != null && !manager.license.deviceIds.isEmpty()
-                    && !manager.license.deviceIds.contains(manager.device.clientId)) {
-                return Long.valueOf(0L);
-            }
-            return Long.valueOf(NativeRuntime.put(manager.license.copy()));
+        switch (method) {
+            case "native_GetLicense":
+                return NativeRuntime.longObject(manager.licenseHandle());
+            case "native_GetAuth":
+                return NativeRuntime.longObject(manager.authHandle());
+            case "native_GetDevice":
+                return NativeRuntime.longObject(manager.deviceHandle());
+            case "native_StartAppProcess":
+                return startAppProcess(manager, args);
+            case "native_SignIn":
+                return signIn(manager, args);
+            case "native_DetachLicense":
+                manager.detachLicense();
+                NativeRuntime.invoke(args[1]);
+                return null;
+            case "native_delete":
+                NativeRuntime.delete(handle);
+                return null;
+            default:
+                throw NativeRuntime.unsupported(NativeOwners.LICENSE_MANAGER + "." + method);
         }
-        if ("native_GetAuth".equals(method)) {
-            return Long.valueOf(manager.auth == null ? 0L : NativeRuntime.put(manager.auth.copy()));
-        }
-        if ("native_GetDevice".equals(method)) {
-            return Long.valueOf(manager.device == null ? 0L : NativeRuntime.put(manager.device.copy()));
-        }
-        if ("native_StartAppProcess".equals(method)) {
-            try {
-                NativeRuntime.invoke(args[1], callManager("native_GetLicense", new Object[]{Long.valueOf(handle)}));
-            } catch (RuntimeException e) {
-                NativeRuntime.invoke(args[2], Long.valueOf(NativeRuntime.exceptionHandle(e)));
-            }
-            return null;
-        }
-        if ("native_SignIn".equals(method)) {
-            try {
-                if (manager.license == null) {
-                    throw NativeRuntime.unsupported("LicenseManager.native_SignIn");
-                }
-                manager.auth = new AuthRec(
-                        NativeRuntime.string(args[1]),
-                        NativeRuntime.string(args[1]),
-                        "",
-                        "",
-                        0,
-                        0L);
-                NativeRuntime.invoke(args[4], Long.valueOf(NativeRuntime.put(manager.license.copy())));
-            } catch (RuntimeException e) {
-                NativeRuntime.invoke(args[5], Long.valueOf(NativeRuntime.exceptionHandle(e)));
-            }
-            return null;
-        }
-        if ("native_DetachLicense".equals(method)) {
-            manager.license = null;
-            NativeRuntime.invoke(args[1]);
-            return null;
-        }
+    }
 
-        NativeRuntime.delete(handle);
+    private static Object startAppProcess(ManagerRec manager, Object[] args) {
+        try {
+            NativeRuntime.invoke(args[1], NativeRuntime.longObject(manager.licenseHandle()));
+        } catch (RuntimeException e) {
+            NativeRuntime.invoke(args[2], NativeRuntime.longObject(NativeRuntime.exceptionHandle(e)));
+        }
+        return null;
+    }
+
+    private static Object signIn(ManagerRec manager, Object[] args) {
+        try {
+            manager.signIn(NativeRuntime.string(args[1]));
+            NativeRuntime.invoke(args[4], NativeRuntime.longObject(manager.rawLicenseHandle()));
+        } catch (RuntimeException e) {
+            NativeRuntime.invoke(args[5], NativeRuntime.longObject(NativeRuntime.exceptionHandle(e)));
+        }
         return null;
     }
 
     private static Object callAuth(String method, Object[] args) {
         long handle = NativeRuntime.longValue(args[0]);
         AuthRec auth = NativeRuntime.get(handle, AuthRec.class);
-        if ("native_GetId".equals(method)) return auth.id;
-        if ("native_GetEmail".equals(method)) return auth.email;
-        if ("native_GetScope".equals(method)) return Integer.valueOf(auth.scope);
-        NativeRuntime.delete(handle);
-        return null;
+
+        switch (method) {
+            case "native_GetId":
+                return auth.id();
+            case "native_GetEmail":
+                return auth.email();
+            case "native_GetScope":
+                return Integer.valueOf(auth.scope());
+            case "native_delete":
+                NativeRuntime.delete(handle);
+                return null;
+            default:
+                throw NativeRuntime.unsupported(NativeOwners.LICENSE_AUTH + "." + method);
+        }
     }
 
     private static Object callDevice(String method, Object[] args) {
         long handle = NativeRuntime.longValue(args[0]);
         DeviceRec device = NativeRuntime.get(handle, DeviceRec.class);
-        if ("native_GetServerId".equals(method)) return device.serverId;
-        NativeRuntime.delete(handle);
-        return null;
+
+        switch (method) {
+            case "native_GetServerId":
+                return device.serverId();
+            case "native_delete":
+                NativeRuntime.delete(handle);
+                return null;
+            default:
+                throw NativeRuntime.unsupported(NativeOwners.LICENSE_DEVICE + "." + method);
+        }
+    }
+
+    private static String valueOrDefault(String value, String defaultValue) {
+        return value == null || value.length() == 0 ? defaultValue : value;
     }
 
     static final class LicenseRec {
-        final String id;
-        final LinkedHashSet<String> deviceIds;
-        final String expiredAt;
-        final boolean expired;
-        final boolean trial;
-        final int life;
-        final LinkedHashMap<String, String> localizations;
-        final int maxDevice;
-        final String scope;
+        private final String id;
+        private final LinkedHashSet<String> deviceIds;
+        private final String expiredAt;
+        private final boolean expired;
+        private final boolean trial;
+        private final int life;
+        private final LinkedHashMap<String, String> localizations;
+        private final int maxDevice;
+        private final String scope;
 
         LicenseRec(String id, LinkedHashSet<String> deviceIds, String expiredAt, boolean expired,
                 boolean trial, int life, LinkedHashMap<String, String> localizations, int maxDevice, String scope) {
@@ -233,6 +256,42 @@ final class LicenseNative {
             this.scope = scope;
         }
 
+        String id() {
+            return id;
+        }
+
+        LinkedHashSet<String> deviceIds() {
+            return deviceIds;
+        }
+
+        String expiredAt() {
+            return expiredAt;
+        }
+
+        boolean expired() {
+            return expired;
+        }
+
+        boolean trial() {
+            return trial;
+        }
+
+        int life() {
+            return life;
+        }
+
+        LinkedHashMap<String, String> localizations() {
+            return localizations;
+        }
+
+        int maxDevice() {
+            return maxDevice;
+        }
+
+        String scope() {
+            return scope;
+        }
+
         LicenseRec copy() {
             return new LicenseRec(id, new LinkedHashSet<>(deviceIds), expiredAt, expired, trial, life,
                     new LinkedHashMap<>(localizations), maxDevice, scope);
@@ -240,12 +299,12 @@ final class LicenseNative {
     }
 
     static final class AuthRec {
-        final String id;
-        final String email;
-        final String accessToken;
-        final String refreshToken;
-        final int scope;
-        final long exp;
+        private final String id;
+        private final String email;
+        private final String accessToken;
+        private final String refreshToken;
+        private final int scope;
+        private final long exp;
 
         AuthRec(String id, String email, String accessToken, String refreshToken, int scope, long exp) {
             this.id = id;
@@ -256,20 +315,32 @@ final class LicenseNative {
             this.exp = exp;
         }
 
+        String id() {
+            return id;
+        }
+
+        String email() {
+            return email;
+        }
+
+        int scope() {
+            return scope;
+        }
+
         AuthRec copy() {
             return new AuthRec(id, email, accessToken, refreshToken, scope, exp);
         }
     }
 
     static final class DeviceRec {
-        final String clientId;
-        final String serverId;
-        final String osType;
-        final String osVersion;
-        final String languageCode;
-        final String countryCode;
-        final String pushToken;
-        final boolean pushEnabled;
+        private final String clientId;
+        private final String serverId;
+        private final String osType;
+        private final String osVersion;
+        private final String languageCode;
+        private final String countryCode;
+        private final String pushToken;
+        private final boolean pushEnabled;
 
         DeviceRec(String clientId, String serverId, String osType, String osVersion, String languageCode,
                 String countryCode, String pushToken, boolean pushEnabled) {
@@ -283,230 +354,118 @@ final class LicenseNative {
             this.pushEnabled = pushEnabled;
         }
 
+        String clientId() {
+            return clientId;
+        }
+
+        String serverId() {
+            return serverId;
+        }
+
         DeviceRec copy() {
             return new DeviceRec(clientId, serverId, osType, osVersion, languageCode, countryCode, pushToken, pushEnabled);
         }
     }
 
     private static final class ManagerRec {
-        final long apiHandle;
-        final String homeDir;
-        final String osVersion;
-        final String deviceId;
-        final String languageCode;
-        final String countryCode;
-        final Object onSignOut;
-        AuthRec auth;
-        DeviceRec device;
-        LicenseRec license;
+        private AuthRec auth;
+        private DeviceRec device;
+        private LicenseRec license;
 
-        ManagerRec(long apiHandle, String homeDir, String osVersion, String deviceId, String languageCode,
-                String countryCode, Object onSignOut) {
-            this.apiHandle = apiHandle;
-            this.homeDir = homeDir;
-            this.osVersion = osVersion;
-            this.deviceId = deviceId;
-            this.languageCode = languageCode;
-            this.countryCode = countryCode;
-            this.onSignOut = onSignOut;
+        ManagerRec(long ignoredApiHandle, String ignoredHomeDir, String osVersion, String deviceId, String languageCode,
+                String countryCode, Object ignoredOnSignOut) {
+            seedDefaults(osVersion, deviceId, languageCode, countryCode);
+        }
+
+        private void seedDefaults(String osVersion, String deviceId, String languageCode, String countryCode) {
+            String normalizedDeviceId = valueOrDefault(deviceId, DEFAULT_DEVICE_ID);
+            String normalizedOsVersion = valueOrDefault(osVersion, DEFAULT_OS_TYPE);
+            String normalizedLanguageCode = valueOrDefault(languageCode, DEFAULT_LANGUAGE_CODE);
+            String normalizedCountryCode = valueOrDefault(countryCode, DEFAULT_COUNTRY_CODE).toUpperCase(Locale.US);
+
+            LinkedHashSet<String> deviceIds = new LinkedHashSet<>();
+            deviceIds.add(normalizedDeviceId);
+
+            LinkedHashMap<String, String> localizations = new LinkedHashMap<>();
+            localizations.put(DEFAULT_LANGUAGE_CODE, DEFAULT_LICENSE_NAME);
+            localizations.put(normalizedLanguageCode, DEFAULT_LICENSE_NAME);
+
+            auth = new AuthRec(
+                    DEFAULT_AUTH_ID,
+                    DEFAULT_AUTH_EMAIL,
+                    "revanced-access-token",
+                    "revanced-refresh-token",
+                    Integer.MAX_VALUE,
+                    Long.MAX_VALUE);
+            device = new DeviceRec(
+                    normalizedDeviceId,
+                    DEFAULT_DEVICE_ID,
+                    DEFAULT_OS_TYPE,
+                    normalizedOsVersion,
+                    normalizedLanguageCode,
+                    normalizedCountryCode,
+                    null,
+                    false);
+            license = new LicenseRec(
+                    DEFAULT_LICENSE_ID,
+                    deviceIds,
+                    DEFAULT_LICENSE_EXPIRES_AT,
+                    false,
+                    false,
+                    Integer.MAX_VALUE,
+                    localizations,
+                    Integer.MAX_VALUE,
+                    DEFAULT_LICENSE_SCOPE);
+        }
+
+        private long licenseHandle() {
+            if (!hasUsableLicense()) {
+                return 0L;
+            }
+            return rawLicenseHandle();
+        }
+
+        private long rawLicenseHandle() {
+            return license == null ? 0L : NativeRuntime.put(license.copy());
+        }
+
+        private boolean hasUsableLicense() {
+            return auth != null
+                    && license != null
+                    && (device == null
+                    || license.deviceIds().isEmpty()
+                    || license.deviceIds().contains(device.clientId()));
+        }
+
+        private long authHandle() {
+            return auth == null ? 0L : NativeRuntime.put(auth.copy());
+        }
+
+        private long deviceHandle() {
+            return device == null ? 0L : NativeRuntime.put(device.copy());
+        }
+
+        private void signIn(String id) {
+            if (license == null) {
+                throw NativeRuntime.unsupported("LicenseManager.native_SignIn");
+            }
+            auth = new AuthRec(id, id, "", "", 0, 0L);
+        }
+
+        private void detachLicense() {
+            license = null;
         }
     }
 
+    @SuppressWarnings("unused")
     private static final class UserIdException extends RuntimeException {
+        private static final long serialVersionUID = 1L;
+
         final String userId;
 
         UserIdException(String message, String userId) {
             super(message);
             this.userId = userId;
-        }
-    }
-
-    private static final class Json {
-        private final String source;
-        private int index;
-
-        private Json(String source) {
-            this.source = source == null ? "" : source;
-        }
-
-        static Map<String, Object> object(String json) {
-            Object value = new Json(json).parse();
-            if (!(value instanceof Map)) {
-                throw new IllegalArgumentException("JSON root is not an object");
-            }
-            @SuppressWarnings("unchecked")
-            Map<String, Object> map = (Map<String, Object>) value;
-            return map;
-        }
-
-        @SuppressWarnings("unchecked")
-        static Map<String, Object> objectAt(Map<String, Object> map, String key) {
-            Object value = map.get(key);
-            return value instanceof Map ? (Map<String, Object>) value : null;
-        }
-
-        @SuppressWarnings("unchecked")
-        static List<Object> arrayAt(Map<String, Object> map, String key) {
-            Object value = map.get(key);
-            return value instanceof List ? (List<Object>) value : new ArrayList<Object>();
-        }
-
-        static String stringAt(Map<String, Object> map, String key, String defaultValue) {
-            Object value = map.get(key);
-            return value == null ? defaultValue : String.valueOf(value);
-        }
-
-        static boolean booleanAt(Map<String, Object> map, String key, boolean defaultValue) {
-            Object value = map.get(key);
-            return value instanceof Boolean ? (Boolean) value : defaultValue;
-        }
-
-        static int intAt(Map<String, Object> map, String key, int defaultValue) {
-            Object value = map.get(key);
-            return value instanceof Number ? ((Number) value).intValue() : defaultValue;
-        }
-
-        static long longAt(Map<String, Object> map, String key, long defaultValue) {
-            Object value = map.get(key);
-            return value instanceof Number ? ((Number) value).longValue() : defaultValue;
-        }
-
-        private Object parse() {
-            Object value = parseValue();
-            skipWs();
-            if (index != source.length()) {
-                throw error("Trailing data");
-            }
-            return value;
-        }
-
-        private Object parseValue() {
-            skipWs();
-            if (index >= source.length()) throw error("Unexpected end");
-            char c = source.charAt(index);
-            if (c == '{') return parseObject();
-            if (c == '[') return parseArray();
-            if (c == '"') return parseString();
-            if (source.startsWith("true", index)) {
-                index += 4;
-                return Boolean.TRUE;
-            }
-            if (source.startsWith("false", index)) {
-                index += 5;
-                return Boolean.FALSE;
-            }
-            if (source.startsWith("null", index)) {
-                index += 4;
-                return null;
-            }
-            return parseNumber();
-        }
-
-        private Map<String, Object> parseObject() {
-            expect('{');
-            LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-            skipWs();
-            if (peek('}')) {
-                index++;
-                return map;
-            }
-            while (true) {
-                String key = parseString();
-                skipWs();
-                expect(':');
-                map.put(key, parseValue());
-                skipWs();
-                if (peek('}')) {
-                    index++;
-                    return map;
-                }
-                expect(',');
-            }
-        }
-
-        private List<Object> parseArray() {
-            expect('[');
-            ArrayList<Object> out = new ArrayList<>();
-            skipWs();
-            if (peek(']')) {
-                index++;
-                return out;
-            }
-            while (true) {
-                out.add(parseValue());
-                skipWs();
-                if (peek(']')) {
-                    index++;
-                    return out;
-                }
-                expect(',');
-            }
-        }
-
-        private String parseString() {
-            expect('"');
-            StringBuilder out = new StringBuilder();
-            while (index < source.length()) {
-                char c = source.charAt(index++);
-                if (c == '"') return out.toString();
-                if (c != '\\') {
-                    out.append(c);
-                    continue;
-                }
-                if (index >= source.length()) throw error("Bad escape");
-                char e = source.charAt(index++);
-                if (e == '"' || e == '\\' || e == '/') out.append(e);
-                else if (e == 'b') out.append('\b');
-                else if (e == 'f') out.append('\f');
-                else if (e == 'n') out.append('\n');
-                else if (e == 'r') out.append('\r');
-                else if (e == 't') out.append('\t');
-                else if (e == 'u') {
-                    if (index + 4 > source.length()) throw error("Bad unicode escape");
-                    out.append((char) Integer.parseInt(source.substring(index, index + 4), 16));
-                    index += 4;
-                } else {
-                    throw error("Bad escape");
-                }
-            }
-            throw error("Unterminated string");
-        }
-
-        private Number parseNumber() {
-            int start = index;
-            if (peek('-')) index++;
-            while (index < source.length() && Character.isDigit(source.charAt(index))) index++;
-            boolean floating = false;
-            if (peek('.')) {
-                floating = true;
-                index++;
-                while (index < source.length() && Character.isDigit(source.charAt(index))) index++;
-            }
-            if (index < source.length() && (source.charAt(index) == 'e' || source.charAt(index) == 'E')) {
-                floating = true;
-                index++;
-                if (index < source.length() && (source.charAt(index) == '+' || source.charAt(index) == '-')) index++;
-                while (index < source.length() && Character.isDigit(source.charAt(index))) index++;
-            }
-            String number = source.substring(start, index);
-            return floating ? Double.valueOf(number) : Long.valueOf(number);
-        }
-
-        private void skipWs() {
-            while (index < source.length() && Character.isWhitespace(source.charAt(index))) index++;
-        }
-
-        private boolean peek(char c) {
-            return index < source.length() && source.charAt(index) == c;
-        }
-
-        private void expect(char c) {
-            if (!peek(c)) throw error("Expected '" + c + "'");
-            index++;
-        }
-
-        private IllegalArgumentException error(String message) {
-            return new IllegalArgumentException(message + " at " + index);
         }
     }
 }

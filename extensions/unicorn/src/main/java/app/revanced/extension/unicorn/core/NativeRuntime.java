@@ -2,11 +2,7 @@ package app.revanced.extension.unicorn.core;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -28,6 +24,14 @@ final class NativeRuntime {
         return handle;
     }
 
+    static Long handle(Object value) {
+        return Long.valueOf(put(value));
+    }
+
+    static Long longObject(long value) {
+        return Long.valueOf(value);
+    }
+
     static Object get(long handle) {
         if (handle == 0L) {
             return null;
@@ -38,6 +42,10 @@ final class NativeRuntime {
             throw new IllegalArgumentException("Invalid native handle: " + handle);
         }
         return value;
+    }
+
+    static Object getOrNull(long handle) {
+        return handle == 0L ? null : HANDLES.get(handle);
     }
 
     static <T> T get(long handle, Class<T> type) {
@@ -86,20 +94,6 @@ final class NativeRuntime {
         return owner.substring(start, end).replace('$', '.');
     }
 
-    static String sha256(byte[] value) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(value == null ? new byte[0] : value);
-            StringBuilder out = new StringBuilder(hash.length * 2);
-            for (byte b : hash) {
-                out.append(String.format(Locale.US, "%02x", b & 0xff));
-            }
-            return out.toString();
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
     static void invoke(Object callback, Object... args) {
         if (callback == null) {
             return;
@@ -130,40 +124,38 @@ final class NativeRuntime {
     }
 
     static Object defaultValue(String returnType) {
-        if ("V".equals(returnType)) {
+        if (returnType == null) {
             return null;
         }
-        if ("Z".equals(returnType)) {
-            return Boolean.FALSE;
+        switch (returnType) {
+            case "V":
+                return null;
+            case "Z":
+                return Boolean.FALSE;
+            case "B":
+            case "S":
+            case "C":
+            case "I":
+                return Integer.valueOf(0);
+            case "J":
+                return Long.valueOf(0L);
+            case "F":
+                return Float.valueOf(0f);
+            case "D":
+                return Double.valueOf(0d);
+            case "Ljava/lang/String;":
+                return "";
+            case "[J":
+                return new long[0];
+            case "[I":
+                return new int[0];
+            case "[Ljava/lang/String;":
+                return new String[0];
+            case "[B":
+                return new byte[0];
+            default:
+                return null;
         }
-        if ("B".equals(returnType) || "S".equals(returnType) || "C".equals(returnType) || "I".equals(returnType)) {
-            return Integer.valueOf(0);
-        }
-        if ("J".equals(returnType)) {
-            return Long.valueOf(0L);
-        }
-        if ("F".equals(returnType)) {
-            return Float.valueOf(0f);
-        }
-        if ("D".equals(returnType)) {
-            return Double.valueOf(0d);
-        }
-        if ("Ljava/lang/String;".equals(returnType)) {
-            return "";
-        }
-        if ("[J".equals(returnType)) {
-            return new long[0];
-        }
-        if ("[I".equals(returnType)) {
-            return new int[0];
-        }
-        if ("[Ljava/lang/String;".equals(returnType)) {
-            return new String[0];
-        }
-        if ("[B".equals(returnType)) {
-            return new byte[0];
-        }
-        return null;
     }
 
     static String string(Object value) {
@@ -176,10 +168,6 @@ final class NativeRuntime {
 
     static int intValue(Object value) {
         return value instanceof Number ? ((Number) value).intValue() : 0;
-    }
-
-    static boolean booleanValue(Object value) {
-        return value instanceof Boolean && (Boolean) value;
     }
 
     private static boolean accepts(Class<?>[] parameterTypes, Object[] args) {
@@ -233,9 +221,5 @@ final class NativeRuntime {
 
     static Throwable throwable(long handle) {
         return get(handle, Throwable.class);
-    }
-
-    static byte[] utf8(String value) {
-        return (value == null ? "" : value).getBytes(StandardCharsets.UTF_8);
     }
 }
