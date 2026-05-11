@@ -1,3 +1,10 @@
+# [1.1.0-dev.3](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.2...v1.1.0-dev.3) (2026-05-11)
+
+
+### Bug Fixes
+
+* **unicorn:** prevent mixed native handle crashes ([28565eb](https://github.com/AmpleReVanced/revanced-patches/commit/28565ebb8da91085a82e09c025bc43c9b524bf20))
+
 # [1.1.0-dev.2](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.1...v1.1.0-dev.2) (2026-05-11)
 
 

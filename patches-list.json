@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0-dev.2",
+  "version": "1.1.0-dev.3",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -2047,7 +2047,7 @@
     },
     {
       "name": "Unlock Pro features",
-      "description": "Makes Unicorn Pro report an active Pro license so subscription-only functionality is available.",
+      "description": "Makes Unicorn Pro report an active Pro license while preserving the original native object graph.",
       "default": true,
       "dependencies": [
         "BytecodePatch"
