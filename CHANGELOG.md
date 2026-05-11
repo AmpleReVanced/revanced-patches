@@ -1,3 +1,16 @@
+# [1.1.0-dev.2](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.1...v1.1.0-dev.2) (2026-05-11)
+
+
+### Bug Fixes
+
+* **unicorn:** preserve original std native handles ([ce874b1](https://github.com/AmpleReVanced/revanced-patches/commit/ce874b119664bb4bf25b037b804470a6f58e4813))
+
+
+### Features
+
+* **unicorn:** add patch to disable Sentry reporting ([29cbce1](https://github.com/AmpleReVanced/revanced-patches/commit/29cbce101ed27958e6423b34a1c2d64a420bc28f))
+* **unicorn:** add Reimplement native core patch ([2afb415](https://github.com/AmpleReVanced/revanced-patches/commit/2afb415d679cf1cf4cf98e9d4beb572b772bd999))
+
 # [1.1.0-dev.1](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.1...v1.1.0-dev.1) (2026-05-10)
 
 

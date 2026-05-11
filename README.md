@@ -4,7 +4,7 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.1.0-dev.1](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.1.0-dev.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;74 patches total
+> **[v1.1.0-dev.2](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.1.0-dev.2)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;76 patches total
 <details open>
 <summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;54 patches</summary>
 <br>
@@ -103,6 +103,22 @@
 | [Hide home components](#hide-home-components) | Adds settings to hide selected DCInside home screen components. |  |
 | [Register settings activity](#register-settings-activity) | Registers the Morphe settings activity in the app manifest. |  |
 | [Spoof Signature](#spoof-signature) | Spoofs the app signature to bypass integrity checks. |  |
+
+</details>
+
+<details open>
+<summary>📦 Unicorn Pro&nbsp;&nbsp;•&nbsp;&nbsp;2 patches</summary>
+<br>
+
+**🎯 Supported versions:**
+
+| 1.30.447 |
+| :---: |
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Disable Sentry](#disable-sentry) | Disables Sentry reporting |  |
+| [Unlock Pro features](#unlock-pro-features) | Makes Unicorn Pro report an active Pro license so subscription-only functionality is available. |  |
 
 </details>
 

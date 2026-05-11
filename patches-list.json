@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0-dev.1",
+  "version": "1.1.0-dev.2",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -1051,6 +1051,33 @@
       "options": []
     },
     {
+      "name": "Disable Sentry",
+      "description": "Disables Sentry reporting",
+      "default": true,
+      "dependencies": [
+        "ResourcePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "com.unicornsoft.android.unicornpro",
+          "name": "Unicorn Pro",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#FF4500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "1.30.447",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
       "name": "Disable Sentry telemetry",
       "description": "Disables Sentry telemetry. See https://sentry.io/for/android/ for more information.",
       "default": false,
@@ -2009,6 +2036,33 @@
           "targets": [
             {
               "version": "26.3.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Unlock Pro features",
+      "description": "Makes Unicorn Pro report an active Pro license so subscription-only functionality is available.",
+      "default": true,
+      "dependencies": [
+        "BytecodePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "com.unicornsoft.android.unicornpro",
+          "name": "Unicorn Pro",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#FF4500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "1.30.447",
               "isExperimental": false,
               "minSdk": null,
               "description": null
