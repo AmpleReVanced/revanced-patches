@@ -1,4 +1,4 @@
-package app.revanced.patches.unicorn.nativecode
+package app.revanced.patches.unicorn.pro
 
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
