@@ -13,6 +13,10 @@
             android:key="morphe_pref_block_reply_dccon_loading"
             android:summary="@string/morphe_settings_block_reply_dccon_loading_summary"
             android:title="@string/morphe_settings_block_reply_dccon_loading" />
+        <SwitchPreference
+            android:key="morphe_pref_render_big_dccon_as_normal"
+            android:summary="@string/morphe_settings_render_big_dccon_as_normal_summary"
+            android:title="@string/morphe_settings_render_big_dccon_as_normal" />
         <Preference
             android:key="morphe_pref_apply_user_memo_preset"
             android:summary="@string/morphe_settings_user_memo_preset_summary"

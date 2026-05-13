@@ -7,6 +7,8 @@
     <string name="morphe_settings_block_post_dccon_loading_summary">Prevents DCCon images from loading in post bodies.</string>
     <string name="morphe_settings_block_reply_dccon_loading">Block DCCon loading in replies</string>
     <string name="morphe_settings_block_reply_dccon_loading_summary">Prevents DCCon images from loading in reply lists.</string>
+    <string name="morphe_settings_render_big_dccon_as_normal">Render big DCCon at normal size</string>
+    <string name="morphe_settings_render_big_dccon_as_normal_summary">Shows big DCCon images at the regular DCCon size.</string>
     <string name="morphe_settings_section_home_screen">Home screen</string>
     <string name="morphe_settings_hide_home_search_menu">Hide search/menu area</string>
     <string name="morphe_settings_hide_home_search_menu_summary">Removes the top search and menu block from the home screen.</string>

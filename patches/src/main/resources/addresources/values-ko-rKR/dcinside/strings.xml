@@ -7,6 +7,8 @@
     <string name="morphe_settings_block_post_dccon_loading_summary">글 본문에서 디시콘 이미지 로딩을 차단합니다.</string>
     <string name="morphe_settings_block_reply_dccon_loading">댓글 디시콘 로딩 차단</string>
     <string name="morphe_settings_block_reply_dccon_loading_summary">댓글 목록에서 디시콘 이미지 로딩을 차단합니다.</string>
+    <string name="morphe_settings_render_big_dccon_as_normal">대왕디시콘 일반 크기로 표시</string>
+    <string name="morphe_settings_render_big_dccon_as_normal_summary">대왕디시콘을 일반 디시콘 크기로 표시합니다.</string>
     <string name="morphe_settings_section_home_screen">홈 화면</string>
     <string name="morphe_settings_hide_home_search_menu">검색/메뉴 영역 숨기기</string>
     <string name="morphe_settings_hide_home_search_menu_summary">홈 화면 상단 검색과 메뉴 영역을 제거합니다.</string>

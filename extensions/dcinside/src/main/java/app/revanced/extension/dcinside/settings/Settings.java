@@ -3,11 +3,16 @@ package app.revanced.extension.dcinside.settings;
 import static java.lang.Boolean.TRUE;
 import static java.lang.Boolean.FALSE;
 
+import android.view.View;
+import android.view.ViewGroup;
+
 import app.morphe.extension.shared.settings.BaseSettings;
 import app.morphe.extension.shared.settings.BooleanSetting;
 
 @SuppressWarnings("unused")
 public final class Settings extends BaseSettings {
+    private static final int NORMAL_DCCON_SIZE_DP = 100;
+
     private Settings() {
     }
 
@@ -17,6 +22,8 @@ public final class Settings extends BaseSettings {
             new BooleanSetting("dcinside_block_post_dccon_loading", FALSE);
     public static final BooleanSetting BLOCK_REPLY_DCCON_LOADING =
             new BooleanSetting("dcinside_block_reply_dccon_loading", FALSE);
+    public static final BooleanSetting RENDER_BIG_DCCON_AS_NORMAL =
+            new BooleanSetting("dcinside_render_big_dccon_as_normal", FALSE);
     public static final BooleanSetting HIDE_HOME_SEARCH_MENU =
             new BooleanSetting("dcinside_hide_home_search_menu", FALSE);
     public static final BooleanSetting HIDE_HOME_RECENT_GALLERIES =
@@ -40,6 +47,30 @@ public final class Settings extends BaseSettings {
 
     public static boolean blockReplyDcconLoading() {
         return BLOCK_REPLY_DCCON_LOADING.get();
+    }
+
+    public static boolean renderBigDcconAsNormal() {
+        return RENDER_BIG_DCCON_AS_NORMAL.get();
+    }
+
+    public static void resizeReplyDcconAsNormal(View view) {
+        if (!renderBigDcconAsNormal() || view == null) {
+            return;
+        }
+
+        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+        if (layoutParams == null) {
+            return;
+        }
+
+        int size = (int) (NORMAL_DCCON_SIZE_DP * view.getResources().getDisplayMetrics().density + 0.5f);
+        if (layoutParams.width == size && layoutParams.height == size) {
+            return;
+        }
+
+        layoutParams.width = size;
+        layoutParams.height = size;
+        view.setLayoutParams(layoutParams);
     }
 
     public static boolean hideHomeSearchMenu() {
