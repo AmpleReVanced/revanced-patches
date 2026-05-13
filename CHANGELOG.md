@@ -1,3 +1,10 @@
+# [1.1.0-dev.5](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.4...v1.1.0-dev.5) (2026-05-13)
+
+
+### Features
+
+* **dcinside:** add big DCCon size rendering setting ([e38fdc5](https://github.com/AmpleReVanced/revanced-patches/commit/e38fdc58bc47e002bac9128be78fffdc2a0cd8ac))
+
 # [1.1.0-dev.4](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.3...v1.1.0-dev.4) (2026-05-13)
 
 
