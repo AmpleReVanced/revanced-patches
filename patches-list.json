@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0-dev.4",
+  "version": "1.1.0-dev.5",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -1859,6 +1859,33 @@
           "targets": [
             {
               "version": "26.4.0",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Render big DCCon as normal size",
+      "description": "Adds a setting to render big DCCon at normal DCCon size.",
+      "default": true,
+      "dependencies": [
+        "BytecodePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "com.dcinside.app.android",
+          "name": "dcinside",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#3D4491",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "5.2.9",
               "isExperimental": false,
               "minSdk": null,
               "description": null
