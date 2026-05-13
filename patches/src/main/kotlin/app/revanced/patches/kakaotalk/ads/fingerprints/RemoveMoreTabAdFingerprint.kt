@@ -10,7 +10,7 @@ internal object AddSectionToMoreTabUIFingerprint : Fingerprint(
     parameters = listOf("Ljava/lang/Object;"),
     returnType = "Ljava/lang/Object;",
     strings = listOf(
-        "null cannot be cast to non-null type com.kakao.talk.moretab.ui.model.KakaoPayUiModel",
+        "null cannot be cast to non-null type com.kakao.talk.moretab.ui.model.KakaoPayUiState",
         "null cannot be cast to non-null type com.kakao.talk.moretab.ui.model.WeatherUiModel",
         "null cannot be cast to non-null type com.kakao.talk.moretab.ui.model.KakaoNowUiModel",
         "null cannot be cast to non-null type com.kakao.talk.moretab.ui.model.GridServiceUiModel",

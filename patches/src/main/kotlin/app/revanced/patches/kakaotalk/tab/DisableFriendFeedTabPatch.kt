@@ -33,7 +33,7 @@ val disableFriendFeedTabPatch = bytecodePatch(
             val instIndex = instructions.indexOfLast { it.opcode == Opcode.IF_EQZ }
             addInstruction(
                 instIndex,
-                "const/4 p1, 0x0"
+                "const/4 v1, 0x0"
             )
         }
     }

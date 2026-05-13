@@ -98,6 +98,10 @@ internal object ChooseNowChildTabFingerprint : Fingerprint(
         Opcode.CONST_STRING,
         Opcode.INVOKE_DIRECT,
         Opcode.THROW,
+        Opcode.IGET_OBJECT,
+        Opcode.CHECK_CAST,
+        Opcode.IGET_OBJECT,
+        Opcode.CHECK_CAST,
         Opcode.INVOKE_STATIC,
         Opcode.MOVE_OBJECT
     ),
