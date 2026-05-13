@@ -10,6 +10,6 @@ internal object TalkShareLogAsyncFlagFingerprint : Fingerprint(
     returnType = "Ljava/lang/Object;",
     custom = { method, classDef ->
         classDef.sourceFile == "Available2.kt" &&
-                method.hasFieldReference("Lbr/c\$b;", "USE_TALK_SHARE_LOG")
+                method.hasFieldReference("${classDef.type.split("/")[0]}/c\$b;", "USE_TALK_SHARE_LOG")
     }
 )
