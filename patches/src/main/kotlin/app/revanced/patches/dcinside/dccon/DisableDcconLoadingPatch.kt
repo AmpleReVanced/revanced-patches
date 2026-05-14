@@ -1,6 +1,6 @@
 package app.revanced.patches.dcinside.dccon
 
-import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.dcinside.settings.addSettingsPatch
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
@@ -16,7 +16,7 @@ val disableDcconLoadingPatch = bytecodePatch(
     execute {
         val postElementMethods = PostDcconImageHandlerFingerprint.method.inferPostElementMethods(this)
 
-        PostDcconImageHandlerFingerprint.method.addInstructions(
+        PostDcconImageHandlerFingerprint.method.addInstructionsWithLabels(
             0,
             """
                 invoke-static {}, $SETTINGS_CLASS->blockPostDcconLoading()Z
@@ -54,13 +54,14 @@ val disableDcconLoadingPatch = bytecodePatch(
                 return-void
 
                 :morphe_post_dccon_continue
+                nop
             """.trimIndent(),
         )
 
         val replyDcconViewFields = ReplyDcconBindFingerprint.classDef.fields
             .filterDcconViewFields()
 
-        ReplyDcconBindFingerprint.method.addInstructions(
+        ReplyDcconBindFingerprint.method.addInstructionsWithLabels(
             0,
             """
                 invoke-static {}, $SETTINGS_CLASS->blockReplyDcconLoading()Z
@@ -72,6 +73,7 @@ val disableDcconLoadingPatch = bytecodePatch(
                 return-void
 
                 :morphe_reply_dccon_continue
+                nop
             """.trimIndent(),
         )
     }
