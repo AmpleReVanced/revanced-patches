@@ -1,3 +1,10 @@
+# [1.1.0-dev.6](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.5...v1.1.0-dev.6) (2026-05-14)
+
+
+### Bug Fixes
+
+* **dcinside:** use label-aware DCCon bytecode injections ([16dc51f](https://github.com/AmpleReVanced/revanced-patches/commit/16dc51fd981e7dd9e1aceba257c577f880e23eca))
+
 # [1.1.0-dev.5](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.4...v1.1.0-dev.5) (2026-05-13)
 
 
