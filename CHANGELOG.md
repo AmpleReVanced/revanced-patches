@@ -1,3 +1,7 @@
+# [1.1.0-dev.7](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.6...v1.1.0-dev.7) (2026-05-14)
+
+### Features
+
 # [1.1.0-dev.6](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.5...v1.1.0-dev.6) (2026-05-14)
 
 ### Bug Fixes
