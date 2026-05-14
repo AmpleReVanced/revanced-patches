@@ -1,3 +1,10 @@
+# [1.1.0-dev.7](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.6...v1.1.0-dev.7) (2026-05-14)
+
+
+### Features
+
+* **unicorn:** update unicorn patches for version 1.30.461 ([886ea5a](https://github.com/AmpleReVanced/revanced-patches/commit/886ea5ae333aa0b7ba79fbbc7ff0125ce7b998c2))
+
 # [1.1.0-dev.6](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.5...v1.1.0-dev.6) (2026-05-14)
 
 
