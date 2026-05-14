@@ -1,6 +1,6 @@
 package app.revanced.patches.dcinside.dccon
 
-import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.dcinside.settings.addSettingsPatch
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
@@ -16,7 +16,7 @@ val renderBigDcconAsNormalPatch = bytecodePatch(
     execute {
         val postElementMethods = PostDcconImageHandlerFingerprint.method.inferPostElementMethods(this)
 
-        PostDcconImageHandlerFingerprint.method.addInstructions(
+        PostDcconImageHandlerFingerprint.method.addInstructionsWithLabels(
             0,
             """
                 invoke-static {}, $SETTINGS_CLASS->renderBigDcconAsNormal()Z
@@ -28,6 +28,7 @@ val renderBigDcconAsNormalPatch = bytecodePatch(
                 ${postElementMethods.removeClassInvoke} {v1, v0}, ${postElementMethods.removeClass}
 
                 :morphe_post_big_dccon_continue
+                nop
             """.trimIndent(),
         )
 
@@ -35,7 +36,7 @@ val renderBigDcconAsNormalPatch = bytecodePatch(
             ReplyDcconBindFingerprint.classDef.methods,
         )
 
-        ReplyDcconBindFingerprint.method.addInstructions(
+        ReplyDcconBindFingerprint.method.addInstructionsWithLabels(
             0,
             """
                 invoke-static {}, $SETTINGS_CLASS->renderBigDcconAsNormal()Z
@@ -46,10 +47,11 @@ val renderBigDcconAsNormalPatch = bytecodePatch(
                 ${replyDcconImageFields.toResizeInstructions()}
 
                 :morphe_reply_big_dccon_continue
+                nop
             """.trimIndent(),
         )
 
-        ReplyDcconAdapterBindFingerprint.method.addInstructions(
+        ReplyDcconAdapterBindFingerprint.method.addInstructionsWithLabels(
             0,
             """
                 invoke-static {}, $SETTINGS_CLASS->renderBigDcconAsNormal()Z
@@ -59,6 +61,7 @@ val renderBigDcconAsNormalPatch = bytecodePatch(
                 sget-object p4, Ljava/lang/Boolean;->FALSE:Ljava/lang/Boolean;
 
                 :morphe_reply_adapter_big_dccon_continue
+                nop
             """.trimIndent(),
         )
     }
