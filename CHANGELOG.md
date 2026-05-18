@@ -1,3 +1,9 @@
+# [1.1.0-dev.9](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.8...v1.1.0-dev.9) (2026-05-18)
+
+### Features
+
+* **kakaotalk:** update kakaotalk patches for version 26.4.1 ([10d84ab](https://github.com/AmpleReVanced/revanced-patches/commit/10d84abd7acc1d4b233b246709adce3b05db677a))
+
 # [1.1.0-dev.8](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.7...v1.1.0-dev.8) (2026-05-18)
 
 ### Features
