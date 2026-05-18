@@ -1,3 +1,9 @@
+# [1.1.0-dev.8](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.7...v1.1.0-dev.8) (2026-05-18)
+
+### Features
+
+* **flexcil:** add unlock premium feature patch ([e07112d](https://github.com/AmpleReVanced/revanced-patches/commit/e07112d9f295e0eb311b3b719ce1f53478b519f7))
+
 # [1.1.0-dev.7](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.6...v1.1.0-dev.7) (2026-05-14)
 
 ### Features
