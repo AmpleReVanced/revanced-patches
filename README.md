@@ -4,7 +4,7 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.1.0-dev.7](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.1.0-dev.7)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;77 patches total
+> **[v1.1.0-dev.8](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.1.0-dev.8)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;78 patches total
 <details open>
 <summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;54 patches</summary>
 <br>
@@ -120,6 +120,21 @@
 |----------|----------------|-----------|
 | [Disable Sentry](#disable-sentry) | Disables Sentry reporting |  |
 | [Unlock Pro features](#unlock-pro-features) | Makes Unicorn Pro report an active Pro license while preserving the original native object graph. |  |
+
+</details>
+
+<details open>
+<summary>📦 Flexcil&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<br>
+
+**🎯 Supported versions:**
+
+| 1.4.3.30 |
+| :---: |
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Unlock Premium features](#unlock-premium-features) | Enables app features locked behind the subscription paywall. |  |
 
 </details>
 
