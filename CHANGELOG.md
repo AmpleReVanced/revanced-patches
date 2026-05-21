@@ -1,3 +1,10 @@
+# [1.1.0-dev.10](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.9...v1.1.0-dev.10) (2026-05-21)
+
+### Features
+
+* **kakaotalk:** update kakaotalk apkChecksum for 26.4.2 ([b9f574d](https://github.com/AmpleReVanced/revanced-patches/commit/b9f574daf515d1bd0ad6fe64b5631beb821c66a5))
+* **kakaotalk:** update kakaotalk patches for version 26.4.2 ([9bceacf](https://github.com/AmpleReVanced/revanced-patches/commit/9bceacfdb38b42649bdf54c034bdff41c3ca91dc))
+
 # [1.1.0-dev.9](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.8...v1.1.0-dev.9) (2026-05-18)
 
 ### Features
