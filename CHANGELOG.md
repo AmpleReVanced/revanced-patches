@@ -1,3 +1,9 @@
+# [1.1.0-dev.11](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.10...v1.1.0-dev.11) (2026-05-25)
+
+### Bug Fixes
+
+* **kakaotalk:** refresh chat info on deleted or hidden messages ([9a6c900](https://github.com/AmpleReVanced/revanced-patches/commit/9a6c900619f0821289c852885c9f4c12dceb4cda))
+
 # [1.1.0-dev.10](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.9...v1.1.0-dev.10) (2026-05-21)
 
 ### Features
