@@ -1,3 +1,11 @@
+# [1.1.0-dev.12](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.11...v1.1.0-dev.12) (2026-06-06)
+
+
+### Features
+
+* **all:** add sharedUserId Patch ([8b09daa](https://github.com/AmpleReVanced/revanced-patches/commit/8b09daa2ba0df47f6787b6db0eb7f5b337273551))
+* **unicorn:** update unicorn patches for version 1.30.467 ([654333a](https://github.com/AmpleReVanced/revanced-patches/commit/654333ad61041851d53c05fb072f3c8ea114774e))
+
 # [1.1.0-dev.11](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.10...v1.1.0-dev.11) (2026-05-25)
 
 
