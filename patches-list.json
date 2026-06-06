@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0-dev.11",
+  "version": "1.1.0-dev.12",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -193,6 +193,26 @@
         }
       ],
       "options": []
+    },
+    {
+      "name": "Add shared user ID",
+      "description": "Adds or updates the sharedUserId attribute in the app's manifest. This allows multiple apps with the same sharedUserId to share data and run in the same process. Use with caution as this can affect app permissions and data isolation.",
+      "default": false,
+      "dependencies": [],
+      "compatiblePackages": null,
+      "options": [
+        {
+          "key": "sharedUserId",
+          "title": "Shared User ID",
+          "description": "The shared user ID to add to the app's manifest.",
+          "required": true,
+          "type": "kotlin.String",
+          "default": "revanced",
+          "values": {
+            "Default": "revanced"
+          }
+        }
+      ]
     },
     {
       "name": "Adjust image download menu",

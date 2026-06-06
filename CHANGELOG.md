@@ -1,3 +1,9 @@
+# [1.1.0-dev.12](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.11...v1.1.0-dev.12) (2026-06-06)
+
+### Features
+
+* **all:** add sharedUserId Patch ([8b09daa](https://github.com/AmpleReVanced/revanced-patches/commit/8b09daa2ba0df47f6787b6db0eb7f5b337273551))
+
 # [1.1.0-dev.11](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.10...v1.1.0-dev.11) (2026-05-25)
 
 ### Bug Fixes
