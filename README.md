@@ -4,9 +4,9 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.1.0-dev.12](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.1.0-dev.12)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;79 patches total
+> **[v1.1.0-dev.13](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.1.0-dev.13)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;81 patches total
 <details open>
-<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;54 patches</summary>
+<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;55 patches</summary>
 <br>
 
 **🎯 Supported versions:**
@@ -65,6 +65,7 @@
 | [Remove focus ad](#remove-focus-ad) | Removes the focus ad from the app. |  |
 | [Remove native ad](#remove-native-ad) | Removes the native ad from the app. |  |
 | [Remove shop tab](#remove-shop-tab) | Removes the shop tab from the bottom navigation bar. |  |
+| [Show chatroom channel ID](#show-chatroom-channel-id) | Shows the channel ID in chatroom settings and copies it when tapping the chat side title. |  |
 | [Show deleted or hidden messages](#show-deleted-or-hidden-messages) | Allows you to see deleted/hidden messages in chat logs. | • Deleted color<br>• Hidden color |
 | [Spoof App ID](#spoof-app-id) | Spoofs the App ID to bypass integrity checks. (to bypass biometric auth etc.) |  |
 | [Spoof apk checksums](#spoof-apk-checksums) | Spoofs the apk checksums to pass integrity checks. |  |
@@ -104,6 +105,21 @@
 | [Register settings activity](#register-settings-activity) | Registers the Morphe settings activity in the app manifest. |  |
 | [Render big DCCon as normal size](#render-big-dccon-as-normal-size) | Adds a setting to render big DCCon at normal DCCon size. |  |
 | [Spoof Signature](#spoof-signature) | Spoofs the app signature to bypass integrity checks. |  |
+
+</details>
+
+<details open>
+<summary>📦 Chzzk&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<br>
+
+**🎯 Supported versions:**
+
+| 3.6.0 |
+| :---: |
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Disable P2P](#disable-p2p) | Disables CHZZK peer-assisted grid streaming and forces CDN playback. |  |
 
 </details>
 

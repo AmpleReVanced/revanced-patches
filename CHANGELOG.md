@@ -1,3 +1,10 @@
+# [1.1.0-dev.13](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.12...v1.1.0-dev.13) (2026-06-08)
+
+### Features
+
+* **chzzk:** add disable P2P Patch ([1d251e2](https://github.com/AmpleReVanced/revanced-patches/commit/1d251e27128468e3754ebefddacd354fd9061b5a))
+* **kakaotalk:** add ShowChannelIdPatch ([a504b1a](https://github.com/AmpleReVanced/revanced-patches/commit/a504b1a2d8bb323b3f6b2daa34dd574fa7972142))
+
 # [1.1.0-dev.12](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.11...v1.1.0-dev.12) (2026-06-06)
 
 ### Features
