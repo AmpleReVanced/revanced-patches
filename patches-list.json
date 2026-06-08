@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0-dev.12",
+  "version": "1.1.0-dev.13",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -957,6 +957,31 @@
           "targets": [
             {
               "version": "26.4.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Disable P2P",
+      "description": "Disables CHZZK peer-assisted grid streaming and forces CDN playback.",
+      "default": true,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.navercorp.game.android.community",
+          "name": "Chzzk",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#00FFA3",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "3.6.0",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1933,6 +1958,35 @@
           "targets": [
             {
               "version": "5.2.9",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Show chatroom channel ID",
+      "description": "Shows the channel ID in chatroom settings and copies it when tapping the chat side title.",
+      "default": true,
+      "dependencies": [
+        "BytecodePatch",
+        "ResourcePatch",
+        "BytecodePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
