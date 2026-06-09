@@ -3,6 +3,7 @@ package app.revanced.patches.chzzk.tongpow
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.chzzk.shared.Constants.COMPATIBILITY_CHZZK
+import app.revanced.util.smaliReference
 import com.android.tools.smali.dexlib2.iface.ClassDef
 
 @Suppress("unused")

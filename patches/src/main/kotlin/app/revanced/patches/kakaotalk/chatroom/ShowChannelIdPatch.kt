@@ -5,7 +5,6 @@ import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patches.all.misc.resources.addResourcesPatch
 import app.morphe.util.getReference
 import app.revanced.patches.kakaotalk.chatroom.fingerprints.ChatRoomProfileEditBindFingerprint
@@ -16,7 +15,7 @@ import app.revanced.patches.kakaotalk.misc.addExtensionPatch
 import app.revanced.patches.kakaotalk.misc.sharedExtensionPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.patches.kakaotalk.shared.addKakaoTalkResources
-import com.android.tools.smali.dexlib2.AccessFlags
+import app.revanced.util.localRegisterCount
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
@@ -164,15 +163,3 @@ private fun FieldReference.sameField(other: FieldReference) =
     definingClass == other.definingClass &&
         name == other.name &&
         type == other.type
-
-private val MutableMethod.localRegisterCount: Int
-    get() {
-        val implementation = implementation
-            ?: throw PatchException("Could not inspect registers for $definingClass->$name.")
-        val receiverWidth = if (AccessFlags.STATIC.isSet(accessFlags)) 0 else 1
-        val parameterWidth = parameterTypes.sumOf { it.toString().registerWidth }
-        return implementation.registerCount - receiverWidth - parameterWidth
-    }
-
-private val String.registerWidth: Int
-    get() = if (this == "J" || this == "D") 2 else 1

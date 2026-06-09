@@ -1,9 +1,14 @@
 package app.revanced.patches.chzzk.tongpow
 
+import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.util.getReference
-import com.android.tools.smali.dexlib2.AccessFlags
+import app.revanced.util.localRegisterCount
+import app.revanced.util.matches
+import app.revanced.util.parameterTypeNames
+import app.revanced.util.requireClass
+import app.revanced.util.smaliReference
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.ClassDef
 import com.android.tools.smali.dexlib2.iface.Method
@@ -13,7 +18,6 @@ import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.RegisterRangeInstruction
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
-import com.android.tools.smali.dexlib2.util.MethodUtil
 
 internal data class TongPowAutoClaimInsertion(
     val method: MutableMethod,
@@ -90,7 +94,6 @@ internal data class TemporaryRegisters(
 )
 
 private fun Method.resolveManualClaimReferences(receiveAmountMethod: Method): ManualClaimReferences {
-    val instructions = instructions
     val receiveAmountIndex = instructions.indexOfFirst { instruction ->
         instruction.getReference<MethodReference>()?.matches(receiveAmountMethod) == true
     }
@@ -98,7 +101,7 @@ private fun Method.resolveManualClaimReferences(receiveAmountMethod: Method): Ma
         throw PatchException("Could not find TongPow receive amount call.")
     }
 
-    val receiveAmount = instructions[receiveAmountIndex].getReference<MethodReference>()
+    val receiveAmount = instructions.toList()[receiveAmountIndex].getReference<MethodReference>()
         ?: throw PatchException("Could not inspect TongPow receive amount call.")
     val callbackConstructor = instructions.asSequence()
         .take(receiveAmountIndex)
@@ -187,14 +190,14 @@ private fun Method.findMoveResultRegisterBefore(
         ?.index
         ?: throw PatchException("Could not find getter ${getter.smaliReference}.")
 
-    return (instructions.getOrNull(getterIndex + 1) as? OneRegisterInstruction)
+    return (instructions.toList().getOrNull(getterIndex + 1) as? OneRegisterInstruction)
         ?.takeIf { it.opcode == Opcode.MOVE_RESULT_OBJECT }
         ?.registerA
         ?: throw PatchException("Could not infer result register for ${getter.smaliReference}.")
 }
 
 private fun Method.instructionRegisters(index: Int): List<Int> {
-    val instruction = instructions.getOrNull(index)
+    val instruction = instructions.toList().getOrNull(index)
         ?: throw PatchException("Could not inspect invoke registers in $definingClass->$name.")
 
     return instruction.registers
@@ -226,20 +229,6 @@ private fun MutableMethod.reserveTemporaryRegisters(
     )
 }
 
-private fun Map<String, ClassDef>.requireClass(type: String): ClassDef =
-    this[type] ?: throw PatchException("Could not resolve class $type.")
-
-private fun MethodReference.matches(method: Method): Boolean =
-    MethodUtil.methodSignaturesMatch(this, method)
-
-private fun MethodReference.matches(reference: MethodReference): Boolean =
-    definingClass == reference.definingClass &&
-        MethodUtil.methodSignaturesMatch(this, reference)
-
-private val Method.instructions: List<Instruction>
-    get() = implementation?.instructions?.toList()
-        ?: throw PatchException("Could not inspect instructions in $definingClass->$name.")
-
 private val Instruction.registers: List<Int>?
     get() = when (this) {
         is FiveRegisterInstruction -> listOf(registerC, registerD, registerE, registerF, registerG)
@@ -247,21 +236,3 @@ private val Instruction.registers: List<Int>?
         is RegisterRangeInstruction -> (startRegister until startRegister + registerCount).toList()
         else -> null
     }
-
-private val MutableMethod.localRegisterCount: Int
-    get() {
-        val implementation = implementation
-            ?: throw PatchException("Could not inspect registers for $definingClass->$name.")
-        val receiverWidth = if (AccessFlags.STATIC.isSet(accessFlags)) 0 else 1
-        val parameterWidth = parameterTypeNames.sumOf { it.registerWidth }
-        return implementation.registerCount - receiverWidth - parameterWidth
-    }
-
-private val String.registerWidth: Int
-    get() = if (this == "J" || this == "D") 2 else 1
-
-internal val FieldReference.smaliReference: String
-    get() = "$definingClass->$name:$type"
-
-internal val MethodReference.smaliReference: String
-    get() = "$definingClass->$name(${parameterTypeNames.joinToString("")})$returnType"

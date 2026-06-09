@@ -2,6 +2,7 @@ package app.revanced.patches.chzzk.tongpow
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.util.getReference
+import app.revanced.util.parameterTypeNames
 import com.android.tools.smali.dexlib2.iface.Method
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
@@ -108,12 +109,6 @@ internal fun Method.findPopupTimerCallIndexOrNull(
 
 internal fun Method.instructionMethodReference(index: Int): MethodReference? =
     implementation?.instructions?.toList()?.getOrNull(index)?.getReference()
-
-internal val MethodReference.parameterTypeNames: List<String>
-    get() = parameterTypes.map { it.toString() }
-
-internal val Method.parameterTypeNames: List<String>
-    get() = parameterTypes.map { it.toString() }
 
 private val MethodReference.isReceiveAmountCall: Boolean
     get() = returnType == VOID_TYPE &&
