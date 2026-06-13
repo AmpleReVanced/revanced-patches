@@ -7,7 +7,7 @@ import com.android.tools.smali.dexlib2.Opcode
 
 internal object EnableMarkdownFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
-    parameters = listOf("Z", "Z", "Lkotlin/coroutines/Continuation;"),
+    parameters = listOf("Z", "Z", "Z", "Lkotlin/coroutines/Continuation;"),
     returnType = "Ljava/lang/Object;",
     filters = OpcodesFilter.opcodesToFilters(
         Opcode.IGET_OBJECT,

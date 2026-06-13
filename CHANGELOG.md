@@ -1,3 +1,89 @@
+# [1.1.0-dev.15](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.14...v1.1.0-dev.15) (2026-06-13)
+
+### Features
+
+# [1.1.0-dev.14](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.13...v1.1.0-dev.14) (2026-06-13)
+
+### Features
+
+* **chzzk:** add auto claim TongPow rewards ([d41e51e](https://github.com/AmpleReVanced/revanced-patches/commit/d41e51ecc18dd9a53a0269c55a9e511b332dcce2))
+
+# [1.1.0-dev.13](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.12...v1.1.0-dev.13) (2026-06-08)
+
+### Features
+
+* **chzzk:** add disable P2P Patch ([1d251e2](https://github.com/AmpleReVanced/revanced-patches/commit/1d251e27128468e3754ebefddacd354fd9061b5a))
+* **kakaotalk:** add ShowChannelIdPatch ([a504b1a](https://github.com/AmpleReVanced/revanced-patches/commit/a504b1a2d8bb323b3f6b2daa34dd574fa7972142))
+
+# [1.1.0-dev.12](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.11...v1.1.0-dev.12) (2026-06-06)
+
+### Features
+
+* **all:** add sharedUserId Patch ([8b09daa](https://github.com/AmpleReVanced/revanced-patches/commit/8b09daa2ba0df47f6787b6db0eb7f5b337273551))
+
+# [1.1.0-dev.11](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.10...v1.1.0-dev.11) (2026-05-25)
+
+### Bug Fixes
+
+* **kakaotalk:** refresh chat info on deleted or hidden messages ([9a6c900](https://github.com/AmpleReVanced/revanced-patches/commit/9a6c900619f0821289c852885c9f4c12dceb4cda))
+
+# [1.1.0-dev.10](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.9...v1.1.0-dev.10) (2026-05-21)
+
+### Features
+
+* **kakaotalk:** update kakaotalk apkChecksum for 26.4.2 ([b9f574d](https://github.com/AmpleReVanced/revanced-patches/commit/b9f574daf515d1bd0ad6fe64b5631beb821c66a5))
+* **kakaotalk:** update kakaotalk patches for version 26.4.2 ([9bceacf](https://github.com/AmpleReVanced/revanced-patches/commit/9bceacfdb38b42649bdf54c034bdff41c3ca91dc))
+
+# [1.1.0-dev.9](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.8...v1.1.0-dev.9) (2026-05-18)
+
+### Features
+
+* **kakaotalk:** update kakaotalk patches for version 26.4.1 ([10d84ab](https://github.com/AmpleReVanced/revanced-patches/commit/10d84abd7acc1d4b233b246709adce3b05db677a))
+
+# [1.1.0-dev.8](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.7...v1.1.0-dev.8) (2026-05-18)
+
+### Features
+
+* **flexcil:** add unlock premium feature patch ([e07112d](https://github.com/AmpleReVanced/revanced-patches/commit/e07112d9f295e0eb311b3b719ce1f53478b519f7))
+
+# [1.1.0-dev.7](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.6...v1.1.0-dev.7) (2026-05-14)
+
+### Features
+
+# [1.1.0-dev.6](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.5...v1.1.0-dev.6) (2026-05-14)
+
+### Bug Fixes
+
+* **dcinside:** use label-aware DCCon bytecode injections ([16dc51f](https://github.com/AmpleReVanced/revanced-patches/commit/16dc51fd981e7dd9e1aceba257c577f880e23eca))
+
+# [1.1.0-dev.5](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.4...v1.1.0-dev.5) (2026-05-13)
+
+### Features
+
+* **dcinside:** add big DCCon size rendering setting ([e38fdc5](https://github.com/AmpleReVanced/revanced-patches/commit/e38fdc58bc47e002bac9128be78fffdc2a0cd8ac))
+
+# [1.1.0-dev.4](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.3...v1.1.0-dev.4) (2026-05-13)
+
+### Features
+
+* **kakaotalk:** update kakaotalk patches for version 26.4.0 ([1bd620b](https://github.com/AmpleReVanced/revanced-patches/commit/1bd620be0013996c1c94910ae9c5e45e4548a6f6))
+
+# [1.1.0-dev.3](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.2...v1.1.0-dev.3) (2026-05-11)
+
+### Bug Fixes
+
+# [1.1.0-dev.2](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.1...v1.1.0-dev.2) (2026-05-11)
+
+### Bug Fixes
+
+### Features
+
+# [1.1.0-dev.1](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.1...v1.1.0-dev.1) (2026-05-10)
+
+### Features
+
+* **dcinside:** add home component hiding options ([91cf697](https://github.com/AmpleReVanced/revanced-patches/commit/91cf69769484119426df6dae67db658b9f15073c))
+
 ## [1.0.1](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.0...v1.0.1) (2026-05-06)
 
 ### Bug Fixes

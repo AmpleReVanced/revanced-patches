@@ -17,6 +17,8 @@ Second \"item\" text"</string>
 <resources>
     <string name="morphe_kakaotalk_chatlog_deleted">Deleted</string>
     <string name="morphe_kakaotalk_chatlog_hidden">Hidden</string>
+    <string name="morphe_kakaotalk_channel_id_label">Channel ID</string>
+    <string name="morphe_kakaotalk_channel_id_copied">Channel ID copied</string>
     <string name="morphe_label_for_ample_settings">Morphe Settings</string>
     <string name="morphe_settings_section_chat">Chat</string>
     <string name="morphe_settings_section_navigation">Navigation</string>

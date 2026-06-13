@@ -4,14 +4,14 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.0.1](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.0.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;73 patches total
+> **[v1.1.0-dev.15](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.1.0-dev.15)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;82 patches total
 <details open>
-<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;54 patches</summary>
+<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;55 patches</summary>
 <br>
 
 **🎯 Supported versions:**
 
-| 26.3.2 |
+| 26.4.2 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
@@ -65,6 +65,7 @@
 | [Remove focus ad](#remove-focus-ad) | Removes the focus ad from the app. |  |
 | [Remove native ad](#remove-native-ad) | Removes the native ad from the app. |  |
 | [Remove shop tab](#remove-shop-tab) | Removes the shop tab from the bottom navigation bar. |  |
+| [Show chatroom channel ID](#show-chatroom-channel-id) | Shows the channel ID in chatroom settings and copies it when tapping the chat side title. |  |
 | [Show deleted or hidden messages](#show-deleted-or-hidden-messages) | Allows you to see deleted/hidden messages in chat logs. | • Deleted color<br>• Hidden color |
 | [Spoof App ID](#spoof-app-id) | Spoofs the App ID to bypass integrity checks. (to bypass biometric auth etc.) |  |
 | [Spoof apk checksums](#spoof-apk-checksums) | Spoofs the apk checksums to pass integrity checks. |  |
@@ -74,7 +75,7 @@
 </details>
 
 <details open>
-<summary>📦 dcinside&nbsp;&nbsp;•&nbsp;&nbsp;18 patches</summary>
+<summary>📦 dcinside&nbsp;&nbsp;•&nbsp;&nbsp;20 patches</summary>
 <br>
 
 **🎯 Supported versions:**
@@ -100,17 +101,51 @@
 | [Enable OneStore feature](#enable-onestore-feature) | Enables the OneStore feature in DC Inside app. |  |
 | [Hide DC official notices](#hide-dc-official-notices) | Hides official DCInside operator notices from gallery notice lists. |  |
 | [Hide Main Ad](#hide-main-ad) | Hides the main ad in the app. |  |
+| [Hide home components](#hide-home-components) | Adds settings to hide selected DCInside home screen components. |  |
 | [Register settings activity](#register-settings-activity) | Registers the Morphe settings activity in the app manifest. |  |
+| [Render big DCCon as normal size](#render-big-dccon-as-normal-size) | Adds a setting to render big DCCon at normal DCCon size. |  |
 | [Spoof Signature](#spoof-signature) | Spoofs the app signature to bypass integrity checks. |  |
 
 </details>
 
 <details open>
-<summary>🌐 Universal&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<summary>📦 Chzzk&nbsp;&nbsp;•&nbsp;&nbsp;2 patches</summary>
+<br>
+
+**🎯 Supported versions:**
+
+| 3.6.0 |
+| :---: |
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Auto claim TongPow](#auto-claim-tongpow) | Automatically claims CHZZK TongPow rewards when they become available while watching streams. |  |
+| [Disable P2P](#disable-p2p) | Disables CHZZK peer-assisted grid streaming and forces CDN playback. |  |
+
+</details>
+
+<details open>
+<summary>📦 Flexcil&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<br>
+
+**🎯 Supported versions:**
+
+| 1.4.3.30 |
+| :---: |
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Unlock Premium features](#unlock-premium-features) | Enables app features locked behind the subscription paywall. |  |
+
+</details>
+
+<details open>
+<summary>🌐 Universal&nbsp;&nbsp;•&nbsp;&nbsp;2 patches</summary>
 <br>
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
+| [Add shared user ID](#add-shared-user-id) | Adds or updates the sharedUserId attribute in the app's manifest. This allows multiple apps with the same sharedUserId to share data and run in the same process. Use with caution as this can affect app permissions and data isolation. | • Shared User ID |
 | [Disable Sentry telemetry](#disable-sentry-telemetry) | Disables Sentry telemetry. See https://sentry.io/for/android/ for more information. |  |
 
 </details>

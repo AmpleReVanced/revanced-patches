@@ -11,11 +11,15 @@ import com.kakao.talk.widget.chatlog.ChatInfoView;
 import com.kakao.talk.widget.chatlog.MyChatInfoView;
 import com.kakao.talk.widget.chatlog.OthersChatInfoView;
 
-import app.revanced.extension.kakaotalk.settings.Settings;
+import java.lang.ref.WeakReference;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static app.morphe.extension.shared.StringRef.str;
 
 public class ChatInfoExtension {
+    private static final Map<Long, WeakReference<ChatInfoExtension>> EXTENSIONS_BY_CHAT_LOG_ID =
+            new ConcurrentHashMap<>();
 
     // Related to a deleted message
     private boolean isDeleted = false;
@@ -30,10 +34,49 @@ public class ChatInfoExtension {
     private TextPaint hiddenPaint = null;
 
     private final ChatInfoView view;
+    private long chatLogId = 0L;
 
     public ChatInfoExtension(ChatInfoView view) {
         this.view = view;
         initializePaints();
+    }
+
+    public void setChatLogId(long chatLogId) {
+        if (this.chatLogId == chatLogId) return;
+
+        long previousChatLogId = this.chatLogId;
+        this.chatLogId = chatLogId;
+
+        if (previousChatLogId != 0L) {
+            WeakReference<ChatInfoExtension> previous = EXTENSIONS_BY_CHAT_LOG_ID.get(previousChatLogId);
+            if (previous != null && previous.get() == this) {
+                EXTENSIONS_BY_CHAT_LOG_ID.remove(previousChatLogId);
+            }
+        }
+
+        if (chatLogId != 0L) {
+            EXTENSIONS_BY_CHAT_LOG_ID.put(chatLogId, new WeakReference<>(this));
+        }
+    }
+
+    public static void updateByChatLogId(long chatLogId, boolean deleted, boolean hidden) {
+        WeakReference<ChatInfoExtension> reference = EXTENSIONS_BY_CHAT_LOG_ID.get(chatLogId);
+        ChatInfoExtension extension = reference == null ? null : reference.get();
+
+        if (extension == null || extension.chatLogId != chatLogId) {
+            EXTENSIONS_BY_CHAT_LOG_ID.remove(chatLogId);
+            return;
+        }
+
+        extension.view.post(new Runnable() {
+            @Override
+            public void run() {
+                if (extension.chatLogId != chatLogId) return;
+
+                extension.setDeleted(deleted);
+                extension.setHidden(hidden);
+            }
+        });
     }
 
     private void initializePaints() {
