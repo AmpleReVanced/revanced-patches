@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0-dev.13",
+  "version": "1.1.0-dev.14",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -315,6 +315,31 @@
           "targets": [
             {
               "version": "26.4.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Auto claim TongPow",
+      "description": "Automatically claims CHZZK TongPow rewards when they become available while watching streams.",
+      "default": true,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.navercorp.game.android.community",
+          "name": "Chzzk",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#00FFA3",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "3.6.0",
               "isExperimental": false,
               "minSdk": null,
               "description": null

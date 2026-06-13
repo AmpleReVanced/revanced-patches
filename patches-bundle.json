@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-06-08T13:20:27",
-  "description": "# [1.1.0-dev.13](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.12...v1.1.0-dev.13) (2026-06-08)\n\n\n### Features\n\n* **chzzk:** add disable P2P Patch ([1d251e2](https://github.com/AmpleReVanced/revanced-patches/commit/1d251e27128468e3754ebefddacd354fd9061b5a))\n* **kakaotalk:** add ShowChannelIdPatch ([a504b1a](https://github.com/AmpleReVanced/revanced-patches/commit/a504b1a2d8bb323b3f6b2daa34dd574fa7972142))",
-  "download_url": "https://github.com/AmpleReVanced/revanced-patches/releases/download/v1.1.0-dev.13/patches-1.1.0-dev.13.mpp",
+  "created_at": "2026-06-13T06:01:33",
+  "description": "# [1.1.0-dev.14](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.13...v1.1.0-dev.14) (2026-06-13)\n\n\n### Features\n\n* **chzzk:** add auto claim TongPow rewards ([d41e51e](https://github.com/AmpleReVanced/revanced-patches/commit/d41e51ecc18dd9a53a0269c55a9e511b332dcce2))",
+  "download_url": "https://github.com/AmpleReVanced/revanced-patches/releases/download/v1.1.0-dev.14/patches-1.1.0-dev.14.mpp",
   "signature_download_url": "",
-  "version": "1.1.0-dev.13"
+  "version": "1.1.0-dev.14"
 }
