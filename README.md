@@ -4,7 +4,7 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.1.0-dev.13](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.1.0-dev.13)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;81 patches total
+> **[v1.1.0-dev.14](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.1.0-dev.14)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;82 patches total
 <details open>
 <summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;55 patches</summary>
 <br>
@@ -109,7 +109,7 @@
 </details>
 
 <details open>
-<summary>📦 Chzzk&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<summary>📦 Chzzk&nbsp;&nbsp;•&nbsp;&nbsp;2 patches</summary>
 <br>
 
 **🎯 Supported versions:**
@@ -119,6 +119,7 @@
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
+| [Auto claim TongPow](#auto-claim-tongpow) | Automatically claims CHZZK TongPow rewards when they become available while watching streams. |  |
 | [Disable P2P](#disable-p2p) | Disables CHZZK peer-assisted grid streaming and forces CDN playback. |  |
 
 </details>

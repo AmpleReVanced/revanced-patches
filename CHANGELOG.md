@@ -1,3 +1,9 @@
+# [1.1.0-dev.14](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.13...v1.1.0-dev.14) (2026-06-13)
+
+### Features
+
+* **chzzk:** add auto claim TongPow rewards ([d41e51e](https://github.com/AmpleReVanced/revanced-patches/commit/d41e51ecc18dd9a53a0269c55a9e511b332dcce2))
+
 # [1.1.0-dev.13](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0-dev.12...v1.1.0-dev.13) (2026-06-08)
 
 ### Features
