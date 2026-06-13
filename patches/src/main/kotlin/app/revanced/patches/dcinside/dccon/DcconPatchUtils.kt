@@ -5,6 +5,8 @@ import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.util.getReference
+import app.revanced.util.registerWidth
+import app.revanced.util.smaliReference
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.Field
@@ -291,12 +293,3 @@ private val Instruction.argumentRegisterCount: Int?
         is RegisterRangeInstruction -> registerCount
         else -> null
     }
-
-private val String.registerWidth: Int
-    get() = if (this == "J" || this == "D") 2 else 1
-
-private val Field.smaliReference: String
-    get() = "$definingClass->$name:$type"
-
-private val FieldReference.smaliReference: String
-    get() = "$definingClass->$name:$type"
