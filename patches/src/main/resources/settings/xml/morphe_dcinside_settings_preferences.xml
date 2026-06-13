@@ -13,10 +13,40 @@
             android:key="morphe_pref_block_reply_dccon_loading"
             android:summary="@string/morphe_settings_block_reply_dccon_loading_summary"
             android:title="@string/morphe_settings_block_reply_dccon_loading" />
+        <SwitchPreference
+            android:key="morphe_pref_render_big_dccon_as_normal"
+            android:summary="@string/morphe_settings_render_big_dccon_as_normal_summary"
+            android:title="@string/morphe_settings_render_big_dccon_as_normal" />
         <Preference
             android:key="morphe_pref_apply_user_memo_preset"
             android:summary="@string/morphe_settings_user_memo_preset_summary"
             android:title="@string/morphe_settings_user_memo_preset" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/morphe_settings_section_home_screen">
+        <SwitchPreference
+            android:key="morphe_pref_hide_home_search_menu"
+            android:summary="@string/morphe_settings_hide_home_search_menu_summary"
+            android:title="@string/morphe_settings_hide_home_search_menu" />
+        <SwitchPreference
+            android:key="morphe_pref_hide_home_recent_galleries"
+            android:summary="@string/morphe_settings_hide_home_recent_galleries_summary"
+            android:title="@string/morphe_settings_hide_home_recent_galleries" />
+        <SwitchPreference
+            android:key="morphe_pref_hide_home_recommended_galleries"
+            android:summary="@string/morphe_settings_hide_home_recommended_galleries_summary"
+            android:title="@string/morphe_settings_hide_home_recommended_galleries" />
+        <SwitchPreference
+            android:key="morphe_pref_hide_home_gallery_ranking"
+            android:summary="@string/morphe_settings_hide_home_gallery_ranking_summary"
+            android:title="@string/morphe_settings_hide_home_gallery_ranking" />
+        <SwitchPreference
+            android:key="morphe_pref_hide_home_live_best"
+            android:summary="@string/morphe_settings_hide_home_live_best_summary"
+            android:title="@string/morphe_settings_hide_home_live_best" />
+        <SwitchPreference
+            android:key="morphe_pref_hide_home_recommended_posts"
+            android:summary="@string/morphe_settings_hide_home_recommended_posts_summary"
+            android:title="@string/morphe_settings_hide_home_recommended_posts" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/morphe_settings_section_information">
         <Preference

@@ -1,5 +1,5 @@
 {
-  "version": "1.0.1",
+  "version": "1.1.0-dev.15",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -20,7 +20,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -45,7 +45,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -153,7 +153,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -184,7 +184,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -193,6 +193,26 @@
         }
       ],
       "options": []
+    },
+    {
+      "name": "Add shared user ID",
+      "description": "Adds or updates the sharedUserId attribute in the app's manifest. This allows multiple apps with the same sharedUserId to share data and run in the same process. Use with caution as this can affect app permissions and data isolation.",
+      "default": false,
+      "dependencies": [],
+      "compatiblePackages": null,
+      "options": [
+        {
+          "key": "sharedUserId",
+          "title": "Shared User ID",
+          "description": "The shared user ID to add to the app's manifest.",
+          "required": true,
+          "type": "kotlin.String",
+          "default": "revanced",
+          "values": {
+            "Default": "revanced"
+          }
+        }
+      ]
     },
     {
       "name": "Adjust image download menu",
@@ -244,7 +264,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -269,7 +289,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -294,7 +314,32 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Auto claim TongPow",
+      "description": "Automatically claims CHZZK TongPow rewards when they become available while watching streams.",
+      "default": true,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.navercorp.game.android.community",
+          "name": "Chzzk",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#00FFA3",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "3.6.0",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -321,7 +366,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -373,7 +418,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -400,7 +445,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -487,7 +532,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -593,7 +638,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -630,7 +675,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -682,7 +727,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -709,7 +754,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -734,7 +779,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -759,7 +804,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -809,7 +854,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -861,7 +906,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -886,7 +931,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -936,7 +981,32 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Disable P2P",
+      "description": "Disables CHZZK peer-assisted grid streaming and forces CDN playback.",
+      "default": true,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.navercorp.game.android.community",
+          "name": "Chzzk",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#00FFA3",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "3.6.0",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -961,7 +1031,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -986,7 +1056,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1013,7 +1083,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1040,7 +1110,34 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Disable Sentry",
+      "description": "Disables Sentry reporting",
+      "default": true,
+      "dependencies": [
+        "ResourcePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "com.unicornsoft.android.unicornpro",
+          "name": "Unicorn Pro",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#FF4500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "1.30.471",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1073,7 +1170,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1098,7 +1195,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1148,7 +1245,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1176,7 +1273,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1226,7 +1323,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1253,7 +1350,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1303,7 +1400,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1330,7 +1427,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1357,7 +1454,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1384,7 +1481,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1409,7 +1506,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1436,7 +1533,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1499,6 +1596,33 @@
       "options": []
     },
     {
+      "name": "Hide home components",
+      "description": "Adds settings to hide selected DCInside home screen components.",
+      "default": true,
+      "dependencies": [
+        "BytecodePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "com.dcinside.app.android",
+          "name": "dcinside",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#3D4491",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "5.2.9",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
       "name": "Hook Package Manager",
       "description": "Hooks the Package Manager to bypass integrity checks.",
       "default": true,
@@ -1515,7 +1639,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1542,7 +1666,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1579,7 +1703,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1629,7 +1753,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1654,7 +1778,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1679,7 +1803,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1704,7 +1828,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1731,7 +1855,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1756,7 +1880,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1781,7 +1905,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1806,7 +1930,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1831,7 +1955,63 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Render big DCCon as normal size",
+      "description": "Adds a setting to render big DCCon at normal DCCon size.",
+      "default": true,
+      "dependencies": [
+        "BytecodePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "com.dcinside.app.android",
+          "name": "dcinside",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#3D4491",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "5.2.9",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Show chatroom channel ID",
+      "description": "Shows the channel ID in chatroom settings and copies it when tapping the chat side title.",
+      "default": true,
+      "dependencies": [
+        "BytecodePatch",
+        "ResourcePatch",
+        "BytecodePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1860,7 +2040,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1904,7 +2084,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1956,7 +2136,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1981,7 +2161,59 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Unlock Premium features",
+      "description": "Enables app features locked behind the subscription paywall.",
+      "default": true,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.flexcil.flexcilnote",
+          "name": "Flexcil",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#0096FA",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "1.4.3.30",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Unlock Pro features",
+      "description": "Makes Unicorn Pro report an active Pro license while preserving the original native object graph.",
+      "default": true,
+      "dependencies": [
+        "BytecodePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "com.unicornsoft.android.unicornpro",
+          "name": "Unicorn Pro",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#FF4500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "1.30.471",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -2006,7 +2238,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.3.2",
+              "version": "26.4.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null

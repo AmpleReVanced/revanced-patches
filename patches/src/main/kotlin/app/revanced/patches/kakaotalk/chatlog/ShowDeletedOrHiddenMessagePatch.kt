@@ -183,6 +183,18 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
             },
         )
 
+        val setChatLogIdMethod = chatInfoViewClass.methods.first { it.name == "setChatLogId" }
+        setChatLogIdMethod.addInstructionsWithLabels(
+            setChatLogIdMethod.instructions.count() - 1,
+            """
+                iget-object p0, p0, Lcom/kakao/talk/widget/chatlog/ChatInfoView;->extension:Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;
+                if-eqz p0, :revanced_set_chat_log_id_end
+                invoke-virtual {p0, p1, p2}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->setChatLogId(J)V
+                :revanced_set_chat_log_id_end
+                nop
+            """.trimIndent()
+        )
+
         val makeLayoutMethod = chatInfoViewClass.methods.first { it.name == "makeLayout" }
         val getUnreadPaint = makeLayoutMethod.instructions.indexOfLast { it.opcode == Opcode.IGET_OBJECT && it.getReference<FieldReference>()?.name == "unreadPaint" }
         makeLayoutMethod.instructions.slice(getUnreadPaint until getUnreadPaint + 10).first {
@@ -389,6 +401,9 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
             val chatRoomListManagerGetInstanceMethod = ChatRoomListManagerGetInstanceFingerprint.method
             val getChatRoomByChannelIdMethod = GetChatRoomByChannelIdFingerprint.method
             val originalSyncMethod = OriginalSyncMethodFingerprint.method
+            val chatRoomListManagerCompanionField = OriginalSyncMethodFingerprint.classDef.fields.first {
+                it.type == chatRoomListManagerGetInstanceMethod.definingClass
+            }
 
             val invokeVirtualInst = originalSyncMethod.instructions.last { it.opcode == Opcode.INVOKE_VIRTUAL }
             val invokeStaticInst = originalSyncMethod.instructions.last { it.opcode == Opcode.INVOKE_STATIC }
@@ -399,27 +414,31 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
                 "nop"
             )
 
-            it.addInstructions(
+            it.addInstructionsWithLabels(
                 sgetObjectDeleteToAllIndex + 1,
                 """
                     iget-object v0, p1, ${chatLogClass.type}->${vFieldField.name}:${vFieldField.type}
                     const/4 v1, 0x1
                     invoke-virtual {v0, v1}, ${chatLogVFieldClass.type}->putDeleted(Z)V
+                    invoke-virtual {p1}, ${chatLogClass.type}->getId()J
+                    move-result-wide p2
+                    const/4 v2, 0x0
+                    invoke-static {p2, p3, v1, v2}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->updateByChatLogId(JZZ)V
                     invoke-virtual {p0, p1}, ${it.definingClass}->${flushToDBMethod.name}(${chatLogClass.type})Z
-                    return-void
                     
-                    # TODO: I suspect the code below is causing a bug, but I don't remember why I included it in the first place.
-                    sget-object v0, ${chatRoomListManagerGetInstanceMethod.returnType}->o:${chatRoomListManagerGetInstanceMethod.definingClass}
+                    sget-object v0, ${chatRoomListManagerCompanionField.definingClass}->${chatRoomListManagerCompanionField.name}:${chatRoomListManagerCompanionField.type}
                     invoke-virtual {v0}, $chatRoomListManagerGetInstanceMethod
                     move-result-object v0
                     invoke-virtual {v0, v3, v4}, $getChatRoomByChannelIdMethod
                     move-result-object v0
+                    if-eqz v0, :revanced_deleted_sync_end
                     const/4 v1, 0x1
                     invoke-virtual {v0, p1, v1}, ${invokeVirtualInst.getReference<MethodReference>()}
                     move-result-object v0
                     const/4 v1, 0x0
                     const/4 v2, 0x1
                     invoke-static {v0, v1, v2, v1}, ${invokeStaticInst.getReference<MethodReference>()}
+                    :revanced_deleted_sync_end
                     return-void
                 """.trimIndent()
             )
@@ -430,27 +449,31 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
                 "nop"
             )
 
-            it.addInstructions(
+            it.addInstructionsWithLabels(
                 lastSgetFeedIndex + 1,
                 """
                     iget-object v0, p1, ${chatLogClass.type}->${vFieldField.name}:${vFieldField.type}
                     const/4 v1, 0x1
                     invoke-virtual {v0, v1}, ${chatLogVFieldClass.type}->putHidden(Z)V
+                    invoke-virtual {p1}, ${chatLogClass.type}->getId()J
+                    move-result-wide p2
+                    const/4 v2, 0x0
+                    invoke-static {p2, p3, v2, v1}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->updateByChatLogId(JZZ)V
                     invoke-virtual {p0, p1}, ${it.definingClass}->${flushToDBMethod.name}(${chatLogClass.type})Z
-                    return-void
                     
-                    # TODO: I suspect the code below is causing a bug, but I don't remember why I included it in the first place.
-                    sget-object v0, ${chatRoomListManagerGetInstanceMethod.returnType}->o:${chatRoomListManagerGetInstanceMethod.definingClass}
+                    sget-object v0, ${chatRoomListManagerCompanionField.definingClass}->${chatRoomListManagerCompanionField.name}:${chatRoomListManagerCompanionField.type}
                     invoke-virtual {v0}, $chatRoomListManagerGetInstanceMethod
                     move-result-object v0
                     invoke-virtual {v0, v3, v4}, $getChatRoomByChannelIdMethod
                     move-result-object v0
+                    if-eqz v0, :revanced_hidden_sync_end
                     const/4 v1, 0x1
                     invoke-virtual {v0, p1, v1}, ${invokeVirtualInst.getReference<MethodReference>()}
                     move-result-object v0
                     const/4 v1, 0x0
                     const/4 v2, 0x1
                     invoke-static {v0, v1, v2, v1}, ${invokeStaticInst.getReference<MethodReference>()}
+                    :revanced_hidden_sync_end
                     return-void
                 """.trimIndent()
             )
