@@ -1,3 +1,9 @@
+# [1.2.0-dev.1](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0...v1.2.0-dev.1) (2026-06-13)
+
+### Features
+
+* **chzzk:** update chzzk patches for version 3.6.2 ([5de5e27](https://github.com/AmpleReVanced/revanced-patches/commit/5de5e274b92f757746b205da10f82ebfd3c2d794))
+
 # [1.1.0](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.1...v1.1.0) (2026-06-13)
 
 ### Bug Fixes
