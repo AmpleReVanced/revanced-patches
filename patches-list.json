@@ -1,5 +1,5 @@
 {
-  "version": "1.2.0-dev.1",
+  "version": "1.2.0-dev.2",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -1007,6 +1007,33 @@
           "targets": [
             {
               "version": "3.6.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Disable P2P",
+      "description": "Disables SOOP peer-assisted grid streaming.",
+      "default": true,
+      "dependencies": [
+        "ResourcePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "kr.co.nowcom.mobile.afreeca",
+          "name": "SOOP",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#0068FF",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "8.25.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
