@@ -1,3 +1,9 @@
+# [1.2.0-dev.2](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.1...v1.2.0-dev.2) (2026-06-13)
+
+### Features
+
+* **soop:** add DisableP2P Patch to disable griding ([5783410](https://github.com/AmpleReVanced/revanced-patches/commit/5783410761e0d571e8575d673a64ae03495343be))
+
 # [1.2.0-dev.1](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0...v1.2.0-dev.1) (2026-06-13)
 
 ### Features
