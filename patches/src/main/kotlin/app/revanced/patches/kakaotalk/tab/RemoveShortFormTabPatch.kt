@@ -3,12 +3,16 @@ package app.revanced.patches.kakaotalk.tab
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.extensions.InstructionExtensions.removeInstructions
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.util.getFreeRegisterProvider
 import app.morphe.util.getReference
 import app.revanced.patches.kakaotalk.misc.addExtensionPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
+import app.revanced.patches.kakaotalk.tab.fingerprints.ChooseOpenLinkTabFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.ChooseNowChildTabFingerprint
+import app.revanced.patches.kakaotalk.tab.fingerprints.GetOpenLinkModuleFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.NowFragmentOnViewCreatedFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.NowTabPagerAdapterFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.TransitionOpenLinkOrShortformMethodFingerprint
@@ -17,6 +21,7 @@ import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction21c
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction22c
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction35c
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction3rc
+import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
@@ -85,20 +90,20 @@ val removeShortFormTabPatch = bytecodePatch(
         )
 
         val createFragmentMethod = NowTabPagerAdapterFingerprint.method
-        val shortFormField = createFragmentMethod.instructions.firstOrNull {
-            it.opcode == Opcode.SGET_OBJECT &&
-                    it.getReference<FieldReference>()?.name == "ShortForm"
-        }?.getReference<FieldReference>()
-            ?: throw PatchException("Could not find ShortForm field in NowTabPagerAdapter.w")
+        val getOpenLinkModuleMethod = GetOpenLinkModuleFingerprint.method
         val openLinkField = createFragmentMethod.instructions.firstOrNull {
             it.opcode == Opcode.SGET_OBJECT &&
                     it.getReference<FieldReference>()?.name == "Openlink"
         }?.getReference<FieldReference>()
             ?: throw PatchException("Could not find Openlink field in NowTabPagerAdapter.w")
         val getPositionMethod = createFragmentMethod.instructions.firstOrNull {
+            val reference = it.getReference<MethodReference>()
+
             it.opcode == Opcode.INVOKE_VIRTUAL &&
-                    it.getReference<MethodReference>()?.name == "getPosition" &&
-                    it.getReference<MethodReference>()?.returnType == "I"
+                    reference?.definingClass == fieldRef.type &&
+                    reference.name == "getPosition" &&
+                    reference.returnType == "I" &&
+                    reference.parameterTypes.isEmpty()
         }?.getReference<MethodReference>()
             ?: throw PatchException("Could not find getPosition()I call in NowTabPagerAdapter.w")
 
@@ -108,14 +113,58 @@ val removeShortFormTabPatch = bytecodePatch(
                 invoke-static {}, Lapp/revanced/extension/kakaotalk/settings/Settings;->removeShortFormTab()Z
                 move-result v0
                 if-eqz v0, :morphe_original_fragment
-                sget-object v0, $shortFormField
+                invoke-static {}, ${getOpenLinkModuleMethod.definingClass}->${getOpenLinkModuleMethod.name}()Lcom/kakao/talk/module/openlink/contract/OpenLinkModuleFacade;
+                move-result-object v0
+                invoke-interface {v0}, Lcom/kakao/talk/module/openlink/contract/OpenLinkModuleFacade;->createOpenChatTabFragment()Landroidx/fragment/app/Fragment;
+                move-result-object v0
+                return-object v0
+                :morphe_original_fragment
+                nop
+            """.trimIndent()
+        )
+
+        val getItemIdMethod = NowTabPagerAdapterFingerprint.classDef.methods.firstOrNull {
+            it.returnType == "J" && it.parameterTypes == listOf("I")
+        } ?: throw PatchException("Could not find NowTabPagerAdapter.getItemId")
+
+        getItemIdMethod.addInstructionsWithLabels(
+            0,
+            """
+                invoke-static {}, Lapp/revanced/extension/kakaotalk/settings/Settings;->removeShortFormTab()Z
+                move-result p0
+                if-eqz p0, :morphe_original_item_id
+                sget-object p0, $openLinkField
+                invoke-virtual {p0}, $getPositionMethod
+                move-result p0
+                int-to-long p0, p0
+                return-wide p0
+                :morphe_original_item_id
+                nop
+            """.trimIndent()
+        )
+
+        val containsItemMethod = NowTabPagerAdapterFingerprint.classDef.methods.firstOrNull {
+            it.returnType == "Z" && it.parameterTypes == listOf("J")
+        } ?: throw PatchException("Could not find NowTabPagerAdapter.containsItem")
+
+        containsItemMethod.addInstructionsWithLabels(
+            0,
+            """
+                invoke-static {}, Lapp/revanced/extension/kakaotalk/settings/Settings;->removeShortFormTab()Z
+                move-result v0
+                if-eqz v0, :morphe_original_contains_item
+                sget-object v0, $openLinkField
                 invoke-virtual {v0}, $getPositionMethod
                 move-result v0
-                if-ne p1, v0, :morphe_original_fragment
-                sget-object p1, $openLinkField
-                invoke-virtual {p1}, $getPositionMethod
-                move-result p1
-                :morphe_original_fragment
+                int-to-long v0, v0
+                cmp-long v0, p1, v0
+                if-nez v0, :morphe_removed_short_form_item
+                const/4 v0, 0x1
+                return v0
+                :morphe_removed_short_form_item
+                const/4 v0, 0x0
+                return v0
+                :morphe_original_contains_item
                 nop
             """.trimIndent()
         )
@@ -128,6 +177,53 @@ val removeShortFormTabPatch = bytecodePatch(
                 if-eqz v0, :morphe_original_transition
                 return-void
                 :morphe_original_transition
+                nop
+            """.trimIndent()
+        )
+
+        val chooseOpenLinkTabMethod = ChooseOpenLinkTabFingerprint.method
+        val openLinkPositionIdx = chooseOpenLinkTabMethod.instructions.indexOfFirst {
+            if (it.opcode != Opcode.INVOKE_VIRTUAL) return@indexOfFirst false
+
+            val ref = (it as? ReferenceInstruction)?.reference as? MethodReference
+                ?: return@indexOfFirst false
+
+            ref.definingClass == fieldRef.type &&
+                    ref.name == "getPosition" &&
+                    ref.returnType == "I" &&
+                    ref.parameterTypes.isEmpty()
+        }
+        if (openLinkPositionIdx < 0) {
+            throw PatchException("Could not find Openlink getPosition()I invoke in chooseOpenLinkTab")
+        }
+
+        val openLinkPositionRegister =
+            (chooseOpenLinkTabMethod.getInstruction(openLinkPositionIdx + 1) as? OneRegisterInstruction)
+                ?.registerA
+                ?: throw PatchException("Could not find Openlink getPosition()I move-result in chooseOpenLinkTab")
+        val openLinkPositionMethodRef =
+            (chooseOpenLinkTabMethod.getInstruction(openLinkPositionIdx) as? ReferenceInstruction)
+                ?.reference as? MethodReference
+                ?: throw PatchException("Could not find Openlink getPosition()I reference in chooseOpenLinkTab")
+        val openLinkTabRegister = when (val invokeInsn = chooseOpenLinkTabMethod.getInstruction(openLinkPositionIdx)) {
+            is BuilderInstruction35c -> invokeInsn.registerC
+            is BuilderInstruction3rc -> invokeInsn.startRegister
+            else -> throw PatchException("Unsupported invoke instruction type in chooseOpenLinkTab: ${invokeInsn::class.java.name}")
+        }
+
+        chooseOpenLinkTabMethod.removeInstructions(openLinkPositionIdx, 2)
+        chooseOpenLinkTabMethod.addInstructionsWithLabels(
+            openLinkPositionIdx,
+            """
+                invoke-static {}, Lapp/revanced/extension/kakaotalk/settings/Settings;->removeShortFormTab()Z
+                move-result v$openLinkPositionRegister
+                if-eqz v$openLinkPositionRegister, :morphe_keep_openlink_tab_position
+                const/4 v$openLinkPositionRegister, 0x0
+                goto :morphe_after_openlink_tab_position
+                :morphe_keep_openlink_tab_position
+                invoke-virtual {v$openLinkTabRegister}, $openLinkPositionMethodRef
+                move-result v$openLinkPositionRegister
+                :morphe_after_openlink_tab_position
                 nop
             """.trimIndent()
         )
@@ -148,20 +244,40 @@ val removeShortFormTabPatch = bytecodePatch(
             throw PatchException("Could not find getPosition()I invoke in chooseNowChildTab")
         }
 
+        val getPositionResultIdx = getPositionIdx + 1
+        val positionRegister = (chooseNowChildTabMethod.getInstruction(getPositionResultIdx) as? OneRegisterInstruction)
+            ?.registerA
+            ?: throw PatchException("Could not find getPosition()I move-result in chooseNowChildTab")
+        val getPositionMethodRef = (chooseNowChildTabMethod.getInstruction(getPositionIdx) as? ReferenceInstruction)
+            ?.reference as? MethodReference
+            ?: throw PatchException("Could not find getPosition()I reference in chooseNowChildTab")
         val tabRegister = when (val invokeInsn = chooseNowChildTabMethod.getInstruction(getPositionIdx)) {
             is BuilderInstruction35c -> invokeInsn.registerC
             is BuilderInstruction3rc -> invokeInsn.startRegister
             else -> throw PatchException("Unsupported invoke instruction type in chooseNowChildTab: ${invokeInsn::class.java.name}")
         }
+        val flagRegister = chooseNowChildTabMethod.getFreeRegisterProvider(
+            getPositionIdx,
+            1,
+            tabRegister
+        ).getFreeRegister()
 
+        chooseNowChildTabMethod.removeInstructions(getPositionIdx, 2)
         chooseNowChildTabMethod.addInstructionsWithLabels(
             getPositionIdx,
             """
                 invoke-static {}, Lapp/revanced/extension/kakaotalk/settings/Settings;->removeShortFormTab()Z
-                move-result p1
-                if-eqz p1, :morphe_keep_now_child_tab
+                move-result v$flagRegister
+                if-eqz v$flagRegister, :morphe_keep_now_child_tab
                 sget-object v$tabRegister, ${fieldRef.type}->Openlink:${fieldRef.type}
+                invoke-virtual {v$tabRegister}, $getPositionMethodRef
+                move-result v$positionRegister
+                const/4 v$positionRegister, 0x0
+                goto :morphe_after_now_child_tab
                 :morphe_keep_now_child_tab
+                invoke-virtual {v$tabRegister}, $getPositionMethodRef
+                move-result v$positionRegister
+                :morphe_after_now_child_tab
                 nop
             """.trimIndent()
         )
