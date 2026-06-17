@@ -26,7 +26,7 @@ internal object AddOlkChatRoomListAdFingerprint : Fingerprint(
 )
 
 internal object OpenChatTabFragmentAdEnabledFingerprint : Fingerprint(
-    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    accessFlags = listOf(AccessFlags.PRIVATE, AccessFlags.FINAL),
     parameters = listOf(),
     returnType = "Z",
     filters = OpcodesFilter.opcodesToFilters(

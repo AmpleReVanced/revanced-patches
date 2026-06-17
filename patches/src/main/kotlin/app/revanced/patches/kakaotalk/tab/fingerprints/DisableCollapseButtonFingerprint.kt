@@ -1,10 +1,40 @@
 package app.revanced.patches.kakaotalk.tab.fingerprints
 
 import app.morphe.patcher.Fingerprint
-import app.morphe.patcher.fingerprint
+import app.morphe.util.getReference
+import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
-// Sorry to proguard :(
-internal object IsChatListCollapseButtonEnabledFingerprint : Fingerprint(
-    custom = { method, classDef -> classDef.sourceFile == "OpenChatTabFeedContract.kt"
-            && method.name == "m" && classDef.fields.toList().size == 9 }
+internal object OpenChatListMoreItemFingerprint : Fingerprint(
+    custom = { _, classDef ->
+        classDef.sourceFile == "OpenChatListMoreItem.kt" &&
+                !classDef.type.contains("$")
+    }
+)
+
+internal object TrimOpenChatListForMoreButtonFingerprint : Fingerprint(
+    returnType = "V",
+    parameters = listOf("Ljava/util/List;", "Z", "Z"),
+    custom = { method, classDef ->
+        classDef.sourceFile == "OpenChatTabFragment.kt" &&
+                method.implementation?.instructions?.let { instructions ->
+                    instructions.any { instruction ->
+                        instruction.getReference<MethodReference>()?.let { reference ->
+                            reference.definingClass == "Lkotlin/collections/CollectionsKt;" &&
+                                    reference.name == "take"
+                        } == true
+                    } &&
+                            instructions.any { instruction ->
+                                instruction.getReference<MethodReference>()?.let { reference ->
+                                    reference.definingClass == "Ljava/util/List;" &&
+                                            reference.name == "clear"
+                                } == true
+                            } &&
+                            instructions.any { instruction ->
+                                instruction.getReference<MethodReference>()?.let { reference ->
+                                    reference.definingClass == "Ljava/util/List;" &&
+                                            reference.name == "addAll"
+                                } == true
+                            }
+                } == true
+    }
 )
