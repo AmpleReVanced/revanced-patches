@@ -57,6 +57,8 @@ Second \"item\" text"</string>
     <string name="morphe_settings_patch_force_debug_mode_summary">Forces KakaoTalk’s internal debug flag on.</string>
     <string name="morphe_settings_catalog_remove_short_form_tab">Hide Short-form tab</string>
     <string name="morphe_settings_catalog_remove_short_form_tab_summary">Hides the Short-form entry point from the tab pager and related navigation. Restart KakaoTalk after changing this setting.</string>
+    <string name="morphe_settings_catalog_hide_more_tab_game">Hide Game tab</string>
+    <string name="morphe_settings_catalog_hide_more_tab_game_summary">Hides the Game tab from the More tab. Restart KakaoTalk after changing this setting.</string>
     <string name="morphe_settings_debug">Debug logging</string>
     <string name="morphe_settings_debug_summary">Writes additional diagnostic logs for Morphe patches.</string>
     <string name="morphe_settings_debug_stacktrace">Include stack traces</string>

@@ -23,6 +23,9 @@ public final class Settings extends BaseSettings {
     public static final BooleanSetting REMOVE_SHORT_FORM_TAB =
             new BooleanSetting("kakaotalk_remove_short_form_tab", TRUE, true);
 
+    public static final BooleanSetting HIDE_MORE_TAB_GAME =
+            new BooleanSetting("kakaotalk_hide_more_tab_game", TRUE, true);
+
     public static final BooleanSetting DISABLE_99_UNREAD_LIMIT =
             new BooleanSetting("kakaotalk_disable_99_unread_limit", TRUE);
 
@@ -63,6 +66,10 @@ public final class Settings extends BaseSettings {
 
     public static boolean removeShortFormTab() {
         return REMOVE_SHORT_FORM_TAB.get();
+    }
+
+    public static boolean hideMoreTabGame() {
+        return HIDE_MORE_TAB_GAME.get();
     }
 
     public static boolean disable99UnreadLimit() {
