@@ -26,6 +26,7 @@ import app.morphe.extension.shared.settings.StringSetting;
 public final class SettingsActivity extends Activity {
     private static final String PREF_GHOST_MODE = "morphe_pref_ghost_mode";
     private static final String PREF_REMOVE_SHORT_FORM_TAB = "morphe_pref_remove_short_form_tab";
+    private static final String PREF_HIDE_MORE_TAB_GAME = "morphe_pref_hide_more_tab_game";
     private static final String PREF_DISABLE_99_UNREAD_LIMIT = "morphe_pref_disable_99_unread_limit";
     private static final String PREF_DEFAULT_EXTERNAL_BROWSER = "morphe_pref_default_external_browser";
     private static final String PREF_ENABLE_RECORDING_PAUSE_RESUME = "morphe_pref_enable_recording_pause_resume";
@@ -105,6 +106,7 @@ public final class SettingsActivity extends Activity {
 
         static {
             RESTART_SENSITIVE_PREFERENCES.add(PREF_REMOVE_SHORT_FORM_TAB);
+            RESTART_SENSITIVE_PREFERENCES.add(PREF_HIDE_MORE_TAB_GAME);
             RESTART_SENSITIVE_PREFERENCES.add(PREF_FORCE_DEBUG_MODE);
             RESTART_SENSITIVE_PREFERENCES.add(PREF_BYPASS_MOAT_INTEGRITY_CHECK);
         }
@@ -116,6 +118,7 @@ public final class SettingsActivity extends Activity {
 
             bindSwitch(PREF_GHOST_MODE, Settings.GHOST_MODE);
             bindSwitch(PREF_REMOVE_SHORT_FORM_TAB, Settings.REMOVE_SHORT_FORM_TAB);
+            bindSwitch(PREF_HIDE_MORE_TAB_GAME, Settings.HIDE_MORE_TAB_GAME);
             bindSwitch(PREF_DISABLE_99_UNREAD_LIMIT, Settings.DISABLE_99_UNREAD_LIMIT);
             bindSwitch(PREF_DEFAULT_EXTERNAL_BROWSER, Settings.DEFAULT_EXTERNAL_BROWSER);
             bindSwitch(PREF_ENABLE_RECORDING_PAUSE_RESUME, Settings.ENABLE_RECORDING_PAUSE_RESUME);

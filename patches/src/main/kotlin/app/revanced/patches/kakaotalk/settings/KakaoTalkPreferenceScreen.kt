@@ -50,6 +50,12 @@ internal fun addDefaultKakaoTalkSettingsPreferences() {
             summaryKey = "morphe_settings_catalog_remove_short_form_tab_summary",
             defaultValue = true,
         ),
+        SwitchPreference(
+            key = "morphe_pref_hide_more_tab_game",
+            titleKey = "morphe_settings_catalog_hide_more_tab_game",
+            summaryKey = "morphe_settings_catalog_hide_more_tab_game_summary",
+            defaultValue = true,
+        ),
     )
 
     PreferenceScreen.FEATURES.addPreferences(
