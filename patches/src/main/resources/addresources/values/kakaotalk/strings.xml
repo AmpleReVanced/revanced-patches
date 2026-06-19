@@ -17,6 +17,11 @@ Second \"item\" text"</string>
 <resources>
     <string name="morphe_kakaotalk_chatlog_deleted">Deleted</string>
     <string name="morphe_kakaotalk_chatlog_hidden">Hidden</string>
+    <string name="morphe_kakaotalk_chatlog_modified_history_title">Edit history</string>
+    <string name="morphe_kakaotalk_chatlog_modified_history_revision">Before revision %1$d</string>
+    <string name="morphe_kakaotalk_chatlog_modified_history_current">Current message</string>
+    <string name="morphe_kakaotalk_chatlog_modified_history_empty">Empty message</string>
+    <string name="morphe_kakaotalk_chatlog_modified_history_no_items">No edit history</string>
     <string name="morphe_kakaotalk_channel_id_label">Channel ID</string>
     <string name="morphe_kakaotalk_channel_id_copied">Channel ID copied</string>
     <string name="morphe_label_for_ample_settings">Morphe Settings</string>
