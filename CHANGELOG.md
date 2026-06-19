@@ -1,3 +1,16 @@
+# [1.2.0-dev.5](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.4...v1.2.0-dev.5) (2026-06-19)
+
+
+### Bug Fixes
+
+* **kakaotalk:** hide More tab service groups reliably ([5acd705](https://github.com/AmpleReVanced/revanced-patches/commit/5acd705c2f5a43085b9c410ef82670008fa950c9))
+* **kakaotalk:** update reaction mention flag patch for 26.5.2 ([1e6e967](https://github.com/AmpleReVanced/revanced-patches/commit/1e6e9672a047213e6f8252fb6377ee898a5f09ad))
+
+
+### Features
+
+* **dcinside:** hide mini gallery cover image ([4d63d1d](https://github.com/AmpleReVanced/revanced-patches/commit/4d63d1d5508aa325aec7a2cb8b35f16ca629cb40))
+
 # [1.2.0-dev.4](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.3...v1.2.0-dev.4) (2026-06-19)
 
 
