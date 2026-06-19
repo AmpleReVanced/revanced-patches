@@ -22,7 +22,7 @@ internal object AddOlkChatRoomListAdFingerprint : Fingerprint(
         Opcode.NEW_INSTANCE,
         Opcode.CONST_STRING,
     ),
-   custom = { _, classDef -> classDef.sourceFile == "OlkChatRoomListViewModel.kt" }
+    custom = { _, classDef -> classDef.sourceFile == "OlkChatRoomListViewModel.kt" }
 )
 
 internal object OpenChatTabFragmentAdEnabledFingerprint : Fingerprint(
@@ -39,5 +39,5 @@ internal object OpenChatTabFragmentAdEnabledFingerprint : Fingerprint(
         Opcode.IF_NE,
         Opcode.SGET_OBJECT,
     ),
-   custom = { _, classDef -> classDef.sourceFile == "OpenChatTabFragment.kt" }
+    custom = { _, classDef -> classDef.sourceFile == "OpenChatTabFragment.kt" }
 )

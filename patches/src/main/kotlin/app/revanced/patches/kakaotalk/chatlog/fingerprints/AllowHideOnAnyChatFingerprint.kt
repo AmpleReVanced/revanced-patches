@@ -2,7 +2,6 @@ package app.revanced.patches.kakaotalk.chatlog.fingerprints
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.OpcodesFilter
-import app.morphe.patcher.fingerprint
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
@@ -22,7 +21,7 @@ internal object CheckIsAllowedHideFingerprint : Fingerprint(
         Opcode.MOVE_RESULT,
         Opcode.CONST_4,
     ),
-   custom = { _, classDef -> classDef.sourceFile == "DeletableAction.kt" }
+    custom = { _, classDef -> classDef.sourceFile == "DeletableAction.kt" }
 )
 
 internal object CheckIsEqualWithMyUserIdFingerprint : Fingerprint(
@@ -39,5 +38,5 @@ internal object CheckIsEqualWithMyUserIdFingerprint : Fingerprint(
         Opcode.CONST_4,
         Opcode.RETURN
     ),
-   custom = { _, classDef -> classDef.sourceFile == "Me.kt" }
+    custom = { _, classDef -> classDef.sourceFile == "Me.kt" }
 )
