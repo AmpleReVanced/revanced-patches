@@ -1,5 +1,6 @@
 package app.revanced.patches.kakaotalk.tab
 
+import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
@@ -14,12 +15,17 @@ import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.patches.kakaotalk.tab.fingerprints.AddMoreTabBodySectionsFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.AddMoreTabServiceSectionsFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.MoreTabGamePlaySectionFingerprint
+import app.revanced.patches.kakaotalk.tab.fingerprints.MoreTabGlobalServiceGroupSectionFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.MoreTabKakaoNowSectionFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.MoreTabKakaoPaySectionFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.MoreTabLineServiceSectionFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.MoreTabServiceGroupSectionFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.MoreTabWeatherSectionFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.WeatherViewHolderBindFingerprint
+import app.revanced.patches.kakaotalk.tab.fingerprints.moreTabGlobalServiceGroupAdditionFingerprint
+import app.revanced.patches.kakaotalk.tab.fingerprints.moreTabGlobalServiceGroupViewHolderBindFingerprint
+import app.revanced.patches.kakaotalk.tab.fingerprints.moreTabLineServiceViewHolderBindFingerprint
+import app.revanced.patches.kakaotalk.tab.fingerprints.moreTabServiceGroupViewHolderBindFingerprint
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.Instruction
 import com.android.tools.smali.dexlib2.iface.instruction.OffsetInstruction
@@ -41,6 +47,14 @@ val hideMoreTabComponentsPatch = bytecodePatch(
         val bodySectionsMethod = AddMoreTabBodySectionsFingerprint.method
         val serviceSectionsMethod = AddMoreTabServiceSectionsFingerprint.method
 
+        fun Fingerprint.hideViewHolder(settingMethod: String, labelPrefix: String) {
+            matchAll(1 .. 1).single().method.hideViewHolder(listOf(settingMethod), labelPrefix)
+        }
+
+        fun Fingerprint.hideViewHolder(settingMethods: List<String>, labelPrefix: String) {
+            matchAll(1 .. 1).single().method.hideViewHolder(settingMethods, labelPrefix)
+        }
+
         bodySectionsMethod.hideKakaoPaySection(MoreTabKakaoPaySectionFingerprint.classDef.type)
         bodySectionsMethod.hideItemAdditions(
             SectionSpec(
@@ -60,7 +74,7 @@ val hideMoreTabComponentsPatch = bytecodePatch(
             ),
             SectionSpec(
                 MoreTabLineServiceSectionFingerprint.classDef.type,
-                "hideMoreTabLineServiceSection",
+                listOf("hideMoreTabLineServiceSection", "hideMoreTabServiceGroupSection"),
                 "more_tab_line_service_body",
             ),
         )
@@ -74,9 +88,41 @@ val hideMoreTabComponentsPatch = bytecodePatch(
             ),
             SectionSpec(
                 MoreTabLineServiceSectionFingerprint.classDef.type,
-                "hideMoreTabLineServiceSection",
+                listOf("hideMoreTabLineServiceSection", "hideMoreTabServiceGroupSection"),
                 "more_tab_line_service",
             ),
+        )
+
+        val globalServiceGroupType = MoreTabGlobalServiceGroupSectionFingerprint.classDef.type
+        moreTabGlobalServiceGroupAdditionFingerprint(globalServiceGroupType)
+            .matchAll(1 .. 1)
+            .single()
+            .method
+            .hideItemAdditions(
+                SectionSpec(
+                    globalServiceGroupType,
+                    "hideMoreTabServiceGroupSection",
+                    "more_tab_global_service_group",
+                ),
+            )
+
+        moreTabServiceGroupViewHolderBindFingerprint(
+            MoreTabServiceGroupSectionFingerprint.classDef.type,
+        ).hideViewHolder(
+            "hideMoreTabServiceGroupSection",
+            "more_tab_service_group_view_holder",
+        )
+        moreTabGlobalServiceGroupViewHolderBindFingerprint(
+            globalServiceGroupType,
+        ).hideViewHolder(
+            "hideMoreTabServiceGroupSection",
+            "more_tab_global_service_group_view_holder",
+        )
+        moreTabLineServiceViewHolderBindFingerprint(
+            MoreTabLineServiceSectionFingerprint.classDef.type,
+        ).hideViewHolder(
+            listOf("hideMoreTabLineServiceSection", "hideMoreTabServiceGroupSection"),
+            "more_tab_line_service_view_holder",
         )
     }
 }
@@ -96,6 +142,25 @@ private fun MutableMethod.hideWeatherViewHolder() {
             const/4 v0, 0x0
             invoke-virtual {v1, v0}, Landroid/view/View;->setVisibility(I)V
         """.trimIndent(),
+    )
+}
+
+private fun MutableMethod.hideViewHolder(settingMethods: List<String>, labelPrefix: String) {
+    val hideLabel = "${labelPrefix}_hide"
+    val showLabel = "${labelPrefix}_show"
+
+    addInstructionsWithLabels(
+        0,
+        """
+            ${settingMethods.hideConditionInstructions(0, hideLabel)}
+            goto :$showLabel
+            :$hideLabel
+            iget-object p1, p0, Landroidx/recyclerview/widget/RecyclerView${'$'}F;->itemView:Landroid/view/View;
+            const/16 v0, 0x8
+            invoke-virtual {p1, v0}, Landroid/view/View;->setVisibility(I)V
+            return-void
+        """.trimIndent(),
+        ExternalLabel(showLabel, getInstruction(0)),
     )
 }
 
@@ -188,11 +253,7 @@ private fun MutableMethod.hideItemAdditions(vararg specs: SectionSpec) {
 
         addInstructionsWithLabels(
             index,
-            """
-                invoke-static {}, $SETTINGS_CLASS->${insertion.spec.settingMethod}()Z
-                move-result v${insertion.scratchRegister}
-                if-nez v${insertion.scratchRegister}, :$label
-            """.trimIndent(),
+            insertion.spec.hideConditionInstructions(insertion.scratchRegister, label),
             ExternalLabel(label, targetInstruction),
         )
     }
@@ -208,9 +269,27 @@ private data class SectionSkip(
 
 private data class SectionSpec(
     val itemType: String,
-    val settingMethod: String,
+    val settingMethods: List<String>,
     val labelPrefix: String,
-)
+) {
+    constructor(
+        itemType: String,
+        settingMethod: String,
+        labelPrefix: String,
+    ) : this(itemType, listOf(settingMethod), labelPrefix)
+
+    fun hideConditionInstructions(register: Int, label: String): String =
+        settingMethods.hideConditionInstructions(register, label)
+}
+
+private fun List<String>.hideConditionInstructions(register: Int, label: String): String =
+    joinToString("\n") { method ->
+        """
+            invoke-static {}, $SETTINGS_CLASS->$method()Z
+            move-result v$register
+            if-nez v$register, :$label
+        """.trimIndent()
+    }
 
 private fun MutableMethod.branchTargetInstruction(index: Int): Instruction {
     val offsets = instructions.instructionOffsets()
