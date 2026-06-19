@@ -515,7 +515,7 @@ public final class app/revanced/patches/kakaotalk/ghost/GhostModePatchKt {
 }
 
 public final class app/revanced/patches/kakaotalk/hook/AddPacketHandlerPatchKt {
-	public static final fun getAddPacketHandlerPatch ()Lapp/revanced/patcher/patch/ResourcePatch;
+	public static final fun getAddPacketHandlerPatch ()Lapp/revanced/patcher/patch/BytecodePatch;
 }
 
 public final class app/revanced/patches/kakaotalk/integrity/BypassMoatCheckPatchKt {
