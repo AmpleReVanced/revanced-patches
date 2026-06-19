@@ -48,6 +48,25 @@ internal object GetOpenLinkModuleFingerprint : Fingerprint(
     custom = { method, classDef -> classDef.sourceFile == "ModuleFacades.kt" }
 )
 
+internal object NowChildTabFromPositionFingerprint : Fingerprint(
+    parameters = listOf("Ljava/lang/Integer;"),
+    custom = { method, classDef ->
+        classDef.sourceFile == "NowChildTab.kt" &&
+                classDef.type.contains("$") &&
+                method.returnType == classDef.type.substringBefore("$") + ";"
+    }
+)
+
+internal object NowChildTabFromNameFingerprint : Fingerprint(
+    parameters = listOf("Ljava/lang/String;"),
+    strings = listOf("brand", "openlink", "openchat", "shortform"),
+    custom = { method, classDef ->
+        classDef.sourceFile == "NowChildTab.kt" &&
+                classDef.type.contains("$") &&
+                method.returnType == classDef.type.substringBefore("$") + ";"
+    }
+)
+
 internal object TransitionOpenLinkOrShortformMethodFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC),
     parameters = listOf(),

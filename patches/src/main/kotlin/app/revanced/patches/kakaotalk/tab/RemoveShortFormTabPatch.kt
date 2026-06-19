@@ -13,6 +13,8 @@ import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.patches.kakaotalk.tab.fingerprints.ChooseOpenLinkTabFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.ChooseNowChildTabFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.GetOpenLinkModuleFingerprint
+import app.revanced.patches.kakaotalk.tab.fingerprints.NowChildTabFromNameFingerprint
+import app.revanced.patches.kakaotalk.tab.fingerprints.NowChildTabFromPositionFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.NowFragmentOnViewCreatedFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.NowTabPagerAdapterFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.TransitionOpenLinkOrShortformMethodFingerprint
@@ -37,23 +39,43 @@ val removeShortFormTabPatch = bytecodePatch(
 
     execute {
         val onViewCreated = NowFragmentOnViewCreatedFingerprint.method
-        val shortFormChip = onViewCreated.instructions.firstOrNull {
-            it.opcode == Opcode.IGET_OBJECT &&
-                    it.getReference<FieldReference>()?.type == "Lcom/kakao/talk/core/ui/widget/TdChip;"
-        } as? BuilderInstruction22c ?: throw PatchException("Could not find short-form chip field in NowFragment.onViewCreated")
-
-        onViewCreated.addInstructionsWithLabels(
-            onViewCreated.instructions.indexOf(shortFormChip) + 1,
-            """
-                invoke-static {}, Lapp/revanced/extension/kakaotalk/settings/Settings;->removeShortFormTab()Z
-                move-result v3
-                if-eqz v3, :morphe_keep_short_form_chip
-                const/16 v3, 0x8
-                invoke-virtual {p1, v3}, Landroid/view/View;->setVisibility(I)V
-                :morphe_keep_short_form_chip
-                nop
-            """.trimIndent()
+        val nowTabChips = onViewCreated.instructions
+            .asSequence()
+            .filterIsInstance<BuilderInstruction22c>()
+            .filter {
+                it.opcode == Opcode.IGET_OBJECT &&
+                        it.getReference<FieldReference>()?.type == "Lcom/kakao/talk/core/ui/widget/TdChip;"
+            }
+            .distinctBy {
+                val reference = it.getReference<FieldReference>()
+                    ?: throw PatchException("Could not inspect Now tab chip field")
+                reference.definingClass to reference.name
+            }
+            .toList()
+        val hiddenNowTabChips = listOfNotNull(
+            nowTabChips.getOrNull(0),
+            nowTabChips.getOrNull(2),
         )
+        if (hiddenNowTabChips.size != 2) {
+            throw PatchException("Could not find Short-form and Brand chips in NowFragment.onViewCreated")
+        }
+
+        hiddenNowTabChips.asReversed().forEachIndexed { index, chip ->
+            val label = "morphe_keep_now_tab_chip_$index"
+
+            onViewCreated.addInstructionsWithLabels(
+                onViewCreated.instructions.indexOf(chip) + 1,
+                """
+                    invoke-static {}, Lapp/revanced/extension/kakaotalk/settings/Settings;->removeShortFormTab()Z
+                    move-result v3
+                    if-eqz v3, :$label
+                    const/16 v3, 0x8
+                    invoke-virtual {p1, v3}, Landroid/view/View;->setVisibility(I)V
+                    :$label
+                    nop
+                """.trimIndent()
+            )
+        }
 
         val getChildTab = onViewCreated.instructions.lastOrNull { it.opcode == Opcode.CHECK_CAST } as? BuilderInstruction21c
             ?: throw PatchException("Could not find current tab cast in NowFragment.onViewCreated")
@@ -91,11 +113,18 @@ val removeShortFormTabPatch = bytecodePatch(
 
         val createFragmentMethod = NowTabPagerAdapterFingerprint.method
         val getOpenLinkModuleMethod = GetOpenLinkModuleFingerprint.method
-        val openLinkField = createFragmentMethod.instructions.firstOrNull {
+        fun nowChildTabField(name: String) = createFragmentMethod.instructions.firstOrNull {
+            val reference = it.getReference<FieldReference>()
+
             it.opcode == Opcode.SGET_OBJECT &&
-                    it.getReference<FieldReference>()?.name == "Openlink"
+                    reference?.definingClass == fieldRef.type &&
+                    reference.name == name
         }?.getReference<FieldReference>()
-            ?: throw PatchException("Could not find Openlink field in NowTabPagerAdapter.w")
+            ?: throw PatchException("Could not find $name field in NowTabPagerAdapter.w")
+
+        val openLinkField = nowChildTabField("Openlink")
+        val shortFormField = nowChildTabField("ShortForm")
+        val brandField = nowChildTabField("Brand")
         val getPositionMethod = createFragmentMethod.instructions.firstOrNull {
             val reference = it.getReference<MethodReference>()
 
@@ -104,8 +133,56 @@ val removeShortFormTabPatch = bytecodePatch(
                     reference.name == "getPosition" &&
                     reference.returnType == "I" &&
                     reference.parameterTypes.isEmpty()
-        }?.getReference<MethodReference>()
+            }?.getReference<MethodReference>()
             ?: throw PatchException("Could not find getPosition()I call in NowTabPagerAdapter.w")
+
+        NowChildTabFromPositionFingerprint.method.addInstructionsWithLabels(
+            0,
+            """
+                invoke-static {}, Lapp/revanced/extension/kakaotalk/settings/Settings;->removeShortFormTab()Z
+                move-result v0
+                if-eqz v0, :morphe_keep_now_child_tab_from_position
+                if-eqz p1, :morphe_keep_now_child_tab_from_position
+                invoke-virtual {p1}, Ljava/lang/Integer;->intValue()I
+                move-result v0
+                sget-object v1, $shortFormField
+                invoke-virtual {v1}, $getPositionMethod
+                move-result v1
+                if-eq v0, v1, :morphe_force_openlink_child_tab_from_position
+                sget-object v1, $brandField
+                invoke-virtual {v1}, $getPositionMethod
+                move-result v1
+                if-ne v0, v1, :morphe_keep_now_child_tab_from_position
+                :morphe_force_openlink_child_tab_from_position
+                sget-object v0, $openLinkField
+                return-object v0
+                :morphe_keep_now_child_tab_from_position
+                nop
+            """.trimIndent()
+        )
+
+        NowChildTabFromNameFingerprint.method.addInstructionsWithLabels(
+            0,
+            """
+                invoke-static {}, Lapp/revanced/extension/kakaotalk/settings/Settings;->removeShortFormTab()Z
+                move-result p0
+                if-eqz p0, :morphe_keep_now_child_tab_from_name
+                if-eqz p1, :morphe_keep_now_child_tab_from_name
+                const-string p0, "brand"
+                invoke-virtual {p1, p0}, Ljava/lang/String;->equalsIgnoreCase(Ljava/lang/String;)Z
+                move-result p0
+                if-nez p0, :morphe_force_openlink_child_tab_from_name
+                const-string p0, "shortform"
+                invoke-virtual {p1, p0}, Ljava/lang/String;->equalsIgnoreCase(Ljava/lang/String;)Z
+                move-result p0
+                if-eqz p0, :morphe_keep_now_child_tab_from_name
+                :morphe_force_openlink_child_tab_from_name
+                sget-object p0, $openLinkField
+                return-object p0
+                :morphe_keep_now_child_tab_from_name
+                nop
+            """.trimIndent()
+        )
 
         createFragmentMethod.addInstructionsWithLabels(
             0,
