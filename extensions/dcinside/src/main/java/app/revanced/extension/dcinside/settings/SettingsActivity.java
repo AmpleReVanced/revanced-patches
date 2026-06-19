@@ -37,6 +37,7 @@ public final class SettingsActivity extends Activity {
     private static final String PREF_BLOCK_POST_DCCON_LOADING = "morphe_pref_block_post_dccon_loading";
     private static final String PREF_BLOCK_REPLY_DCCON_LOADING = "morphe_pref_block_reply_dccon_loading";
     private static final String PREF_RENDER_BIG_DCCON_AS_NORMAL = "morphe_pref_render_big_dccon_as_normal";
+    private static final String PREF_HIDE_MINI_GALLERY_COVER_IMAGE = "morphe_pref_hide_mini_gallery_cover_image";
     private static final String PREF_HIDE_HOME_SEARCH_MENU = "morphe_pref_hide_home_search_menu";
     private static final String PREF_HIDE_HOME_RECENT_GALLERIES = "morphe_pref_hide_home_recent_galleries";
     private static final String PREF_HIDE_HOME_RECOMMENDED_GALLERIES = "morphe_pref_hide_home_recommended_galleries";
@@ -137,6 +138,7 @@ public final class SettingsActivity extends Activity {
             bindSwitch(PREF_BLOCK_POST_DCCON_LOADING, Settings.BLOCK_POST_DCCON_LOADING);
             bindSwitch(PREF_BLOCK_REPLY_DCCON_LOADING, Settings.BLOCK_REPLY_DCCON_LOADING);
             bindSwitch(PREF_RENDER_BIG_DCCON_AS_NORMAL, Settings.RENDER_BIG_DCCON_AS_NORMAL);
+            bindSwitch(PREF_HIDE_MINI_GALLERY_COVER_IMAGE, Settings.HIDE_MINI_GALLERY_COVER_IMAGE);
             bindSwitch(PREF_HIDE_HOME_SEARCH_MENU, Settings.HIDE_HOME_SEARCH_MENU);
             bindSwitch(PREF_HIDE_HOME_RECENT_GALLERIES, Settings.HIDE_HOME_RECENT_GALLERIES);
             bindSwitch(PREF_HIDE_HOME_RECOMMENDED_GALLERIES, Settings.HIDE_HOME_RECOMMENDED_GALLERIES);

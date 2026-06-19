@@ -24,6 +24,8 @@ public final class Settings extends BaseSettings {
             new BooleanSetting("dcinside_block_reply_dccon_loading", FALSE);
     public static final BooleanSetting RENDER_BIG_DCCON_AS_NORMAL =
             new BooleanSetting("dcinside_render_big_dccon_as_normal", FALSE);
+    public static final BooleanSetting HIDE_MINI_GALLERY_COVER_IMAGE =
+            new BooleanSetting("dcinside_hide_mini_gallery_cover_image", FALSE);
     public static final BooleanSetting HIDE_HOME_SEARCH_MENU =
             new BooleanSetting("dcinside_hide_home_search_menu", FALSE);
     public static final BooleanSetting HIDE_HOME_RECENT_GALLERIES =
@@ -51,6 +53,10 @@ public final class Settings extends BaseSettings {
 
     public static boolean renderBigDcconAsNormal() {
         return RENDER_BIG_DCCON_AS_NORMAL.get();
+    }
+
+    public static boolean hideMiniGalleryCoverImage() {
+        return HIDE_MINI_GALLERY_COVER_IMAGE.get();
     }
 
     public static void resizeReplyDcconAsNormal(View view) {
