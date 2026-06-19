@@ -1,6 +1,11 @@
 <resources>
     <string name="morphe_kakaotalk_chatlog_deleted">삭제됨</string>
     <string name="morphe_kakaotalk_chatlog_hidden">가려짐</string>
+    <string name="morphe_kakaotalk_chatlog_modified_history_title">수정 이력</string>
+    <string name="morphe_kakaotalk_chatlog_modified_history_revision">리비전 %1$d 이전</string>
+    <string name="morphe_kakaotalk_chatlog_modified_history_current">현재 메시지</string>
+    <string name="morphe_kakaotalk_chatlog_modified_history_empty">빈 메시지</string>
+    <string name="morphe_kakaotalk_chatlog_modified_history_no_items">수정 이력이 없습니다</string>
     <string name="morphe_kakaotalk_channel_id_label">채널 ID</string>
     <string name="morphe_kakaotalk_channel_id_copied">채널 ID 복사됨</string>
     <string name="morphe_label_for_ample_settings">Morphe 설정</string>
