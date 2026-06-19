@@ -22,6 +22,9 @@
     <string name="morphe_settings_hide_home_live_best_summary">Removes the live best feed and its filter controls from the home screen.</string>
     <string name="morphe_settings_hide_home_recommended_posts">Hide recommended posts</string>
     <string name="morphe_settings_hide_home_recommended_posts_summary">Removes the recommended post section from the home screen.</string>
+    <string name="morphe_settings_section_support">Support</string>
+    <string name="morphe_settings_support">Support the project</string>
+    <string name="morphe_settings_support_summary">Like the results? Support the project with a donation. Your support keeps development going.</string>
     <string name="morphe_settings_user_memo_preset">Register user memo preset</string>
     <string name="morphe_settings_user_memo_preset_summary">Choose a bundled preset and register it to global user memo immediately.</string>
     <string name="morphe_settings_user_memo_preset_select_title">Select user memo preset</string>
