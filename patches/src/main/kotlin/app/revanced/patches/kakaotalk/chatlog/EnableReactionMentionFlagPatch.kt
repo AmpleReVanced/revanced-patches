@@ -1,13 +1,15 @@
 package app.revanced.patches.kakaotalk.chatlog
 
-import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
-import app.morphe.patcher.extensions.InstructionExtensions.instructions
-import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.util.getReference
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.ReactionMentionFlagFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.ReactionMentionFlagPreferenceFingerprint
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
-import com.android.tools.smali.dexlib2.Opcode
-import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction11n
+import app.revanced.util.matches
+import com.android.tools.smali.dexlib2.iface.Method
+import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
 @Suppress("unused")
 val enableReactionMentionFlagPatch = bytecodePatch(
@@ -18,17 +20,26 @@ val enableReactionMentionFlagPatch = bytecodePatch(
     compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        ReactionMentionFlagFingerprint.method.instructions.indexOfFirst { it.opcode == Opcode.CONST_4 && (it as BuilderInstruction11n).narrowLiteral == 0x0 }
-            .takeIf { it >= 0 }
-            ?.let { index ->
-                ReactionMentionFlagFingerprint.method.replaceInstruction(
-                    index,
-                    BuilderInstruction11n(
-                        Opcode.CONST_4,
-                        (ReactionMentionFlagFingerprint.method.getInstruction(index) as BuilderInstruction11n).registerA,
-                        0x1
-                    )
-                )
-            }
+        val preferenceMethod = ReactionMentionFlagPreferenceFingerprint.originalMethod
+        val method = ReactionMentionFlagFingerprint.matchAll()
+            .singleOrNull { match -> match.originalMethod.hasReferenceTo(preferenceMethod) }
+            ?.method
+            ?: throw PatchException("Could not find reaction mention flag coroutine.")
+
+        method.addInstructions(
+            0,
+            """
+                sget-object p1, Ljava/lang/Boolean;->TRUE:Ljava/lang/Boolean;
+                return-object p1
+            """.trimIndent()
+        )
     }
 }
+
+private fun Method.hasReferenceTo(method: Method) =
+    implementation?.instructions?.any { instruction ->
+        val reference = instruction.getReference<MethodReference>() ?: return@any false
+
+        reference.definingClass == method.definingClass &&
+            reference.matches(method)
+    } == true
