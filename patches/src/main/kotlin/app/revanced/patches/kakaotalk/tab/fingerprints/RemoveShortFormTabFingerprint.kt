@@ -1,7 +1,9 @@
 package app.revanced.patches.kakaotalk.tab.fingerprints
 
+import app.morphe.patcher.fieldAccess
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.OpcodesFilter
+import app.morphe.patcher.methodCall
 import app.morphe.util.getReference
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
@@ -9,11 +11,10 @@ import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
 internal object NowFragmentOnViewCreatedFingerprint : Fingerprint(
+    name = "onViewCreated",
     parameters = listOf("Landroid/view/View;", "Landroid/os/Bundle;"),
     returnType = "V",
-    custom = { method, classDef ->
-        classDef.sourceFile == "NowFragment.kt" && method.name == "onViewCreated"
-    }
+    custom = { _, classDef -> classDef.sourceFile == "NowFragment.kt" }
 )
 
 internal object NowTabPagerAdapterFingerprint : Fingerprint(
@@ -96,23 +97,20 @@ internal object TransitionOpenLinkOrShortformMethodFingerprint : Fingerprint(
 internal object ChooseOpenLinkTabFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.FINAL),
     returnType = "V",
-    custom = { method, classDef ->
-        val instructions = method.implementation?.instructions
-        classDef.sourceFile == "NowFragment.kt" &&
-                method.parameterTypes.size == 2 &&
-                method.parameterTypes.last() == "Landroid/view/View;" &&
-                instructions?.any {
-                    it.opcode == Opcode.SGET_OBJECT &&
-                            it.getReference<FieldReference>()?.name == "Openlink"
-                } == true &&
-                instructions.any {
-                    val reference = it.getReference<MethodReference>()
-                    it.opcode == Opcode.INVOKE_VIRTUAL &&
-                            reference?.definingClass == "Landroidx/viewpager2/widget/ViewPager2;" &&
-                            reference.parameterTypes == listOf("I", "Z") &&
-                            reference.returnType == "V"
-                }
-    }
+    parameters = listOf("L", "Landroid/view/View;"),
+    filters = listOf(
+        fieldAccess(
+            name = "Openlink",
+            opcode = Opcode.SGET_OBJECT,
+        ),
+        methodCall(
+            definingClass = "Landroidx/viewpager2/widget/ViewPager2;",
+            parameters = listOf("I", "Z"),
+            returnType = "V",
+            opcode = Opcode.INVOKE_VIRTUAL,
+        ),
+    ),
+    custom = { _, classDef -> classDef.sourceFile == "NowFragment.kt" },
 )
 
 internal object ChooseNowChildTabFingerprint : Fingerprint(

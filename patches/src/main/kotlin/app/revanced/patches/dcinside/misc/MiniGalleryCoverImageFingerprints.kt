@@ -1,6 +1,10 @@
 package app.revanced.patches.dcinside.misc
 
 import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.InstructionLocation.MatchAfterImmediately
+import app.morphe.patcher.literal
+import app.morphe.patcher.methodCall
+import app.morphe.patcher.opcode
 import app.morphe.util.getReference
 import app.revanced.util.parameterTypeNames
 import com.android.tools.smali.dexlib2.AccessFlags
@@ -20,9 +24,24 @@ internal object MiniGalleryHeaderSetupFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PRIVATE, AccessFlags.FINAL),
     parameters = emptyList(),
     returnType = "V",
+    filters = listOf(
+        methodCall(
+            definingClass = GALLERY_INFO_TYPE,
+            parameters = emptyList(),
+            returnType = "L",
+        ),
+        opcode(Opcode.MOVE_RESULT_OBJECT, MatchAfterImmediately()),
+        methodCall(
+            parameters = emptyList(),
+            returnType = "Z",
+            location = MatchAfterImmediately(),
+        ),
+        opcode(Opcode.MOVE_RESULT, MatchAfterImmediately()),
+        methodCall("$VIEW_TYPE->setVisibility(I)V"),
+        methodCall("$VIEW_STUB_TYPE->setVisibility(I)V"),
+    ),
     custom = { method, classDef ->
         method.findMiniGalleryTypeCheck() != null &&
-            method.hasMiniGalleryHeaderVisibilityUpdates() &&
             classDef.hasMiniGalleryHeaderHideMethod(method.definingClass)
     },
 )
@@ -31,6 +50,17 @@ internal object MiniGalleryHeaderRestoreFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     parameters = emptyList(),
     returnType = "V",
+    filters = listOf(
+        methodCall(
+            definingClass = GALLERY_INFO_TYPE,
+            parameters = emptyList(),
+            returnType = "L",
+        ),
+        literal(2),
+        literal(0),
+        methodCall("$VIEW_TYPE->setVisibility(I)V"),
+        methodCall("$VIEW_STUB_TYPE->setVisibility(I)V"),
+    ),
     custom = { method, _ ->
         method.isMiniGalleryHeaderRestoreMethod()
     },
@@ -143,11 +173,6 @@ private fun Method.isMiniGalleryHeaderRestoreMethod(): Boolean {
     val checksMiniAndPersonGalleryTypes = fieldReferences.count {
         it.definingClass == galleryType && it.type == galleryType
     } >= 2
-    val updatesMiniHeaderVisibility = references.any {
-        it.isSetVisibilityReference(VIEW_TYPE)
-    } && references.any {
-        it.isSetVisibilityReference(VIEW_STUB_TYPE)
-    }
     val callsHeaderStateHelpers = references.count {
         it.definingClass == definingClass &&
             it.parameterTypeNames == listOf("Z") &&
@@ -156,19 +181,7 @@ private fun Method.isMiniGalleryHeaderRestoreMethod(): Boolean {
 
     return findGalleryInfoFieldReference() != null &&
         checksMiniAndPersonGalleryTypes &&
-        updatesMiniHeaderVisibility &&
-        callsHeaderStateHelpers &&
-        instructions.hasLiteral(2) &&
-        instructions.hasLiteral(0)
-}
-
-private fun Method.hasMiniGalleryHeaderVisibilityUpdates(): Boolean {
-    val references = implementation?.instructions
-        ?.mapNotNull { it.getReference<MethodReference>() }
-        ?: return false
-
-    return references.any { it.isSetVisibilityReference(VIEW_TYPE) } &&
-        references.any { it.isSetVisibilityReference(VIEW_STUB_TYPE) }
+        callsHeaderStateHelpers
 }
 
 private fun MethodReference.isSetVisibilityReference(definingClass: String) =

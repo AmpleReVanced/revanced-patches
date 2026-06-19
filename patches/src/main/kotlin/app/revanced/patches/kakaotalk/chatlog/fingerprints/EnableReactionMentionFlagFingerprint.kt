@@ -17,5 +17,5 @@ internal object ReactionMentionFlagFingerprint : Fingerprint(
         Opcode.IF_EQZ,
         Opcode.IF_NE,
     ),
-   custom = { method, classDef -> classDef.sourceFile == "CbtPreferencesWithBlocking.kt" }
+    custom = { method, classDef -> classDef.sourceFile == "CbtPreferencesWithBlocking.kt" }
 )
