@@ -27,6 +27,12 @@ public final class SettingsActivity extends Activity {
     private static final String PREF_GHOST_MODE = "morphe_pref_ghost_mode";
     private static final String PREF_REMOVE_SHORT_FORM_TAB = "morphe_pref_remove_short_form_tab";
     private static final String PREF_HIDE_MORE_TAB_GAME = "morphe_pref_hide_more_tab_game";
+    private static final String PREF_HIDE_MORE_TAB_KAKAO_PAY_SECTION = "morphe_pref_hide_more_tab_kakao_pay_section";
+    private static final String PREF_HIDE_MORE_TAB_GAME_PLAY_SECTION = "morphe_pref_hide_more_tab_game_play_section";
+    private static final String PREF_HIDE_MORE_TAB_KAKAO_NOW_SECTION = "morphe_pref_hide_more_tab_kakao_now_section";
+    private static final String PREF_HIDE_MORE_TAB_WEATHER_SECTION = "morphe_pref_hide_more_tab_weather_section";
+    private static final String PREF_HIDE_MORE_TAB_SERVICE_GROUP_SECTION = "morphe_pref_hide_more_tab_service_group_section";
+    private static final String PREF_HIDE_MORE_TAB_LINE_SERVICE_SECTION = "morphe_pref_hide_more_tab_line_service_section";
     private static final String PREF_DISABLE_99_UNREAD_LIMIT = "morphe_pref_disable_99_unread_limit";
     private static final String PREF_DEFAULT_EXTERNAL_BROWSER = "morphe_pref_default_external_browser";
     private static final String PREF_ENABLE_RECORDING_PAUSE_RESUME = "morphe_pref_enable_recording_pause_resume";
@@ -107,6 +113,12 @@ public final class SettingsActivity extends Activity {
         static {
             RESTART_SENSITIVE_PREFERENCES.add(PREF_REMOVE_SHORT_FORM_TAB);
             RESTART_SENSITIVE_PREFERENCES.add(PREF_HIDE_MORE_TAB_GAME);
+            RESTART_SENSITIVE_PREFERENCES.add(PREF_HIDE_MORE_TAB_KAKAO_PAY_SECTION);
+            RESTART_SENSITIVE_PREFERENCES.add(PREF_HIDE_MORE_TAB_GAME_PLAY_SECTION);
+            RESTART_SENSITIVE_PREFERENCES.add(PREF_HIDE_MORE_TAB_KAKAO_NOW_SECTION);
+            RESTART_SENSITIVE_PREFERENCES.add(PREF_HIDE_MORE_TAB_WEATHER_SECTION);
+            RESTART_SENSITIVE_PREFERENCES.add(PREF_HIDE_MORE_TAB_SERVICE_GROUP_SECTION);
+            RESTART_SENSITIVE_PREFERENCES.add(PREF_HIDE_MORE_TAB_LINE_SERVICE_SECTION);
             RESTART_SENSITIVE_PREFERENCES.add(PREF_FORCE_DEBUG_MODE);
             RESTART_SENSITIVE_PREFERENCES.add(PREF_BYPASS_MOAT_INTEGRITY_CHECK);
         }
@@ -119,6 +131,12 @@ public final class SettingsActivity extends Activity {
             bindSwitch(PREF_GHOST_MODE, Settings.GHOST_MODE);
             bindSwitch(PREF_REMOVE_SHORT_FORM_TAB, Settings.REMOVE_SHORT_FORM_TAB);
             bindSwitch(PREF_HIDE_MORE_TAB_GAME, Settings.HIDE_MORE_TAB_GAME);
+            bindSwitch(PREF_HIDE_MORE_TAB_KAKAO_PAY_SECTION, Settings.HIDE_MORE_TAB_KAKAO_PAY_SECTION);
+            bindSwitch(PREF_HIDE_MORE_TAB_GAME_PLAY_SECTION, Settings.HIDE_MORE_TAB_GAME_PLAY_SECTION);
+            bindSwitch(PREF_HIDE_MORE_TAB_KAKAO_NOW_SECTION, Settings.HIDE_MORE_TAB_KAKAO_NOW_SECTION);
+            bindSwitch(PREF_HIDE_MORE_TAB_WEATHER_SECTION, Settings.HIDE_MORE_TAB_WEATHER_SECTION);
+            bindSwitch(PREF_HIDE_MORE_TAB_SERVICE_GROUP_SECTION, Settings.HIDE_MORE_TAB_SERVICE_GROUP_SECTION);
+            bindSwitch(PREF_HIDE_MORE_TAB_LINE_SERVICE_SECTION, Settings.HIDE_MORE_TAB_LINE_SERVICE_SECTION);
             bindSwitch(PREF_DISABLE_99_UNREAD_LIMIT, Settings.DISABLE_99_UNREAD_LIMIT);
             bindSwitch(PREF_DEFAULT_EXTERNAL_BROWSER, Settings.DEFAULT_EXTERNAL_BROWSER);
             bindSwitch(PREF_ENABLE_RECORDING_PAUSE_RESUME, Settings.ENABLE_RECORDING_PAUSE_RESUME);
