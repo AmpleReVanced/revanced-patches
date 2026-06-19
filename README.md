@@ -4,7 +4,7 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.2.0-dev.4](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.2.0-dev.4)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;85 patches total
+> **[v1.2.0-dev.5](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.2.0-dev.5)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;86 patches total
 <details open>
 <summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;57 patches</summary>
 <br>
@@ -77,7 +77,7 @@
 </details>
 
 <details open>
-<summary>📦 dcinside&nbsp;&nbsp;•&nbsp;&nbsp;20 patches</summary>
+<summary>📦 dcinside&nbsp;&nbsp;•&nbsp;&nbsp;21 patches</summary>
 <br>
 
 **🎯 Supported versions:**
@@ -104,6 +104,7 @@
 | [Hide DC official notices](#hide-dc-official-notices) | Hides official DCInside operator notices from gallery notice lists. |  |
 | [Hide Main Ad](#hide-main-ad) | Hides the main ad in the app. |  |
 | [Hide home components](#hide-home-components) | Adds settings to hide selected DCInside home screen components. |  |
+| [Hide mini gallery cover image](#hide-mini-gallery-cover-image) | Adds a setting to hide the mini gallery cover image above post lists. |  |
 | [Register settings activity](#register-settings-activity) | Registers the Morphe settings activity in the app manifest. |  |
 | [Render big DCCon as normal size](#render-big-dccon-as-normal-size) | Adds a setting to render big DCCon at normal DCCon size. |  |
 | [Spoof Signature](#spoof-signature) | Spoofs the app signature to bypass integrity checks. |  |
