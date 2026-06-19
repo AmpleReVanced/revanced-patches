@@ -3,7 +3,6 @@ package app.revanced.extension.kakaotalk.packet;
 import android.content.Context;
 import android.util.Log;
 import org.jetbrains.annotations.NotNull;
-import top.canyie.pine.Pine;
 
 import java.util.Collections;
 import java.util.List;
@@ -16,13 +15,11 @@ public class HookInitializer implements B5.b<Void> {
     @NotNull
     @Override
     public Void create(@NotNull Context context) {
-        Pine.disableHiddenApiPolicy(true, true);
-
         Serializer serializer = new Serializer();
         RemotePacketHandler remoteHandler = new RemotePacketHandler();
 
+        PacketHook.initialize(serializer);
         startServer(remoteHandler);
-        installHook(serializer);
 
         return null;
     }
@@ -37,11 +34,6 @@ public class HookInitializer implements B5.b<Void> {
                 Log.e(TAG, "Failed to start server", e);
             }
         }).start();
-    }
-
-    private void installHook(Serializer serializer) {
-        PacketHook hook = new PacketHook(serializer);
-        hook.install();
     }
 
     @NotNull
