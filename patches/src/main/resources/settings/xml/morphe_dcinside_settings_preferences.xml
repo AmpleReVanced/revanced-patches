@@ -48,6 +48,16 @@
             android:summary="@string/morphe_settings_hide_home_recommended_posts_summary"
             android:title="@string/morphe_settings_hide_home_recommended_posts" />
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/morphe_settings_section_support">
+        <Preference
+            android:key="morphe_pref_support"
+            android:summary="@string/morphe_settings_support_summary"
+            android:title="@string/morphe_settings_support">
+            <intent
+                android:action="android.intent.action.SENDTO"
+                android:data="mailto:thisisample@proton.me?subject=Morphe%20support" />
+        </Preference>
+    </PreferenceCategory>
     <PreferenceCategory android:title="@string/morphe_settings_section_information">
         <Preference
             android:key="morphe_pref_app_version"

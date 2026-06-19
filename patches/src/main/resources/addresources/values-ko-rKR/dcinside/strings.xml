@@ -22,6 +22,9 @@
     <string name="morphe_settings_hide_home_live_best_summary">홈 화면의 실시간 베스트 목록과 필터를 제거합니다.</string>
     <string name="morphe_settings_hide_home_recommended_posts">추천글 숨기기</string>
     <string name="morphe_settings_hide_home_recommended_posts_summary">홈 화면의 추천글 영역을 제거합니다.</string>
+    <string name="morphe_settings_section_support">후원</string>
+    <string name="morphe_settings_support">프로젝트 후원하기</string>
+    <string name="morphe_settings_support_summary">결과물이 마음에 드시나요? 후원으로 더 나은 결과물을 만드는 데 힘을 보태주세요. 여러분의 지원으로 이 프로젝트는 계속 개발됩니다.</string>
     <string name="morphe_settings_user_memo_preset">이용자 메모 프리셋 등록</string>
     <string name="morphe_settings_user_memo_preset_summary">내장 프리셋을 선택해서 전체 이용자 메모에 바로 등록합니다.</string>
     <string name="morphe_settings_user_memo_preset_select_title">이용자 메모 프리셋 선택</string>

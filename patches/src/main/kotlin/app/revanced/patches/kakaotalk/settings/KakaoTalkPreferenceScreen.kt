@@ -8,6 +8,7 @@ import app.revanced.patches.kakaotalk.settings.preference.SwitchPreference
 import app.revanced.patches.kakaotalk.settings.preference.TextPreference
 
 private const val ACTION_VIEW = "android.intent.action.VIEW"
+private const val ACTION_SENDTO = "android.intent.action.SENDTO"
 
 internal val kakaoTalkSettingsPreferences = linkedSetOf<BasePreference>()
 
@@ -133,6 +134,18 @@ internal fun addDefaultKakaoTalkSettingsPreferences() {
         ),
     )
 
+    PreferenceScreen.SUPPORT.addPreferences(
+        IntentPreference(
+            key = "morphe_pref_support",
+            titleKey = "morphe_settings_support",
+            summaryKey = "morphe_settings_support_summary",
+            intent = IntentPreference.Intent(
+                action = ACTION_SENDTO,
+                data = "mailto:thisisample@proton.me?subject=Morphe%20support",
+            ),
+        ),
+    )
+
     PreferenceScreen.INFORMATION.addPreferences(
         TextPreference(
             key = "morphe_pref_app_version",
@@ -218,6 +231,10 @@ internal object PreferenceScreen : BasePreferenceScreen() {
     val FEATURES = Screen(
         key = "morphe_pref_category_features",
         titleKey = "morphe_settings_section_features",
+    )
+    val SUPPORT = Screen(
+        key = "morphe_pref_category_support",
+        titleKey = "morphe_settings_section_support",
     )
     val INFORMATION = Screen(
         key = "morphe_pref_category_information",
