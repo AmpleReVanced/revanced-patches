@@ -26,6 +26,24 @@ public final class Settings extends BaseSettings {
     public static final BooleanSetting HIDE_MORE_TAB_GAME =
             new BooleanSetting("kakaotalk_hide_more_tab_game", TRUE, true);
 
+    public static final BooleanSetting HIDE_MORE_TAB_KAKAO_PAY_SECTION =
+            new BooleanSetting("kakaotalk_hide_more_tab_kakao_pay_section", false, true);
+
+    public static final BooleanSetting HIDE_MORE_TAB_GAME_PLAY_SECTION =
+            new BooleanSetting("kakaotalk_hide_more_tab_game_play_section", false, true);
+
+    public static final BooleanSetting HIDE_MORE_TAB_KAKAO_NOW_SECTION =
+            new BooleanSetting("kakaotalk_hide_more_tab_kakao_now_section", false, true);
+
+    public static final BooleanSetting HIDE_MORE_TAB_WEATHER_SECTION =
+            new BooleanSetting("kakaotalk_hide_more_tab_weather_section", false, true);
+
+    public static final BooleanSetting HIDE_MORE_TAB_SERVICE_GROUP_SECTION =
+            new BooleanSetting("kakaotalk_hide_more_tab_service_group_section", false, true);
+
+    public static final BooleanSetting HIDE_MORE_TAB_LINE_SERVICE_SECTION =
+            new BooleanSetting("kakaotalk_hide_more_tab_line_service_section", false, true);
+
     public static final BooleanSetting DISABLE_99_UNREAD_LIMIT =
             new BooleanSetting("kakaotalk_disable_99_unread_limit", TRUE);
 
@@ -70,6 +88,30 @@ public final class Settings extends BaseSettings {
 
     public static boolean hideMoreTabGame() {
         return HIDE_MORE_TAB_GAME.get();
+    }
+
+    public static boolean hideMoreTabKakaoPaySection() {
+        return HIDE_MORE_TAB_KAKAO_PAY_SECTION.get();
+    }
+
+    public static boolean hideMoreTabGamePlaySection() {
+        return HIDE_MORE_TAB_GAME_PLAY_SECTION.get();
+    }
+
+    public static boolean hideMoreTabKakaoNowSection() {
+        return HIDE_MORE_TAB_KAKAO_NOW_SECTION.get();
+    }
+
+    public static boolean hideMoreTabWeatherSection() {
+        return HIDE_MORE_TAB_WEATHER_SECTION.get();
+    }
+
+    public static boolean hideMoreTabServiceGroupSection() {
+        return HIDE_MORE_TAB_SERVICE_GROUP_SECTION.get();
+    }
+
+    public static boolean hideMoreTabLineServiceSection() {
+        return HIDE_MORE_TAB_LINE_SERVICE_SECTION.get();
     }
 
     public static boolean disable99UnreadLimit() {

@@ -56,6 +56,42 @@ internal fun addDefaultKakaoTalkSettingsPreferences() {
             summaryKey = "morphe_settings_catalog_hide_more_tab_game_summary",
             defaultValue = true,
         ),
+        SwitchPreference(
+            key = "morphe_pref_hide_more_tab_kakao_pay_section",
+            titleKey = "morphe_settings_catalog_hide_more_tab_kakao_pay_section",
+            summaryKey = "morphe_settings_catalog_hide_more_tab_kakao_pay_section_summary",
+            defaultValue = false,
+        ),
+        SwitchPreference(
+            key = "morphe_pref_hide_more_tab_game_play_section",
+            titleKey = "morphe_settings_catalog_hide_more_tab_game_play_section",
+            summaryKey = "morphe_settings_catalog_hide_more_tab_game_play_section_summary",
+            defaultValue = false,
+        ),
+        SwitchPreference(
+            key = "morphe_pref_hide_more_tab_kakao_now_section",
+            titleKey = "morphe_settings_catalog_hide_more_tab_kakao_now_section",
+            summaryKey = "morphe_settings_catalog_hide_more_tab_kakao_now_section_summary",
+            defaultValue = false,
+        ),
+        SwitchPreference(
+            key = "morphe_pref_hide_more_tab_weather_section",
+            titleKey = "morphe_settings_catalog_hide_more_tab_weather_section",
+            summaryKey = "morphe_settings_catalog_hide_more_tab_weather_section_summary",
+            defaultValue = false,
+        ),
+        SwitchPreference(
+            key = "morphe_pref_hide_more_tab_service_group_section",
+            titleKey = "morphe_settings_catalog_hide_more_tab_service_group_section",
+            summaryKey = "morphe_settings_catalog_hide_more_tab_service_group_section_summary",
+            defaultValue = false,
+        ),
+        SwitchPreference(
+            key = "morphe_pref_hide_more_tab_line_service_section",
+            titleKey = "morphe_settings_catalog_hide_more_tab_line_service_section",
+            summaryKey = "morphe_settings_catalog_hide_more_tab_line_service_section_summary",
+            defaultValue = false,
+        ),
     )
 
     PreferenceScreen.FEATURES.addPreferences(
