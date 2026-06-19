@@ -1,3 +1,21 @@
+# [1.2.0-dev.3](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.2...v1.2.0-dev.3) (2026-06-19)
+
+
+### Bug Fixes
+
+* **kakaotalk:** install pine native library to correct path ([33c90eb](https://github.com/AmpleReVanced/revanced-patches/commit/33c90eb5262ff7fc711ac17f2c0bf014c29d9546))
+* **kakaotalk:** remove Brand tab from Now tab ([2df6d96](https://github.com/AmpleReVanced/revanced-patches/commit/2df6d965e79bb5ea2a277c085c7e6dd22537ccb1))
+
+
+### Features
+
+* add project support section ([51fd340](https://github.com/AmpleReVanced/revanced-patches/commit/51fd3405f70f228347b8a5a91cf266fe1f26546f))
+* **kakaotalk:** add More tab component hide options ([311418f](https://github.com/AmpleReVanced/revanced-patches/commit/311418f2a81bf55df53675655272f751af57954e))
+* **kakaotalk:** hide game tab in more tab ([aff2e4b](https://github.com/AmpleReVanced/revanced-patches/commit/aff2e4ba1f19fec106eb5b56537a62160301ab6b))
+* **kakaotalk:** restore packet handler for latest version ([5c78139](https://github.com/AmpleReVanced/revanced-patches/commit/5c781398b5820b522a846ff04a1d7d7eead60d59))
+* **kakaotalk:** update kakaotalk patches for version 26.5.0 ([488c238](https://github.com/AmpleReVanced/revanced-patches/commit/488c2383be48a83ecfe42dbf3360996ed1a86d4b))
+* **kakaotalk:** update kakaotalk patches for version 26.5.2 ([8d8e2f2](https://github.com/AmpleReVanced/revanced-patches/commit/8d8e2f225cd916ee2a6615c5eabd99d738b3d1f0))
+
 # [1.2.0-dev.2](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.1...v1.2.0-dev.2) (2026-06-13)
 
 

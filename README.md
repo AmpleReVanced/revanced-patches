@@ -4,14 +4,14 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.2.0-dev.2](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.2.0-dev.2)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;83 patches total
+> **[v1.2.0-dev.3](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.2.0-dev.3)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;85 patches total
 <details open>
-<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;55 patches</summary>
+<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;57 patches</summary>
 <br>
 
 **🎯 Supported versions:**
 
-| 26.4.2 |
+| 26.5.2 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
@@ -53,6 +53,8 @@
 | [Force enable debug mode](#force-enable-debug-mode) | Enables debug mode in the app. |  |
 | [Force enable emoticon plus feature](#force-enable-emoticon-plus-feature) | Force enable emoticon plus feature (Unpurchased emoticon can be sent once per day) |  |
 | [Ghost Mode](#ghost-mode) | Don't expose your typing status to the other party. |  |
+| [Hide More tab Game tab](#hide-more-tab-game-tab) | Hides the Game tab from the More tab. |  |
+| [Hide More tab components](#hide-more-tab-components) | Adds options to hide components from the More tab. |  |
 | [Hook Package Manager](#hook-package-manager) | Hooks the Package Manager to bypass integrity checks. |  |
 | [Override feature flag](#override-feature-flag) | Overrides the feature flag to enable the feature. | • Feature flag overrides |
 | [Play YouTube player in chat room](#play-youtube-player-in-chat-room) | Allows playing YouTube videos in KakaoTalk chat rooms. |  |
