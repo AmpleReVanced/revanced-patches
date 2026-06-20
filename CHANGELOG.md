@@ -1,3 +1,16 @@
+# [1.2.0-dev.6](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.5...v1.2.0-dev.6) (2026-06-20)
+
+### Bug Fixes
+
+* **kakaotalk:** resolve edited history sender profile from chat model ([c65c9c2](https://github.com/AmpleReVanced/revanced-patches/commit/c65c9c2132cb100464281c3271254dcdd3339018))
+* **kakaotalk:** respect chat theme in edit history screen ([8b94b3b](https://github.com/AmpleReVanced/revanced-patches/commit/8b94b3b7b821bd9deaac11817ae239a89d226e7b))
+
+### Features
+
+* **kakaotalk:** add edited message history ([0e19d4e](https://github.com/AmpleReVanced/revanced-patches/commit/0e19d4e226e07e32cfd1141de6e5f84fa7cb0566))
+* **kakaotalk:** add edited message history ([#139](https://github.com/AmpleReVanced/revanced-patches/issues/139)) ([ff316fa](https://github.com/AmpleReVanced/revanced-patches/commit/ff316fa7fb8e3cd7a4deb1433192ecaf2bba99d2))
+* **kakaotalk:** show sender profile in edit history ([73af0fa](https://github.com/AmpleReVanced/revanced-patches/commit/73af0fa9ce739a668dc7ba3a9041b0174d83fbf4))
+
 # [1.2.0-dev.5](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.4...v1.2.0-dev.5) (2026-06-19)
 
 ### Bug Fixes

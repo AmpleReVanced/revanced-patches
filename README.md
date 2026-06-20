@@ -4,7 +4,7 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.2.0-dev.5](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.2.0-dev.5)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;86 patches total
+> **[v1.2.0-dev.6](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.2.0-dev.6)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;86 patches total
 <details open>
 <summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;57 patches</summary>
 <br>
@@ -68,7 +68,7 @@
 | [Remove native ad](#remove-native-ad) | Removes the native ad from the app. |  |
 | [Remove shop tab](#remove-shop-tab) | Removes the shop tab from the bottom navigation bar. |  |
 | [Show chatroom channel ID](#show-chatroom-channel-id) | Shows the channel ID in chatroom settings and copies it when tapping the chat side title. |  |
-| [Show deleted or hidden messages](#show-deleted-or-hidden-messages) | Allows you to see deleted/hidden messages in chat logs. | • Deleted color<br>• Hidden color |
+| [Show deleted, hidden, or edited messages](#show-deleted-hidden-or-edited-messages) | Allows you to see deleted, hidden, and edited message history in chat logs. | • Deleted color<br>• Hidden color |
 | [Spoof App ID](#spoof-app-id) | Spoofs the App ID to bypass integrity checks. (to bypass biometric auth etc.) |  |
 | [Spoof apk checksums](#spoof-apk-checksums) | Spoofs the apk checksums to pass integrity checks. |  |
 | [Spoof signature](#spoof-signature) | Spoofs the app signature to pass integrity checks. |  |

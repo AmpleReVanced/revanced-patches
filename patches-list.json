@@ -1,5 +1,5 @@
 {
-  "version": "1.2.0-dev.5",
+  "version": "1.2.0-dev.6",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -2103,13 +2103,14 @@
       "options": []
     },
     {
-      "name": "Show deleted or hidden messages",
-      "description": "Allows you to see deleted/hidden messages in chat logs.",
+      "name": "Show deleted, hidden, or edited messages",
+      "description": "Allows you to see deleted, hidden, and edited message history in chat logs.",
       "default": true,
       "dependencies": [
         "BytecodePatch",
         "ResourcePatch",
-        "BytecodePatch"
+        "BytecodePatch",
+        "ResourcePatch"
       ],
       "compatiblePackages": [
         {
