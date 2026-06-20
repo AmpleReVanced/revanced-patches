@@ -1,5 +1,5 @@
 {
-  "version": "1.2.0-dev.4",
+  "version": "1.2.0-dev.5",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -1652,6 +1652,33 @@
     {
       "name": "Hide home components",
       "description": "Adds settings to hide selected DCInside home screen components.",
+      "default": true,
+      "dependencies": [
+        "BytecodePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "com.dcinside.app.android",
+          "name": "dcinside",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#3D4491",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "5.2.15",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Hide mini gallery cover image",
+      "description": "Adds a setting to hide the mini gallery cover image above post lists.",
       "default": true,
       "dependencies": [
         "BytecodePatch"
