@@ -17,6 +17,11 @@ Second \"item\" text"</string>
 <resources>
     <string name="morphe_kakaotalk_chatlog_deleted">Deleted</string>
     <string name="morphe_kakaotalk_chatlog_hidden">Hidden</string>
+    <string name="morphe_kakaotalk_chatlog_modified_history_title">Edit history</string>
+    <string name="morphe_kakaotalk_chatlog_modified_history_revision">Before revision %1$d</string>
+    <string name="morphe_kakaotalk_chatlog_modified_history_current">Current message</string>
+    <string name="morphe_kakaotalk_chatlog_modified_history_empty">Empty message</string>
+    <string name="morphe_kakaotalk_chatlog_modified_history_no_items">No edit history</string>
     <string name="morphe_kakaotalk_channel_id_label">Channel ID</string>
     <string name="morphe_kakaotalk_channel_id_copied">Channel ID copied</string>
     <string name="morphe_label_for_ample_settings">Morphe Settings</string>
@@ -37,6 +42,8 @@ Second \"item\" text"</string>
     <string name="morphe_settings_patch_disable_99_unread_limit_summary">Shows the full unread count instead of limiting the badge to 99+.</string>
     <string name="morphe_settings_patch_open_chat_room_comment_disabled">Disable comments in open chat</string>
     <string name="morphe_settings_patch_open_chat_room_comment_disabled_summary">Uses replies instead of comments in open chat when enabled.</string>
+    <string name="morphe_settings_patch_show_modified_message_sender_profile">Show sender profile in edit history</string>
+    <string name="morphe_settings_patch_show_modified_message_sender_profile_summary">Shows the sender’s profile image and nickname in message edit history.</string>
     <string name="morphe_settings_patch_feature_flag_overrides">Feature flag overrides</string>
     <string name="morphe_settings_patch_feature_flag_overrides_summary">Enter overrides as semicolon-separated key=value pairs.</string>
     <string name="morphe_settings_patch_external_browser">Open in external browser</string>

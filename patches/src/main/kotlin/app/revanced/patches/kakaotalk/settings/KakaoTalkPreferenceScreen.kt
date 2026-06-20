@@ -37,6 +37,12 @@ internal fun addDefaultKakaoTalkSettingsPreferences() {
             summaryKey = "morphe_settings_patch_open_chat_room_comment_disabled_summary",
             defaultValue = false,
         ),
+        SwitchPreference(
+            key = "morphe_pref_show_modified_message_sender_profile",
+            titleKey = "morphe_settings_patch_show_modified_message_sender_profile",
+            summaryKey = "morphe_settings_patch_show_modified_message_sender_profile_summary",
+            defaultValue = true,
+        ),
         EditTextPreference(
             key = "morphe_pref_feature_flag_overrides",
             titleKey = "morphe_settings_patch_feature_flag_overrides",

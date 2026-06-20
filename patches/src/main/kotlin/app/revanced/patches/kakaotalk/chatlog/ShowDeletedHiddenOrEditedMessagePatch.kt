@@ -2,10 +2,14 @@ package app.revanced.patches.kakaotalk.chatlog
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
+import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
+import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.resourcePatch
 import app.morphe.patcher.patch.stringOption
+import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patcher.util.proxy.mutableTypes.MutableField.Companion.toMutable
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
 import app.morphe.patches.all.misc.resources.addResourcesPatch
@@ -15,6 +19,8 @@ import app.revanced.patches.kakaotalk.chatlog.fingerprints.ChatInfoViewClassFing
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.ChatLogFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.ChatLogItemViewHolderFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.ChatLogVFieldPutBooleanFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.ChatLogVFieldPutStringFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.ChatLogViewHolderBindProfileFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.ChatLogViewHolderSetupChatInfoViewFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.ChatRoomListManagerGetInstanceFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.CheckViewableChatLogFingerprint
@@ -24,6 +30,9 @@ import app.revanced.patches.kakaotalk.chatlog.fingerprints.GetChatRoomByChannelI
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.GetDeletedColorFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.GetDeletedMessageCacheFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.GetHiddenColorFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.ModifiedChatLogApplyFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.ModifiedChatLogFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.ModifyLogBuilderFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.MyChatInfoViewClassFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.OriginalSyncMethodFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.OthersChatInfoViewClassFingerprint
@@ -33,18 +42,37 @@ import app.revanced.patches.kakaotalk.misc.addExtensionPatch
 import app.revanced.patches.kakaotalk.misc.sharedExtensionPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.patches.kakaotalk.shared.addKakaoTalkResources
+import app.revanced.util.localRegisterCount
+import app.revanced.util.parameterTypeNames
+import app.revanced.util.smaliReference
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.MutableMethodImplementation
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction11n
+import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.immutable.ImmutableField
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethodParameter
+import org.w3c.dom.Element
 
 private const val ARGB_32_MASK = 0xFFFF_FFFFL
 private const val OPAQUE_ALPHA = 0xFF00_0000L
+private const val MODIFIED_PROFILE_NICKNAME_METHOD = "revanced_modified_profile_nickname"
+private const val MODIFIED_PROFILE_USER_ID_METHOD = "revanced_modified_profile_user_id"
+private const val MODIFIED_PROFILE_IMAGE_URL_METHOD = "revanced_modified_profile_image_url"
+private const val MODIFIED_PROFILE_IMAGE_TYPE_METHOD = "revanced_modified_profile_image_type"
+
+private data class ModifiedProfileReferences(
+    val getRecyclerItemReference: MethodReference,
+    val getProfileUserIdReference: MethodReference,
+    val getMemberStateReference: MethodReference,
+    val getProfileImageReference: MethodReference,
+    val getProfileStatusReference: MethodReference,
+    val getProfileNicknameReference: MethodReference,
+    val openProfileFieldReference: FieldReference,
+)
 
 private fun parseArgb32ToInt(input: String): Int {
     val t = input.trim().replace("_", "")
@@ -70,13 +98,44 @@ private fun parseHashColor(input: String): Long {
 private fun toSmaliIntLiteral(value: Int) =
     "0x" + (value.toLong() and ARGB_32_MASK).toString(16).padStart(8, '0')
 
+private val registerModifiedMessageHistoryActivityPatch = resourcePatch {
+    compatibleWith(COMPATIBILITY_KAKAO)
+
+    execute {
+        document("AndroidManifest.xml").use { document ->
+            val application = document.getElementsByTagName("application").item(0) as Element
+            val activityName = "app.revanced.extension.kakaotalk.chatlog.ModifiedMessageHistoryActivity"
+            val activities = application.getElementsByTagName("activity")
+
+            for (i in 0 until activities.length) {
+                val activity = activities.item(i) as? Element ?: continue
+                if (activity.getAttribute("android:name") == activityName) {
+                    activity.setAttribute("android:excludeFromRecents", "true")
+                    activity.setAttribute("android:exported", "false")
+                    activity.setAttribute("android:label", "@string/morphe_kakaotalk_chatlog_modified_history_title")
+                    activity.setAttribute("android:theme", "@style/Theme.Default.NoActionBar")
+                    return@use
+                }
+            }
+
+            val activity = document.createElement("activity")
+            activity.setAttribute("android:name", activityName)
+            activity.setAttribute("android:excludeFromRecents", "true")
+            activity.setAttribute("android:exported", "false")
+            activity.setAttribute("android:label", "@string/morphe_kakaotalk_chatlog_modified_history_title")
+            activity.setAttribute("android:theme", "@style/Theme.Default.NoActionBar")
+            application.appendChild(activity)
+        }
+    }
+}
+
 @Suppress("unused")
-val showDeletedOrHiddenMessagePatch = bytecodePatch(
-    name = "Show deleted or hidden messages",
-    description = "Allows you to see deleted/hidden messages in chat logs.",
+val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
+    name = "Show deleted, hidden, or edited messages",
+    description = "Allows you to see deleted, hidden, and edited message history in chat logs.",
 ) {
     compatibleWith(COMPATIBILITY_KAKAO)
-    dependsOn(addExtensionPatch, addResourcesPatch, sharedExtensionPatch)
+    dependsOn(addExtensionPatch, addResourcesPatch, sharedExtensionPatch, registerModifiedMessageHistoryActivityPatch)
 
     val deletedColorText by stringOption(
         key = "deletedColor",
@@ -299,6 +358,7 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
         val chatLogVFieldClass = ChatLogVFieldPutBooleanFingerprint.classDef
         chatLogVFieldClass.let {
             val putBooleanMethod = ChatLogVFieldPutBooleanFingerprint.method
+            val putStringMethod = ChatLogVFieldPutStringFingerprint.method
 
             it.methods.addAll(
                 listOf(
@@ -387,6 +447,53 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
                                 return v0
                             """,
                         )
+                    },
+                    ImmutableMethod(
+                        chatLogVFieldClass.type,
+                        "putModifiedMessage",
+                        listOf(
+                            ImmutableMethodParameter("Ljava/lang/String;", null, null),
+                            ImmutableMethodParameter("I", null, null),
+                            ImmutableMethodParameter("Ljava/lang/String;", null, null),
+                        ),
+                        "V",
+                        AccessFlags.PUBLIC.value or AccessFlags.FINAL.value,
+                        null,
+                        null,
+                        MutableMethodImplementation(6),
+                    ).toMutable().apply {
+                        addInstructions(
+                            0,
+                            """
+                                const-string v0, "_revanced_modified_history"
+                                invoke-static {p3, p1, p2}, Lapp/revanced/extension/kakaotalk/chatlog/ModifiedMessageHistoryExtension;->mergeModifiedHistory(Ljava/lang/String;Ljava/lang/String;I)Ljava/lang/String;
+                                move-result-object v1
+                                invoke-virtual {p0, v0, v1}, ${chatLogVFieldClass.type}->${putStringMethod.name}(Ljava/lang/String;Ljava/lang/String;)V
+                                return-void
+                            """,
+                        )
+                    },
+                    ImmutableMethod(
+                        chatLogVFieldClass.type,
+                        "getModifiedHistory",
+                        emptyList(),
+                        "Ljava/lang/String;",
+                        AccessFlags.PUBLIC.value or AccessFlags.FINAL.value,
+                        null,
+                        null,
+                        MutableMethodImplementation(3),
+                    ).toMutable().apply {
+                        addInstructions(
+                            0,
+                            """
+                                iget-object v0, p0, ${chatLogVFieldClass.type}->a:Lorg/json/JSONObject;
+                                const-string v1, "_revanced_modified_history"
+                                const-string v2, ""
+                                invoke-virtual {v0, v1, v2}, Lorg/json/JSONObject;->optString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+                                move-result-object v0
+                                return-object v0
+                            """,
+                        )
                     }
                 )
             )
@@ -394,6 +501,43 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
 
         val chatLogClass = ChatLogFingerprint.classDef
         val vFieldField = chatLogClass.fields.first { it.type == chatLogVFieldClass.type }
+        val modifiedChatLogType = ModifiedChatLogFingerprint.classDef.type
+        val modifyLogBuilderMethod = ModifyLogBuilderFingerprint(chatLogClass.type).method
+
+        val messageGetterReference = modifyLogBuilderMethod.instructions
+            .asSequence()
+            .mapNotNull { it.getReference<MethodReference>() }
+            .filter {
+                it.definingClass == chatLogClass.type &&
+                        it.parameterTypeNames.isEmpty() &&
+                        it.returnType == "Ljava/lang/String;"
+            }
+            .lastOrNull()
+            ?: throw PatchException("Could not find modified message getter.")
+
+        val modifyRevisionGetterReference = modifyLogBuilderMethod.instructions
+            .asSequence()
+            .mapNotNull { it.getReference<MethodReference>() }
+            .filter {
+                it.definingClass == chatLogVFieldClass.type &&
+                        it.parameterTypeNames.isEmpty() &&
+                        it.returnType == "I"
+            }
+            .lastOrNull()
+            ?: throw PatchException("Could not find modified revision getter.")
+
+        ModifiedChatLogApplyFingerprint(chatLogClass.type, modifiedChatLogType)
+            .matchAll(1 .. 2)
+            .forEach {
+                it.method.addModifiedHistoryHook(
+                    chatLogClass.type,
+                    modifiedChatLogType,
+                    vFieldField.smaliReference,
+                    vFieldField.type,
+                    messageGetterReference.smaliReference,
+                    modifyRevisionGetterReference.smaliReference,
+                )
+            }
 
         val replaceToFeedMethod = ReplaceToFeedFingerprint.method
         replaceToFeedMethod.let {
@@ -481,6 +625,14 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
 
         CheckViewableChatLogFingerprint.method.returnEarly(true)
 
+        val modifiedProfileReferences = ChatLogViewHolderBindProfileFingerprint.method.resolveModifiedProfileReferences(
+            ChatLogItemViewHolderFingerprint.method.definingClass,
+        )
+        val chatLogViewHolderProfileClass = ChatLogViewHolderBindProfileFingerprint.classDef
+        chatLogViewHolderProfileClass.methods.addAll(
+            modifiedProfileAccessorMethods(chatLogViewHolderProfileClass.type, modifiedProfileReferences)
+        )
+
         val chatLogViewHolderSetupChatInfoViewMethod = ChatLogViewHolderSetupChatInfoViewFingerprint.method
         chatLogViewHolderSetupChatInfoViewMethod.let {
             val getChatLogItemMethod = ChatLogItemViewHolderFingerprint.method
@@ -509,6 +661,7 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
                     if-nez v6, :cond_get_vfield
                     const/4 v8, 0x0
                     const/4 v9, 0x0
+                    const-string v10, ""
                     goto :goto_set_flags
                     
                     :cond_get_vfield
@@ -519,10 +672,22 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
                     
                     invoke-virtual {v7}, ${vFieldField.type}->getHidden()Z
                     move-result v9
+
+                    invoke-virtual {v7}, ${vFieldField.type}->getModifiedHistory()Ljava/lang/String;
+                    move-result-object v10
                     
                     :goto_set_flags
                     invoke-virtual {v5, v8}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->setDeleted(Z)V
                     invoke-virtual {v5, v9}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->setHidden(Z)V
+                    if-nez v6, :cond_get_current_message
+                    const-string v12, ""
+                    goto :goto_get_current_message
+                    :cond_get_current_message
+                    invoke-virtual {v6}, ${messageGetterReference.smaliReference}
+                    move-result-object v12
+                    :goto_get_current_message
+                    instance-of v11, v0, Lcom/kakao/talk/widget/chatlog/MyChatInfoView;
+                    invoke-static {p0, v10, v12, v11}, Lapp/revanced/extension/kakaotalk/chatlog/ModifiedMessageHistoryExtension;->bindModifiedLabel(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;Z)V
                     
                     :skip_set_flags
                     nop
@@ -537,3 +702,245 @@ val showDeletedOrHiddenMessagePatch = bytecodePatch(
         GetDeletedMessageCacheFingerprint.method.returnEarly(false)
     }
 }
+
+private fun MutableMethod.addModifiedHistoryHook(
+    chatLogType: String,
+    modifiedChatLogType: String,
+    vFieldReference: String,
+    vFieldType: String,
+    messageGetterReference: String,
+    modifyRevisionGetterReference: String,
+) {
+    val newChatLogIndex = instructions.indexOfFirst { instruction ->
+        val reference = instruction.getReference<MethodReference>() ?: return@indexOfFirst false
+
+        reference.parameterTypeNames == listOf(chatLogType, modifiedChatLogType, "Ljava/lang/String;") &&
+                reference.returnType == chatLogType
+    }.takeIf { it >= 0 }
+        ?: throw PatchException("Could not find modified ChatLog builder call.")
+
+    val newChatLogRegister = (getInstruction(newChatLogIndex + 1) as? OneRegisterInstruction)?.registerA
+        ?: throw PatchException("Could not find modified ChatLog result register.")
+
+    val scratchRegisters = (0 until localRegisterCount)
+        .filter { it != newChatLogRegister }
+        .take(4)
+
+    if (scratchRegisters.size < 4) {
+        throw PatchException("Not enough registers to preserve modified message history.")
+    }
+
+    val (messageRegister, historyRegister, revisionRegister, vFieldRegister) = scratchRegisters
+
+    addInstructions(
+        newChatLogIndex + 2,
+        """
+            invoke-virtual {p1}, $messageGetterReference
+            move-result-object v$messageRegister
+            iget-object v$historyRegister, p1, $vFieldReference
+            invoke-virtual {v$historyRegister}, $vFieldType->getModifiedHistory()Ljava/lang/String;
+            move-result-object v$historyRegister
+            iget-object v$revisionRegister, p1, $vFieldReference
+            invoke-virtual {v$revisionRegister}, $modifyRevisionGetterReference
+            move-result v$revisionRegister
+            iget-object v$vFieldRegister, v$newChatLogRegister, $vFieldReference
+            invoke-virtual {v$vFieldRegister, v$messageRegister, v$revisionRegister, v$historyRegister}, $vFieldType->putModifiedMessage(Ljava/lang/String;ILjava/lang/String;)V
+        """.trimIndent(),
+    )
+}
+
+private fun MutableMethod.resolveModifiedProfileReferences(
+    viewHolderBaseClass: String,
+): ModifiedProfileReferences {
+    val profileLoadIndex = instructions.indexOfFirst { instruction ->
+        instruction.getReference<MethodReference>()?.isProfileLoadCall() == true
+    }.takeIf { it >= 0 }
+        ?: throw PatchException("Could not find modified message profile load call.")
+
+    val profileImageIndex = (profileLoadIndex - 1 downTo 0).firstOrNull { index ->
+        instructions[index].getReference<MethodReference>()?.let { reference ->
+            reference.parameterTypeNames.isEmpty() &&
+                    reference.returnType == "Ljava/lang/String;"
+        } == true
+    } ?: throw PatchException("Could not find modified message profile image getter.")
+
+    val profileImageReference = instructions[profileImageIndex].getReference<MethodReference>()
+        ?: throw PatchException("Could not resolve modified message profile image getter.")
+    val memberStateType = profileImageReference.definingClass
+
+    val getMemberStateReference = instructions.take(profileImageIndex)
+        .mapNotNull { it.getReference<MethodReference>() }
+        .lastOrNull {
+            it.parameterTypeNames.isEmpty() &&
+                    it.returnType == memberStateType
+        } ?: throw PatchException("Could not find modified message member state getter.")
+    val recyclerItemType = getMemberStateReference.definingClass
+
+    val getRecyclerItemReference = instructions.take(profileImageIndex)
+        .mapNotNull { it.getReference<MethodReference>() }
+        .lastOrNull {
+            it.definingClass == viewHolderBaseClass &&
+                    it.parameterTypeNames.isEmpty() &&
+                    it.returnType == recyclerItemType
+        } ?: throw PatchException("Could not find modified message recycler item getter.")
+
+    val getProfileUserIdReference = instructions.take(profileLoadIndex)
+        .mapNotNull { it.getReference<MethodReference>() }
+        .lastOrNull {
+            it.definingClass == recyclerItemType &&
+                    it.parameterTypeNames.isEmpty() &&
+                    it.returnType == "J"
+        } ?: throw PatchException("Could not find modified message profile user id getter.")
+
+    val openProfileFieldReference = instructions.take(profileLoadIndex)
+        .mapNotNull { it.getReference<FieldReference>() }
+        .lastOrNull {
+            it.definingClass == it.type &&
+                    it.type.startsWith("L")
+        } ?: throw PatchException("Could not find modified message open profile field.")
+
+    val getProfileStatusReference = instructions.take(profileLoadIndex)
+        .mapNotNull { it.getReference<MethodReference>() }
+        .lastOrNull {
+            it.definingClass == memberStateType &&
+                    it.parameterTypeNames.isEmpty() &&
+                    it.returnType == openProfileFieldReference.type
+        } ?: throw PatchException("Could not find modified message profile status getter.")
+
+    val nicknameSetTextIndex = instructions.indices.lastOrNull { index ->
+        index > profileLoadIndex &&
+                instructions[index].getReference<MethodReference>()?.isTextSetCall() == true
+    } ?: throw PatchException("Could not find modified message profile nickname binding.")
+
+    val getProfileNicknameReference = instructions.take(nicknameSetTextIndex)
+        .mapNotNull { it.getReference<MethodReference>() }
+        .lastOrNull {
+            it.definingClass == memberStateType &&
+                    it.parameterTypeNames.isEmpty() &&
+                    it.returnType == "Ljava/lang/String;"
+        } ?: throw PatchException("Could not find modified message profile nickname getter.")
+
+    return ModifiedProfileReferences(
+        getRecyclerItemReference,
+        getProfileUserIdReference,
+        getMemberStateReference,
+        profileImageReference,
+        getProfileStatusReference,
+        getProfileNicknameReference,
+        openProfileFieldReference,
+    )
+}
+
+private fun MethodReference.isProfileLoadCall() =
+    definingClass == "Lcom/kakao/talk/widget/ProfileView;" &&
+            name == "load" &&
+            parameterTypeNames == listOf("J", "Ljava/lang/String;", "I") &&
+            returnType == "V"
+
+private fun MethodReference.isTextSetCall() =
+    definingClass == "Landroid/widget/TextView;" &&
+            name == "setText" &&
+            parameterTypeNames == listOf("Ljava/lang/CharSequence;") &&
+            returnType == "V"
+
+private fun modifiedProfileAccessorMethods(
+    definingClass: String,
+    references: ModifiedProfileReferences,
+): List<MutableMethod> = listOf(
+    ImmutableMethod(
+        definingClass,
+        MODIFIED_PROFILE_NICKNAME_METHOD,
+        emptyList(),
+        "Ljava/lang/String;",
+        AccessFlags.PUBLIC.value or AccessFlags.FINAL.value,
+        null,
+        null,
+        MutableMethodImplementation(3),
+    ).toMutable().apply {
+        addInstructions(
+            0,
+            """
+                invoke-virtual {p0}, ${references.getRecyclerItemReference.smaliReference}
+                move-result-object v0
+                invoke-virtual {v0}, ${references.getMemberStateReference.smaliReference}
+                move-result-object v0
+                invoke-virtual {v0}, ${references.getProfileNicknameReference.smaliReference}
+                move-result-object v0
+                return-object v0
+            """.trimIndent(),
+        )
+    },
+    ImmutableMethod(
+        definingClass,
+        MODIFIED_PROFILE_USER_ID_METHOD,
+        emptyList(),
+        "J",
+        AccessFlags.PUBLIC.value or AccessFlags.FINAL.value,
+        null,
+        null,
+        MutableMethodImplementation(3),
+    ).toMutable().apply {
+        addInstructions(
+            0,
+            """
+                invoke-virtual {p0}, ${references.getRecyclerItemReference.smaliReference}
+                move-result-object v0
+                invoke-virtual {v0}, ${references.getProfileUserIdReference.smaliReference}
+                move-result-wide v0
+                return-wide v0
+            """.trimIndent(),
+        )
+    },
+    ImmutableMethod(
+        definingClass,
+        MODIFIED_PROFILE_IMAGE_URL_METHOD,
+        emptyList(),
+        "Ljava/lang/String;",
+        AccessFlags.PUBLIC.value or AccessFlags.FINAL.value,
+        null,
+        null,
+        MutableMethodImplementation(3),
+    ).toMutable().apply {
+        addInstructions(
+            0,
+            """
+                invoke-virtual {p0}, ${references.getRecyclerItemReference.smaliReference}
+                move-result-object v0
+                invoke-virtual {v0}, ${references.getMemberStateReference.smaliReference}
+                move-result-object v0
+                invoke-virtual {v0}, ${references.getProfileImageReference.smaliReference}
+                move-result-object v0
+                return-object v0
+            """.trimIndent(),
+        )
+    },
+    ImmutableMethod(
+        definingClass,
+        MODIFIED_PROFILE_IMAGE_TYPE_METHOD,
+        emptyList(),
+        "I",
+        AccessFlags.PUBLIC.value or AccessFlags.FINAL.value,
+        null,
+        null,
+        MutableMethodImplementation(3),
+    ).toMutable().apply {
+        addInstructions(
+            0,
+            """
+                invoke-virtual {p0}, ${references.getRecyclerItemReference.smaliReference}
+                move-result-object v0
+                invoke-virtual {v0}, ${references.getMemberStateReference.smaliReference}
+                move-result-object v0
+                invoke-virtual {v0}, ${references.getProfileStatusReference.smaliReference}
+                move-result-object v0
+                sget-object v1, ${references.openProfileFieldReference.smaliReference}
+                if-ne v0, v1, :revanced_modified_profile_not_open
+                const/4 v0, -0x1
+                return v0
+                :revanced_modified_profile_not_open
+                const/4 v0, 0x0
+                return v0
+            """.trimIndent(),
+        )
+    },
+)
