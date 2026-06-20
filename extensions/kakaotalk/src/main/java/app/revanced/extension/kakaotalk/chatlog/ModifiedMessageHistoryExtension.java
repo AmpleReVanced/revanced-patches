@@ -17,13 +17,17 @@ import java.lang.reflect.Field;
 import app.revanced.extension.kakaotalk.settings.Settings;
 
 public final class ModifiedMessageHistoryExtension {
+    private static final String PROFILE_NICKNAME_METHOD = "revanced_modified_profile_nickname";
+    private static final String PROFILE_USER_ID_METHOD = "revanced_modified_profile_user_id";
+    private static final String PROFILE_IMAGE_URL_METHOD = "revanced_modified_profile_image_url";
+    private static final String PROFILE_IMAGE_TYPE_METHOD = "revanced_modified_profile_image_type";
+
     private static int modifiedLabelId;
     private static int bubbleId;
     private static int messageId;
     private static int nicknameId;
     private static int profileId;
     private static int profileLayoutId;
-    private static ProfileInfo cachedProfileInfo;
 
     private ModifiedMessageHistoryExtension() {
     }
@@ -65,7 +69,7 @@ public final class ModifiedMessageHistoryExtension {
             public void onClick(View view) {
                 ProfileInfo profileInfo = isMine || !Settings.showModifiedMessageSenderProfile()
                         ? null
-                        : findProfileInfo(itemView);
+                        : findProfileInfo(viewHolder, itemView);
                 ModifiedMessageHistoryActivity.start(
                         view.getContext(),
                         safeHistoryJson,
@@ -73,7 +77,10 @@ public final class ModifiedMessageHistoryExtension {
                         isMine,
                         isDarkMode(itemView),
                         profileInfo == null ? null : profileInfo.nickname,
-                        profileInfo == null ? null : profileInfo.profileImage
+                        profileInfo == null ? null : profileInfo.profileImage,
+                        profileInfo == null ? 0L : profileInfo.profileUserId,
+                        profileInfo == null ? null : profileInfo.profileImageUrl,
+                        profileInfo == null ? 0 : profileInfo.profileImageType
                 );
             }
         });
@@ -154,10 +161,66 @@ public final class ModifiedMessageHistoryExtension {
                 && ((Color.red(color) * 299) + (Color.green(color) * 587) + (Color.blue(color) * 114)) >= 128000;
     }
 
-    private static ProfileInfo findProfileInfo(View itemView) {
-        ProfileInfo profileInfo = getProfileInfo(itemView);
+    private static ProfileInfo findProfileInfo(Object viewHolder, View itemView) {
+        ProfileInfo profileInfo = getModelProfileInfo(viewHolder);
         if (profileInfo != null) return profileInfo;
 
+        profileInfo = getProfileInfo(itemView);
+        if (profileInfo != null) return profileInfo;
+
+        profileInfo = findPreviousSiblingProfileInfo(itemView);
+        if (profileInfo != null) return profileInfo;
+
+        return null;
+    }
+
+    private static ProfileInfo getModelProfileInfo(Object viewHolder) {
+        String nickname = invokeString(viewHolder, PROFILE_NICKNAME_METHOD);
+        long profileUserId = invokeLong(viewHolder, PROFILE_USER_ID_METHOD);
+        String profileImageUrl = invokeString(viewHolder, PROFILE_IMAGE_URL_METHOD);
+        int profileImageType = invokeInt(viewHolder, PROFILE_IMAGE_TYPE_METHOD);
+
+        if ((nickname == null || nickname.length() == 0)
+                && profileUserId == 0L
+                && (profileImageUrl == null || profileImageUrl.length() == 0)) {
+            return null;
+        }
+
+        return new ProfileInfo(
+                nickname,
+                null,
+                profileUserId,
+                profileImageUrl,
+                profileImageType
+        );
+    }
+
+    private static String invokeString(Object target, String methodName) {
+        Object value = invokeNoArg(target, methodName);
+        return value instanceof String ? (String) value : null;
+    }
+
+    private static long invokeLong(Object target, String methodName) {
+        Object value = invokeNoArg(target, methodName);
+        return value instanceof Number ? ((Number) value).longValue() : 0L;
+    }
+
+    private static int invokeInt(Object target, String methodName) {
+        Object value = invokeNoArg(target, methodName);
+        return value instanceof Number ? ((Number) value).intValue() : 0;
+    }
+
+    private static Object invokeNoArg(Object target, String methodName) {
+        if (target == null) return null;
+
+        try {
+            return target.getClass().getMethod(methodName).invoke(target);
+        } catch (Throwable ignored) {
+            return null;
+        }
+    }
+
+    private static ProfileInfo findPreviousSiblingProfileInfo(View itemView) {
         View current = itemView;
         ViewParent parent = current == null ? null : current.getParent();
         while (parent instanceof ViewGroup) {
@@ -165,7 +228,7 @@ public final class ModifiedMessageHistoryExtension {
             int index = parentGroup.indexOfChild(current);
             if (index >= 0) {
                 for (int i = index - 1; i >= 0; i--) {
-                    profileInfo = getProfileInfo(parentGroup.getChildAt(i));
+                    ProfileInfo profileInfo = getProfileInfo(parentGroup.getChildAt(i));
                     if (profileInfo != null) return profileInfo;
                 }
             }
@@ -174,7 +237,7 @@ public final class ModifiedMessageHistoryExtension {
             parent = parentGroup.getParent();
         }
 
-        return cachedProfileInfo;
+        return null;
     }
 
     private static ProfileInfo getProfileInfo(View root) {
@@ -184,9 +247,7 @@ public final class ModifiedMessageHistoryExtension {
         Bitmap profileImage = getProfileImage(root);
         if ((nickname == null || nickname.length() == 0) && profileImage == null) return null;
 
-        ProfileInfo profileInfo = new ProfileInfo(nickname, profileImage);
-        cachedProfileInfo = profileInfo;
-        return profileInfo;
+        return new ProfileInfo(nickname, profileImage);
     }
 
     private static String getNickname(View root) {
@@ -409,10 +470,26 @@ public final class ModifiedMessageHistoryExtension {
     private static final class ProfileInfo {
         private final String nickname;
         private final Bitmap profileImage;
+        private final long profileUserId;
+        private final String profileImageUrl;
+        private final int profileImageType;
 
         private ProfileInfo(String nickname, Bitmap profileImage) {
+            this(nickname, profileImage, 0L, null, 0);
+        }
+
+        private ProfileInfo(
+                String nickname,
+                Bitmap profileImage,
+                long profileUserId,
+                String profileImageUrl,
+                int profileImageType
+        ) {
             this.nickname = nickname;
             this.profileImage = profileImage;
+            this.profileUserId = profileUserId;
+            this.profileImageUrl = profileImageUrl;
+            this.profileImageType = profileImageType;
         }
     }
 }

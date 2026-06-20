@@ -20,6 +20,7 @@ import app.revanced.patches.kakaotalk.chatlog.fingerprints.ChatLogFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.ChatLogItemViewHolderFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.ChatLogVFieldPutBooleanFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.ChatLogVFieldPutStringFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.ChatLogViewHolderBindProfileFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.ChatLogViewHolderSetupChatInfoViewFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.ChatRoomListManagerGetInstanceFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.CheckViewableChatLogFingerprint
@@ -58,6 +59,20 @@ import org.w3c.dom.Element
 
 private const val ARGB_32_MASK = 0xFFFF_FFFFL
 private const val OPAQUE_ALPHA = 0xFF00_0000L
+private const val MODIFIED_PROFILE_NICKNAME_METHOD = "revanced_modified_profile_nickname"
+private const val MODIFIED_PROFILE_USER_ID_METHOD = "revanced_modified_profile_user_id"
+private const val MODIFIED_PROFILE_IMAGE_URL_METHOD = "revanced_modified_profile_image_url"
+private const val MODIFIED_PROFILE_IMAGE_TYPE_METHOD = "revanced_modified_profile_image_type"
+
+private data class ModifiedProfileReferences(
+    val getRecyclerItemReference: MethodReference,
+    val getProfileUserIdReference: MethodReference,
+    val getMemberStateReference: MethodReference,
+    val getProfileImageReference: MethodReference,
+    val getProfileStatusReference: MethodReference,
+    val getProfileNicknameReference: MethodReference,
+    val openProfileFieldReference: FieldReference,
+)
 
 private fun parseArgb32ToInt(input: String): Int {
     val t = input.trim().replace("_", "")
@@ -610,6 +625,14 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
 
         CheckViewableChatLogFingerprint.method.returnEarly(true)
 
+        val modifiedProfileReferences = ChatLogViewHolderBindProfileFingerprint.method.resolveModifiedProfileReferences(
+            ChatLogItemViewHolderFingerprint.method.definingClass,
+        )
+        val chatLogViewHolderProfileClass = ChatLogViewHolderBindProfileFingerprint.classDef
+        chatLogViewHolderProfileClass.methods.addAll(
+            modifiedProfileAccessorMethods(chatLogViewHolderProfileClass.type, modifiedProfileReferences)
+        )
+
         val chatLogViewHolderSetupChatInfoViewMethod = ChatLogViewHolderSetupChatInfoViewFingerprint.method
         chatLogViewHolderSetupChatInfoViewMethod.let {
             val getChatLogItemMethod = ChatLogItemViewHolderFingerprint.method
@@ -725,3 +748,199 @@ private fun MutableMethod.addModifiedHistoryHook(
         """.trimIndent(),
     )
 }
+
+private fun MutableMethod.resolveModifiedProfileReferences(
+    viewHolderBaseClass: String,
+): ModifiedProfileReferences {
+    val profileLoadIndex = instructions.indexOfFirst { instruction ->
+        instruction.getReference<MethodReference>()?.isProfileLoadCall() == true
+    }.takeIf { it >= 0 }
+        ?: throw PatchException("Could not find modified message profile load call.")
+
+    val profileImageIndex = (profileLoadIndex - 1 downTo 0).firstOrNull { index ->
+        instructions[index].getReference<MethodReference>()?.let { reference ->
+            reference.parameterTypeNames.isEmpty() &&
+                    reference.returnType == "Ljava/lang/String;"
+        } == true
+    } ?: throw PatchException("Could not find modified message profile image getter.")
+
+    val profileImageReference = instructions[profileImageIndex].getReference<MethodReference>()
+        ?: throw PatchException("Could not resolve modified message profile image getter.")
+    val memberStateType = profileImageReference.definingClass
+
+    val getMemberStateReference = instructions.take(profileImageIndex)
+        .mapNotNull { it.getReference<MethodReference>() }
+        .lastOrNull {
+            it.parameterTypeNames.isEmpty() &&
+                    it.returnType == memberStateType
+        } ?: throw PatchException("Could not find modified message member state getter.")
+    val recyclerItemType = getMemberStateReference.definingClass
+
+    val getRecyclerItemReference = instructions.take(profileImageIndex)
+        .mapNotNull { it.getReference<MethodReference>() }
+        .lastOrNull {
+            it.definingClass == viewHolderBaseClass &&
+                    it.parameterTypeNames.isEmpty() &&
+                    it.returnType == recyclerItemType
+        } ?: throw PatchException("Could not find modified message recycler item getter.")
+
+    val getProfileUserIdReference = instructions.take(profileLoadIndex)
+        .mapNotNull { it.getReference<MethodReference>() }
+        .lastOrNull {
+            it.definingClass == recyclerItemType &&
+                    it.parameterTypeNames.isEmpty() &&
+                    it.returnType == "J"
+        } ?: throw PatchException("Could not find modified message profile user id getter.")
+
+    val openProfileFieldReference = instructions.take(profileLoadIndex)
+        .mapNotNull { it.getReference<FieldReference>() }
+        .lastOrNull {
+            it.definingClass == it.type &&
+                    it.type.startsWith("L")
+        } ?: throw PatchException("Could not find modified message open profile field.")
+
+    val getProfileStatusReference = instructions.take(profileLoadIndex)
+        .mapNotNull { it.getReference<MethodReference>() }
+        .lastOrNull {
+            it.definingClass == memberStateType &&
+                    it.parameterTypeNames.isEmpty() &&
+                    it.returnType == openProfileFieldReference.type
+        } ?: throw PatchException("Could not find modified message profile status getter.")
+
+    val nicknameSetTextIndex = instructions.indices.lastOrNull { index ->
+        index > profileLoadIndex &&
+                instructions[index].getReference<MethodReference>()?.isTextSetCall() == true
+    } ?: throw PatchException("Could not find modified message profile nickname binding.")
+
+    val getProfileNicknameReference = instructions.take(nicknameSetTextIndex)
+        .mapNotNull { it.getReference<MethodReference>() }
+        .lastOrNull {
+            it.definingClass == memberStateType &&
+                    it.parameterTypeNames.isEmpty() &&
+                    it.returnType == "Ljava/lang/String;"
+        } ?: throw PatchException("Could not find modified message profile nickname getter.")
+
+    return ModifiedProfileReferences(
+        getRecyclerItemReference,
+        getProfileUserIdReference,
+        getMemberStateReference,
+        profileImageReference,
+        getProfileStatusReference,
+        getProfileNicknameReference,
+        openProfileFieldReference,
+    )
+}
+
+private fun MethodReference.isProfileLoadCall() =
+    definingClass == "Lcom/kakao/talk/widget/ProfileView;" &&
+            name == "load" &&
+            parameterTypeNames == listOf("J", "Ljava/lang/String;", "I") &&
+            returnType == "V"
+
+private fun MethodReference.isTextSetCall() =
+    definingClass == "Landroid/widget/TextView;" &&
+            name == "setText" &&
+            parameterTypeNames == listOf("Ljava/lang/CharSequence;") &&
+            returnType == "V"
+
+private fun modifiedProfileAccessorMethods(
+    definingClass: String,
+    references: ModifiedProfileReferences,
+): List<MutableMethod> = listOf(
+    ImmutableMethod(
+        definingClass,
+        MODIFIED_PROFILE_NICKNAME_METHOD,
+        emptyList(),
+        "Ljava/lang/String;",
+        AccessFlags.PUBLIC.value or AccessFlags.FINAL.value,
+        null,
+        null,
+        MutableMethodImplementation(3),
+    ).toMutable().apply {
+        addInstructions(
+            0,
+            """
+                invoke-virtual {p0}, ${references.getRecyclerItemReference.smaliReference}
+                move-result-object v0
+                invoke-virtual {v0}, ${references.getMemberStateReference.smaliReference}
+                move-result-object v0
+                invoke-virtual {v0}, ${references.getProfileNicknameReference.smaliReference}
+                move-result-object v0
+                return-object v0
+            """.trimIndent(),
+        )
+    },
+    ImmutableMethod(
+        definingClass,
+        MODIFIED_PROFILE_USER_ID_METHOD,
+        emptyList(),
+        "J",
+        AccessFlags.PUBLIC.value or AccessFlags.FINAL.value,
+        null,
+        null,
+        MutableMethodImplementation(3),
+    ).toMutable().apply {
+        addInstructions(
+            0,
+            """
+                invoke-virtual {p0}, ${references.getRecyclerItemReference.smaliReference}
+                move-result-object v0
+                invoke-virtual {v0}, ${references.getProfileUserIdReference.smaliReference}
+                move-result-wide v0
+                return-wide v0
+            """.trimIndent(),
+        )
+    },
+    ImmutableMethod(
+        definingClass,
+        MODIFIED_PROFILE_IMAGE_URL_METHOD,
+        emptyList(),
+        "Ljava/lang/String;",
+        AccessFlags.PUBLIC.value or AccessFlags.FINAL.value,
+        null,
+        null,
+        MutableMethodImplementation(3),
+    ).toMutable().apply {
+        addInstructions(
+            0,
+            """
+                invoke-virtual {p0}, ${references.getRecyclerItemReference.smaliReference}
+                move-result-object v0
+                invoke-virtual {v0}, ${references.getMemberStateReference.smaliReference}
+                move-result-object v0
+                invoke-virtual {v0}, ${references.getProfileImageReference.smaliReference}
+                move-result-object v0
+                return-object v0
+            """.trimIndent(),
+        )
+    },
+    ImmutableMethod(
+        definingClass,
+        MODIFIED_PROFILE_IMAGE_TYPE_METHOD,
+        emptyList(),
+        "I",
+        AccessFlags.PUBLIC.value or AccessFlags.FINAL.value,
+        null,
+        null,
+        MutableMethodImplementation(3),
+    ).toMutable().apply {
+        addInstructions(
+            0,
+            """
+                invoke-virtual {p0}, ${references.getRecyclerItemReference.smaliReference}
+                move-result-object v0
+                invoke-virtual {v0}, ${references.getMemberStateReference.smaliReference}
+                move-result-object v0
+                invoke-virtual {v0}, ${references.getProfileStatusReference.smaliReference}
+                move-result-object v0
+                sget-object v1, ${references.openProfileFieldReference.smaliReference}
+                if-ne v0, v1, :revanced_modified_profile_not_open
+                const/4 v0, -0x1
+                return v0
+                :revanced_modified_profile_not_open
+                const/4 v0, 0x0
+                return v0
+            """.trimIndent(),
+        )
+    },
+)
