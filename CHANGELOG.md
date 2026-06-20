@@ -1,3 +1,9 @@
+# [1.2.0-dev.7](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.6...v1.2.0-dev.7) (2026-06-20)
+
+### Features
+
+* **dcinside:** restore legacy post icons ([bf61958](https://github.com/AmpleReVanced/revanced-patches/commit/bf619581f646e3d97557c87bb5fb6c6cc671c19f))
+
 # [1.2.0-dev.6](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.5...v1.2.0-dev.6) (2026-06-20)
 
 ### Bug Fixes

@@ -1,5 +1,5 @@
 {
-  "version": "1.2.0-dev.6",
+  "version": "1.2.0-dev.7",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -2052,6 +2052,35 @@
       "default": true,
       "dependencies": [
         "BytecodePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "com.dcinside.app.android",
+          "name": "dcinside",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#3D4491",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "5.2.15",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Restore old post icons",
+      "description": "Adds a setting to restore DCInside 4.7.x post list and read footer icons.",
+      "default": true,
+      "dependencies": [
+        "BytecodePatch",
+        "ResourcePatch",
+        "ResourcePatch"
       ],
       "compatiblePackages": [
         {
