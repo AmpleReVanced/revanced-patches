@@ -1,5 +1,7 @@
 package app.revanced.extension.kakaotalk.chatlog;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,10 +10,16 @@ import android.widget.TextView;
 
 import java.lang.reflect.Field;
 
+import app.revanced.extension.kakaotalk.settings.Settings;
+
 public final class ModifiedMessageHistoryExtension {
     private static int modifiedLabelId;
     private static int bubbleId;
     private static int messageId;
+    private static int nicknameId;
+    private static int profileId;
+    private static int profileLayoutId;
+    private static ProfileInfo cachedProfileInfo;
 
     private ModifiedMessageHistoryExtension() {
     }
@@ -51,11 +59,16 @@ public final class ModifiedMessageHistoryExtension {
         label.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ProfileInfo profileInfo = isMine || !Settings.showModifiedMessageSenderProfile()
+                        ? null
+                        : findProfileInfo(itemView);
                 ModifiedMessageHistoryActivity.start(
                         view.getContext(),
                         safeHistoryJson,
                         getCurrentMessage(itemView, currentMessage),
-                        isMine
+                        isMine,
+                        profileInfo == null ? null : profileInfo.nickname,
+                        profileInfo == null ? null : profileInfo.profileImage
                 );
             }
         });
@@ -76,6 +89,114 @@ public final class ModifiedMessageHistoryExtension {
 
         View label = itemView.findViewById(labelId);
         return label instanceof TextView ? (TextView) label : null;
+    }
+
+    private static ProfileInfo findProfileInfo(View itemView) {
+        ProfileInfo profileInfo = getProfileInfo(itemView);
+        if (profileInfo != null) return profileInfo;
+
+        View current = itemView;
+        ViewParent parent = current == null ? null : current.getParent();
+        while (parent instanceof ViewGroup) {
+            ViewGroup parentGroup = (ViewGroup) parent;
+            int index = parentGroup.indexOfChild(current);
+            if (index >= 0) {
+                for (int i = index - 1; i >= 0; i--) {
+                    profileInfo = getProfileInfo(parentGroup.getChildAt(i));
+                    if (profileInfo != null) return profileInfo;
+                }
+            }
+
+            current = parentGroup;
+            parent = parentGroup.getParent();
+        }
+
+        return cachedProfileInfo;
+    }
+
+    private static ProfileInfo getProfileInfo(View root) {
+        if (root == null) return null;
+
+        String nickname = getNickname(root);
+        Bitmap profileImage = getProfileImage(root);
+        if ((nickname == null || nickname.length() == 0) && profileImage == null) return null;
+
+        ProfileInfo profileInfo = new ProfileInfo(nickname, profileImage);
+        cachedProfileInfo = profileInfo;
+        return profileInfo;
+    }
+
+    private static String getNickname(View root) {
+        int id = getNicknameId(root);
+        if (id == 0) return null;
+
+        View nicknameView = root.findViewById(id);
+        if (!(nicknameView instanceof TextView) || !isActuallyVisible(nicknameView)) return null;
+
+        CharSequence text = ((TextView) nicknameView).getText();
+        if (text == null) return null;
+
+        String nickname = text.toString();
+        return nickname.length() == 0 ? null : nickname;
+    }
+
+    private static Bitmap getProfileImage(View root) {
+        View profileView = findProfileView(root);
+        if (profileView == null || !isActuallyVisible(profileView)) return null;
+
+        return captureView(profileView);
+    }
+
+    private static View findProfileView(View root) {
+        int profileLayoutId = getProfileLayoutId(root);
+        if (profileLayoutId != 0) {
+            View profileLayout = root.findViewById(profileLayoutId);
+            if (profileLayout != null) return profileLayout;
+        }
+
+        int profileId = getProfileId(root);
+        return profileId == 0 ? null : root.findViewById(profileId);
+    }
+
+    private static Bitmap captureView(View view) {
+        int width = view.getWidth();
+        int height = view.getHeight();
+        if (width <= 0 || height <= 0) return null;
+
+        try {
+            Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            view.draw(canvas);
+
+            int maxSize = (int) (48 * view.getResources().getDisplayMetrics().density);
+            int largestSide = Math.max(width, height);
+            if (largestSide <= maxSize) return bitmap;
+
+            float scale = (float) maxSize / largestSide;
+            Bitmap scaled = Bitmap.createScaledBitmap(
+                    bitmap,
+                    Math.max(1, (int) (width * scale)),
+                    Math.max(1, (int) (height * scale)),
+                    true
+            );
+            bitmap.recycle();
+            return scaled;
+        } catch (Throwable ignored) {
+            return null;
+        }
+    }
+
+    private static boolean isActuallyVisible(View view) {
+        if (view.getVisibility() != View.VISIBLE) return false;
+
+        ViewParent parent = view.getParent();
+        while (parent instanceof View) {
+            View parentView = (View) parent;
+            if (parentView.getVisibility() != View.VISIBLE) return false;
+            parent = parentView.getParent();
+        }
+
+        return true;
     }
 
     private static String getCurrentMessage(View itemView, String fallbackMessage) {
@@ -184,5 +305,51 @@ public final class ModifiedMessageHistoryExtension {
         }
 
         return messageId;
+    }
+
+    private static int getNicknameId(View view) {
+        if (nicknameId == 0) {
+            nicknameId = view.getResources().getIdentifier(
+                    "nickname",
+                    "id",
+                    view.getContext().getPackageName()
+            );
+        }
+
+        return nicknameId;
+    }
+
+    private static int getProfileId(View view) {
+        if (profileId == 0) {
+            profileId = view.getResources().getIdentifier(
+                    "profile",
+                    "id",
+                    view.getContext().getPackageName()
+            );
+        }
+
+        return profileId;
+    }
+
+    private static int getProfileLayoutId(View view) {
+        if (profileLayoutId == 0) {
+            profileLayoutId = view.getResources().getIdentifier(
+                    "profile_layout",
+                    "id",
+                    view.getContext().getPackageName()
+            );
+        }
+
+        return profileLayoutId;
+    }
+
+    private static final class ProfileInfo {
+        private final String nickname;
+        private final Bitmap profileImage;
+
+        private ProfileInfo(String nickname, Bitmap profileImage) {
+            this.nickname = nickname;
+            this.profileImage = profileImage;
+        }
     }
 }

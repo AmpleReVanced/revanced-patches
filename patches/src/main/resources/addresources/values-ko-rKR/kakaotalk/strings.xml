@@ -26,6 +26,8 @@
     <string name="morphe_settings_patch_disable_99_unread_limit_summary">읽지 않은 수를 99+로 줄이지 않고 실제 숫자로 표시합니다.</string>
     <string name="morphe_settings_patch_open_chat_room_comment_disabled">오픈채팅에서 댓글 기능 끄기</string>
     <string name="morphe_settings_patch_open_chat_room_comment_disabled_summary">켜면 오픈채팅에서 댓글 대신 답장을 사용합니다.</string>
+    <string name="morphe_settings_patch_show_modified_message_sender_profile">수정 이력에 보낸 사람 프로필 표시</string>
+    <string name="morphe_settings_patch_show_modified_message_sender_profile_summary">메시지 수정 이력에서 보낸 사람의 프로필 사진과 닉네임을 표시합니다.</string>
     <string name="morphe_settings_patch_feature_flag_overrides">기능 플래그 오버라이드</string>
     <string name="morphe_settings_patch_feature_flag_overrides_summary">key=value 형식으로 입력하고 여러 항목은 세미콜론으로 구분합니다.</string>
     <string name="morphe_settings_patch_external_browser">외부 브라우저로 열기</string>
