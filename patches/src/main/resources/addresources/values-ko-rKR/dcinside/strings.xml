@@ -11,6 +11,8 @@
     <string name="morphe_settings_render_big_dccon_as_normal_summary">대왕디시콘을 일반 디시콘 크기로 표시합니다.</string>
     <string name="morphe_settings_hide_mini_gallery_cover_image">미니 갤러리 대문사진 숨기기</string>
     <string name="morphe_settings_hide_mini_gallery_cover_image_summary">글 목록 위에 표시되는 미니 갤러리 대문사진을 숨깁니다.</string>
+    <string name="morphe_settings_restore_legacy_post_icons">구버전 글 아이콘 사용</string>
+    <string name="morphe_settings_restore_legacy_post_icons_summary">글 목록과 본문에서 DCInside 4.7.x 스타일의 사진, 동영상, 개념글 아이콘을 사용합니다.</string>
     <string name="morphe_settings_section_home_screen">홈 화면</string>
     <string name="morphe_settings_hide_home_search_menu">검색/메뉴 영역 숨기기</string>
     <string name="morphe_settings_hide_home_search_menu_summary">홈 화면 상단 검색과 메뉴 영역을 제거합니다.</string>

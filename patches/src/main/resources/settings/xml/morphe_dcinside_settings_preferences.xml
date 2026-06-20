@@ -21,6 +21,10 @@
             android:key="morphe_pref_hide_mini_gallery_cover_image"
             android:summary="@string/morphe_settings_hide_mini_gallery_cover_image_summary"
             android:title="@string/morphe_settings_hide_mini_gallery_cover_image" />
+        <SwitchPreference
+            android:key="morphe_pref_restore_legacy_post_icons"
+            android:summary="@string/morphe_settings_restore_legacy_post_icons_summary"
+            android:title="@string/morphe_settings_restore_legacy_post_icons" />
         <Preference
             android:key="morphe_pref_apply_user_memo_preset"
             android:summary="@string/morphe_settings_user_memo_preset_summary"

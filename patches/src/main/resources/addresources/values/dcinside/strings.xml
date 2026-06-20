@@ -11,6 +11,8 @@
     <string name="morphe_settings_render_big_dccon_as_normal_summary">Shows big DCCon images at the regular DCCon size.</string>
     <string name="morphe_settings_hide_mini_gallery_cover_image">Hide mini gallery cover image</string>
     <string name="morphe_settings_hide_mini_gallery_cover_image_summary">Hides the mini gallery cover image shown above the post list.</string>
+    <string name="morphe_settings_restore_legacy_post_icons">Restore old post icons</string>
+    <string name="morphe_settings_restore_legacy_post_icons_summary">Uses the DCInside 4.7.x photo, video, and recommended-post icons in post lists and post bodies.</string>
     <string name="morphe_settings_section_home_screen">Home screen</string>
     <string name="morphe_settings_hide_home_search_menu">Hide search/menu area</string>
     <string name="morphe_settings_hide_home_search_menu_summary">Removes the top search and menu block from the home screen.</string>
