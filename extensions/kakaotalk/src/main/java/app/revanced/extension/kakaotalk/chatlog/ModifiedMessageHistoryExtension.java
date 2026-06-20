@@ -1,8 +1,12 @@
 package app.revanced.extension.kakaotalk.chatlog;
 
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -67,6 +71,7 @@ public final class ModifiedMessageHistoryExtension {
                         safeHistoryJson,
                         getCurrentMessage(itemView, currentMessage),
                         isMine,
+                        isDarkMode(itemView),
                         profileInfo == null ? null : profileInfo.nickname,
                         profileInfo == null ? null : profileInfo.profileImage
                 );
@@ -89,6 +94,64 @@ public final class ModifiedMessageHistoryExtension {
 
         View label = itemView.findViewById(labelId);
         return label instanceof TextView ? (TextView) label : null;
+    }
+
+    private static boolean isDarkMode(View itemView) {
+        Integer titleColor = getColor(itemView, "theme_title_color");
+        if (titleColor != null) {
+            return isLightColor(titleColor);
+        }
+
+        if (itemView != null
+                && (itemView.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
+                == Configuration.UI_MODE_NIGHT_YES) {
+            return true;
+        }
+
+        Integer backgroundColor = getBackgroundColor(itemView);
+        return backgroundColor != null && isDarkColor(backgroundColor);
+    }
+
+    private static Integer getBackgroundColor(View view) {
+        View current = view;
+        while (current != null) {
+            Drawable background = current.getBackground();
+            if (background instanceof ColorDrawable) {
+                int color = ((ColorDrawable) background).getColor();
+                if (Color.alpha(color) != 0) return color;
+            }
+
+            ViewParent parent = current.getParent();
+            current = parent instanceof View ? (View) parent : null;
+        }
+
+        return null;
+    }
+
+    private static Integer getColor(View view, String name) {
+        if (view == null) return null;
+
+        int colorId = view.getResources().getIdentifier(
+                name,
+                "color",
+                view.getContext().getPackageName()
+        );
+        if (colorId == 0) return null;
+
+        try {
+            return view.getResources().getColor(colorId);
+        } catch (Throwable ignored) {
+            return null;
+        }
+    }
+
+    private static boolean isDarkColor(int color) {
+        return !isLightColor(color);
+    }
+
+    private static boolean isLightColor(int color) {
+        return Color.alpha(color) != 0
+                && ((Color.red(color) * 299) + (Color.green(color) * 587) + (Color.blue(color) * 114)) >= 128000;
     }
 
     private static ProfileInfo findProfileInfo(View itemView) {

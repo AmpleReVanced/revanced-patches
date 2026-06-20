@@ -5,6 +5,7 @@ import static app.morphe.extension.shared.StringRef.str;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -31,16 +32,38 @@ public final class ModifiedMessageHistoryActivity extends Activity {
             "app.revanced.extension.kakaotalk.chatlog.EXTRA_CURRENT_MESSAGE";
     private static final String EXTRA_IS_MINE =
             "app.revanced.extension.kakaotalk.chatlog.EXTRA_IS_MINE";
+    private static final String EXTRA_DARK_MODE =
+            "app.revanced.extension.kakaotalk.chatlog.EXTRA_DARK_MODE";
     private static final String EXTRA_PROFILE_NICKNAME =
             "app.revanced.extension.kakaotalk.chatlog.EXTRA_PROFILE_NICKNAME";
     private static final String EXTRA_PROFILE_IMAGE =
             "app.revanced.extension.kakaotalk.chatlog.EXTRA_PROFILE_IMAGE";
+    private static final int LIGHT_CHAT_BACKGROUND = 0xFFABC1D1;
+    private static final int DARK_CHAT_BACKGROUND = 0xFF080808;
+    private static final int LIGHT_SURFACE = LIGHT_CHAT_BACKGROUND;
+    private static final int DARK_SURFACE = 0xFF080808;
+    private static final int LIGHT_TITLE = Color.BLACK;
+    private static final int DARK_TITLE = Color.WHITE;
+    private static final int LIGHT_SECONDARY_TEXT = 0xFF767676;
+    private static final int DARK_SECONDARY_TEXT = 0xFFA6A6A6;
+    private static final int LIGHT_NICKNAME_TEXT = 0xFF424242;
+    private static final int DARK_NICKNAME_TEXT = 0xFFDFDFDF;
+    private static final int LIGHT_MESSAGE_TEXT = 0xFF191919;
+    private static final int DARK_MESSAGE_TEXT = 0xFFF2F2F2;
+    private static final int MY_BUBBLE = 0xFFFEE500;
+    private static final int LIGHT_OTHER_BUBBLE = Color.WHITE;
+    private static final int DARK_OTHER_BUBBLE = 0xFF202020;
+    private static final int LIGHT_PROFILE_FALLBACK = 0xFFCCCCCC;
+    private static final int DARK_PROFILE_FALLBACK = 0xFF5D5D5D;
+
+    private boolean darkMode;
 
     public static void start(
             Context context,
             String historyJson,
             String currentMessage,
             boolean isMine,
+            boolean darkMode,
             String profileNickname,
             Bitmap profileImage
     ) {
@@ -48,6 +71,7 @@ public final class ModifiedMessageHistoryActivity extends Activity {
         intent.putExtra(EXTRA_HISTORY_JSON, historyJson);
         intent.putExtra(EXTRA_CURRENT_MESSAGE, currentMessage);
         intent.putExtra(EXTRA_IS_MINE, isMine);
+        intent.putExtra(EXTRA_DARK_MODE, darkMode);
         intent.putExtra(EXTRA_PROFILE_NICKNAME, profileNickname);
         if (profileImage != null) {
             intent.putExtra(EXTRA_PROFILE_IMAGE, profileImage);
@@ -66,13 +90,14 @@ public final class ModifiedMessageHistoryActivity extends Activity {
 
         super.onCreate(savedInstanceState);
         setTitle(resString("morphe_kakaotalk_chatlog_modified_history_title", "Edit history"));
-        applyStatusBarColor();
 
         String historyJson = getIntent().getStringExtra(EXTRA_HISTORY_JSON);
         String currentMessage = getIntent().getStringExtra(EXTRA_CURRENT_MESSAGE);
         boolean isMine = getIntent().getBooleanExtra(EXTRA_IS_MINE, false);
+        darkMode = getIntent().getBooleanExtra(EXTRA_DARK_MODE, isSystemDarkMode());
         String profileNickname = getIntent().getStringExtra(EXTRA_PROFILE_NICKNAME);
         Bitmap profileImage = getIntent().getParcelableExtra(EXTRA_PROFILE_IMAGE);
+        applySystemBarColors();
 
         setContentView(createScreen(
                 ModifiedMessageHistory.parse(historyJson),
@@ -92,7 +117,7 @@ public final class ModifiedMessageHistoryActivity extends Activity {
     ) {
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
-        root.setBackgroundColor(resolveColor("theme_chatroom_background_color", 0xFFABC1D1));
+        root.setBackgroundColor(chatBackgroundColor());
         root.setPadding(0, getStatusBarHeight(), 0, 0);
 
         root.addView(createHeader(), new LinearLayout.LayoutParams(
@@ -108,25 +133,32 @@ public final class ModifiedMessageHistoryActivity extends Activity {
         return root;
     }
 
-    private void applyStatusBarColor() {
+    private void applySystemBarColors() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(resolveColor("daynight_white000s", Color.WHITE));
+            getWindow().setStatusBarColor(surfaceColor());
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int flags = getWindow().getDecorView().getSystemUiVisibility();
+            if (darkMode) {
+                flags &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            } else {
+                flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            }
+            getWindow().getDecorView().setSystemUiVisibility(flags);
         }
     }
 
     private View createHeader() {
-        int titleColor = resolveColor("daynight_gray990s", Color.BLACK);
-
         LinearLayout header = new LinearLayout(this);
         header.setOrientation(LinearLayout.HORIZONTAL);
         header.setGravity(Gravity.CENTER_VERTICAL);
-        header.setBackgroundColor(resolveColor("daynight_white000s", Color.WHITE));
+        header.setBackgroundColor(surfaceColor());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             header.setElevation(dp(2));
         }
 
-        TextView backButton = createText("\u2039", 34, titleColor, Typeface.NORMAL);
+        TextView backButton = createText("\u2039", 34, titleColor(), Typeface.NORMAL);
         backButton.setGravity(Gravity.CENTER);
         backButton.setContentDescription("Back");
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -143,7 +175,7 @@ public final class ModifiedMessageHistoryActivity extends Activity {
         TextView title = createText(
                 resString("morphe_kakaotalk_chatlog_modified_history_title", "Edit history"),
                 18,
-                titleColor,
+                titleColor(),
                 Typeface.BOLD
         );
         title.setGravity(Gravity.CENTER);
@@ -170,7 +202,7 @@ public final class ModifiedMessageHistoryActivity extends Activity {
     ) {
         ScrollView scrollView = new ScrollView(this);
         scrollView.setFillViewport(true);
-        scrollView.setBackgroundColor(resolveColor("theme_chatroom_background_color", 0xFFABC1D1));
+        scrollView.setBackgroundColor(chatBackgroundColor());
 
         LinearLayout container = new LinearLayout(this);
         container.setOrientation(LinearLayout.VERTICAL);
@@ -180,7 +212,7 @@ public final class ModifiedMessageHistoryActivity extends Activity {
             TextView emptyView = createText(
                     resString("morphe_kakaotalk_chatlog_modified_history_no_items", "No edit history"),
                     15,
-                    resolveColor("daynight_gray550s", 0xFF777777),
+                    secondaryTextColor(),
                     Typeface.NORMAL
             );
             emptyView.setGravity(Gravity.CENTER);
@@ -277,7 +309,7 @@ public final class ModifiedMessageHistoryActivity extends Activity {
         TextView label = createText(
                 labelText,
                 12,
-                resolveColor("daynight_gray550s", 0xFF777777),
+                secondaryTextColor(),
                 Typeface.NORMAL
         );
         label.setGravity(isMine ? Gravity.RIGHT : Gravity.LEFT);
@@ -288,10 +320,7 @@ public final class ModifiedMessageHistoryActivity extends Activity {
                         ? str("morphe_kakaotalk_chatlog_modified_history_empty")
                         : messageOrEmpty(messageText),
                 16,
-                resolveColor(
-                        isMine ? "theme_chatroom_bubble_me_color" : "theme_chatroom_bubble_you_color",
-                        Color.BLACK
-                ),
+                messageTextColor(isMine),
                 Typeface.NORMAL
         );
         bubble.setTextIsSelectable(true);
@@ -335,7 +364,7 @@ public final class ModifiedMessageHistoryActivity extends Activity {
             TextView nickname = createText(
                     profileNickname,
                     12,
-                    resolveColor("daynight_gray700s", 0xFF555555),
+                    nicknameTextColor(),
                     Typeface.NORMAL
             );
             content.addView(nickname, new LinearLayout.LayoutParams(
@@ -347,7 +376,7 @@ public final class ModifiedMessageHistoryActivity extends Activity {
         TextView label = createText(
                 labelText,
                 12,
-                resolveColor("daynight_gray550s", 0xFF777777),
+                secondaryTextColor(),
                 Typeface.NORMAL
         );
         LinearLayout.LayoutParams labelParams = new LinearLayout.LayoutParams(
@@ -364,7 +393,7 @@ public final class ModifiedMessageHistoryActivity extends Activity {
                         ? str("morphe_kakaotalk_chatlog_modified_history_empty")
                         : messageOrEmpty(messageText),
                 16,
-                resolveColor("theme_chatroom_bubble_you_color", Color.BLACK),
+                messageTextColor(false),
                 Typeface.NORMAL
         );
         bubble.setTextIsSelectable(true);
@@ -399,7 +428,7 @@ public final class ModifiedMessageHistoryActivity extends Activity {
     private GradientDrawable createFallbackProfileBackground() {
         GradientDrawable drawable = new GradientDrawable();
         drawable.setShape(GradientDrawable.OVAL);
-        drawable.setColor(resolveColor("daynight_gray300s", 0xFFD8D8D8));
+        drawable.setColor(profileFallbackColor());
         return drawable;
     }
 
@@ -424,23 +453,12 @@ public final class ModifiedMessageHistoryActivity extends Activity {
     }
 
     private void applyBubbleBackground(TextView bubble, boolean isMine) {
-        int drawableId = ResourceHelper.getResourceId(
-                "drawable",
-                isMine ? "chatroom_message_bubble_me_no_tail_bg_n" : "chatroom_message_bubble_you_no_tail_bg_n"
-        );
-        if (drawableId != 0) {
-            bubble.setBackgroundResource(drawableId);
-            return;
-        }
-
-        bubble.setBackground(createFallbackBubbleBackground(isMine));
+        bubble.setBackground(createBubbleBackground(isMine));
     }
 
-    private GradientDrawable createFallbackBubbleBackground(boolean isMine) {
+    private GradientDrawable createBubbleBackground(boolean isMine) {
         GradientDrawable drawable = new GradientDrawable();
-        drawable.setColor(isMine
-                ? resolveColor("theme_chatroom_input_bar_send_button_color", 0xFFFEE500)
-                : Color.WHITE);
+        drawable.setColor(isMine ? MY_BUBBLE : otherBubbleColor());
         drawable.setCornerRadius(dp(12));
         return drawable;
     }
@@ -463,15 +481,36 @@ public final class ModifiedMessageHistoryActivity extends Activity {
         return message == null ? "" : message;
     }
 
-    private int resolveColor(String name, int fallback) {
-        int colorId = ResourceHelper.getResourceId("color", name);
-        if (colorId != 0) {
-            try {
-                return getColor(colorId);
-            } catch (Throwable ignored) {
-            }
-        }
-        return fallback;
+    private int chatBackgroundColor() {
+        return darkMode ? DARK_CHAT_BACKGROUND : LIGHT_CHAT_BACKGROUND;
+    }
+
+    private int surfaceColor() {
+        return darkMode ? DARK_SURFACE : LIGHT_SURFACE;
+    }
+
+    private int titleColor() {
+        return darkMode ? DARK_TITLE : LIGHT_TITLE;
+    }
+
+    private int secondaryTextColor() {
+        return darkMode ? DARK_SECONDARY_TEXT : LIGHT_SECONDARY_TEXT;
+    }
+
+    private int nicknameTextColor() {
+        return darkMode ? DARK_NICKNAME_TEXT : LIGHT_NICKNAME_TEXT;
+    }
+
+    private int messageTextColor(boolean isMine) {
+        return isMine ? LIGHT_MESSAGE_TEXT : darkMode ? DARK_MESSAGE_TEXT : LIGHT_MESSAGE_TEXT;
+    }
+
+    private int otherBubbleColor() {
+        return darkMode ? DARK_OTHER_BUBBLE : LIGHT_OTHER_BUBBLE;
+    }
+
+    private int profileFallbackColor() {
+        return darkMode ? DARK_PROFILE_FALLBACK : LIGHT_PROFILE_FALLBACK;
     }
 
     private int resolveDimension(String name, int fallback) {
@@ -497,5 +536,10 @@ public final class ModifiedMessageHistoryActivity extends Activity {
     private int getStatusBarHeight() {
         int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
         return resourceId == 0 ? 0 : getResources().getDimensionPixelSize(resourceId);
+    }
+
+    private boolean isSystemDarkMode() {
+        return (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
+                == Configuration.UI_MODE_NIGHT_YES;
     }
 }

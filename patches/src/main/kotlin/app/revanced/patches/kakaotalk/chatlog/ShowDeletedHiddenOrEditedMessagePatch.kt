@@ -95,6 +95,10 @@ private val registerModifiedMessageHistoryActivityPatch = resourcePatch {
             for (i in 0 until activities.length) {
                 val activity = activities.item(i) as? Element ?: continue
                 if (activity.getAttribute("android:name") == activityName) {
+                    activity.setAttribute("android:excludeFromRecents", "true")
+                    activity.setAttribute("android:exported", "false")
+                    activity.setAttribute("android:label", "@string/morphe_kakaotalk_chatlog_modified_history_title")
+                    activity.setAttribute("android:theme", "@style/Theme.Default.NoActionBar")
                     return@use
                 }
             }
@@ -104,7 +108,7 @@ private val registerModifiedMessageHistoryActivityPatch = resourcePatch {
             activity.setAttribute("android:excludeFromRecents", "true")
             activity.setAttribute("android:exported", "false")
             activity.setAttribute("android:label", "@string/morphe_kakaotalk_chatlog_modified_history_title")
-            activity.setAttribute("android:theme", "@android:style/Theme.DeviceDefault.NoActionBar")
+            activity.setAttribute("android:theme", "@style/Theme.Default.NoActionBar")
             application.appendChild(activity)
         }
     }
