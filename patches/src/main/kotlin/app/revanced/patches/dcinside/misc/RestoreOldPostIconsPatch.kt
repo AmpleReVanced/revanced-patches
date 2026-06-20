@@ -2,11 +2,13 @@ package app.revanced.patches.dcinside.misc
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
-import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.resourcePatch
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
+import app.morphe.patches.all.misc.resources.ResourceType
+import app.morphe.patches.all.misc.resources.getResourceId
+import app.morphe.patches.all.misc.resources.resourceMappingPatch
 import app.morphe.util.ResourceGroup
 import app.morphe.util.copyResources
 import app.morphe.util.findMutableMethodOf
@@ -16,7 +18,6 @@ import com.android.tools.smali.dexlib2.iface.Method
 import com.android.tools.smali.dexlib2.iface.instruction.Instruction
 import com.android.tools.smali.dexlib2.iface.instruction.NarrowLiteralInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
-import com.android.tools.smali.dexlib2.iface.value.IntEncodedValue
 
 private const val SETTINGS_CLASS = "Lapp/revanced/extension/dcinside/settings/Settings;"
 
@@ -65,6 +66,7 @@ val restoreOldPostIconsPatch = bytecodePatch(
     dependsOn(
         addSettingsPatch,
         restoreOldPostIconsResourcesPatch,
+        resourceMappingPatch,
     )
 
     execute {
@@ -89,27 +91,10 @@ val restoreOldPostIconsPatch = bytecodePatch(
     }
 }
 
-private fun BytecodePatchContext.drawableResourceIds(names: Collection<String>): Set<Int> {
-    val remainingNames = names.toMutableSet()
-    val resourceIds = classDefByOrNull("Lcom/dcinside/app/R\$drawable;")
-        ?.fields
-        ?.mapNotNull { field ->
-            if (!remainingNames.remove(field.name)) {
-                return@mapNotNull null
-            }
-
-            (field.initialValue as? IntEncodedValue)?.value
-                ?: throw PatchException("Could not read drawable resource id for ${field.name}")
-        }
-        ?.toSet()
-        ?: throw PatchException("Could not find DCInside drawable resources")
-
-    if (remainingNames.isNotEmpty()) {
-        throw PatchException("Could not find drawable resources: ${remainingNames.joinToString()}")
-    }
-
-    return resourceIds
-}
+private fun drawableResourceIds(names: Collection<String>): Set<Int> =
+    names.map { name ->
+        getResourceId(ResourceType.DRAWABLE, name).toInt()
+    }.toSet()
 
 private fun Method.hasLegacyPostIconResourceLoad(resourceIds: Set<Int>): Boolean =
     implementation?.instructions?.any { instruction ->
