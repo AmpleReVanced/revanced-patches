@@ -38,6 +38,12 @@ public final class ModifiedMessageHistoryActivity extends Activity {
             "app.revanced.extension.kakaotalk.chatlog.EXTRA_PROFILE_NICKNAME";
     private static final String EXTRA_PROFILE_IMAGE =
             "app.revanced.extension.kakaotalk.chatlog.EXTRA_PROFILE_IMAGE";
+    private static final String EXTRA_PROFILE_USER_ID =
+            "app.revanced.extension.kakaotalk.chatlog.EXTRA_PROFILE_USER_ID";
+    private static final String EXTRA_PROFILE_IMAGE_URL =
+            "app.revanced.extension.kakaotalk.chatlog.EXTRA_PROFILE_IMAGE_URL";
+    private static final String EXTRA_PROFILE_IMAGE_TYPE =
+            "app.revanced.extension.kakaotalk.chatlog.EXTRA_PROFILE_IMAGE_TYPE";
     private static final int LIGHT_CHAT_BACKGROUND = 0xFFABC1D1;
     private static final int DARK_CHAT_BACKGROUND = 0xFF080808;
     private static final int LIGHT_SURFACE = LIGHT_CHAT_BACKGROUND;
@@ -65,7 +71,10 @@ public final class ModifiedMessageHistoryActivity extends Activity {
             boolean isMine,
             boolean darkMode,
             String profileNickname,
-            Bitmap profileImage
+            Bitmap profileImage,
+            long profileUserId,
+            String profileImageUrl,
+            int profileImageType
     ) {
         Intent intent = new Intent(context, ModifiedMessageHistoryActivity.class);
         intent.putExtra(EXTRA_HISTORY_JSON, historyJson);
@@ -73,6 +82,9 @@ public final class ModifiedMessageHistoryActivity extends Activity {
         intent.putExtra(EXTRA_IS_MINE, isMine);
         intent.putExtra(EXTRA_DARK_MODE, darkMode);
         intent.putExtra(EXTRA_PROFILE_NICKNAME, profileNickname);
+        intent.putExtra(EXTRA_PROFILE_USER_ID, profileUserId);
+        intent.putExtra(EXTRA_PROFILE_IMAGE_URL, profileImageUrl);
+        intent.putExtra(EXTRA_PROFILE_IMAGE_TYPE, profileImageType);
         if (profileImage != null) {
             intent.putExtra(EXTRA_PROFILE_IMAGE, profileImage);
         }
@@ -97,6 +109,9 @@ public final class ModifiedMessageHistoryActivity extends Activity {
         darkMode = getIntent().getBooleanExtra(EXTRA_DARK_MODE, isSystemDarkMode());
         String profileNickname = getIntent().getStringExtra(EXTRA_PROFILE_NICKNAME);
         Bitmap profileImage = getIntent().getParcelableExtra(EXTRA_PROFILE_IMAGE);
+        long profileUserId = getIntent().getLongExtra(EXTRA_PROFILE_USER_ID, 0L);
+        String profileImageUrl = getIntent().getStringExtra(EXTRA_PROFILE_IMAGE_URL);
+        int profileImageType = getIntent().getIntExtra(EXTRA_PROFILE_IMAGE_TYPE, 0);
         applySystemBarColors();
 
         setContentView(createScreen(
@@ -104,7 +119,10 @@ public final class ModifiedMessageHistoryActivity extends Activity {
                 currentMessage,
                 isMine,
                 profileNickname,
-                profileImage
+                profileImage,
+                profileUserId,
+                profileImageUrl,
+                profileImageType
         ));
     }
 
@@ -113,7 +131,10 @@ public final class ModifiedMessageHistoryActivity extends Activity {
             String currentMessage,
             boolean isMine,
             String profileNickname,
-            Bitmap profileImage
+            Bitmap profileImage,
+            long profileUserId,
+            String profileImageUrl,
+            int profileImageType
     ) {
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
@@ -124,7 +145,16 @@ public final class ModifiedMessageHistoryActivity extends Activity {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 dp(52)
         ));
-        root.addView(createContent(messages, currentMessage, isMine, profileNickname, profileImage), new LinearLayout.LayoutParams(
+        root.addView(createContent(
+                messages,
+                currentMessage,
+                isMine,
+                profileNickname,
+                profileImage,
+                profileUserId,
+                profileImageUrl,
+                profileImageType
+        ), new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 0,
                 1.0f
@@ -198,7 +228,10 @@ public final class ModifiedMessageHistoryActivity extends Activity {
             String currentMessage,
             boolean isMine,
             String profileNickname,
-            Bitmap profileImage
+            Bitmap profileImage,
+            long profileUserId,
+            String profileImageUrl,
+            int profileImageType
     ) {
         ScrollView scrollView = new ScrollView(this);
         scrollView.setFillViewport(true);
@@ -222,7 +255,16 @@ public final class ModifiedMessageHistoryActivity extends Activity {
             ));
         } else {
             for (int i = 0; i < messages.size(); i++) {
-                container.addView(createMessageRow(messages.get(i), i, isMine, profileNickname, profileImage));
+                container.addView(createMessageRow(
+                        messages.get(i),
+                        i,
+                        isMine,
+                        profileNickname,
+                        profileImage,
+                        profileUserId,
+                        profileImageUrl,
+                        profileImageType
+                ));
             }
 
             if (currentMessage != null) {
@@ -231,7 +273,10 @@ public final class ModifiedMessageHistoryActivity extends Activity {
                         messages.size(),
                         isMine,
                         profileNickname,
-                        profileImage
+                        profileImage,
+                        profileUserId,
+                        profileImageUrl,
+                        profileImageType
                 ));
             }
         }
@@ -248,7 +293,10 @@ public final class ModifiedMessageHistoryActivity extends Activity {
             int index,
             boolean isMine,
             String profileNickname,
-            Bitmap profileImage
+            Bitmap profileImage,
+            long profileUserId,
+            String profileImageUrl,
+            int profileImageType
     ) {
         return createMessageRow(
                 str("morphe_kakaotalk_chatlog_modified_history_current"),
@@ -256,7 +304,10 @@ public final class ModifiedMessageHistoryActivity extends Activity {
                 index,
                 isMine,
                 profileNickname,
-                profileImage
+                profileImage,
+                profileUserId,
+                profileImageUrl,
+                profileImageType
         );
     }
 
@@ -265,7 +316,10 @@ public final class ModifiedMessageHistoryActivity extends Activity {
             int index,
             boolean isMine,
             String profileNickname,
-            Bitmap profileImage
+            Bitmap profileImage,
+            long profileUserId,
+            String profileImageUrl,
+            int profileImageType
     ) {
         return createMessageRow(
                 String.format(
@@ -277,7 +331,10 @@ public final class ModifiedMessageHistoryActivity extends Activity {
                 index,
                 isMine,
                 profileNickname,
-                profileImage
+                profileImage,
+                profileUserId,
+                profileImageUrl,
+                profileImageType
         );
     }
 
@@ -287,10 +344,25 @@ public final class ModifiedMessageHistoryActivity extends Activity {
             int index,
             boolean isMine,
             String profileNickname,
-            Bitmap profileImage
+            Bitmap profileImage,
+            long profileUserId,
+            String profileImageUrl,
+            int profileImageType
     ) {
-        if (!isMine && (hasText(profileNickname) || profileImage != null)) {
-            return createOtherMessageRow(labelText, messageText, index, profileNickname, profileImage);
+        if (!isMine
+                && (hasText(profileNickname)
+                || profileImage != null
+                || hasProfileModel(profileUserId, profileImageUrl))) {
+            return createOtherMessageRow(
+                    labelText,
+                    messageText,
+                    index,
+                    profileNickname,
+                    profileImage,
+                    profileUserId,
+                    profileImageUrl,
+                    profileImageType
+            );
         }
 
         LinearLayout row = new LinearLayout(this);
@@ -340,7 +412,10 @@ public final class ModifiedMessageHistoryActivity extends Activity {
             String messageText,
             int index,
             String profileNickname,
-            Bitmap profileImage
+            Bitmap profileImage,
+            long profileUserId,
+            String profileImageUrl,
+            int profileImageType
     ) {
         LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.HORIZONTAL);
@@ -355,7 +430,10 @@ public final class ModifiedMessageHistoryActivity extends Activity {
         }
         row.setLayoutParams(rowParams);
 
-        row.addView(createProfileImage(profileImage), profileLayoutParams());
+        row.addView(
+                createProfileImage(profileImage, profileUserId, profileImageUrl, profileImageType),
+                profileLayoutParams()
+        );
 
         LinearLayout content = new LinearLayout(this);
         content.setOrientation(LinearLayout.VERTICAL);
@@ -413,16 +491,41 @@ public final class ModifiedMessageHistoryActivity extends Activity {
         return row;
     }
 
-    private ImageView createProfileImage(Bitmap profileImage) {
+    private View createProfileImage(
+            Bitmap profileImage,
+            long profileUserId,
+            String profileImageUrl,
+            int profileImageType
+    ) {
         ImageView imageView = new ImageView(this);
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         imageView.setAdjustViewBounds(true);
         if (profileImage != null) {
             imageView.setImageBitmap(profileImage);
-        } else {
-            imageView.setBackground(createFallbackProfileBackground());
+            return imageView;
         }
+
+        View profileView = createKakaoProfileView(profileUserId, profileImageUrl, profileImageType);
+        if (profileView != null) return profileView;
+
+        imageView.setBackground(createFallbackProfileBackground());
         return imageView;
+    }
+
+    private View createKakaoProfileView(long profileUserId, String profileImageUrl, int profileImageType) {
+        if (!hasProfileModel(profileUserId, profileImageUrl)) return null;
+
+        try {
+            Class<?> profileViewClass = Class.forName("com.kakao.talk.widget.ProfileView");
+            Object profileView = profileViewClass.getConstructor(Context.class).newInstance(this);
+            if (!(profileView instanceof View)) return null;
+
+            profileViewClass.getMethod("load", long.class, String.class, int.class)
+                    .invoke(profileView, profileUserId, profileImageUrl, profileImageType);
+            return (View) profileView;
+        } catch (Throwable ignored) {
+            return null;
+        }
     }
 
     private GradientDrawable createFallbackProfileBackground() {
@@ -475,6 +578,10 @@ public final class ModifiedMessageHistoryActivity extends Activity {
 
     private boolean hasText(String text) {
         return text != null && text.length() > 0;
+    }
+
+    private boolean hasProfileModel(long profileUserId, String profileImageUrl) {
+        return profileUserId != 0L || hasText(profileImageUrl);
     }
 
     private String messageOrEmpty(String message) {
