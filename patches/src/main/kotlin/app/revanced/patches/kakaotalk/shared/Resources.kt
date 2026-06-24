@@ -4,7 +4,7 @@ import app.morphe.patches.all.misc.resources.AppLocale
 import app.morphe.patches.all.misc.resources.addAppResources
 import app.morphe.patches.all.misc.resources.setAddResourceLocale
 
-private val localesKakaoTalk = listOf(
+internal val localesKakaoTalk = listOf(
     AppLocale("", ""),
     AppLocale("ko-rKR", "ko"),
 )
