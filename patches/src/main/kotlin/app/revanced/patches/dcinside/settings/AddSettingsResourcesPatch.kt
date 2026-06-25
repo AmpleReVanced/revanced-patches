@@ -32,8 +32,28 @@ internal val addSettingsResourcesPatch = resourcePatch(
             ),
         )
 
+        addDefaultDcInsideSettingsPreferences()
+
         document("res/layout/fragment_settings.xml").use { document ->
             document.addSettingsShortcut()
+        }
+    }
+
+    finalize {
+        PreferenceScreen.close()
+
+        document("res/xml/morphe_dcinside_settings_preferences.xml").use { document ->
+            val preferenceScreen = document.getElementsByTagName("PreferenceScreen").item(0)
+                ?: throw IllegalStateException("Missing PreferenceScreen root")
+
+            while (preferenceScreen.hasChildNodes()) {
+                preferenceScreen.removeChild(preferenceScreen.firstChild)
+            }
+
+            orderedDcInsideSettingsPreferences().forEach { preference ->
+                preferenceScreen.appendChild(preference.serialize(document) { })
+                preferenceScreen.appendChild(document.createTextNode("\n"))
+            }
         }
     }
 }

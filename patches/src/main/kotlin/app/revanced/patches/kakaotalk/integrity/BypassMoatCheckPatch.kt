@@ -9,10 +9,13 @@ import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.util.findMutableMethodOf
 import app.morphe.util.getFreeRegisterProvider
 import app.morphe.util.getReference
+import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.kakaotalk.integrity.fingerprints.CheckApkChecksumsFingerprint
 import app.revanced.patches.kakaotalk.integrity.fingerprints.MoatResultClassFingerprint
+import app.revanced.patches.kakaotalk.settings.PreferenceScreen
 import app.revanced.patches.kakaotalk.settings.addSettingsTabPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
+import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.Method
@@ -21,6 +24,9 @@ import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.RegisterRangeInstruction
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
+
+private const val EXTENSION_CLASS =
+    "Lapp/revanced/extension/kakaotalk/patches/BypassMoatCheckPatch;"
 
 @Suppress("unused")
 val bypassMoatCheckPatch = bytecodePatch(
@@ -31,6 +37,15 @@ val bypassMoatCheckPatch = bytecodePatch(
     dependsOn(addSettingsTabPatch)
 
     execute {
+        PreferenceScreen.FEATURES.addPreferences(
+            SwitchPreference(
+                key = "morphe_pref_bypass_moat_integrity_check",
+                titleKey = "morphe_settings_patch_bypass_moat_check",
+                summary = true,
+            ),
+        )
+        setExtensionIsPatchIncluded(EXTENSION_CLASS)
+
         CheckApkChecksumsFingerprint.method.apply {
             val lastSgetObjectType = instructions.last { it.opcode == Opcode.SGET_OBJECT }.getReference<FieldReference>()?.type
 

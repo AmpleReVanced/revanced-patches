@@ -80,4 +80,26 @@
     <string name="morphe_settings_restart_required_title">재시작 필요</string>
     <string name="morphe_settings_restart_required">이 변경사항을 적용하려면 앱을 다시 시작해야 합니다.</string>
     <string name="morphe_settings_restart_required_restart">재시작</string>
+    <string name="morphe_pref_play_youtube_player_in_chat_room_summary">지원되는 유튜브 링크를 채팅방 안에서 바로 재생할 수 있습니다.</string>
+    <string name="morphe_pref_open_chat_room_comment_disabled_summary">켜면 오픈채팅에서 댓글 대신 답장을 사용합니다.</string>
+    <string name="morphe_pref_disable_99_unread_limit_summary">읽지 않은 수를 99+로 줄이지 않고 실제 숫자로 표시합니다.</string>
+    <string name="morphe_pref_show_modified_message_sender_profile_summary">메시지 수정 이력에서 보낸 사람의 프로필 사진과 닉네임을 표시합니다.</string>
+    <string name="morphe_pref_bypass_moat_integrity_check_summary">카카오페이를 실행하는 데 필요할 수 있습니다. 무결성 감지 경로를 우회하므로 위험을 이해한 경우에만 사용하세요.</string>
+    <string name="morphe_pref_ghost_mode_summary">상대방에게 입력 중 상태나 현재 동작 정보가 전달되지 않도록 합니다.</string>
+    <string name="morphe_pref_enable_recording_pause_resume_summary">지원되는 환경에서 음성 녹음 중 일시중지와 재개를 사용할 수 있습니다.</string>
+    <string name="morphe_pref_force_debug_mode_summary">카카오톡 내부 디버그 플래그를 강제로 켭니다.</string>
+    <string name="morphe_pref_default_external_browser_summary">외부 링크를 카카오톡 내부 브라우저 대신 기본 브라우저로 엽니다.</string>
+    <string name="morphe_pref_debug_summary">Morphe 패치의 추가 진단 로그를 기록합니다.</string>
+    <string name="morphe_pref_debug_stacktrace_summary">오류 보고에 전체 스택 트레이스를 함께 표시합니다.</string>
+    <string name="morphe_pref_debug_toast_summary">확장에서 오류를 잡았을 때 화면에 토스트를 표시합니다.</string>
+    <string name="morphe_pref_hide_more_tab_game_summary">더보기 탭에서 게임 탭을 숨깁니다. 이 설정을 바꾼 뒤에는 카카오톡을 다시 시작해야 합니다.</string>
+    <string name="morphe_pref_remove_short_form_tab_summary">탭 페이저와 관련 이동 흐름에서 숏폼 진입점을 숨깁니다. 이 설정을 바꾼 뒤에는 카카오톡을 다시 시작해야 합니다.</string>
+    <string name="morphe_pref_hide_more_tab_kakao_pay_section_summary">더보기 탭에서 카카오페이 섹션을 숨깁니다. 이 설정을 바꾼 뒤에는 카카오톡을 다시 시작해야 합니다.</string>
+    <string name="morphe_pref_hide_more_tab_game_play_section_summary">더보기 탭에서 게임플레이 섹션을 숨깁니다. 이 설정을 바꾼 뒤에는 카카오톡을 다시 시작해야 합니다.</string>
+    <string name="morphe_pref_hide_more_tab_kakao_now_section_summary">더보기 탭에서 카카오 나우 섹션을 숨깁니다. 이 설정을 바꾼 뒤에는 카카오톡을 다시 시작해야 합니다.</string>
+    <string name="morphe_pref_hide_more_tab_weather_section_summary">더보기 탭에서 날씨 섹션을 숨깁니다. 이 설정을 바꾼 뒤에는 카카오톡을 다시 시작해야 합니다.</string>
+    <string name="morphe_pref_hide_more_tab_service_group_section_summary">더보기 탭에서 서비스 그룹 섹션을 숨깁니다. 이 설정을 바꾼 뒤에는 카카오톡을 다시 시작해야 합니다.</string>
+    <string name="morphe_pref_hide_more_tab_line_service_section_summary">더보기 탭에서 개별 서비스 항목을 숨깁니다. 이 설정을 바꾼 뒤에는 카카오톡을 다시 시작해야 합니다.</string>
+    <string name="morphe_pref_enable_send_big_text_summary">전송 버튼을 길게 눌러 한 줄 텍스트를 큰 글씨로 보낼 수 있습니다.</string>
+    <string name="morphe_pref_enable_markdown_summary">일반 텍스트를 마크다운이 적용된 형태로 전송합니다.</string>
 </resources>

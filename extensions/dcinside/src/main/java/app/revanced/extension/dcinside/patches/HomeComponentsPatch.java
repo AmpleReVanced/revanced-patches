@@ -25,6 +25,13 @@ public final class HomeComponentsPatch {
     private HomeComponentsPatch() {
     }
 
+    /**
+     * @return If this patch was included during patching.
+     */
+    public static boolean isPatchIncluded() {
+        return false;  // Modified during patching.
+    }
+
     public static List<?> filterMainItems(List<?> items, String typeGetterName, String rawTypeSpec) {
         if (items == null || items.isEmpty() || !Settings.hideAnyHomeComponent()) {
             return items;

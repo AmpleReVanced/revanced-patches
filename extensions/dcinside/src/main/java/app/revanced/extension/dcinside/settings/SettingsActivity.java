@@ -1,6 +1,5 @@
 package app.revanced.extension.dcinside.settings;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -10,15 +9,13 @@ import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.Preference;
-import android.preference.PreferenceFragment;
+import android.preference.PreferenceGroup;
 import android.preference.SwitchPreference;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -29,7 +26,15 @@ import java.util.Set;
 import app.morphe.extension.shared.Utils;
 import app.morphe.extension.shared.settings.BaseSettings;
 import app.morphe.extension.shared.settings.BooleanSetting;
+import app.morphe.extension.shared.settings.preference.SettingsActivityLayout;
+import app.morphe.extension.shared.settings.preference.ToolbarPreferenceFragment;
 import app.revanced.extension.dcinside.helper.ResourceHelper;
+import app.revanced.extension.dcinside.patches.DisableDcconLoadingPatch;
+import app.revanced.extension.dcinside.patches.HideMiniGalleryCoverImagePatch;
+import app.revanced.extension.dcinside.patches.HomeComponentsPatch;
+import app.revanced.extension.dcinside.patches.OfficialNoticePatch;
+import app.revanced.extension.dcinside.patches.RenderBigDcconAsNormalPatch;
+import app.revanced.extension.dcinside.patches.RestoreOldPostIconsPatch;
 
 public final class SettingsActivity extends Activity {
     private static final String SETTINGS_SHORTCUT_ID = "morphe_dcinside_settings";
@@ -60,32 +65,17 @@ public final class SettingsActivity extends Activity {
         Utils.setContext(getApplicationContext());
 
         super.onCreate(savedInstanceState);
-        setTitle(resString("morphe_label_for_ample_settings", "Morphe Settings"));
-        setContentView(requireResourceId("layout", "morphe_dcinside_settings"));
-
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setTitle(resString("morphe_label_for_ample_settings", "Morphe Settings"));
-        }
+        int containerId = SettingsActivityLayout.setContentView(
+                this,
+                resString("morphe_label_for_ample_settings", "Morphe Settings")
+        );
 
         if (savedInstanceState == null) {
             getFragmentManager()
                     .beginTransaction()
-                    .replace(requireResourceId("id", "morphe_dcinside_settings_container"), new SettingsFragment())
+                    .replace(containerId, new SettingsFragment())
                     .commit();
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     public static void bindSettingsShortcut(View rootView) {
@@ -126,7 +116,7 @@ public final class SettingsActivity extends Activity {
         return resourceId;
     }
 
-    public static final class SettingsFragment extends PreferenceFragment {
+    public static final class SettingsFragment extends ToolbarPreferenceFragment {
         private final List<SwitchBinding> switchBindings = new ArrayList<>();
         private final Set<BooleanSetting> resettableSettings = new LinkedHashSet<>();
 
@@ -135,19 +125,19 @@ public final class SettingsActivity extends Activity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(requireResourceId("xml", "morphe_dcinside_settings_preferences"));
 
-            bindSwitch(PREF_HIDE_OFFICIAL_NOTICES, Settings.HIDE_OFFICIAL_NOTICES);
-            bindSwitch(PREF_BLOCK_POST_DCCON_LOADING, Settings.BLOCK_POST_DCCON_LOADING);
-            bindSwitch(PREF_BLOCK_REPLY_DCCON_LOADING, Settings.BLOCK_REPLY_DCCON_LOADING);
-            bindSwitch(PREF_RENDER_BIG_DCCON_AS_NORMAL, Settings.RENDER_BIG_DCCON_AS_NORMAL);
-            bindSwitch(PREF_HIDE_MINI_GALLERY_COVER_IMAGE, Settings.HIDE_MINI_GALLERY_COVER_IMAGE);
-            bindSwitch(PREF_RESTORE_LEGACY_POST_ICONS, Settings.RESTORE_LEGACY_POST_ICONS);
-            bindSwitch(PREF_HIDE_HOME_SEARCH_MENU, Settings.HIDE_HOME_SEARCH_MENU);
-            bindSwitch(PREF_HIDE_HOME_RECENT_GALLERIES, Settings.HIDE_HOME_RECENT_GALLERIES);
-            bindSwitch(PREF_HIDE_HOME_RECOMMENDED_GALLERIES, Settings.HIDE_HOME_RECOMMENDED_GALLERIES);
-            bindSwitch(PREF_HIDE_HOME_GALLERY_RANKING, Settings.HIDE_HOME_GALLERY_RANKING);
-            bindSwitch(PREF_HIDE_HOME_LIVE_BEST, Settings.HIDE_HOME_LIVE_BEST);
-            bindSwitch(PREF_HIDE_HOME_RECOMMENDED_POSTS, Settings.HIDE_HOME_RECOMMENDED_POSTS);
-            bindUserMemoPresetPreference();
+            bindSwitchIfIncluded(PREF_HIDE_OFFICIAL_NOTICES, Settings.HIDE_OFFICIAL_NOTICES, OfficialNoticePatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_BLOCK_POST_DCCON_LOADING, Settings.BLOCK_POST_DCCON_LOADING, DisableDcconLoadingPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_BLOCK_REPLY_DCCON_LOADING, Settings.BLOCK_REPLY_DCCON_LOADING, DisableDcconLoadingPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_RENDER_BIG_DCCON_AS_NORMAL, Settings.RENDER_BIG_DCCON_AS_NORMAL, RenderBigDcconAsNormalPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_HIDE_MINI_GALLERY_COVER_IMAGE, Settings.HIDE_MINI_GALLERY_COVER_IMAGE, HideMiniGalleryCoverImagePatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_RESTORE_LEGACY_POST_ICONS, Settings.RESTORE_LEGACY_POST_ICONS, RestoreOldPostIconsPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_HIDE_HOME_SEARCH_MENU, Settings.HIDE_HOME_SEARCH_MENU, HomeComponentsPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_HIDE_HOME_RECENT_GALLERIES, Settings.HIDE_HOME_RECENT_GALLERIES, HomeComponentsPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_HIDE_HOME_RECOMMENDED_GALLERIES, Settings.HIDE_HOME_RECOMMENDED_GALLERIES, HomeComponentsPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_HIDE_HOME_GALLERY_RANKING, Settings.HIDE_HOME_GALLERY_RANKING, HomeComponentsPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_HIDE_HOME_LIVE_BEST, Settings.HIDE_HOME_LIVE_BEST, HomeComponentsPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_HIDE_HOME_RECOMMENDED_POSTS, Settings.HIDE_HOME_RECOMMENDED_POSTS, HomeComponentsPatch.isPatchIncluded());
+            bindUserMemoPresetPreferenceIfIncluded(UserMemoPatch.isPatchIncluded());
             bindSwitch(PREF_DEBUG, BaseSettings.DEBUG);
             bindSwitch(PREF_DEBUG_STACKTRACE, BaseSettings.DEBUG_STACKTRACE);
             bindSwitch(PREF_DEBUG_TOAST, BaseSettings.DEBUG_TOAST_ON_ERROR);
@@ -155,14 +145,25 @@ public final class SettingsActivity extends Activity {
             bindInfoPreference(PREF_APP_VERSION, Utils.getAppVersionName());
             bindInfoPreference(PREF_PATCHES_VERSION, Utils.getPatchesReleaseVersion());
             bindInfoPreference(PREF_PACKAGE_NAME, requireActivity().getPackageName());
-            bindClearUserMemosPreference();
+            bindClearUserMemosPreferenceIfIncluded(UserMemoPatch.isPatchIncluded());
             bindResetPreference();
-
+            removeEmptyPreferenceGroups();
+            setPreferenceScreenToolbar(getPreferenceScreen());
             refreshPreferences();
+        }
+
+        private void bindUserMemoPresetPreferenceIfIncluded(boolean included) {
+            if (!included) {
+                removePreference(PREF_APPLY_USER_MEMO_PRESET);
+                return;
+            }
+
+            bindUserMemoPresetPreference();
         }
 
         private void bindUserMemoPresetPreference() {
             Preference preference = requirePreference(PREF_APPLY_USER_MEMO_PRESET, Preference.class);
+            preference.setPersistent(false);
             preference.setOnPreferenceClickListener(pref -> {
                 showUserMemoPresetSelectionDialog();
                 return true;
@@ -214,8 +215,18 @@ public final class SettingsActivity extends Activity {
                     .show();
         }
 
+        private void bindClearUserMemosPreferenceIfIncluded(boolean included) {
+            if (!included) {
+                removePreference(PREF_CLEAR_USER_MEMOS);
+                return;
+            }
+
+            bindClearUserMemosPreference();
+        }
+
         private void bindClearUserMemosPreference() {
             Preference preference = requirePreference(PREF_CLEAR_USER_MEMOS, Preference.class);
+            preference.setPersistent(false);
             preference.setOnPreferenceClickListener(pref -> {
                 Activity activity = requireActivity();
                 new AlertDialog.Builder(activity)
@@ -241,12 +252,6 @@ public final class SettingsActivity extends Activity {
         }
 
         @Override
-        public void onActivityCreated(Bundle savedInstanceState) {
-            super.onActivityCreated(savedInstanceState);
-            applyTopInsetWorkaround();
-        }
-
-        @Override
         public void onResume() {
             super.onResume();
             refreshPreferences();
@@ -254,6 +259,7 @@ public final class SettingsActivity extends Activity {
 
         private void bindSwitch(String key, BooleanSetting setting) {
             SwitchPreference preference = requirePreference(key, SwitchPreference.class);
+            preference.setPersistent(false);
             switchBindings.add(new SwitchBinding(preference, setting));
             resettableSettings.add(setting);
             preference.setOnPreferenceChangeListener((pref, newValue) -> {
@@ -263,14 +269,25 @@ public final class SettingsActivity extends Activity {
             });
         }
 
+        private void bindSwitchIfIncluded(String key, BooleanSetting setting, boolean included) {
+            if (!included) {
+                removePreference(key);
+                return;
+            }
+
+            bindSwitch(key, setting);
+        }
+
         private void bindInfoPreference(String key, String summary) {
             Preference preference = requirePreference(key, Preference.class);
+            preference.setPersistent(false);
             preference.setSelectable(false);
             preference.setSummary(normalizeSummary(summary));
         }
 
         private void bindResetPreference() {
             Preference preference = requirePreference(PREF_RESET, Preference.class);
+            preference.setPersistent(false);
             preference.setOnPreferenceClickListener(pref -> {
                 for (BooleanSetting setting : resettableSettings) {
                     setting.resetToDefault();
@@ -280,20 +297,64 @@ public final class SettingsActivity extends Activity {
             });
         }
 
+        private void removeEmptyPreferenceGroups() {
+            PreferenceGroup root = getPreferenceScreen();
+            if (root == null) {
+                return;
+            }
+
+            removeEmptyPreferenceGroups(root);
+        }
+
+        private boolean removeEmptyPreferenceGroups(PreferenceGroup group) {
+            for (int i = group.getPreferenceCount() - 1; i >= 0; i--) {
+                Preference preference = group.getPreference(i);
+                if (preference instanceof PreferenceGroup) {
+                    PreferenceGroup child = (PreferenceGroup) preference;
+                    if (removeEmptyPreferenceGroups(child) && child.getPreferenceCount() == 0) {
+                        group.removePreference(child);
+                    }
+                }
+            }
+
+            return group != getPreferenceScreen();
+        }
+
+        private void removePreference(String key) {
+            Preference preference = findPreference(key);
+            PreferenceGroup root = getPreferenceScreen();
+            if (preference == null || root == null) {
+                return;
+            }
+
+            PreferenceGroup parent = findParentPreference(root, preference);
+            if (parent != null) {
+                parent.removePreference(preference);
+            }
+        }
+
+        private PreferenceGroup findParentPreference(PreferenceGroup group, Preference preference) {
+            for (int i = 0; i < group.getPreferenceCount(); i++) {
+                Preference child = group.getPreference(i);
+                if (child == preference) {
+                    return group;
+                }
+                if (child instanceof PreferenceGroup) {
+                    PreferenceGroup parent = findParentPreference((PreferenceGroup) child, preference);
+                    if (parent != null) {
+                        return parent;
+                    }
+                }
+            }
+
+            return null;
+        }
+
         private void refreshPreferences() {
             for (SwitchBinding binding : switchBindings) {
                 binding.preference.setChecked(binding.setting.get());
                 binding.preference.setEnabled(binding.setting.isAvailable());
             }
-        }
-
-        private void applyTopInsetWorkaround() {
-            ListView listView = requireActivity().findViewById(android.R.id.list);
-            if (listView == null) {
-                return;
-            }
-
-            listView.setClipToPadding(false);
         }
 
         private String normalizeSummary(String summary) {

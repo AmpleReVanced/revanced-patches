@@ -12,14 +12,19 @@ import app.morphe.patches.all.misc.resources.resourceMappingPatch
 import app.morphe.util.ResourceGroup
 import app.morphe.util.copyResources
 import app.morphe.util.findMutableMethodOf
+import app.morphe.util.setExtensionIsPatchIncluded
+import app.revanced.patches.dcinside.settings.PreferenceScreen
 import app.revanced.patches.dcinside.settings.addSettingsPatch
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
+import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import com.android.tools.smali.dexlib2.iface.Method
 import com.android.tools.smali.dexlib2.iface.instruction.Instruction
 import com.android.tools.smali.dexlib2.iface.instruction.NarrowLiteralInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 
 private const val SETTINGS_CLASS = "Lapp/revanced/extension/dcinside/settings/Settings;"
+private const val EXTENSION_CLASS =
+    "Lapp/revanced/extension/dcinside/patches/RestoreOldPostIconsPatch;"
 
 private val postIconDrawableNames = listOf(
     "ic_list_head_best",
@@ -70,6 +75,15 @@ val restoreOldPostIconsPatch = bytecodePatch(
     )
 
     execute {
+        PreferenceScreen.FEATURES.addPreferences(
+            SwitchPreference(
+                key = "morphe_pref_restore_legacy_post_icons",
+                titleKey = "morphe_settings_restore_legacy_post_icons",
+                summary = true,
+            ),
+        )
+        setExtensionIsPatchIncluded(EXTENSION_CLASS)
+
         val resourceIds = drawableResourceIds(postIconDrawableNames)
         var patchedInstructions = 0
 

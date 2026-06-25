@@ -1,16 +1,12 @@
 package app.revanced.extension.kakaotalk.settings;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
-import android.preference.PreferenceFragment;
+import android.preference.PreferenceGroup;
 import android.preference.SwitchPreference;
-import android.view.MenuItem;
-import android.util.TypedValue;
-import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -22,6 +18,23 @@ import app.morphe.extension.shared.Utils;
 import app.morphe.extension.shared.settings.BaseSettings;
 import app.morphe.extension.shared.settings.BooleanSetting;
 import app.morphe.extension.shared.settings.StringSetting;
+import app.morphe.extension.shared.settings.preference.SettingsActivityLayout;
+import app.morphe.extension.shared.settings.preference.ToolbarPreferenceFragment;
+import app.revanced.extension.kakaotalk.patches.BypassMoatCheckPatch;
+import app.revanced.extension.kakaotalk.patches.DefaultExternalBrowserPatch;
+import app.revanced.extension.kakaotalk.patches.DisableOpenChatRoomCommentPatch;
+import app.revanced.extension.kakaotalk.patches.EnableMarkdownPatch;
+import app.revanced.extension.kakaotalk.patches.EnableRecordingPauseResumePatch;
+import app.revanced.extension.kakaotalk.patches.EnableSendBigTextPatch;
+import app.revanced.extension.kakaotalk.patches.ForceEnableDebugModePatch;
+import app.revanced.extension.kakaotalk.patches.GhostModePatch;
+import app.revanced.extension.kakaotalk.patches.HideMoreTabComponentsPatch;
+import app.revanced.extension.kakaotalk.patches.HideMoreTabGamePatch;
+import app.revanced.extension.kakaotalk.patches.OverrideFeatureFlagPatch;
+import app.revanced.extension.kakaotalk.patches.PlayYoutubePlayerInChatRoomPatch;
+import app.revanced.extension.kakaotalk.patches.Remove99ClampPatch;
+import app.revanced.extension.kakaotalk.patches.RemoveShortFormTabPatch;
+import app.revanced.extension.kakaotalk.patches.ShowDeletedHiddenOrEditedMessagePatch;
 
 public final class SettingsActivity extends Activity {
     private static final String PREF_GHOST_MODE = "morphe_pref_ghost_mode";
@@ -64,32 +77,17 @@ public final class SettingsActivity extends Activity {
         Utils.setContext(getApplicationContext());
 
         super.onCreate(savedInstanceState);
-        setTitle(resString("morphe_label_for_ample_settings", "Morphe Settings"));
-        setContentView(requireResourceId("layout", "morphe_kakaotalk_settings"));
-
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setTitle(resString("morphe_label_for_ample_settings", "Morphe Settings"));
-        }
+        int containerId = SettingsActivityLayout.setContentView(
+                this,
+                resString("morphe_label_for_ample_settings", "Morphe Settings")
+        );
 
         if (savedInstanceState == null) {
             getFragmentManager()
                     .beginTransaction()
-                    .replace(requireResourceId("id", "morphe_kakaotalk_settings_container"), new SettingsFragment())
+                    .replace(containerId, new SettingsFragment())
                     .commit();
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private String resString(String name, String fallback) {
@@ -105,7 +103,7 @@ public final class SettingsActivity extends Activity {
         return resourceId;
     }
 
-    public static final class SettingsFragment extends PreferenceFragment {
+    public static final class SettingsFragment extends ToolbarPreferenceFragment {
         private final List<SwitchBinding> switchBindings = new ArrayList<>();
         private final List<TextBinding> textBindings = new ArrayList<>();
         private final Set<BooleanSetting> resettableSettings = new LinkedHashSet<>();
@@ -130,26 +128,26 @@ public final class SettingsActivity extends Activity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(requireResourceId("xml", "morphe_kakaotalk_settings_preferences"));
 
-            bindSwitch(PREF_GHOST_MODE, Settings.GHOST_MODE);
-            bindSwitch(PREF_REMOVE_SHORT_FORM_TAB, Settings.REMOVE_SHORT_FORM_TAB);
-            bindSwitch(PREF_HIDE_MORE_TAB_GAME, Settings.HIDE_MORE_TAB_GAME);
-            bindSwitch(PREF_HIDE_MORE_TAB_KAKAO_PAY_SECTION, Settings.HIDE_MORE_TAB_KAKAO_PAY_SECTION);
-            bindSwitch(PREF_HIDE_MORE_TAB_GAME_PLAY_SECTION, Settings.HIDE_MORE_TAB_GAME_PLAY_SECTION);
-            bindSwitch(PREF_HIDE_MORE_TAB_KAKAO_NOW_SECTION, Settings.HIDE_MORE_TAB_KAKAO_NOW_SECTION);
-            bindSwitch(PREF_HIDE_MORE_TAB_WEATHER_SECTION, Settings.HIDE_MORE_TAB_WEATHER_SECTION);
-            bindSwitch(PREF_HIDE_MORE_TAB_SERVICE_GROUP_SECTION, Settings.HIDE_MORE_TAB_SERVICE_GROUP_SECTION);
-            bindSwitch(PREF_HIDE_MORE_TAB_LINE_SERVICE_SECTION, Settings.HIDE_MORE_TAB_LINE_SERVICE_SECTION);
-            bindSwitch(PREF_DISABLE_99_UNREAD_LIMIT, Settings.DISABLE_99_UNREAD_LIMIT);
-            bindSwitch(PREF_DEFAULT_EXTERNAL_BROWSER, Settings.DEFAULT_EXTERNAL_BROWSER);
-            bindSwitch(PREF_ENABLE_RECORDING_PAUSE_RESUME, Settings.ENABLE_RECORDING_PAUSE_RESUME);
-            bindSwitch(PREF_ENABLE_SEND_BIG_TEXT, Settings.ENABLE_SEND_BIG_TEXT);
-            bindSwitch(PREF_ENABLE_MARKDOWN, Settings.ENABLE_MARKDOWN);
-            bindSwitch(PREF_PLAY_YOUTUBE_PLAYER_IN_CHAT_ROOM, Settings.PLAY_YOUTUBE_PLAYER_IN_CHAT_ROOM);
-            bindSwitch(PREF_OPEN_CHAT_ROOM_COMMENT_DISABLED, Settings.OPEN_CHAT_ROOM_COMMENT_DISABLED);
-            bindSwitch(PREF_SHOW_MODIFIED_MESSAGE_SENDER_PROFILE, Settings.SHOW_MODIFIED_MESSAGE_SENDER_PROFILE);
-            bindRiskySwitch(PREF_BYPASS_MOAT_INTEGRITY_CHECK, Settings.BYPASS_MOAT_INTEGRITY_CHECK);
-            bindText(PREF_FEATURE_FLAG_OVERRIDES, Settings.FEATURE_FLAG_OVERRIDES);
-            bindSwitch(PREF_FORCE_DEBUG_MODE, Settings.FORCE_DEBUG_MODE);
+            bindSwitchIfIncluded(PREF_GHOST_MODE, Settings.GHOST_MODE, GhostModePatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_REMOVE_SHORT_FORM_TAB, Settings.REMOVE_SHORT_FORM_TAB, RemoveShortFormTabPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_HIDE_MORE_TAB_GAME, Settings.HIDE_MORE_TAB_GAME, HideMoreTabGamePatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_HIDE_MORE_TAB_KAKAO_PAY_SECTION, Settings.HIDE_MORE_TAB_KAKAO_PAY_SECTION, HideMoreTabComponentsPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_HIDE_MORE_TAB_GAME_PLAY_SECTION, Settings.HIDE_MORE_TAB_GAME_PLAY_SECTION, HideMoreTabComponentsPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_HIDE_MORE_TAB_KAKAO_NOW_SECTION, Settings.HIDE_MORE_TAB_KAKAO_NOW_SECTION, HideMoreTabComponentsPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_HIDE_MORE_TAB_WEATHER_SECTION, Settings.HIDE_MORE_TAB_WEATHER_SECTION, HideMoreTabComponentsPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_HIDE_MORE_TAB_SERVICE_GROUP_SECTION, Settings.HIDE_MORE_TAB_SERVICE_GROUP_SECTION, HideMoreTabComponentsPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_HIDE_MORE_TAB_LINE_SERVICE_SECTION, Settings.HIDE_MORE_TAB_LINE_SERVICE_SECTION, HideMoreTabComponentsPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_DISABLE_99_UNREAD_LIMIT, Settings.DISABLE_99_UNREAD_LIMIT, Remove99ClampPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_DEFAULT_EXTERNAL_BROWSER, Settings.DEFAULT_EXTERNAL_BROWSER, DefaultExternalBrowserPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_ENABLE_RECORDING_PAUSE_RESUME, Settings.ENABLE_RECORDING_PAUSE_RESUME, EnableRecordingPauseResumePatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_ENABLE_SEND_BIG_TEXT, Settings.ENABLE_SEND_BIG_TEXT, EnableSendBigTextPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_ENABLE_MARKDOWN, Settings.ENABLE_MARKDOWN, EnableMarkdownPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_PLAY_YOUTUBE_PLAYER_IN_CHAT_ROOM, Settings.PLAY_YOUTUBE_PLAYER_IN_CHAT_ROOM, PlayYoutubePlayerInChatRoomPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_OPEN_CHAT_ROOM_COMMENT_DISABLED, Settings.OPEN_CHAT_ROOM_COMMENT_DISABLED, DisableOpenChatRoomCommentPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_SHOW_MODIFIED_MESSAGE_SENDER_PROFILE, Settings.SHOW_MODIFIED_MESSAGE_SENDER_PROFILE, ShowDeletedHiddenOrEditedMessagePatch.isPatchIncluded());
+            bindRiskySwitchIfIncluded(PREF_BYPASS_MOAT_INTEGRITY_CHECK, Settings.BYPASS_MOAT_INTEGRITY_CHECK, BypassMoatCheckPatch.isPatchIncluded());
+            bindTextIfIncluded(PREF_FEATURE_FLAG_OVERRIDES, Settings.FEATURE_FLAG_OVERRIDES, OverrideFeatureFlagPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_FORCE_DEBUG_MODE, Settings.FORCE_DEBUG_MODE, ForceEnableDebugModePatch.isPatchIncluded());
             bindSwitch(PREF_DEBUG, BaseSettings.DEBUG);
             bindSwitch(PREF_DEBUG_STACKTRACE, BaseSettings.DEBUG_STACKTRACE);
             bindSwitch(PREF_DEBUG_TOAST, BaseSettings.DEBUG_TOAST_ON_ERROR);
@@ -158,14 +156,9 @@ public final class SettingsActivity extends Activity {
             bindInfoPreference(PREF_PATCHES_VERSION, Utils.getPatchesReleaseVersion());
             bindInfoPreference(PREF_PACKAGE_NAME, requireActivity().getPackageName());
             bindResetPreference();
-
+            removeEmptyPreferenceGroups();
+            setPreferenceScreenToolbar(getPreferenceScreen());
             refreshPreferences();
-        }
-
-        @Override
-        public void onActivityCreated(Bundle savedInstanceState) {
-            super.onActivityCreated(savedInstanceState);
-            applyTopInsetWorkaround();
         }
 
         @Override
@@ -176,6 +169,7 @@ public final class SettingsActivity extends Activity {
 
         private void bindSwitch(String key, BooleanSetting setting) {
             SwitchPreference preference = requirePreference(key, SwitchPreference.class);
+            preference.setPersistent(false);
             switchBindings.add(new SwitchBinding(preference, setting));
             resettableSettings.add(setting);
             preference.setOnPreferenceChangeListener((pref, newValue) -> {
@@ -186,8 +180,18 @@ public final class SettingsActivity extends Activity {
             });
         }
 
+        private void bindSwitchIfIncluded(String key, BooleanSetting setting, boolean included) {
+            if (!included) {
+                removePreference(key);
+                return;
+            }
+
+            bindSwitch(key, setting);
+        }
+
         private void bindRiskySwitch(String key, BooleanSetting setting) {
             SwitchPreference preference = requirePreference(key, SwitchPreference.class);
+            preference.setPersistent(false);
             switchBindings.add(new SwitchBinding(preference, setting));
             resettableSettings.add(setting);
             preference.setOnPreferenceChangeListener((pref, newValue) -> {
@@ -204,8 +208,18 @@ public final class SettingsActivity extends Activity {
             });
         }
 
+        private void bindRiskySwitchIfIncluded(String key, BooleanSetting setting, boolean included) {
+            if (!included) {
+                removePreference(key);
+                return;
+            }
+
+            bindRiskySwitch(key, setting);
+        }
+
         private void bindText(String key, StringSetting setting) {
             EditTextPreference preference = requirePreference(key, EditTextPreference.class);
+            preference.setPersistent(false);
             textBindings.add(new TextBinding(preference, setting, preference.getSummary()));
             resettableTextSettings.add(setting);
             preference.setOnPreferenceChangeListener((pref, newValue) -> {
@@ -213,6 +227,15 @@ public final class SettingsActivity extends Activity {
                 refreshPreferences();
                 return true;
             });
+        }
+
+        private void bindTextIfIncluded(String key, StringSetting setting, boolean included) {
+            if (!included) {
+                removePreference(key);
+                return;
+            }
+
+            bindText(key, setting);
         }
 
         private void maybeShowRestartRequiredNotice(String key) {
@@ -261,12 +284,14 @@ public final class SettingsActivity extends Activity {
 
         private void bindInfoPreference(String key, String summary) {
             Preference preference = requirePreference(key, Preference.class);
+            preference.setPersistent(false);
             preference.setSelectable(false);
             preference.setSummary(normalizeSummary(summary));
         }
 
         private void bindResetPreference() {
             Preference preference = requirePreference(PREF_RESET, Preference.class);
+            preference.setPersistent(false);
             preference.setOnPreferenceClickListener(pref -> {
                 for (BooleanSetting setting : resettableSettings) {
                     setting.resetToDefault();
@@ -277,6 +302,59 @@ public final class SettingsActivity extends Activity {
                 refreshPreferences();
                 return true;
             });
+        }
+
+        private void removeEmptyPreferenceGroups() {
+            PreferenceGroup root = getPreferenceScreen();
+            if (root == null) {
+                return;
+            }
+
+            removeEmptyPreferenceGroups(root);
+        }
+
+        private boolean removeEmptyPreferenceGroups(PreferenceGroup group) {
+            for (int i = group.getPreferenceCount() - 1; i >= 0; i--) {
+                Preference preference = group.getPreference(i);
+                if (preference instanceof PreferenceGroup) {
+                    PreferenceGroup child = (PreferenceGroup) preference;
+                    if (removeEmptyPreferenceGroups(child) && child.getPreferenceCount() == 0) {
+                        group.removePreference(child);
+                    }
+                }
+            }
+
+            return group != getPreferenceScreen();
+        }
+
+        private void removePreference(String key) {
+            Preference preference = findPreference(key);
+            PreferenceGroup root = getPreferenceScreen();
+            if (preference == null || root == null) {
+                return;
+            }
+
+            PreferenceGroup parent = findParentPreference(root, preference);
+            if (parent != null) {
+                parent.removePreference(preference);
+            }
+        }
+
+        private PreferenceGroup findParentPreference(PreferenceGroup group, Preference preference) {
+            for (int i = 0; i < group.getPreferenceCount(); i++) {
+                Preference child = group.getPreference(i);
+                if (child == preference) {
+                    return group;
+                }
+                if (child instanceof PreferenceGroup) {
+                    PreferenceGroup parent = findParentPreference((PreferenceGroup) child, preference);
+                    if (parent != null) {
+                        return parent;
+                    }
+                }
+            }
+
+            return null;
         }
 
         private void refreshPreferences() {
@@ -292,46 +370,6 @@ public final class SettingsActivity extends Activity {
                         : normalizeSummary(value));
                 binding.preference.setEnabled(binding.setting.isAvailable());
             }
-        }
-
-        private void applyTopInsetWorkaround() {
-            ListView listView = requireActivity().findViewById(android.R.id.list);
-            if (listView == null) {
-                return;
-            }
-
-            listView.setClipToPadding(false);
-
-            if (!isActionBarOverlayEnabled()) {
-                return;
-            }
-
-            int actionBarHeight = getActionBarHeight();
-            if (actionBarHeight <= 0) {
-                return;
-            }
-
-            listView.setPadding(
-                    listView.getPaddingLeft(),
-                    listView.getPaddingTop() + actionBarHeight,
-                    listView.getPaddingRight(),
-                    listView.getPaddingBottom()
-            );
-        }
-
-        private boolean isActionBarOverlayEnabled() {
-            TypedValue typedValue = new TypedValue();
-            return requireActivity().getTheme().resolveAttribute(android.R.attr.windowActionBarOverlay, typedValue, true)
-                    && typedValue.data != 0;
-        }
-
-        private int getActionBarHeight() {
-            TypedValue typedValue = new TypedValue();
-            if (!requireActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, typedValue, true)) {
-                return 0;
-            }
-
-            return TypedValue.complexToDimensionPixelSize(typedValue.data, getResources().getDisplayMetrics());
         }
 
         private String normalizeSummary(String summary) {

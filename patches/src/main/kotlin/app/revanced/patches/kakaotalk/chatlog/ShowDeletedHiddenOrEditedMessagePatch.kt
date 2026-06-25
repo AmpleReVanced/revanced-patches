@@ -15,6 +15,8 @@ import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMuta
 import app.morphe.patches.all.misc.resources.addResourcesPatch
 import app.morphe.util.getReference
 import app.morphe.util.returnEarly
+import app.morphe.util.setExtensionIsPatchIncluded
+import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.ChatInfoViewClassFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.ChatLogFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.ChatLogItemViewHolderFingerprint
@@ -40,6 +42,8 @@ import app.revanced.patches.kakaotalk.chatlog.fingerprints.PutDeletedMessageCach
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.ReplaceToFeedFingerprint
 import app.revanced.patches.kakaotalk.misc.addExtensionPatch
 import app.revanced.patches.kakaotalk.misc.sharedExtensionPatch
+import app.revanced.patches.kakaotalk.settings.PreferenceScreen
+import app.revanced.patches.kakaotalk.settings.addSettingsTabPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.patches.kakaotalk.shared.addKakaoTalkResources
 import app.revanced.util.localRegisterCount
@@ -63,6 +67,8 @@ private const val MODIFIED_PROFILE_NICKNAME_METHOD = "revanced_modified_profile_
 private const val MODIFIED_PROFILE_USER_ID_METHOD = "revanced_modified_profile_user_id"
 private const val MODIFIED_PROFILE_IMAGE_URL_METHOD = "revanced_modified_profile_image_url"
 private const val MODIFIED_PROFILE_IMAGE_TYPE_METHOD = "revanced_modified_profile_image_type"
+private const val EXTENSION_CLASS =
+    "Lapp/revanced/extension/kakaotalk/patches/ShowDeletedHiddenOrEditedMessagePatch;"
 
 private data class ModifiedProfileReferences(
     val getRecyclerItemReference: MethodReference,
@@ -135,7 +141,7 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
     description = "Allows you to see deleted, hidden, and edited message history in chat logs.",
 ) {
     compatibleWith(COMPATIBILITY_KAKAO)
-    dependsOn(addExtensionPatch, addResourcesPatch, sharedExtensionPatch, registerModifiedMessageHistoryActivityPatch)
+    dependsOn(addSettingsTabPatch, addExtensionPatch, addResourcesPatch, sharedExtensionPatch, registerModifiedMessageHistoryActivityPatch)
 
     val deletedColorText by stringOption(
         key = "deletedColor",
@@ -152,6 +158,15 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
     )
 
     execute {
+        PreferenceScreen.CHAT.addPreferences(
+            SwitchPreference(
+                key = "morphe_pref_show_modified_message_sender_profile",
+                titleKey = "morphe_settings_patch_show_modified_message_sender_profile",
+                summary = true,
+            ),
+        )
+        setExtensionIsPatchIncluded(EXTENSION_CLASS)
+
         addKakaoTalkResources()
 
         val deletedInt = parseArgb32ToInt(deletedColorText!!)

@@ -1,16 +1,27 @@
 package app.revanced.patches.kakaotalk.settings
 
-import app.revanced.patches.kakaotalk.settings.preference.BasePreference
-import app.revanced.patches.kakaotalk.settings.preference.BasePreferenceScreen
-import app.revanced.patches.kakaotalk.settings.preference.EditTextPreference
-import app.revanced.patches.kakaotalk.settings.preference.IntentPreference
-import app.revanced.patches.kakaotalk.settings.preference.SwitchPreference
-import app.revanced.patches.kakaotalk.settings.preference.TextPreference
+import app.morphe.patches.shared.misc.settings.preference.ActionIntentPreference
+import app.morphe.patches.shared.misc.settings.preference.BasePreferenceScreen
+import app.morphe.patches.shared.misc.settings.preference.NonInteractivePreference
+import app.morphe.patches.shared.misc.settings.preference.PreferenceScreenPreference
+import app.morphe.patches.shared.misc.settings.preference.PreferenceScreenPreference.Sorting
+import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 
 private const val ACTION_VIEW = "android.intent.action.VIEW"
 private const val ACTION_SENDTO = "android.intent.action.SENDTO"
 
-internal val kakaoTalkSettingsPreferences = linkedSetOf<BasePreference>()
+internal val kakaoTalkSettingsPreferences = linkedSetOf<PreferenceScreenPreference>()
+
+private val kakaoTalkSettingsPreferenceOrder = listOf(
+    "morphe_pref_category_chat",
+    "morphe_pref_category_navigation",
+    "morphe_pref_category_features",
+    "morphe_pref_category_support",
+    "morphe_pref_category_information",
+    "morphe_pref_category_debug",
+    "morphe_pref_category_manage",
+    "morphe_pref_category_links",
+)
 
 private var defaultPreferencesAdded = false
 
@@ -18,134 +29,12 @@ internal fun addDefaultKakaoTalkSettingsPreferences() {
     if (defaultPreferencesAdded) return
     defaultPreferencesAdded = true
 
-    PreferenceScreen.CHAT.addPreferences(
-        SwitchPreference(
-            key = "morphe_pref_ghost_mode",
-            titleKey = "morphe_settings_patch_ghost_mode",
-            summaryKey = "morphe_settings_patch_ghost_mode_summary",
-            defaultValue = true,
-        ),
-        SwitchPreference(
-            key = "morphe_pref_disable_99_unread_limit",
-            titleKey = "morphe_settings_patch_disable_99_unread_limit",
-            summaryKey = "morphe_settings_patch_disable_99_unread_limit_summary",
-            defaultValue = true,
-        ),
-        SwitchPreference(
-            key = "morphe_pref_open_chat_room_comment_disabled",
-            titleKey = "morphe_settings_patch_open_chat_room_comment_disabled",
-            summaryKey = "morphe_settings_patch_open_chat_room_comment_disabled_summary",
-            defaultValue = false,
-        ),
-        SwitchPreference(
-            key = "morphe_pref_show_modified_message_sender_profile",
-            titleKey = "morphe_settings_patch_show_modified_message_sender_profile",
-            summaryKey = "morphe_settings_patch_show_modified_message_sender_profile_summary",
-            defaultValue = true,
-        ),
-        EditTextPreference(
-            key = "morphe_pref_feature_flag_overrides",
-            titleKey = "morphe_settings_patch_feature_flag_overrides",
-            summaryKey = "morphe_settings_patch_feature_flag_overrides_summary",
-        ),
-    )
-
-    PreferenceScreen.NAVIGATION.addPreferences(
-        SwitchPreference(
-            key = "morphe_pref_remove_short_form_tab",
-            titleKey = "morphe_settings_catalog_remove_short_form_tab",
-            summaryKey = "morphe_settings_catalog_remove_short_form_tab_summary",
-            defaultValue = true,
-        ),
-        SwitchPreference(
-            key = "morphe_pref_hide_more_tab_game",
-            titleKey = "morphe_settings_catalog_hide_more_tab_game",
-            summaryKey = "morphe_settings_catalog_hide_more_tab_game_summary",
-            defaultValue = true,
-        ),
-        SwitchPreference(
-            key = "morphe_pref_hide_more_tab_kakao_pay_section",
-            titleKey = "morphe_settings_catalog_hide_more_tab_kakao_pay_section",
-            summaryKey = "morphe_settings_catalog_hide_more_tab_kakao_pay_section_summary",
-            defaultValue = false,
-        ),
-        SwitchPreference(
-            key = "morphe_pref_hide_more_tab_game_play_section",
-            titleKey = "morphe_settings_catalog_hide_more_tab_game_play_section",
-            summaryKey = "morphe_settings_catalog_hide_more_tab_game_play_section_summary",
-            defaultValue = false,
-        ),
-        SwitchPreference(
-            key = "morphe_pref_hide_more_tab_kakao_now_section",
-            titleKey = "morphe_settings_catalog_hide_more_tab_kakao_now_section",
-            summaryKey = "morphe_settings_catalog_hide_more_tab_kakao_now_section_summary",
-            defaultValue = false,
-        ),
-        SwitchPreference(
-            key = "morphe_pref_hide_more_tab_weather_section",
-            titleKey = "morphe_settings_catalog_hide_more_tab_weather_section",
-            summaryKey = "morphe_settings_catalog_hide_more_tab_weather_section_summary",
-            defaultValue = false,
-        ),
-        SwitchPreference(
-            key = "morphe_pref_hide_more_tab_service_group_section",
-            titleKey = "morphe_settings_catalog_hide_more_tab_service_group_section",
-            summaryKey = "morphe_settings_catalog_hide_more_tab_service_group_section_summary",
-            defaultValue = false,
-        ),
-        SwitchPreference(
-            key = "morphe_pref_hide_more_tab_line_service_section",
-            titleKey = "morphe_settings_catalog_hide_more_tab_line_service_section",
-            summaryKey = "morphe_settings_catalog_hide_more_tab_line_service_section_summary",
-            defaultValue = false,
-        ),
-    )
-
-    PreferenceScreen.FEATURES.addPreferences(
-        SwitchPreference(
-            key = "morphe_pref_default_external_browser",
-            titleKey = "morphe_settings_patch_external_browser",
-            summaryKey = "morphe_settings_patch_external_browser_summary",
-            defaultValue = true,
-        ),
-        SwitchPreference(
-            key = "morphe_pref_enable_recording_pause_resume",
-            titleKey = "morphe_settings_patch_recording_pause_resume",
-            summaryKey = "morphe_settings_patch_recording_pause_resume_summary",
-            defaultValue = true,
-        ),
-        SwitchPreference(
-            key = "morphe_pref_enable_send_big_text",
-            titleKey = "morphe_settings_patch_send_big_text",
-            summaryKey = "morphe_settings_patch_send_big_text_summary",
-            defaultValue = false,
-        ),
-        SwitchPreference(
-            key = "morphe_pref_enable_markdown",
-            titleKey = "morphe_settings_patch_markdown",
-            summaryKey = "morphe_settings_patch_markdown_summary",
-            defaultValue = false,
-        ),
-        SwitchPreference(
-            key = "morphe_pref_play_youtube_player_in_chat_room",
-            titleKey = "morphe_settings_patch_play_youtube_player_in_chat_room",
-            summaryKey = "morphe_settings_patch_play_youtube_player_in_chat_room_summary",
-            defaultValue = true,
-        ),
-        SwitchPreference(
-            key = "morphe_pref_bypass_moat_integrity_check",
-            titleKey = "morphe_settings_patch_bypass_moat_check",
-            summaryKey = "morphe_settings_patch_bypass_moat_check_summary",
-            defaultValue = false,
-        ),
-    )
-
     PreferenceScreen.SUPPORT.addPreferences(
-        IntentPreference(
+        ActionIntentPreference(
             key = "morphe_pref_support",
             titleKey = "morphe_settings_support",
             summaryKey = "morphe_settings_support_summary",
-            intent = IntentPreference.Intent(
+            intent = ActionIntentPreference.Intent(
                 action = ACTION_SENDTO,
                 data = "mailto:thisisample@proton.me?subject=Morphe%20support",
             ),
@@ -153,71 +42,65 @@ internal fun addDefaultKakaoTalkSettingsPreferences() {
     )
 
     PreferenceScreen.INFORMATION.addPreferences(
-        TextPreference(
+        NonInteractivePreference(
             key = "morphe_pref_app_version",
             titleKey = "morphe_settings_app_version",
+            summaryKey = null,
         ),
-        TextPreference(
+        NonInteractivePreference(
             key = "morphe_pref_patches_version",
             titleKey = "morphe_settings_patches_version",
+            summaryKey = null,
         ),
-        TextPreference(
+        NonInteractivePreference(
             key = "morphe_pref_package_name",
             titleKey = "morphe_settings_package_name",
+            summaryKey = null,
         ),
     )
 
     PreferenceScreen.DEBUG.addPreferences(
         SwitchPreference(
-            key = "morphe_pref_force_debug_mode",
-            titleKey = "morphe_settings_patch_force_debug_mode",
-            summaryKey = "morphe_settings_patch_force_debug_mode_summary",
-            defaultValue = true,
-        ),
-        SwitchPreference(
             key = "morphe_pref_debug",
             titleKey = "morphe_settings_debug",
-            summaryKey = "morphe_settings_debug_summary",
-            defaultValue = false,
+            summary = true,
         ),
         SwitchPreference(
             key = "morphe_pref_debug_stacktrace",
             titleKey = "morphe_settings_debug_stacktrace",
-            summaryKey = "morphe_settings_debug_stacktrace_summary",
-            defaultValue = false,
-            dependency = "morphe_pref_debug",
+            summary = true,
         ),
         SwitchPreference(
             key = "morphe_pref_debug_toast",
             titleKey = "morphe_settings_debug_toast",
-            summaryKey = "morphe_settings_debug_toast_summary",
-            defaultValue = true,
+            summary = true,
         ),
     )
 
     PreferenceScreen.MANAGE.addPreferences(
-        TextPreference(
+        NonInteractivePreference(
             key = "morphe_pref_reset",
             titleKey = "morphe_settings_reset_all",
             summaryKey = "morphe_settings_reset_all_summary",
+            selectable = true,
         ),
     )
 
     PreferenceScreen.LINKS.addPreferences(
-        IntentPreference(
+        ActionIntentPreference(
             key = "morphe_pref_github",
             titleKey = "morphe_settings_link_github",
             summaryKey = "morphe_settings_link_github_summary",
-            intent = IntentPreference.Intent(
+            intent = ActionIntentPreference.Intent(
                 action = ACTION_VIEW,
                 data = "https://github.com/AmpleReVanced/revanced-patches",
             ),
         ),
-        IntentPreference(
+        ActionIntentPreference(
             key = "morphe_pref_telegram",
             titleKey = "morphe_settings_link_telegram",
             summaryKey = "morphe_settings_link_telegram_summary",
-            intent = IntentPreference.Intent(
+            intent = ActionIntentPreference.Intent(
                 action = ACTION_VIEW,
                 data = "https://t.me/ample_revanced_bot",
             ),
@@ -229,37 +112,60 @@ internal object PreferenceScreen : BasePreferenceScreen() {
     val CHAT = Screen(
         key = "morphe_pref_category_chat",
         titleKey = "morphe_settings_section_chat",
+        summaryKey = null,
+        sorting = Sorting.UNSORTED,
     )
     val NAVIGATION = Screen(
         key = "morphe_pref_category_navigation",
         titleKey = "morphe_settings_section_navigation",
+        summaryKey = null,
+        sorting = Sorting.UNSORTED,
     )
     val FEATURES = Screen(
         key = "morphe_pref_category_features",
         titleKey = "morphe_settings_section_features",
+        summaryKey = null,
+        sorting = Sorting.UNSORTED,
     )
     val SUPPORT = Screen(
         key = "morphe_pref_category_support",
         titleKey = "morphe_settings_section_support",
+        summaryKey = null,
+        sorting = Sorting.UNSORTED,
     )
     val INFORMATION = Screen(
         key = "morphe_pref_category_information",
         titleKey = "morphe_settings_section_information",
+        summaryKey = null,
+        sorting = Sorting.UNSORTED,
     )
     val DEBUG = Screen(
         key = "morphe_pref_category_debug",
         titleKey = "morphe_settings_section_debug",
+        summaryKey = null,
+        sorting = Sorting.UNSORTED,
     )
     val MANAGE = Screen(
         key = "morphe_pref_category_manage",
         titleKey = "morphe_settings_section_manage",
+        summaryKey = null,
+        sorting = Sorting.UNSORTED,
     )
     val LINKS = Screen(
         key = "morphe_pref_category_links",
         titleKey = "morphe_settings_section_links",
+        summaryKey = null,
+        sorting = Sorting.UNSORTED,
     )
 
-    override fun commit(preference: BasePreference) {
-        kakaoTalkSettingsPreferences += preference
+    override fun commit(screen: PreferenceScreenPreference) {
+        kakaoTalkSettingsPreferences += screen
     }
 }
+
+internal fun orderedKakaoTalkSettingsPreferences(): List<PreferenceScreenPreference> =
+    kakaoTalkSettingsPreferences.sortedBy { preference ->
+        kakaoTalkSettingsPreferenceOrder.indexOf(preference.key).let { index ->
+            if (index < 0) Int.MAX_VALUE else index
+        }
+    }

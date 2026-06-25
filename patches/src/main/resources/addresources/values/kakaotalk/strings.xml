@@ -96,4 +96,26 @@ Second \"item\" text"</string>
     <string name="morphe_settings_restart_required_title">Restart required</string>
     <string name="morphe_settings_restart_required">Restart the app to apply this setting.</string>
     <string name="morphe_settings_restart_required_restart">Restart</string>
+    <string name="morphe_pref_play_youtube_player_in_chat_room_summary">Allows supported YouTube links to play directly inside a chat room.</string>
+    <string name="morphe_pref_open_chat_room_comment_disabled_summary">Uses replies instead of comments in open chat when enabled.</string>
+    <string name="morphe_pref_disable_99_unread_limit_summary">Shows the full unread count instead of limiting the badge to 99+.</string>
+    <string name="morphe_pref_show_modified_message_sender_profile_summary">Shows the sender’s profile image and nickname in message edit history.</string>
+    <string name="morphe_pref_bypass_moat_integrity_check_summary">May be required to launch KakaoPay. This bypasses an integrity detection path. Use at your own risk.</string>
+    <string name="morphe_pref_ghost_mode_summary">Prevents typing and activity updates from being sent to the other side.</string>
+    <string name="morphe_pref_enable_recording_pause_resume_summary">Enables pause and resume controls while recording voice messages when supported.</string>
+    <string name="morphe_pref_force_debug_mode_summary">Forces KakaoTalk’s internal debug flag on.</string>
+    <string name="morphe_pref_default_external_browser_summary">Opens external links in the default browser instead of KakaoTalk’s in-app browser.</string>
+    <string name="morphe_pref_debug_summary">Writes additional diagnostic logs for Morphe patches.</string>
+    <string name="morphe_pref_debug_stacktrace_summary">Includes full stack traces in error reports.</string>
+    <string name="morphe_pref_debug_toast_summary">Shows an on-screen toast when the extension catches an error.</string>
+    <string name="morphe_pref_hide_more_tab_game_summary">Hides the Game tab from the More tab. Restart KakaoTalk after changing this setting.</string>
+    <string name="morphe_pref_remove_short_form_tab_summary">Hides the Short-form entry point from the tab pager and related navigation. Restart KakaoTalk after changing this setting.</string>
+    <string name="morphe_pref_hide_more_tab_kakao_pay_section_summary">Hides the KakaoPay section from the More tab. Restart KakaoTalk after changing this setting.</string>
+    <string name="morphe_pref_hide_more_tab_game_play_section_summary">Hides the Game Play section from the More tab. Restart KakaoTalk after changing this setting.</string>
+    <string name="morphe_pref_hide_more_tab_kakao_now_section_summary">Hides the Kakao Now section from the More tab. Restart KakaoTalk after changing this setting.</string>
+    <string name="morphe_pref_hide_more_tab_weather_section_summary">Hides the Weather section from the More tab. Restart KakaoTalk after changing this setting.</string>
+    <string name="morphe_pref_hide_more_tab_service_group_section_summary">Hides the service group section from the More tab. Restart KakaoTalk after changing this setting.</string>
+    <string name="morphe_pref_hide_more_tab_line_service_section_summary">Hides individual service items from the More tab. Restart KakaoTalk after changing this setting.</string>
+    <string name="morphe_pref_enable_send_big_text_summary">Lets you long-press the send button to send a single-line message in large text.</string>
+    <string name="morphe_pref_enable_markdown_summary">Sends regular text messages with markdown enabled.</string>
 </resources>

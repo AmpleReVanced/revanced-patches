@@ -10,6 +10,8 @@ import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patcher.util.smali.ExternalLabel
 import app.morphe.util.getReference
+import app.morphe.util.setExtensionIsPatchIncluded
+import app.revanced.patches.kakaotalk.settings.PreferenceScreen
 import app.revanced.patches.kakaotalk.settings.addSettingsTabPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.patches.kakaotalk.tab.fingerprints.AddMoreTabBodySectionsFingerprint
@@ -26,6 +28,7 @@ import app.revanced.patches.kakaotalk.tab.fingerprints.moreTabGlobalServiceGroup
 import app.revanced.patches.kakaotalk.tab.fingerprints.moreTabGlobalServiceGroupViewHolderBindFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.moreTabLineServiceViewHolderBindFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.moreTabServiceGroupViewHolderBindFingerprint
+import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.Instruction
 import com.android.tools.smali.dexlib2.iface.instruction.OffsetInstruction
@@ -34,6 +37,8 @@ import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.reference.TypeReference
 
 private const val SETTINGS_CLASS = "Lapp/revanced/extension/kakaotalk/settings/Settings;"
+private const val EXTENSION_CLASS =
+    "Lapp/revanced/extension/kakaotalk/patches/HideMoreTabComponentsPatch;"
 
 @Suppress("unused")
 val hideMoreTabComponentsPatch = bytecodePatch(
@@ -44,6 +49,40 @@ val hideMoreTabComponentsPatch = bytecodePatch(
     dependsOn(addSettingsTabPatch)
 
     execute {
+        PreferenceScreen.NAVIGATION.addPreferences(
+            SwitchPreference(
+                key = "morphe_pref_hide_more_tab_kakao_pay_section",
+                titleKey = "morphe_settings_catalog_hide_more_tab_kakao_pay_section",
+                summary = true,
+            ),
+            SwitchPreference(
+                key = "morphe_pref_hide_more_tab_game_play_section",
+                titleKey = "morphe_settings_catalog_hide_more_tab_game_play_section",
+                summary = true,
+            ),
+            SwitchPreference(
+                key = "morphe_pref_hide_more_tab_kakao_now_section",
+                titleKey = "morphe_settings_catalog_hide_more_tab_kakao_now_section",
+                summary = true,
+            ),
+            SwitchPreference(
+                key = "morphe_pref_hide_more_tab_weather_section",
+                titleKey = "morphe_settings_catalog_hide_more_tab_weather_section",
+                summary = true,
+            ),
+            SwitchPreference(
+                key = "morphe_pref_hide_more_tab_service_group_section",
+                titleKey = "morphe_settings_catalog_hide_more_tab_service_group_section",
+                summary = true,
+            ),
+            SwitchPreference(
+                key = "morphe_pref_hide_more_tab_line_service_section",
+                titleKey = "morphe_settings_catalog_hide_more_tab_line_service_section",
+                summary = true,
+            ),
+        )
+        setExtensionIsPatchIncluded(EXTENSION_CLASS)
+
         val bodySectionsMethod = AddMoreTabBodySectionsFingerprint.method
         val serviceSectionsMethod = AddMoreTabServiceSectionsFingerprint.method
 

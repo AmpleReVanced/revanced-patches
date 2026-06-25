@@ -50,8 +50,8 @@ val addSettingsResourcesPatch = resourcePatch(
                 preferenceScreen.removeChild(preferenceScreen.firstChild)
             }
 
-            kakaoTalkSettingsPreferences.forEach { preference ->
-                preferenceScreen.appendChild(preference.serialize(document))
+            orderedKakaoTalkSettingsPreferences().forEach { preference ->
+                preferenceScreen.appendChild(preference.serialize(document) { })
                 preferenceScreen.appendChild(document.createTextNode("\n"))
             }
         }

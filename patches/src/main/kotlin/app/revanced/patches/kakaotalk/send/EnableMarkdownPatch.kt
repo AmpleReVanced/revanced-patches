@@ -7,12 +7,18 @@ import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.util.getFreeRegisterProvider
 import app.morphe.util.getReference
-import app.revanced.patches.kakaotalk.misc.addExtensionPatch
+import app.morphe.util.setExtensionIsPatchIncluded
+import app.revanced.patches.kakaotalk.settings.PreferenceScreen
+import app.revanced.patches.kakaotalk.settings.addSettingsTabPatch
 import app.revanced.patches.kakaotalk.send.fingerprints.EnableMarkdownFingerprint
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
+import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
+
+private const val EXTENSION_CLASS =
+    "Lapp/revanced/extension/kakaotalk/patches/EnableMarkdownPatch;"
 
 @Suppress("unused")
 val enableMarkdownPatch = bytecodePatch(
@@ -20,9 +26,18 @@ val enableMarkdownPatch = bytecodePatch(
     description = "Render plain text messages with markdown-style formatting.",
 ) {
     compatibleWith(COMPATIBILITY_KAKAO)
-    dependsOn(addExtensionPatch)
+    dependsOn(addSettingsTabPatch)
 
     execute {
+        PreferenceScreen.FEATURES.addPreferences(
+            SwitchPreference(
+                key = "morphe_pref_enable_markdown",
+                titleKey = "morphe_settings_patch_markdown",
+                summary = true,
+            ),
+        )
+        setExtensionIsPatchIncluded(EXTENSION_CLASS)
+
         val method = EnableMarkdownFingerprint.method
         val jsonInvokeIndex = method.instructions.indexOfLast { instruction ->
             if (instruction.opcode != Opcode.INVOKE_STATIC) return@indexOfLast false

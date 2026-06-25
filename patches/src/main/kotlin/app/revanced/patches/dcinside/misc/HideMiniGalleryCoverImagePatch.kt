@@ -3,12 +3,17 @@ package app.revanced.patches.dcinside.misc
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.util.setExtensionIsPatchIncluded
+import app.revanced.patches.dcinside.settings.PreferenceScreen
 import app.revanced.patches.dcinside.settings.addSettingsPatch
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
+import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import app.revanced.util.smaliReference
 import com.android.tools.smali.dexlib2.iface.Method
 
 private const val SETTINGS_CLASS = "Lapp/revanced/extension/dcinside/settings/Settings;"
+private const val EXTENSION_CLASS =
+    "Lapp/revanced/extension/dcinside/patches/HideMiniGalleryCoverImagePatch;"
 
 @Suppress("unused")
 val hideMiniGalleryCoverImagePatch = bytecodePatch(
@@ -19,6 +24,15 @@ val hideMiniGalleryCoverImagePatch = bytecodePatch(
     dependsOn(addSettingsPatch)
 
     execute {
+        PreferenceScreen.FEATURES.addPreferences(
+            SwitchPreference(
+                key = "morphe_pref_hide_mini_gallery_cover_image",
+                titleKey = "morphe_settings_hide_mini_gallery_cover_image",
+                summary = true,
+            ),
+        )
+        setExtensionIsPatchIncluded(EXTENSION_CLASS)
+
         val method = MiniGalleryHeaderSetupFingerprint.method
         val miniGalleryTypeCheck = method.findMiniGalleryTypeCheck()
             ?: throw PatchException("Could not find mini gallery type check")

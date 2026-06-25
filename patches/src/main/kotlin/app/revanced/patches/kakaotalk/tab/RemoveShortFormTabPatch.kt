@@ -8,7 +8,9 @@ import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.util.getFreeRegisterProvider
 import app.morphe.util.getReference
-import app.revanced.patches.kakaotalk.misc.addExtensionPatch
+import app.morphe.util.setExtensionIsPatchIncluded
+import app.revanced.patches.kakaotalk.settings.PreferenceScreen
+import app.revanced.patches.kakaotalk.settings.addSettingsTabPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.patches.kakaotalk.tab.fingerprints.ChooseOpenLinkTabFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.ChooseNowChildTabFingerprint
@@ -28,6 +30,10 @@ import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.reference.TypeReference
+import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
+
+private const val EXTENSION_CLASS =
+    "Lapp/revanced/extension/kakaotalk/patches/RemoveShortFormTabPatch;"
 
 @Suppress("unused")
 val removeShortFormTabPatch = bytecodePatch(
@@ -35,9 +41,18 @@ val removeShortFormTabPatch = bytecodePatch(
     description = "Removes the Short-form tab from the now fragment.",
 ) {
     compatibleWith(COMPATIBILITY_KAKAO)
-    dependsOn(addExtensionPatch)
+    dependsOn(addSettingsTabPatch)
 
     execute {
+        PreferenceScreen.NAVIGATION.addPreferences(
+            SwitchPreference(
+                key = "morphe_pref_remove_short_form_tab",
+                titleKey = "morphe_settings_catalog_remove_short_form_tab",
+                summary = true,
+            ),
+        )
+        setExtensionIsPatchIncluded(EXTENSION_CLASS)
+
         val onViewCreated = NowFragmentOnViewCreatedFingerprint.method
         val nowTabChips = onViewCreated.instructions
             .asSequence()
