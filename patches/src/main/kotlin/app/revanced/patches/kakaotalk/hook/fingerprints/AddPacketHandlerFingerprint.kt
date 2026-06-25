@@ -5,6 +5,13 @@ import app.morphe.patcher.methodCall
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
+internal object KakaoApplicationOnCreateFingerprint : Fingerprint(
+    definingClass = "Lcom/kakao/talk/application/App;",
+    name = "onCreate",
+    returnType = "V",
+    parameters = emptyList(),
+)
+
 internal object LocoProtocolResponseHookFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.FINAL),
     filters = listOf(
