@@ -67,27 +67,23 @@ public abstract class ToolbarPreferenceFragment extends AbstractPreferenceFragme
 
         AbstractPreferenceFragment.styleDialogList(dialog);
 
+        Context context = childScreen.getContext();
+        int backgroundColor = SettingsActivityLayout.resolveBackgroundColor(context);
+
+        Window window = dialog.getWindow();
+        if (window != null) {
+            SettingsActivityLayout.applySystemBars(window, backgroundColor);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                window.setNavigationBarContrastEnforced(true);
+            }
+        }
+
         FrameLayout content = dialog.findViewById(android.R.id.content);
         if (content == null || content.findViewWithTag(TOOLBAR_ROOT_TAG) != null) {
             return content != null;
         }
 
-        Context context = childScreen.getContext();
-        int backgroundColor = SettingsActivityLayout.resolveBackgroundColor(context);
         int foregroundColor = SettingsActivityLayout.resolveForegroundColor(context, backgroundColor);
-
-        Window window = dialog.getWindow();
-        if (window != null) {
-            window.setStatusBarColor(backgroundColor);
-            window.setNavigationBarColor(backgroundColor);
-            SettingsActivityLayout.applySystemBarIcons(window, SettingsActivityLayout.isLight(backgroundColor));
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                window.setNavigationBarContrastEnforced(true);
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                window.setDecorFitsSystemWindows(true);
-            }
-        }
 
         LinearLayout root = new LinearLayout(context);
         root.setTag(TOOLBAR_ROOT_TAG);

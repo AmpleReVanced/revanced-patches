@@ -18,6 +18,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowInsetsController;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -41,12 +42,7 @@ public final class SettingsActivityLayout {
         int backgroundColor = resolveBackgroundColor(activity);
         int foregroundColor = resolveForegroundColor(activity, backgroundColor);
 
-        activity.getWindow().setStatusBarColor(backgroundColor);
-        activity.getWindow().setNavigationBarColor(backgroundColor);
-        applySystemBarIcons(activity.getWindow(), isLight(backgroundColor));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            activity.getWindow().setDecorFitsSystemWindows(true);
-        }
+        applySystemBars(activity.getWindow(), backgroundColor);
 
         LinearLayout root = new LinearLayout(activity);
         root.setOrientation(LinearLayout.VERTICAL);
@@ -127,6 +123,19 @@ public final class SettingsActivityLayout {
         return titleTextView;
     }
 
+    static void applySystemBars(Window window, int backgroundColor) {
+        if (window == null) {
+            return;
+        }
+
+        window.setStatusBarColor(backgroundColor);
+        window.setNavigationBarColor(backgroundColor);
+        applySystemBarIcons(window, isLight(backgroundColor));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.setDecorFitsSystemWindows(true);
+        }
+    }
+
     static void applySystemBarIcons(Window window, boolean light) {
         int flags = window.getDecorView().getSystemUiVisibility();
         flags &= ~View.SYSTEM_UI_FLAG_FULLSCREEN;
@@ -152,6 +161,15 @@ public final class SettingsActivityLayout {
             }
         }
         window.getDecorView().setSystemUiVisibility(flags);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WindowInsetsController controller = window.getInsetsController();
+            if (controller != null) {
+                int mask = WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+                        | WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS;
+                controller.setSystemBarsAppearance(light ? mask : 0, mask);
+            }
+        }
     }
 
     static void applySystemWindowInsets(View view) {
