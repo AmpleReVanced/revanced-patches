@@ -80,6 +80,7 @@ public abstract class ToolbarPreferenceFragment extends AbstractPreferenceFragme
         if (window != null) {
             window.setStatusBarColor(backgroundColor);
             window.setNavigationBarColor(backgroundColor);
+            SettingsActivityLayout.applySystemBarIcons(window, SettingsActivityLayout.isLight(backgroundColor));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 window.setNavigationBarContrastEnforced(true);
             }

@@ -17,6 +17,7 @@ import app.morphe.extension.shared.Utils;
 import app.morphe.extension.shared.settings.BaseSettings;
 import app.morphe.extension.shared.settings.BooleanSetting;
 import app.morphe.extension.shared.settings.StringSetting;
+import app.morphe.extension.shared.settings.preference.MorphePreferenceStyle;
 import app.morphe.extension.shared.settings.preference.SettingsActivityLayout;
 import app.morphe.extension.shared.settings.preference.ToolbarPreferenceFragment;
 import app.revanced.extension.kakaotalk.patches.BypassMoatCheckPatch;
@@ -74,6 +75,8 @@ public final class SettingsActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Utils.setContext(getApplicationContext());
+        MorphePreferenceStyle.setThemeModeProvider(MorpheSettingsIconDynamicDrawable::isAppDarkMode);
+        SettingsActivityLayout.applyTheme(this);
 
         super.onCreate(savedInstanceState);
         int containerId = SettingsActivityLayout.setContentView(

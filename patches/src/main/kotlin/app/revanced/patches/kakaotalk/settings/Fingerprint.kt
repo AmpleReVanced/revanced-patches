@@ -26,3 +26,19 @@ internal object SetupSettingsItemFingerprint : Fingerprint(
         Opcode.INVOKE_DIRECT
     )
 )
+
+internal object ThemePrefNightModeReadFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf(),
+    returnType = "I",
+    strings = listOf("night_mode"),
+    custom = { _, classDef -> classDef.sourceFile == "ThemePref.kt" }
+)
+
+internal object ThemePrefNightModeWriteFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf("I"),
+    returnType = "V",
+    strings = listOf("night_mode"),
+    custom = { _, classDef -> classDef.sourceFile == "ThemePref.kt" }
+)

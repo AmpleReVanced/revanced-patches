@@ -17,6 +17,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,6 +29,12 @@ public final class SettingsActivityLayout {
     private SettingsActivityLayout() {
     }
 
+    public static void applyTheme(Activity activity) {
+        activity.setTheme(MorphePreferenceStyle.isDark(activity)
+                ? android.R.style.Theme_DeviceDefault_NoActionBar
+                : android.R.style.Theme_DeviceDefault_Light_NoActionBar);
+    }
+
     public static int setContentView(Activity activity, CharSequence title) {
         activity.setTitle(title);
 
@@ -36,7 +43,7 @@ public final class SettingsActivityLayout {
 
         activity.getWindow().setStatusBarColor(backgroundColor);
         activity.getWindow().setNavigationBarColor(backgroundColor);
-        applySystemBarIcons(activity, isLight(backgroundColor));
+        applySystemBarIcons(activity.getWindow(), isLight(backgroundColor));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             activity.getWindow().setDecorFitsSystemWindows(true);
         }
@@ -120,8 +127,8 @@ public final class SettingsActivityLayout {
         return titleTextView;
     }
 
-    private static void applySystemBarIcons(Activity activity, boolean light) {
-        int flags = activity.getWindow().getDecorView().getSystemUiVisibility();
+    static void applySystemBarIcons(Window window, boolean light) {
+        int flags = window.getDecorView().getSystemUiVisibility();
         flags &= ~View.SYSTEM_UI_FLAG_FULLSCREEN;
         flags &= ~View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
         flags &= ~View.SYSTEM_UI_FLAG_IMMERSIVE;
@@ -144,7 +151,7 @@ public final class SettingsActivityLayout {
                 flags &= ~View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
             }
         }
-        activity.getWindow().getDecorView().setSystemUiVisibility(flags);
+        window.getDecorView().setSystemUiVisibility(flags);
     }
 
     static void applySystemWindowInsets(View view) {
@@ -165,7 +172,7 @@ public final class SettingsActivityLayout {
         view.requestApplyInsets();
     }
 
-    private static boolean isLight(int color) {
+    static boolean isLight(int color) {
         double luminance = (0.299 * Color.red(color))
                 + (0.587 * Color.green(color))
                 + (0.114 * Color.blue(color));

@@ -37,12 +37,21 @@ public final class MorphePreferenceStyle {
     private static final String TAG_SUMMARY = "morphe_pref_summary";
     private static final String TAG_SWITCH = "morphe_pref_switch";
     private static final String TAG_TRAILING = "morphe_pref_trailing";
+    private static ThemeModeProvider themeModeProvider;
 
     public static final int TRAILING_NONE = 0;
     public static final int TRAILING_SWITCH = 1;
     public static final int TRAILING_CHEVRON = 2;
 
     private MorphePreferenceStyle() {
+    }
+
+    public interface ThemeModeProvider {
+        Boolean isDark(Context context);
+    }
+
+    public static void setThemeModeProvider(ThemeModeProvider provider) {
+        themeModeProvider = provider;
     }
 
     public static int dp(Context context, float value) {
@@ -54,6 +63,17 @@ public final class MorphePreferenceStyle {
     }
 
     public static boolean isDark(Context context) {
+        ThemeModeProvider provider = themeModeProvider;
+        if (provider != null) {
+            try {
+                Boolean dark = provider.isDark(context);
+                if (dark != null) {
+                    return dark;
+                }
+            } catch (Exception ignored) {
+            }
+        }
+
         int nightMode = context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
         return nightMode == Configuration.UI_MODE_NIGHT_YES;
     }

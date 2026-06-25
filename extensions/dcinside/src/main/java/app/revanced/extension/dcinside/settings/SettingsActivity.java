@@ -25,6 +25,7 @@ import java.util.Set;
 import app.morphe.extension.shared.Utils;
 import app.morphe.extension.shared.settings.BaseSettings;
 import app.morphe.extension.shared.settings.BooleanSetting;
+import app.morphe.extension.shared.settings.preference.MorphePreferenceStyle;
 import app.morphe.extension.shared.settings.preference.SettingsActivityLayout;
 import app.morphe.extension.shared.settings.preference.ToolbarPreferenceFragment;
 import app.revanced.extension.dcinside.helper.ResourceHelper;
@@ -62,6 +63,8 @@ public final class SettingsActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Utils.setContext(getApplicationContext());
+        MorphePreferenceStyle.setThemeModeProvider(SettingsActivity::resolveDarkMode);
+        SettingsActivityLayout.applyTheme(this);
 
         super.onCreate(savedInstanceState);
         int containerId = SettingsActivityLayout.setContentView(
@@ -75,6 +78,18 @@ public final class SettingsActivity extends Activity {
                     .replace(containerId, new SettingsFragment())
                     .commit();
         }
+    }
+
+    private static Boolean resolveDarkMode(Context context) {
+        int mode = context.getSharedPreferences("save", Context.MODE_PRIVATE)
+                .getInt("themeMode", 0);
+        if (mode == 1) {
+            return true;
+        }
+        if (mode == 0) {
+            return false;
+        }
+        return null;
     }
 
     public static void bindSettingsShortcut(View rootView) {

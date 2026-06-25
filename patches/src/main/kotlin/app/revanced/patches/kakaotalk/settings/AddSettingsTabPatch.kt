@@ -4,6 +4,7 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
+import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.util.proxy.mutableTypes.MutableField.Companion.toMutable
@@ -19,6 +20,7 @@ import com.android.tools.smali.dexlib2.builder.MutableMethodImplementation
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction35c
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction3rc
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
+import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.reference.TypeReference
@@ -40,6 +42,8 @@ val addSettingsTabPatch = bytecodePatch(
     )
 
     execute {
+        syncThemeNightModePreference()
+
         val mainSettingItemTypeClass = MainSettingItemTypeFingerprint.classDef
 
         mainSettingItemTypeClass.fields.add(
@@ -156,9 +160,18 @@ val addSettingsTabPatch = bytecodePatch(
         val originalInstruction = setupSettingsItemMethod.instructions[separatorIndex]
         setupSettingsItemMethod.replaceInstruction(separatorIndex, "nop")
 
+        val themePrefClass = ThemePrefNightModeReadFingerprint.classDef
+        val themePrefInstanceField = themePrefClass.fields.firstOrNull {
+            it.type == themePrefClass.type &&
+                    it.accessFlags and AccessFlags.STATIC.value != 0
+        } ?: throw PatchException("Could not find ThemePref singleton field")
+        val themePrefNightModeReader = ThemePrefNightModeReadFingerprint.method
+
         setupSettingsItemMethod.addInstructions(
             separatorIndex + 1,
             """
+                sget-object v18, ${themePrefClass.type}->${themePrefInstanceField.name}:${themePrefClass.type}
+                invoke-virtual/range {v18 .. v18}, ${themePrefClass.type}->${themePrefNightModeReader.name}()I
                 new-instance v18, ${finishSetupSettingsModel?.definingClass}
                 sget-object v19, ${mainSettingItemTypeClass.type}->MORPHE:${mainSettingItemTypeClass.type}
                 new-instance v3, ${finishSetupSettingsModel?.parameterTypes[2]}
@@ -185,4 +198,32 @@ val addSettingsTabPatch = bytecodePatch(
             """.trimIndent()
         )
     }
+}
+
+private fun BytecodePatchContext.syncThemeNightModePreference() {
+    ThemePrefNightModeReadFingerprint.method.apply {
+        val returnIndex = instructions.indexOfLast {
+            it.opcode == Opcode.RETURN
+        }
+        if (returnIndex < 0) {
+            throw PatchException("Could not find ThemePref night mode return")
+        }
+
+        val returnRegister = (getInstruction(returnIndex) as? OneRegisterInstruction)?.registerA
+            ?: throw PatchException("Could not read ThemePref night mode return register")
+
+        addInstructions(
+            returnIndex,
+            """
+                invoke-static {v$returnRegister}, Lapp/revanced/extension/kakaotalk/settings/KakaoThemeSettings;->setNightMode(I)V
+            """.trimIndent()
+        )
+    }
+
+    ThemePrefNightModeWriteFingerprint.method.addInstructions(
+        0,
+        """
+            invoke-static {p1}, Lapp/revanced/extension/kakaotalk/settings/KakaoThemeSettings;->setNightMode(I)V
+        """.trimIndent()
+    )
 }
