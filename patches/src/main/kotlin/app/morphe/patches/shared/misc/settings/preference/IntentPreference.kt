@@ -21,7 +21,7 @@ class IntentPreference(
     icon: String? = null,
     iconBold: String? = null,
     layout: String? = null,
-    tag: String = "Preference",
+    tag: String = MORPHE_PREFERENCE_CLASS,
     val intent: Intent,
 ) : BasePreference(key, titleKey, summaryKey, icon, iconBold, layout, tag) {
 

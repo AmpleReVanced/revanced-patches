@@ -2,6 +2,7 @@ package app.revanced.patches.dcinside.settings
 
 import app.morphe.patches.shared.misc.settings.preference.ActionIntentPreference
 import app.morphe.patches.shared.misc.settings.preference.BasePreferenceScreen
+import app.morphe.patches.shared.misc.settings.preference.MORPHE_PREFERENCE_SCREEN_LAYOUT
 import app.morphe.patches.shared.misc.settings.preference.NonInteractivePreference
 import app.morphe.patches.shared.misc.settings.preference.PreferenceScreenPreference
 import app.morphe.patches.shared.misc.settings.preference.PreferenceScreenPreference.Sorting
@@ -107,51 +108,59 @@ internal fun addDefaultDcInsideSettingsPreferences() {
     )
 }
 
-internal object PreferenceScreen : BasePreferenceScreen() {
+internal object PreferenceScreen : BasePreferenceScreen(MORPHE_PREFERENCE_SCREEN_LAYOUT) {
     val FEATURES = Screen(
         key = "morphe_pref_category_features",
         titleKey = "morphe_settings_section_features",
         summaryKey = null,
+        icon = "@drawable/morphe_pref_icon_features",
         sorting = Sorting.UNSORTED,
     )
     val HOME_SCREEN = Screen(
         key = "morphe_pref_category_home_screen",
         titleKey = "morphe_settings_section_home_screen",
         summaryKey = null,
+        icon = "@drawable/morphe_pref_icon_home",
         sorting = Sorting.UNSORTED,
     )
     val SUPPORT = Screen(
         key = "morphe_pref_category_support",
         titleKey = "morphe_settings_section_support",
         summaryKey = null,
+        icon = "@drawable/morphe_pref_icon_support",
         sorting = Sorting.UNSORTED,
     )
     val INFORMATION = Screen(
         key = "morphe_pref_category_information",
         titleKey = "morphe_settings_section_information",
         summaryKey = null,
+        icon = "@drawable/morphe_pref_icon_information",
         sorting = Sorting.UNSORTED,
     )
     val DEBUG = Screen(
         key = "morphe_pref_category_debug",
         titleKey = "morphe_settings_section_debug",
         summaryKey = null,
+        icon = "@drawable/morphe_pref_icon_debug",
         sorting = Sorting.UNSORTED,
     )
     val MANAGE = Screen(
         key = "morphe_pref_category_manage",
         titleKey = "morphe_settings_section_manage",
         summaryKey = null,
+        icon = "@drawable/morphe_pref_icon_manage",
         sorting = Sorting.UNSORTED,
     )
     val LINKS = Screen(
         key = "morphe_pref_category_links",
         titleKey = "morphe_settings_section_links",
         summaryKey = null,
+        icon = "@drawable/morphe_pref_icon_links",
         sorting = Sorting.UNSORTED,
     )
 
     override fun commit(screen: PreferenceScreenPreference) {
+        dcInsideSettingsPreferences.removeAll { it.key == screen.key }
         dcInsideSettingsPreferences += screen
     }
 }

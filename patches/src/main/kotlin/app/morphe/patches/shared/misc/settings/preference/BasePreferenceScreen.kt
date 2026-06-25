@@ -4,6 +4,7 @@ import app.morphe.patches.shared.misc.settings.preference.PreferenceScreenPrefer
 import java.io.Closeable
 
 abstract class BasePreferenceScreen(
+    private val defaultScreenLayout: String? = null,
     private val root: MutableSet<Screen> = mutableSetOf(),
 ) : Closeable {
 
@@ -13,6 +14,7 @@ abstract class BasePreferenceScreen(
         root.forEach { preference ->
             commit(preference.transform())
         }
+        root.clear()
     }
 
     /**
@@ -26,10 +28,10 @@ abstract class BasePreferenceScreen(
         private val summaryKey: String? = "${key}_summary",
         icon: String? = null,
         iconBold: String? = null,
-        layout: String? = null,
+        layout: String? = defaultScreenLayout,
         preferences: MutableSet<BasePreference> = mutableSetOf(),
         val categories: MutableSet<Category> = mutableSetOf(),
-        private val sorting: Sorting = Sorting.BY_TITLE,
+        private val sorting: Sorting = Sorting.UNSORTED,
     ) : BasePreferenceCollection(key, titleKey, icon, iconBold, layout, preferences) {
 
         override fun transform(): PreferenceScreenPreference {
@@ -41,8 +43,7 @@ abstract class BasePreferenceScreen(
                 iconBold,
                 layout,
                 sorting,
-                // Screens and preferences are sorted at runtime by extension code,
-                // so title sorting uses the localized language in use.
+                // Sorting is encoded into the key for runtimes that support it.
                 preferences = preferences + categories.map { it.transform() },
             )
         }

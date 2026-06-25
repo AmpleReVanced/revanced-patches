@@ -15,7 +15,7 @@ class SwitchPreference(
     key: String? = null,
     titleKey: String = "${key}_title",
     summary: Boolean = false,
-    tag: String = "SwitchPreference",
+    tag: String = MORPHE_SWITCH_PREFERENCE_CLASS,
     icon: String? = null,
     iconBold: String? = null,
     layout: String? = null

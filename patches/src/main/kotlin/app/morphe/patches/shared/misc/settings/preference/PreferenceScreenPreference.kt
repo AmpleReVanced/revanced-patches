@@ -24,7 +24,7 @@ open class PreferenceScreenPreference(
     icon: String? = null,
     iconBold: String? = null,
     layout: String? = null,
-    sorting: Sorting = Sorting.BY_TITLE,
+    sorting: Sorting = Sorting.UNSORTED,
     tag: String = "PreferenceScreen",
     val preferences: Set<BasePreference>,
     // Alternatively, instead of repurposing the key for sorting,

@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2026 piko <https://github.com/crimera/piko>
+ *
+ * See the included NOTICE file for GPLv3 §7(b) terms that apply to this code.
+ */
+
 package app.morphe.extension.shared.settings.preference;
 
 import android.app.Dialog;
@@ -10,8 +16,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toolbar;
+import android.widget.ListView;
 
 @SuppressWarnings({"deprecation", "unused"})
 public abstract class ToolbarPreferenceFragment extends AbstractPreferenceFragment {
@@ -30,7 +35,7 @@ public abstract class ToolbarPreferenceFragment extends AbstractPreferenceFragme
                 childScreen.setOnPreferenceClickListener(preference -> {
                     View view = getView();
                     if (view != null) {
-                        view.post(() -> addPreferenceScreenToolbar(childScreen));
+                        postAddPreferenceScreenToolbar(childScreen, view, 0);
                     } else {
                         addPreferenceScreenToolbar(childScreen);
                     }
@@ -40,15 +45,31 @@ public abstract class ToolbarPreferenceFragment extends AbstractPreferenceFragme
         }
     }
 
-    private static void addPreferenceScreenToolbar(PreferenceScreen childScreen) {
+    private static void postAddPreferenceScreenToolbar(PreferenceScreen childScreen, View anchor, int attempt) {
+        anchor.post(() -> {
+            AbstractPreferenceFragment.stylePreferenceScreenDialog(childScreen);
+            if (addPreferenceScreenToolbar(childScreen) || attempt >= 8) {
+                return;
+            }
+
+            anchor.postDelayed(
+                    () -> postAddPreferenceScreenToolbar(childScreen, anchor, attempt + 1),
+                    16L
+            );
+        });
+    }
+
+    private static boolean addPreferenceScreenToolbar(PreferenceScreen childScreen) {
         Dialog dialog = childScreen.getDialog();
         if (dialog == null) {
-            return;
+            return false;
         }
+
+        AbstractPreferenceFragment.styleDialogList(dialog);
 
         FrameLayout content = dialog.findViewById(android.R.id.content);
         if (content == null || content.findViewWithTag(TOOLBAR_ROOT_TAG) != null) {
-            return;
+            return content != null;
         }
 
         Context context = childScreen.getContext();
@@ -79,19 +100,15 @@ public abstract class ToolbarPreferenceFragment extends AbstractPreferenceFragme
         ));
         SettingsActivityLayout.applySystemWindowInsets(root);
 
-        Toolbar toolbar = new Toolbar(context);
-        toolbar.setTitle(childScreen.getTitle());
-        toolbar.setTitleTextColor(foregroundColor);
-        toolbar.setTitleMargin(dp(context, 16), 0, dp(context, 16), 0);
+        LinearLayout toolbar = new LinearLayout(context);
+        toolbar.setOrientation(LinearLayout.HORIZONTAL);
+        toolbar.setGravity(android.view.Gravity.CENTER_VERTICAL);
         toolbar.setBackgroundColor(backgroundColor);
-        toolbar.setNavigationIcon(SettingsActivityLayout.createBackArrowDrawable(context, foregroundColor));
-        toolbar.setNavigationOnClickListener(view -> dialog.dismiss());
+        int toolbarPadding = dp(context, 15);
+        toolbar.setPadding(toolbarPadding, dp(context, 10), toolbarPadding, dp(context, 8));
 
-        TextView toolbarTextView = findTextView(toolbar);
-        if (toolbarTextView != null) {
-            toolbarTextView.setTextColor(foregroundColor);
-            toolbarTextView.setTextSize(20);
-        }
+        toolbar.addView(SettingsActivityLayout.createBackArrowView(context, view -> dialog.dismiss()));
+        toolbar.addView(SettingsActivityLayout.createToolbarTitle(context, childScreen.getTitle(), foregroundColor));
 
         root.addView(toolbar, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -101,6 +118,10 @@ public abstract class ToolbarPreferenceFragment extends AbstractPreferenceFragme
         while (content.getChildCount() > 0) {
             View child = content.getChildAt(0);
             content.removeViewAt(0);
+            ListView listView = findListView(child);
+            if (listView != null) {
+                MorphePreferenceStyle.applyListStyle(listView);
+            }
             root.addView(child, new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     0,
@@ -113,11 +134,12 @@ public abstract class ToolbarPreferenceFragment extends AbstractPreferenceFragme
                 ViewGroup.LayoutParams.MATCH_PARENT
         ));
         root.requestApplyInsets();
+        return true;
     }
 
-    private static TextView findTextView(View view) {
-        if (view instanceof TextView) {
-            return (TextView) view;
+    private static ListView findListView(View view) {
+        if (view instanceof ListView) {
+            return (ListView) view;
         }
         if (!(view instanceof ViewGroup)) {
             return null;
@@ -125,9 +147,9 @@ public abstract class ToolbarPreferenceFragment extends AbstractPreferenceFragme
 
         ViewGroup viewGroup = (ViewGroup) view;
         for (int i = 0, count = viewGroup.getChildCount(); i < count; i++) {
-            TextView textView = findTextView(viewGroup.getChildAt(i));
-            if (textView != null) {
-                return textView;
+            ListView listView = findListView(viewGroup.getChildAt(i));
+            if (listView != null) {
+                return listView;
             }
         }
 
@@ -135,10 +157,10 @@ public abstract class ToolbarPreferenceFragment extends AbstractPreferenceFragme
     }
 
     private static int dp(Context context, float value) {
-        return Math.round(android.util.TypedValue.applyDimension(
+        return (int) android.util.TypedValue.applyDimension(
                 android.util.TypedValue.COMPLEX_UNIT_DIP,
                 value,
                 context.getResources().getDisplayMetrics()
-        ));
+        );
     }
 }

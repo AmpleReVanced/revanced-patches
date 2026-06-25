@@ -21,8 +21,8 @@ open class PreferenceCategory(
     icon: String? = null,
     iconBold: String? = null,
     layout: String? = null,
-    sorting: Sorting = Sorting.BY_TITLE,
-    tag: String = "PreferenceCategory",
+    sorting: Sorting = Sorting.UNSORTED,
+    tag: String = MORPHE_PREFERENCE_CATEGORY_CLASS,
     val preferences: Set<BasePreference>
 ) : BasePreference(sorting.appendSortType(key), titleKey, null, icon, iconBold, layout, tag) {
 
@@ -44,7 +44,6 @@ internal fun noTitleUnsortedPreferenceCategory(
     key = null,
     titleKey = null,
     sorting = Sorting.UNSORTED,
-    tag = "app.morphe.extension.shared.settings.preference.NoTitlePreferenceCategory",
+    tag = MORPHE_NO_TITLE_PREFERENCE_CATEGORY_CLASS,
     preferences = preferences
 )
-

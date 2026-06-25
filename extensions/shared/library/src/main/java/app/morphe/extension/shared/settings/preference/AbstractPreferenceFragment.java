@@ -23,6 +23,7 @@ public abstract class AbstractPreferenceFragment extends PreferenceFragment {
         private DebouncedListView(android.content.Context context) {
             super(context);
             setId(android.R.id.list);
+            MorphePreferenceStyle.applyListStyle(this);
             setLayoutParams(new ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT
@@ -71,20 +72,53 @@ public abstract class AbstractPreferenceFragment extends PreferenceFragment {
 
     @Override
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
+        boolean handled = super.onPreferenceTreeClick(preferenceScreen, preference);
         if (preference instanceof PreferenceScreen) {
-            wrapDialogListClickListener(((PreferenceScreen) preference).getDialog());
+            PreferenceScreen childScreen = (PreferenceScreen) preference;
+            stylePreferenceScreenDialog(childScreen);
+
+            View view = getView();
+            if (view != null) {
+                view.post(() -> stylePreferenceScreenDialog(childScreen));
+            }
         }
-        return super.onPreferenceTreeClick(preferenceScreen, preference);
+        return handled;
     }
 
     protected void removePreferences(String... keys) {
         for (String key : keys) {
-            Preference preference = findPreference(key);
-            PreferenceGroup parent = preference == null ? null : preference.getParent();
-            if (parent != null) {
-                parent.removePreference(preference);
-            }
+            removePreference(key);
         }
+    }
+
+    protected void removePreference(String key) {
+        Preference preference = findPreference(key);
+        PreferenceGroup root = getPreferenceScreen();
+        if (preference == null || root == null) {
+            return;
+        }
+
+        PreferenceGroup parent = findParentPreference(root, preference);
+        if (parent != null) {
+            parent.removePreference(preference);
+        }
+    }
+
+    protected void removeEmptyPreferenceGroups() {
+        PreferenceGroup root = getPreferenceScreen();
+        if (root == null) {
+            return;
+        }
+
+        removeEmptyPreferenceGroups(root, root);
+    }
+
+    protected <T extends Preference> T requirePreference(String key, Class<T> type) {
+        Preference preference = findPreference(key);
+        if (preference == null) {
+            throw new IllegalStateException("Missing preference: " + key);
+        }
+        return type.cast(preference);
     }
 
     @Override
@@ -92,7 +126,31 @@ public abstract class AbstractPreferenceFragment extends PreferenceFragment {
         return new DebouncedListView(getActivity());
     }
 
-    private static void wrapDialogListClickListener(Dialog dialog) {
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        View rootView = getView();
+        if (rootView == null) {
+            return;
+        }
+
+        rootView.setBackgroundColor(MorphePreferenceStyle.backgroundColor(rootView.getContext()));
+        ListView listView = findListView(rootView);
+        if (listView != null) {
+            MorphePreferenceStyle.applyListStyle(listView);
+        }
+    }
+
+    static void stylePreferenceScreenDialog(PreferenceScreen preferenceScreen) {
+        if (preferenceScreen == null) {
+            return;
+        }
+
+        styleDialogList(preferenceScreen.getDialog());
+    }
+
+    static void styleDialogList(Dialog dialog) {
         if (dialog == null) {
             return;
         }
@@ -102,10 +160,56 @@ public abstract class AbstractPreferenceFragment extends PreferenceFragment {
             return;
         }
 
+        MorphePreferenceStyle.applyListStyle(listView);
+
         AdapterView.OnItemClickListener originalListener = listView.getOnItemClickListener();
         if (originalListener != null && !(originalListener instanceof DebouncedItemClickListener)) {
             listView.setOnItemClickListener(new DebouncedItemClickListener(originalListener));
         }
+    }
+
+    private static ListView findListView(View view) {
+        if (view instanceof ListView) {
+            return (ListView) view;
+        }
+
+        View list = view.findViewById(android.R.id.list);
+        if (list instanceof ListView) {
+            return (ListView) list;
+        }
+
+        return null;
+    }
+
+    private static boolean removeEmptyPreferenceGroups(PreferenceGroup root, PreferenceGroup group) {
+        for (int i = group.getPreferenceCount() - 1; i >= 0; i--) {
+            Preference preference = group.getPreference(i);
+            if (preference instanceof PreferenceGroup) {
+                PreferenceGroup child = (PreferenceGroup) preference;
+                if (removeEmptyPreferenceGroups(root, child) && child.getPreferenceCount() == 0) {
+                    group.removePreference(child);
+                }
+            }
+        }
+
+        return group != root;
+    }
+
+    private static PreferenceGroup findParentPreference(PreferenceGroup group, Preference preference) {
+        for (int i = 0; i < group.getPreferenceCount(); i++) {
+            Preference child = group.getPreference(i);
+            if (child == preference) {
+                return group;
+            }
+            if (child instanceof PreferenceGroup) {
+                PreferenceGroup parent = findParentPreference((PreferenceGroup) child, preference);
+                if (parent != null) {
+                    return parent;
+                }
+            }
+        }
+
+        return null;
     }
 
     private static int toggleFeedbackConstant(TwoStatePreference preference) {

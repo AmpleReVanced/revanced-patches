@@ -4,6 +4,14 @@ import app.morphe.patches.util.resource.BaseResource
 import org.w3c.dom.Document
 import org.w3c.dom.Element
 
+internal const val MORPHE_PREFERENCE_SCREEN_LAYOUT = "@layout/morphe_preference_screen"
+internal const val MORPHE_PREFERENCE_CLASS = "app.morphe.extension.shared.settings.preference.MorphePreference"
+internal const val MORPHE_SWITCH_PREFERENCE_CLASS = "app.morphe.extension.shared.settings.preference.MorpheSwitchPreference"
+internal const val MORPHE_EDIT_TEXT_PREFERENCE_CLASS = "app.morphe.extension.shared.settings.preference.MorpheEditTextPreference"
+internal const val MORPHE_LIST_PREFERENCE_CLASS = "app.morphe.extension.shared.settings.preference.MorpheListPreference"
+internal const val MORPHE_PREFERENCE_CATEGORY_CLASS = "app.morphe.extension.shared.settings.preference.MorphePreferenceCategory"
+internal const val MORPHE_NO_TITLE_PREFERENCE_CATEGORY_CLASS = "app.morphe.extension.shared.settings.preference.MorpheNoTitlePreferenceCategory"
+
 /**
  * Base preference class for all preferences.
  *
@@ -51,7 +59,7 @@ abstract class BasePreference(
 
             if (icon != null || iconBold != null) {
                 setAttribute("android:icon",  icon ?: iconBold)
-                setAttribute("app:iconSpaceReserved", "true")
+                setAttribute("android:iconSpaceReserved", "true")
             }
             layout?.let { setAttribute("android:layout", layout) }
         }

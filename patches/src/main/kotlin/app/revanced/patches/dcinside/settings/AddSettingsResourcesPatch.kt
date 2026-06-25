@@ -23,8 +23,19 @@ internal val addSettingsResourcesPatch = resourcePatch(
         copyResources(
             "settings",
             ResourceGroup(
+                "drawable",
+                "morphe_pref_icon_features.xml",
+                "morphe_pref_icon_home.xml",
+                "morphe_pref_icon_support.xml",
+                "morphe_pref_icon_information.xml",
+                "morphe_pref_icon_debug.xml",
+                "morphe_pref_icon_manage.xml",
+                "morphe_pref_icon_links.xml",
+            ),
+            ResourceGroup(
                 "layout",
                 "morphe_dcinside_settings.xml",
+                "morphe_preference_screen.xml",
             ),
             ResourceGroup(
                 "xml",

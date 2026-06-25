@@ -37,7 +37,7 @@ val overrideFeatureFlagPatch = bytecodePatch(
                 key = "morphe_pref_feature_flag_overrides",
                 titleKey = "morphe_settings_patch_feature_flag_overrides",
                 summaryKey = "morphe_settings_patch_feature_flag_overrides_summary",
-                tag = "EditTextPreference",
+                tag = "app.morphe.extension.shared.settings.preference.MorpheEditTextPreference",
             ),
         )
         setExtensionIsPatchIncluded(EXTENSION_CLASS)

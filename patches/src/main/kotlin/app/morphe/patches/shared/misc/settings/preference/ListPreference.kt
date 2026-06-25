@@ -19,13 +19,14 @@ import org.w3c.dom.Document
 class ListPreference(
     key: String? = null,
     titleKey: String = "${key}_title",
+    summaryKey: String? = null,
     icon: String? = null,
     iconBold: String? = null,
     layout: String? = null,
-    tag: String = "app.morphe.extension.shared.settings.preference.CustomDialogListPreference",
+    tag: String = MORPHE_LIST_PREFERENCE_CLASS,
     val entriesKey: String? = "${key}_entries",
     val entryValuesKey: String? = "${key}_entry_values"
-) : BasePreference(key, titleKey, null, icon, iconBold, layout, tag) {
+) : BasePreference(key, titleKey, summaryKey, icon, iconBold, layout, tag) {
     var entries: ArrayResource? = null
         private set
     var entryValues: ArrayResource? = null
@@ -45,10 +46,17 @@ class ListPreference(
         key: String? = null,
         titleKey: String = "${key}_title",
         summaryKey: String? = "${key}_summary",
-        tag: String = "ListPreference",
+        tag: String = MORPHE_LIST_PREFERENCE_CLASS,
         entries: ArrayResource,
         entryValues: ArrayResource
-    ) : this(key, titleKey, summaryKey, tag, entries.name, entryValues.name) {
+    ) : this(
+        key = key,
+        titleKey = titleKey,
+        summaryKey = summaryKey,
+        tag = tag,
+        entriesKey = entries.name,
+        entryValuesKey = entryValues.name
+    ) {
         this.entries = entries
         this.entryValues = entryValues
     }

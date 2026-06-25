@@ -9,7 +9,6 @@ import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.Preference;
-import android.preference.PreferenceGroup;
 import android.preference.SwitchPreference;
 import android.view.View;
 import android.view.ViewGroup;
@@ -297,59 +296,6 @@ public final class SettingsActivity extends Activity {
             });
         }
 
-        private void removeEmptyPreferenceGroups() {
-            PreferenceGroup root = getPreferenceScreen();
-            if (root == null) {
-                return;
-            }
-
-            removeEmptyPreferenceGroups(root);
-        }
-
-        private boolean removeEmptyPreferenceGroups(PreferenceGroup group) {
-            for (int i = group.getPreferenceCount() - 1; i >= 0; i--) {
-                Preference preference = group.getPreference(i);
-                if (preference instanceof PreferenceGroup) {
-                    PreferenceGroup child = (PreferenceGroup) preference;
-                    if (removeEmptyPreferenceGroups(child) && child.getPreferenceCount() == 0) {
-                        group.removePreference(child);
-                    }
-                }
-            }
-
-            return group != getPreferenceScreen();
-        }
-
-        private void removePreference(String key) {
-            Preference preference = findPreference(key);
-            PreferenceGroup root = getPreferenceScreen();
-            if (preference == null || root == null) {
-                return;
-            }
-
-            PreferenceGroup parent = findParentPreference(root, preference);
-            if (parent != null) {
-                parent.removePreference(preference);
-            }
-        }
-
-        private PreferenceGroup findParentPreference(PreferenceGroup group, Preference preference) {
-            for (int i = 0; i < group.getPreferenceCount(); i++) {
-                Preference child = group.getPreference(i);
-                if (child == preference) {
-                    return group;
-                }
-                if (child instanceof PreferenceGroup) {
-                    PreferenceGroup parent = findParentPreference((PreferenceGroup) child, preference);
-                    if (parent != null) {
-                        return parent;
-                    }
-                }
-            }
-
-            return null;
-        }
-
         private void refreshPreferences() {
             for (SwitchBinding binding : switchBindings) {
                 binding.preference.setChecked(binding.setting.get());
@@ -403,14 +349,6 @@ public final class SettingsActivity extends Activity {
                 throw new IllegalStateException("Settings fragment is not attached");
             }
             return activity;
-        }
-
-        private <T extends Preference> T requirePreference(String key, Class<T> type) {
-            Preference preference = findPreference(key);
-            if (preference == null) {
-                throw new IllegalStateException("Missing preference: " + key);
-            }
-            return type.cast(preference);
         }
 
         private static final class PresetAdapter extends BaseAdapter {

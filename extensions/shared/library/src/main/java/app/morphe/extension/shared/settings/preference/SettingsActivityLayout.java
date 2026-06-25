@@ -1,21 +1,25 @@
+/*
+ * Copyright (C) 2026 piko <https://github.com/crimera/piko>
+ *
+ * See the included NOTICE file for GPLv3 §7(b) terms that apply to this code.
+ */
+
 package app.morphe.extension.shared.settings.preference;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Configuration;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PixelFormat;
-import android.graphics.drawable.Drawable;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.Toolbar;
+import android.widget.TextView;
 
 @SuppressWarnings("unused")
 public final class SettingsActivityLayout {
@@ -48,12 +52,15 @@ public final class SettingsActivityLayout {
         ));
         applySystemWindowInsets(root);
 
-        Toolbar toolbar = new Toolbar(activity);
-        toolbar.setTitle(title);
-        toolbar.setTitleTextColor(foregroundColor);
+        LinearLayout toolbar = new LinearLayout(activity);
+        toolbar.setOrientation(LinearLayout.HORIZONTAL);
+        toolbar.setGravity(Gravity.CENTER_VERTICAL);
         toolbar.setBackgroundColor(backgroundColor);
-        toolbar.setNavigationIcon(createBackArrowDrawable(activity, foregroundColor));
-        toolbar.setNavigationOnClickListener(view -> activity.finish());
+        int toolbarPadding = dp(activity, 15);
+        toolbar.setPadding(toolbarPadding, dp(activity, 10), toolbarPadding, dp(activity, 8));
+
+        toolbar.addView(createBackArrowView(activity, view -> activity.finish()));
+        toolbar.addView(createToolbarTitle(activity, title, foregroundColor));
 
         root.addView(toolbar, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -75,40 +82,42 @@ public final class SettingsActivityLayout {
     }
 
     static int resolveToolbarHeight(Context context) {
-        TypedValue value = new TypedValue();
-        if (context.getTheme().resolveAttribute(android.R.attr.actionBarSize, value, true)) {
-            return TypedValue.complexToDimensionPixelSize(
-                    value.data,
-                    context.getResources().getDisplayMetrics()
-            );
-        }
-        return dp(context, 56);
+        return dp(context, 70);
     }
 
     static int resolveBackgroundColor(Context context) {
-        int defaultBackgroundColor = isNightMode(context) ? Color.BLACK : Color.WHITE;
-        return resolveColor(context, android.R.attr.windowBackground, defaultBackgroundColor);
+        return MorphePreferenceStyle.backgroundColor(context);
     }
 
     static int resolveForegroundColor(Context context, int backgroundColor) {
-        return resolveColor(
-                context,
-                android.R.attr.textColorPrimary,
-                isLight(backgroundColor) ? Color.BLACK : Color.WHITE
+        return MorphePreferenceStyle.primaryTextColor(context);
+    }
+
+    static View createBackArrowView(Context context, View.OnClickListener onClickListener) {
+        BackArrowView back = new BackArrowView(context);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(dp(context, 44), dp(context, 44));
+        params.gravity = Gravity.CENTER_VERTICAL;
+        back.setLayoutParams(params);
+        back.setOnClickListener(onClickListener);
+        return back;
+    }
+
+    static TextView createToolbarTitle(Context context, CharSequence title, int color) {
+        TextView titleTextView = new TextView(context);
+        titleTextView.setText(title);
+        titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 26);
+        titleTextView.setTypeface(Typeface.create("sans-serif", Typeface.NORMAL));
+        titleTextView.setIncludeFontPadding(false);
+        titleTextView.setTextColor(color);
+
+        LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
         );
-    }
-
-    static Drawable createBackArrowDrawable(Context context, int color) {
-        return new BackArrowDrawable(context, color);
-    }
-
-    private static int resolveColor(Context context, int attribute, int fallback) {
-        TypedArray typedArray = context.obtainStyledAttributes(new int[]{attribute});
-        try {
-            return typedArray.getColor(0, fallback);
-        } finally {
-            typedArray.recycle();
-        }
+        titleParams.gravity = Gravity.CENTER_VERTICAL;
+        titleParams.leftMargin = dp(context, 7);
+        titleTextView.setLayoutParams(titleParams);
+        return titleTextView;
     }
 
     private static void applySystemBarIcons(Activity activity, boolean light) {
@@ -163,72 +172,40 @@ public final class SettingsActivityLayout {
         return luminance >= 186;
     }
 
-    private static boolean isNightMode(Context context) {
-        int nightMode = context.getResources().getConfiguration().uiMode
-                & Configuration.UI_MODE_NIGHT_MASK;
-        return nightMode == Configuration.UI_MODE_NIGHT_YES;
-    }
-
     private static int dp(Context context, float value) {
-        return Math.round(TypedValue.applyDimension(
+        return (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
                 value,
                 context.getResources().getDisplayMetrics()
-        ));
+        );
     }
 
-    private static final class BackArrowDrawable extends Drawable {
+    private static final class BackArrowView extends View {
         private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        private final int size;
 
-        private BackArrowDrawable(Context context, int color) {
-            size = dp(context, 24);
+        private BackArrowView(Context context) {
+            super(context);
+        }
+
+        @Override
+        protected void onDraw(Canvas canvas) {
+            super.onDraw(canvas);
+
+            float centerY = getHeight() / 2f;
+            float tipX = dp(getContext(), 2);
+            float endX = dp(getContext(), 21);
+            float headEndX = dp(getContext(), 10);
+            float headOffset = dp(getContext(), 7);
+
             paint.setStyle(Paint.Style.STROKE);
-            paint.setStrokeWidth(dp(context, 2));
+            paint.setStrokeWidth(dp(getContext(), 1.9f));
             paint.setStrokeCap(Paint.Cap.ROUND);
             paint.setStrokeJoin(Paint.Join.ROUND);
-            paint.setColor(color);
-        }
+            paint.setColor(MorphePreferenceStyle.primaryTextColor(getContext()));
 
-        @Override
-        public void draw(Canvas canvas) {
-            android.graphics.Rect bounds = getBounds();
-            float centerY = bounds.exactCenterY();
-            float left = bounds.left + (bounds.width() * 0.30f);
-            float right = bounds.right - (bounds.width() * 0.25f);
-            float headX = bounds.left + (bounds.width() * 0.48f);
-            float headOffset = bounds.height() * 0.24f;
-
-            canvas.drawLine(left, centerY, right, centerY, paint);
-            canvas.drawLine(left, centerY, headX, centerY - headOffset, paint);
-            canvas.drawLine(left, centerY, headX, centerY + headOffset, paint);
-        }
-
-        @Override
-        public void setAlpha(int alpha) {
-            paint.setAlpha(alpha);
-            invalidateSelf();
-        }
-
-        @Override
-        public void setColorFilter(android.graphics.ColorFilter colorFilter) {
-            paint.setColorFilter(colorFilter);
-            invalidateSelf();
-        }
-
-        @Override
-        public int getOpacity() {
-            return PixelFormat.TRANSLUCENT;
-        }
-
-        @Override
-        public int getIntrinsicWidth() {
-            return size;
-        }
-
-        @Override
-        public int getIntrinsicHeight() {
-            return size;
+            canvas.drawLine(tipX, centerY, endX, centerY, paint);
+            canvas.drawLine(tipX, centerY, headEndX, centerY - headOffset, paint);
+            canvas.drawLine(tipX, centerY, headEndX, centerY + headOffset, paint);
         }
     }
 }
