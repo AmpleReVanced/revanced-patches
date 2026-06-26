@@ -26,7 +26,6 @@ import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction22c
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction35c
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction3rc
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
-import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.reference.TypeReference
@@ -274,29 +273,19 @@ val removeShortFormTabPatch = bytecodePatch(
         )
 
         val chooseOpenLinkTabMethod = ChooseOpenLinkTabFingerprint.method
-        val openLinkPositionIdx = chooseOpenLinkTabMethod.instructions.indexOfFirst {
-            if (it.opcode != Opcode.INVOKE_VIRTUAL) return@indexOfFirst false
-
-            val ref = (it as? ReferenceInstruction)?.reference as? MethodReference
-                ?: return@indexOfFirst false
-
-            ref.definingClass == fieldRef.type &&
-                    ref.name == "getPosition" &&
-                    ref.returnType == "I" &&
-                    ref.parameterTypes.isEmpty()
-        }
-        if (openLinkPositionIdx < 0) {
-            throw PatchException("Could not find Openlink getPosition()I invoke in chooseOpenLinkTab")
-        }
+        val openLinkPositionIdx = ChooseOpenLinkTabFingerprint.instructionMatches[1].index
 
         val openLinkPositionRegister =
             (chooseOpenLinkTabMethod.getInstruction(openLinkPositionIdx + 1) as? OneRegisterInstruction)
                 ?.registerA
                 ?: throw PatchException("Could not find Openlink getPosition()I move-result in chooseOpenLinkTab")
         val openLinkPositionMethodRef =
-            (chooseOpenLinkTabMethod.getInstruction(openLinkPositionIdx) as? ReferenceInstruction)
-                ?.reference as? MethodReference
+            chooseOpenLinkTabMethod.getInstruction(openLinkPositionIdx)
+                .getReference<MethodReference>()
                 ?: throw PatchException("Could not find Openlink getPosition()I reference in chooseOpenLinkTab")
+        if (openLinkPositionMethodRef.definingClass != fieldRef.type) {
+            throw PatchException("Openlink getPosition()I belongs to unexpected enum type")
+        }
         val openLinkTabRegister = when (val invokeInsn = chooseOpenLinkTabMethod.getInstruction(openLinkPositionIdx)) {
             is BuilderInstruction35c -> invokeInsn.registerC
             is BuilderInstruction3rc -> invokeInsn.startRegister
@@ -321,28 +310,21 @@ val removeShortFormTabPatch = bytecodePatch(
         )
 
         val chooseNowChildTabMethod = ChooseNowChildTabFingerprint.method
-        val getPositionIdx = chooseNowChildTabMethod.instructions.indexOfFirst {
-            if (it.opcode != Opcode.INVOKE_VIRTUAL) return@indexOfFirst false
-
-            val ref = (it as? ReferenceInstruction)?.reference as? MethodReference
-                ?: return@indexOfFirst false
-
-            ref.definingClass == fieldRef.type &&
-                    ref.name == "getPosition" &&
-                    ref.returnType == "I" &&
-                    ref.parameterTypes.isEmpty()
-        }
-        if (getPositionIdx < 0) {
-            throw PatchException("Could not find getPosition()I invoke in chooseNowChildTab")
-        }
-
+        val getPositionIdx = ChooseNowChildTabFingerprint.instructionMatches.first().index
         val getPositionResultIdx = getPositionIdx + 1
         val positionRegister = (chooseNowChildTabMethod.getInstruction(getPositionResultIdx) as? OneRegisterInstruction)
             ?.registerA
             ?: throw PatchException("Could not find getPosition()I move-result in chooseNowChildTab")
-        val getPositionMethodRef = (chooseNowChildTabMethod.getInstruction(getPositionIdx) as? ReferenceInstruction)
-            ?.reference as? MethodReference
+        val getPositionMethodRef = chooseNowChildTabMethod.getInstruction(getPositionIdx)
+            .getReference<MethodReference>()
             ?: throw PatchException("Could not find getPosition()I reference in chooseNowChildTab")
+        if (getPositionMethodRef.definingClass != fieldRef.type ||
+            getPositionMethodRef.name != "getPosition" ||
+            getPositionMethodRef.returnType != "I" ||
+            getPositionMethodRef.parameterTypes.isNotEmpty()
+        ) {
+            throw PatchException("ChooseNowChildTab getPosition()I match is not the NowChildTab position accessor")
+        }
         val tabRegister = when (val invokeInsn = chooseNowChildTabMethod.getInstruction(getPositionIdx)) {
             is BuilderInstruction35c -> invokeInsn.registerC
             is BuilderInstruction3rc -> invokeInsn.startRegister

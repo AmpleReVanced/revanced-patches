@@ -104,6 +104,12 @@ internal object ChooseOpenLinkTabFingerprint : Fingerprint(
             opcode = Opcode.SGET_OBJECT,
         ),
         methodCall(
+            name = "getPosition",
+            parameters = listOf(),
+            returnType = "I",
+            opcode = Opcode.INVOKE_VIRTUAL,
+        ),
+        methodCall(
             definingClass = "Landroidx/viewpager2/widget/ViewPager2;",
             parameters = listOf("I", "Z"),
             returnType = "V",
@@ -124,28 +130,13 @@ internal object ChooseNowChildTabFingerprint : Fingerprint(
         "viewpager",
         "hsv"
     ),
-    filters = OpcodesFilter.opcodesToFilters(
-        Opcode.INVOKE_STATIC,
-        Opcode.MOVE_RESULT_OBJECT,
-        Opcode.IGET,
-        Opcode.CONST_4,
-        Opcode.CONST_4,
-        Opcode.CONST_4,
-        Opcode.IF_EQZ,
-        Opcode.IF_EQ,
-        Opcode.IF_NE,
-        Opcode.INVOKE_STATIC,
-        Opcode.GOTO_16,
-        Opcode.NEW_INSTANCE,
-        Opcode.CONST_STRING,
-        Opcode.INVOKE_DIRECT,
-        Opcode.THROW,
-        Opcode.IGET_OBJECT,
-        Opcode.CHECK_CAST,
-        Opcode.IGET_OBJECT,
-        Opcode.CHECK_CAST,
-        Opcode.INVOKE_STATIC,
-        Opcode.MOVE_OBJECT
+    filters = listOf(
+        methodCall(
+            name = "getPosition",
+            parameters = listOf(),
+            returnType = "I",
+            opcode = Opcode.INVOKE_VIRTUAL,
+        ),
     ),
     custom = { method, classDef -> classDef.sourceFile == "NowFragment.kt" }
 )
