@@ -1,3 +1,22 @@
+# [1.2.0-dev.8](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.7...v1.2.0-dev.8) (2026-06-27)
+
+
+### Bug Fixes
+
+* **kakaotalk:** avoid hardcoded settings model registers ([4b637ec](https://github.com/AmpleReVanced/revanced-patches/commit/4b637ec41d32ec603fae68e207caf5c15d3d56e6))
+* **kakaotalk:** derive settings tab injection from bytecode ([60d33a4](https://github.com/AmpleReVanced/revanced-patches/commit/60d33a43ebc971927ba32c7a5c7989e6bda5fd16))
+* **settings:** respect host app theme in Morphe settings ([cc72810](https://github.com/AmpleReVanced/revanced-patches/commit/cc72810445f29129580e04988b7cb021c2c06a09))
+* **settings:** resync system bars for preference dialogs ([7de7693](https://github.com/AmpleReVanced/revanced-patches/commit/7de7693a36686b2610d0ca5936b70743ef24d041))
+* **settings:** suppress custom preference lint warnings ([31a80fe](https://github.com/AmpleReVanced/revanced-patches/commit/31a80fe5229d6e8cc586f325c08b2506431b643c))
+* use app-specific locales for string checks ([e0343f4](https://github.com/AmpleReVanced/revanced-patches/commit/e0343f4786509b5ce9750084e52cf5625202532f))
+
+
+### Features
+
+* **dcinside:** update dcinside patches for version 5.2.17 ([425a1fe](https://github.com/AmpleReVanced/revanced-patches/commit/425a1fe612d61229fad0b555d4f7531c56103e51))
+* **kakaotalk:** implement HookInitializer and integrate with Kakao application lifecycle ([5ca31dd](https://github.com/AmpleReVanced/revanced-patches/commit/5ca31dda712b37b82667a6720f402e4c26c4a1ee))
+* **settings:** port Piko-derived preference UI ([17c1ac0](https://github.com/AmpleReVanced/revanced-patches/commit/17c1ac0440eca58db1c9cdb2470320caf4eac29f))
+
 # [1.2.0-dev.1](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0...v1.2.0-dev.1) (2026-06-27)
 
 
