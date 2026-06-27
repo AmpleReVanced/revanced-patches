@@ -6,6 +6,7 @@
 
 package app.morphe.extension.shared.settings.preference;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.preference.SwitchPreference;
 import android.util.AttributeSet;
@@ -37,6 +38,7 @@ public class MorpheSwitchPreference extends SwitchPreference {
     }
 
     @Override
+    @SuppressLint("MissingSuperCall")
     protected View onCreateView(ViewGroup parent) {
         View view = MorphePreferenceStyle.createPreferenceView(
                 getContext(),
@@ -48,6 +50,7 @@ public class MorpheSwitchPreference extends SwitchPreference {
     }
 
     @Override
+    @SuppressLint("MissingSuperCall")
     protected void onBindView(View view) {
         rowView = view;
         Object previousKey = view.getTag();

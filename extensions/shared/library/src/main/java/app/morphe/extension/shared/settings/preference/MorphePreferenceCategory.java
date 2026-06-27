@@ -6,6 +6,7 @@
 
 package app.morphe.extension.shared.settings.preference;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.preference.PreferenceCategory;
@@ -35,6 +36,7 @@ public class MorphePreferenceCategory extends PreferenceCategory {
     }
 
     @Override
+    @SuppressLint("MissingSuperCall")
     protected View onCreateView(ViewGroup parent) {
         TextView title = new TextView(getContext());
         title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
@@ -48,6 +50,7 @@ public class MorphePreferenceCategory extends PreferenceCategory {
     }
 
     @Override
+    @SuppressLint("MissingSuperCall")
     protected void onBindView(View view) {
         TextView title = (TextView) view;
         title.setText(getTitle());

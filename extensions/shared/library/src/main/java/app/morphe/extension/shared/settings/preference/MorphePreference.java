@@ -6,6 +6,7 @@
 
 package app.morphe.extension.shared.settings.preference;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.preference.Preference;
 import android.util.AttributeSet;
@@ -31,6 +32,7 @@ public class MorphePreference extends Preference {
     }
 
     @Override
+    @SuppressLint("MissingSuperCall")
     protected View onCreateView(ViewGroup parent) {
         return MorphePreferenceStyle.createPreferenceView(
                 getContext(),
@@ -39,6 +41,7 @@ public class MorphePreference extends Preference {
     }
 
     @Override
+    @SuppressLint("MissingSuperCall")
     protected void onBindView(View view) {
         MorphePreferenceStyle.bindText(this, view);
         MorphePreferenceStyle.bindChevron(this, view);
