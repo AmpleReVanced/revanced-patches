@@ -8,7 +8,6 @@ dependencies {
     compileOnly(libs.netty.all)
 
     implementation(libs.hiddenapibypass)
-    implementation(libs.pine)
 }
 
 android {

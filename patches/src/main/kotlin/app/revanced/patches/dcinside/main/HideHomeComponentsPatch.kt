@@ -7,8 +7,11 @@ import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.util.getReference
+import app.morphe.util.setExtensionIsPatchIncluded
+import app.revanced.patches.dcinside.settings.PreferenceScreen
 import app.revanced.patches.dcinside.settings.addSettingsPatch
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
+import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.Method
@@ -37,6 +40,40 @@ val hideHomeComponentsPatch = bytecodePatch(
     dependsOn(addSettingsPatch)
 
     execute {
+        PreferenceScreen.HOME_SCREEN.addPreferences(
+            SwitchPreference(
+                key = "morphe_pref_hide_home_search_menu",
+                titleKey = "morphe_settings_hide_home_search_menu",
+                summary = true,
+            ),
+            SwitchPreference(
+                key = "morphe_pref_hide_home_recent_galleries",
+                titleKey = "morphe_settings_hide_home_recent_galleries",
+                summary = true,
+            ),
+            SwitchPreference(
+                key = "morphe_pref_hide_home_recommended_galleries",
+                titleKey = "morphe_settings_hide_home_recommended_galleries",
+                summary = true,
+            ),
+            SwitchPreference(
+                key = "morphe_pref_hide_home_gallery_ranking",
+                titleKey = "morphe_settings_hide_home_gallery_ranking",
+                summary = true,
+            ),
+            SwitchPreference(
+                key = "morphe_pref_hide_home_live_best",
+                titleKey = "morphe_settings_hide_home_live_best",
+                summary = true,
+            ),
+            SwitchPreference(
+                key = "morphe_pref_hide_home_recommended_posts",
+                titleKey = "morphe_settings_hide_home_recommended_posts",
+                summary = true,
+            ),
+        )
+        setExtensionIsPatchIncluded(EXTENSION_CLASS)
+
         val updateItemsMethod = MainAdapterItemsUpdateFingerprint.method
         val adapterClass = MainAdapterItemsUpdateFingerprint.classDef
         val itemTypeGetter = adapterClass.methods.inferItemTypeGetter(adapterClass.type)

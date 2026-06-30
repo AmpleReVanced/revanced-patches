@@ -29,7 +29,7 @@ val registerSettingsActivityPatch = resourcePatch(
             activity.setAttribute("android:exported", "false")
             activity.setAttribute("android:label", "@string/morphe_label_for_ample_settings")
             activity.setAttribute("android:launchMode", "singleTop")
-            activity.setAttribute("android:theme", "@android:style/Theme.DeviceDefault")
+            activity.setAttribute("android:theme", "@android:style/Theme.DeviceDefault.NoActionBar")
             application.appendChild(activity)
         }
     }

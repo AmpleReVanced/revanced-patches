@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0",
+  "version": "1.2.0-dev.8",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -7,8 +7,7 @@
       "default": false,
       "dependencies": [
         "BytecodePatch",
-        "BytecodePatch",
-        "ResourcePatch"
+        "BytecodePatch"
       ],
       "compatiblePackages": [
         {
@@ -20,7 +19,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -45,7 +44,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -72,7 +71,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.2.17",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -103,7 +102,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.2.17",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -128,7 +127,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.2.17",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -153,7 +152,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -184,7 +183,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -229,7 +228,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.2.17",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -264,7 +263,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -289,7 +288,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -314,7 +313,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -339,7 +338,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "3.6.0",
+              "version": "3.6.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -366,7 +365,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -393,7 +392,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.2.17",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -418,7 +417,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -445,7 +444,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -474,7 +473,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.2.17",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -532,7 +531,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -589,7 +588,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.2.17",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -638,7 +637,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -675,7 +674,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -702,7 +701,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.2.17",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -727,7 +726,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -754,7 +753,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -779,7 +778,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -804,7 +803,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -829,7 +828,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.2.17",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -854,7 +853,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -881,7 +880,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.2.17",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -906,7 +905,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -931,7 +930,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -956,7 +955,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.2.17",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -981,7 +980,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1006,7 +1005,34 @@
           "signatures": null,
           "targets": [
             {
-              "version": "3.6.0",
+              "version": "3.6.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Disable P2P",
+      "description": "Disables SOOP peer-assisted grid streaming.",
+      "default": true,
+      "dependencies": [
+        "ResourcePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "kr.co.nowcom.mobile.afreeca",
+          "name": "SOOP",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#0068FF",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "8.25.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1031,7 +1057,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1056,7 +1082,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1083,7 +1109,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1110,7 +1136,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1143,7 +1169,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1168,7 +1194,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1193,7 +1219,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.2.17",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1218,7 +1244,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1233,7 +1259,6 @@
       "description": "Adds a setting to disable comments in open chat rooms.",
       "default": true,
       "dependencies": [
-        "BytecodePatch",
         "BytecodePatch"
       ],
       "compatiblePackages": [
@@ -1246,7 +1271,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1271,7 +1296,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.2.17",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1296,7 +1321,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1323,7 +1348,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1348,7 +1373,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.2.17",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1373,7 +1398,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1400,7 +1425,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1427,7 +1452,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1454,7 +1479,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1479,7 +1504,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1506,7 +1531,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1533,7 +1558,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.2.17",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1558,7 +1583,61 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.2.17",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Hide More tab Game tab",
+      "description": "Hides the Game tab from the More tab.",
+      "default": true,
+      "dependencies": [
+        "BytecodePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.5.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Hide More tab components",
+      "description": "Adds options to hide components from the More tab.",
+      "default": true,
+      "dependencies": [
+        "BytecodePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1585,7 +1664,34 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.2.17",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Hide mini gallery cover image",
+      "description": "Adds a setting to hide the mini gallery cover image above post lists.",
+      "default": true,
+      "dependencies": [
+        "BytecodePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "com.dcinside.app.android",
+          "name": "dcinside",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#3D4491",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "5.2.17",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1612,7 +1718,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1639,7 +1745,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1676,7 +1782,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1701,7 +1807,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.2.17",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1726,7 +1832,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1751,7 +1857,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1776,7 +1882,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1801,7 +1907,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1828,7 +1934,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1853,7 +1959,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1878,7 +1984,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1903,7 +2009,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1928,7 +2034,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1955,7 +2061,36 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.2.17",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Restore old post icons",
+      "description": "Adds a setting to restore DCInside 4.7.x post list and read footer icons.",
+      "default": true,
+      "dependencies": [
+        "BytecodePatch",
+        "ResourcePatch",
+        "ResourcePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "com.dcinside.app.android",
+          "name": "dcinside",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#3D4491",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "5.2.17",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1984,7 +2119,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1995,13 +2130,15 @@
       "options": []
     },
     {
-      "name": "Show deleted or hidden messages",
-      "description": "Allows you to see deleted/hidden messages in chat logs.",
+      "name": "Show deleted, hidden, or edited messages",
+      "description": "Allows you to see deleted, hidden, and edited message history in chat logs.",
       "default": true,
       "dependencies": [
         "BytecodePatch",
+        "BytecodePatch",
         "ResourcePatch",
-        "BytecodePatch"
+        "BytecodePatch",
+        "ResourcePatch"
       ],
       "compatiblePackages": [
         {
@@ -2013,7 +2150,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -2057,7 +2194,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -2084,7 +2221,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.2.17",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -2109,7 +2246,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -2134,7 +2271,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -2184,7 +2321,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.5.2",
               "isExperimental": false,
               "minSdk": null,
               "description": null

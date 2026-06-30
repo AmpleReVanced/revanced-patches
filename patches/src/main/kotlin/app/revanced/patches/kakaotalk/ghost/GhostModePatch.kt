@@ -2,8 +2,14 @@ package app.revanced.patches.kakaotalk.ghost
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.patch.bytecodePatch
-import app.revanced.patches.kakaotalk.misc.addExtensionPatch
+import app.morphe.util.setExtensionIsPatchIncluded
+import app.revanced.patches.kakaotalk.settings.PreferenceScreen
+import app.revanced.patches.kakaotalk.settings.addSettingsTabPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
+import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
+
+private const val EXTENSION_CLASS =
+    "Lapp/revanced/extension/kakaotalk/patches/GhostModePatch;"
 
 @Suppress("unused")
 val ghostMode = bytecodePatch(
@@ -11,9 +17,18 @@ val ghostMode = bytecodePatch(
     description = "Don't expose your typing status to the other party.",
 ) {
     compatibleWith(COMPATIBILITY_KAKAO)
-    dependsOn(addExtensionPatch)
+    dependsOn(addSettingsTabPatch)
 
     execute {
+        PreferenceScreen.CHAT.addPreferences(
+            SwitchPreference(
+                key = "morphe_pref_ghost_mode",
+                titleKey = "morphe_settings_patch_ghost_mode",
+                summary = true,
+            ),
+        )
+        setExtensionIsPatchIncluded(EXTENSION_CLASS)
+
         val locoMethodClass = LocoMethodClassFingerprint.classDef
         val actionJobClass = actionJobMethodFingerprint(locoMethodClass).classDef
         val sendActionMethod = sendCurrentActionFingerprint(actionJobClass).method

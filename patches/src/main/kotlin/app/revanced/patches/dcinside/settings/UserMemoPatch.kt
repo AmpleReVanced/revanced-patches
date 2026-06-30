@@ -5,8 +5,10 @@ import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.util.getReference
+import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.dcinside.misc.addExtensionPatch
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
+import app.morphe.patches.shared.misc.settings.preference.NonInteractivePreference
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.ClassDef
@@ -16,6 +18,9 @@ import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.reference.StringReference
 import com.android.tools.smali.dexlib2.iface.reference.TypeReference
 
+private const val EXTENSION_CLASS =
+    "Lapp/revanced/extension/dcinside/settings/UserMemoPatch;"
+
 internal val userMemoPatch = bytecodePatch {
     compatibleWith(COMPATIBILITY_DC_INSIDE)
     dependsOn(
@@ -24,6 +29,24 @@ internal val userMemoPatch = bytecodePatch {
     )
 
     execute {
+        PreferenceScreen.FEATURES.addPreferences(
+            NonInteractivePreference(
+                key = "morphe_pref_apply_user_memo_preset",
+                titleKey = "morphe_settings_user_memo_preset",
+                summaryKey = "morphe_settings_user_memo_preset_summary",
+                selectable = true,
+            ),
+        )
+        PreferenceScreen.MANAGE.addPreferences(
+            NonInteractivePreference(
+                key = "morphe_pref_clear_user_memos",
+                titleKey = "morphe_settings_user_memo_clear",
+                summaryKey = "morphe_settings_user_memo_clear_summary",
+                selectable = true,
+            ),
+        )
+        setExtensionIsPatchIncluded(EXTENSION_CLASS)
+
         val classDefsByType = mutableMapOf<String, ClassDef>()
         classDefForEach { classDef ->
             classDefsByType[classDef.type] = classDef

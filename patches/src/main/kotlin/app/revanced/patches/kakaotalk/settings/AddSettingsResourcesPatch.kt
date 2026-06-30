@@ -25,10 +25,19 @@ val addSettingsResourcesPatch = resourcePatch(
                 "morphe_settings_icon_dark.xml",
                 "morphe_settings_icon_bold_light.xml",
                 "morphe_settings_icon_bold_dark.xml",
+                "morphe_pref_icon_chat.xml",
+                "morphe_pref_icon_navigation.xml",
+                "morphe_pref_icon_features.xml",
+                "morphe_pref_icon_support.xml",
+                "morphe_pref_icon_information.xml",
+                "morphe_pref_icon_debug.xml",
+                "morphe_pref_icon_manage.xml",
+                "morphe_pref_icon_links.xml",
             ),
             ResourceGroup(
                 "layout",
                 "morphe_kakaotalk_settings.xml",
+                "morphe_preference_screen.xml",
             ),
             ResourceGroup(
                 "xml",
@@ -50,8 +59,8 @@ val addSettingsResourcesPatch = resourcePatch(
                 preferenceScreen.removeChild(preferenceScreen.firstChild)
             }
 
-            kakaoTalkSettingsPreferences.forEach { preference ->
-                preferenceScreen.appendChild(preference.serialize(document))
+            orderedKakaoTalkSettingsPreferences().forEach { preference ->
+                preferenceScreen.appendChild(preference.serialize(document) { })
                 preferenceScreen.appendChild(document.createTextNode("\n"))
             }
         }

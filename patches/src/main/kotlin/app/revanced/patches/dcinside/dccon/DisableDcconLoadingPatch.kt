@@ -2,8 +2,14 @@ package app.revanced.patches.dcinside.dccon
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.util.setExtensionIsPatchIncluded
+import app.revanced.patches.dcinside.settings.PreferenceScreen
 import app.revanced.patches.dcinside.settings.addSettingsPatch
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
+import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
+
+private const val EXTENSION_CLASS =
+    "Lapp/revanced/extension/dcinside/patches/DisableDcconLoadingPatch;"
 
 @Suppress("unused")
 val disableDcconLoadingPatch = bytecodePatch(
@@ -14,6 +20,20 @@ val disableDcconLoadingPatch = bytecodePatch(
     dependsOn(addSettingsPatch)
 
     execute {
+        PreferenceScreen.FEATURES.addPreferences(
+            SwitchPreference(
+                key = "morphe_pref_block_post_dccon_loading",
+                titleKey = "morphe_settings_block_post_dccon_loading",
+                summary = true,
+            ),
+            SwitchPreference(
+                key = "morphe_pref_block_reply_dccon_loading",
+                titleKey = "morphe_settings_block_reply_dccon_loading",
+                summary = true,
+            ),
+        )
+        setExtensionIsPatchIncluded(EXTENSION_CLASS)
+
         val postElementMethods = PostDcconImageHandlerFingerprint.method.inferPostElementMethods(this)
 
         PostDcconImageHandlerFingerprint.method.addInstructionsWithLabels(

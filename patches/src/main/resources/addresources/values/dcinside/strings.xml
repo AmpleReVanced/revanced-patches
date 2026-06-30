@@ -9,6 +9,10 @@
     <string name="morphe_settings_block_reply_dccon_loading_summary">Prevents DCCon images from loading in reply lists.</string>
     <string name="morphe_settings_render_big_dccon_as_normal">Render big DCCon at normal size</string>
     <string name="morphe_settings_render_big_dccon_as_normal_summary">Shows big DCCon images at the regular DCCon size.</string>
+    <string name="morphe_settings_hide_mini_gallery_cover_image">Hide mini gallery cover image</string>
+    <string name="morphe_settings_hide_mini_gallery_cover_image_summary">Hides the mini gallery cover image shown above the post list.</string>
+    <string name="morphe_settings_restore_legacy_post_icons">Restore old post icons</string>
+    <string name="morphe_settings_restore_legacy_post_icons_summary">Uses the DCInside 4.7.x photo, video, and recommended-post icons in post lists and post bodies.</string>
     <string name="morphe_settings_section_home_screen">Home screen</string>
     <string name="morphe_settings_hide_home_search_menu">Hide search/menu area</string>
     <string name="morphe_settings_hide_home_search_menu_summary">Removes the top search and menu block from the home screen.</string>
@@ -22,6 +26,9 @@
     <string name="morphe_settings_hide_home_live_best_summary">Removes the live best feed and its filter controls from the home screen.</string>
     <string name="morphe_settings_hide_home_recommended_posts">Hide recommended posts</string>
     <string name="morphe_settings_hide_home_recommended_posts_summary">Removes the recommended post section from the home screen.</string>
+    <string name="morphe_settings_section_support">Support</string>
+    <string name="morphe_settings_support">Support the project</string>
+    <string name="morphe_settings_support_summary">Like the results? Support the project with a donation. Your support keeps development going.</string>
     <string name="morphe_settings_user_memo_preset">Register user memo preset</string>
     <string name="morphe_settings_user_memo_preset_summary">Choose a bundled preset and register it to global user memo immediately.</string>
     <string name="morphe_settings_user_memo_preset_select_title">Select user memo preset</string>
@@ -62,4 +69,19 @@
     <string name="morphe_settings_link_github_summary">Browse the source code on GitHub.</string>
     <string name="morphe_settings_link_telegram">Telegram</string>
     <string name="morphe_settings_link_telegram_summary">Check announcements and updates on Telegram.</string>
+    <string name="morphe_pref_render_big_dccon_as_normal_summary">Shows big DCCon images at the regular DCCon size.</string>
+    <string name="morphe_pref_block_post_dccon_loading_summary">Prevents DCCon images from loading in post bodies.</string>
+    <string name="morphe_pref_block_reply_dccon_loading_summary">Prevents DCCon images from loading in reply lists.</string>
+    <string name="morphe_pref_hide_home_search_menu_summary">Removes the top search and menu block from the home screen.</string>
+    <string name="morphe_pref_hide_home_recent_galleries_summary">Removes the recent galleries block from the home screen.</string>
+    <string name="morphe_pref_hide_home_recommended_galleries_summary">Removes the recommended galleries block from the home screen.</string>
+    <string name="morphe_pref_hide_home_gallery_ranking_summary">Removes the gallery ranking block from the home screen.</string>
+    <string name="morphe_pref_hide_home_live_best_summary">Removes the live best feed and its filter controls from the home screen.</string>
+    <string name="morphe_pref_hide_home_recommended_posts_summary">Removes the recommended post section from the home screen.</string>
+    <string name="morphe_pref_restore_legacy_post_icons_summary">Uses the DCInside 4.7.x photo, video, and recommended-post icons in post lists and post bodies.</string>
+    <string name="morphe_pref_hide_official_notices_summary">Removes DCInside operator notices from gallery notice lists.</string>
+    <string name="morphe_pref_hide_mini_gallery_cover_image_summary">Hides the mini gallery cover image shown above the post list.</string>
+    <string name="morphe_pref_debug_summary">Writes additional diagnostic logs for Morphe patches.</string>
+    <string name="morphe_pref_debug_stacktrace_summary">Includes full stack traces in error reports.</string>
+    <string name="morphe_pref_debug_toast_summary">Shows an on-screen toast when the extension catches an error.</string>
 </resources>

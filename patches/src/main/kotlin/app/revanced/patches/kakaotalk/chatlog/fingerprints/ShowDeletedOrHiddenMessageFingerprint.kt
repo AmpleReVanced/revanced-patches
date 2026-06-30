@@ -2,6 +2,7 @@ package app.revanced.patches.kakaotalk.chatlog.fingerprints
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.OpcodesFilter
+import app.morphe.patcher.methodCall
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
@@ -32,6 +33,17 @@ internal object ChatLogViewHolderSetupChatInfoViewFingerprint : Fingerprint(
         Opcode.IF_NEZ
     ),
     custom = { _, classDef -> classDef.sourceFile == "ChatLogViewHolder.kt" }
+)
+
+internal object ChatLogViewHolderBindProfileFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = emptyList(),
+    returnType = "V",
+    filters = listOf(
+        methodCall("Lcom/kakao/talk/widget/ProfileView;->load(JLjava/lang/String;I)V"),
+        methodCall("Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V"),
+    ),
+    custom = { _, classDef -> classDef.sourceFile == "ChatLogViewHolder.kt" },
 )
 
 internal object CheckViewableChatLogFingerprint : Fingerprint(

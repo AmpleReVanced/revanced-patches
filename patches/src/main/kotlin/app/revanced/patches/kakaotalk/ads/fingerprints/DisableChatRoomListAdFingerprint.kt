@@ -23,5 +23,5 @@ internal object ChatListAdHelperEnabledFingerprint : Fingerprint(
         Opcode.SGET_OBJECT,
         Opcode.INVOKE_VIRTUAL,
     ),
-   custom = { _, classDef -> classDef.sourceFile == "ChatListAdHelper.kt" }
+    custom = { _, classDef -> classDef.sourceFile == "ChatListAdHelper.kt" }
 )

@@ -7,12 +7,18 @@ import app.morphe.patcher.extensions.InstructionExtensions.removeInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.kakaotalk.chatroom.fingerprints.IsPlayYoutubePlayerInChatRoomFingerprint
-import app.revanced.patches.kakaotalk.misc.addExtensionPatch
 import app.revanced.patches.kakaotalk.send.fingerprints.IsEnableSendBigTextFingerprint
+import app.revanced.patches.kakaotalk.settings.PreferenceScreen
+import app.revanced.patches.kakaotalk.settings.addSettingsTabPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
+import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction11n
+
+private const val EXTENSION_CLASS =
+    "Lapp/revanced/extension/kakaotalk/patches/PlayYoutubePlayerInChatRoomPatch;"
 
 @Suppress("unused")
 val playYoutubePlayerInChatRoomPatch = bytecodePatch(
@@ -20,9 +26,18 @@ val playYoutubePlayerInChatRoomPatch = bytecodePatch(
     description = "Allows playing YouTube videos in KakaoTalk chat rooms.",
 ) {
     compatibleWith(COMPATIBILITY_KAKAO)
-    dependsOn(addExtensionPatch)
+    dependsOn(addSettingsTabPatch)
 
     execute {
+        PreferenceScreen.FEATURES.addPreferences(
+            SwitchPreference(
+                key = "morphe_pref_play_youtube_player_in_chat_room",
+                titleKey = "morphe_settings_patch_play_youtube_player_in_chat_room",
+                summary = true,
+            ),
+        )
+        setExtensionIsPatchIncluded(EXTENSION_CLASS)
+
         val method = IsPlayYoutubePlayerInChatRoomFingerprint.method
         val index = method.instructions.indexOfFirst {
             it.opcode == Opcode.CONST_4 && (it as BuilderInstruction11n).narrowLiteral in listOf(0x0, 0x1)

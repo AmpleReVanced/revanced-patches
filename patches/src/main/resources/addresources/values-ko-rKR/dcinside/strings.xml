@@ -9,6 +9,10 @@
     <string name="morphe_settings_block_reply_dccon_loading_summary">댓글 목록에서 디시콘 이미지 로딩을 차단합니다.</string>
     <string name="morphe_settings_render_big_dccon_as_normal">대왕디시콘 일반 크기로 표시</string>
     <string name="morphe_settings_render_big_dccon_as_normal_summary">대왕디시콘을 일반 디시콘 크기로 표시합니다.</string>
+    <string name="morphe_settings_hide_mini_gallery_cover_image">미니 갤러리 대문사진 숨기기</string>
+    <string name="morphe_settings_hide_mini_gallery_cover_image_summary">글 목록 위에 표시되는 미니 갤러리 대문사진을 숨깁니다.</string>
+    <string name="morphe_settings_restore_legacy_post_icons">구버전 글 아이콘 사용</string>
+    <string name="morphe_settings_restore_legacy_post_icons_summary">글 목록과 본문에서 DCInside 4.7.x 스타일의 사진, 동영상, 개념글 아이콘을 사용합니다.</string>
     <string name="morphe_settings_section_home_screen">홈 화면</string>
     <string name="morphe_settings_hide_home_search_menu">검색/메뉴 영역 숨기기</string>
     <string name="morphe_settings_hide_home_search_menu_summary">홈 화면 상단 검색과 메뉴 영역을 제거합니다.</string>
@@ -22,6 +26,9 @@
     <string name="morphe_settings_hide_home_live_best_summary">홈 화면의 실시간 베스트 목록과 필터를 제거합니다.</string>
     <string name="morphe_settings_hide_home_recommended_posts">추천글 숨기기</string>
     <string name="morphe_settings_hide_home_recommended_posts_summary">홈 화면의 추천글 영역을 제거합니다.</string>
+    <string name="morphe_settings_section_support">후원</string>
+    <string name="morphe_settings_support">프로젝트 후원하기</string>
+    <string name="morphe_settings_support_summary">결과물이 마음에 드시나요? 후원으로 더 나은 결과물을 만드는 데 힘을 보태주세요. 여러분의 지원으로 이 프로젝트는 계속 개발됩니다.</string>
     <string name="morphe_settings_user_memo_preset">이용자 메모 프리셋 등록</string>
     <string name="morphe_settings_user_memo_preset_summary">내장 프리셋을 선택해서 전체 이용자 메모에 바로 등록합니다.</string>
     <string name="morphe_settings_user_memo_preset_select_title">이용자 메모 프리셋 선택</string>
@@ -62,4 +69,19 @@
     <string name="morphe_settings_link_github_summary">GitHub에서 소스 코드를 확인해보세요.</string>
     <string name="morphe_settings_link_telegram">Telegram</string>
     <string name="morphe_settings_link_telegram_summary">텔레그램에서 공지와 업데이트를 확인해보세요.</string>
+    <string name="morphe_pref_render_big_dccon_as_normal_summary">대왕디시콘을 일반 디시콘 크기로 표시합니다.</string>
+    <string name="morphe_pref_block_post_dccon_loading_summary">글 본문에서 디시콘 이미지 로딩을 차단합니다.</string>
+    <string name="morphe_pref_block_reply_dccon_loading_summary">댓글 목록에서 디시콘 이미지 로딩을 차단합니다.</string>
+    <string name="morphe_pref_hide_home_search_menu_summary">홈 화면 상단 검색과 메뉴 영역을 제거합니다.</string>
+    <string name="morphe_pref_hide_home_recent_galleries_summary">홈 화면의 최근 갤러리 영역을 제거합니다.</string>
+    <string name="morphe_pref_hide_home_recommended_galleries_summary">홈 화면의 추천 갤러리 영역을 제거합니다.</string>
+    <string name="morphe_pref_hide_home_gallery_ranking_summary">홈 화면의 갤러리 순위 영역을 제거합니다.</string>
+    <string name="morphe_pref_hide_home_live_best_summary">홈 화면의 실시간 베스트 목록과 필터를 제거합니다.</string>
+    <string name="morphe_pref_hide_home_recommended_posts_summary">홈 화면의 추천글 영역을 제거합니다.</string>
+    <string name="morphe_pref_restore_legacy_post_icons_summary">글 목록과 본문에서 DCInside 4.7.x 스타일의 사진, 동영상, 개념글 아이콘을 사용합니다.</string>
+    <string name="morphe_pref_hide_official_notices_summary">갤러리 공지 목록에서 디시인사이드 운영자 공지를 제거합니다.</string>
+    <string name="morphe_pref_hide_mini_gallery_cover_image_summary">글 목록 위에 표시되는 미니 갤러리 대문사진을 숨깁니다.</string>
+    <string name="morphe_pref_debug_summary">Morphe 패치의 추가 진단 로그를 기록합니다.</string>
+    <string name="morphe_pref_debug_stacktrace_summary">오류 보고에 전체 스택 트레이스를 함께 표시합니다.</string>
+    <string name="morphe_pref_debug_toast_summary">확장에서 오류를 잡았을 때 화면에 토스트를 표시합니다.</string>
 </resources>

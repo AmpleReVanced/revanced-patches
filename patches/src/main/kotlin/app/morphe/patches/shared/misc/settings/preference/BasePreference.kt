@@ -1,0 +1,67 @@
+package app.morphe.patches.shared.misc.settings.preference
+
+import app.morphe.patches.util.resource.BaseResource
+import org.w3c.dom.Document
+import org.w3c.dom.Element
+
+internal const val MORPHE_PREFERENCE_SCREEN_LAYOUT = "@layout/morphe_preference_screen"
+internal const val MORPHE_PREFERENCE_CLASS = "app.morphe.extension.shared.settings.preference.MorphePreference"
+internal const val MORPHE_SWITCH_PREFERENCE_CLASS = "app.morphe.extension.shared.settings.preference.MorpheSwitchPreference"
+internal const val MORPHE_EDIT_TEXT_PREFERENCE_CLASS = "app.morphe.extension.shared.settings.preference.MorpheEditTextPreference"
+internal const val MORPHE_LIST_PREFERENCE_CLASS = "app.morphe.extension.shared.settings.preference.MorpheListPreference"
+internal const val MORPHE_PREFERENCE_CATEGORY_CLASS = "app.morphe.extension.shared.settings.preference.MorphePreferenceCategory"
+internal const val MORPHE_NO_TITLE_PREFERENCE_CATEGORY_CLASS = "app.morphe.extension.shared.settings.preference.MorpheNoTitlePreferenceCategory"
+
+/**
+ * Base preference class for all preferences.
+ *
+ * @param key The key of the preference. If null, other parameters must be specified.
+ * @param titleKey The key of the preference title.
+ * @param icon The preference icon resource name.
+ * @param layout Layout declaration.
+ * @param summaryKey The key of the preference summary.
+ * @param tag The tag or full class name of the preference.
+ */
+@Suppress("MemberVisibilityCanBePrivate")
+abstract class BasePreference(
+    val key: String? = null,
+    val titleKey: String? = "${key}_title",
+    val summaryKey: String? = "${key}_summary",
+    icon: String? = null,
+    iconBold: String? = null,
+    layout: String? = null,
+    val tag: String
+) {
+
+    var icon: String? = icon
+        internal set
+
+    var iconBold: String? = iconBold
+        internal set
+
+    var layout: String? = layout
+        internal set
+
+    /**
+     * Serialize preference element to XML.
+     * Overriding methods should invoke super and operate on its return value.
+     *
+     * @param resourceCallback A callback for additional resources.
+     * @param ownerDocument Target document to create elements from.
+     *
+     * @return The serialized element.
+     */
+    open fun serialize(ownerDocument: Document, resourceCallback: (BaseResource) -> Unit): Element =
+        ownerDocument.createElement(tag).apply {
+            key?.let { setAttribute("android:key", it) }
+            titleKey?.let { setAttribute("android:title", "@string/$it") }
+            summaryKey?.let { setAttribute("android:summary", "@string/$it") }
+
+            if (icon != null || iconBold != null) {
+                setAttribute("android:icon",  icon ?: iconBold)
+                setAttribute("android:iconSpaceReserved", "true")
+            }
+            layout?.let { setAttribute("android:layout", layout) }
+        }
+
+}

@@ -1,3 +1,86 @@
+# [1.2.0-dev.8](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.7...v1.2.0-dev.8) (2026-06-27)
+
+
+### Bug Fixes
+
+* **kakaotalk:** avoid hardcoded settings model registers ([4b637ec](https://github.com/AmpleReVanced/revanced-patches/commit/4b637ec41d32ec603fae68e207caf5c15d3d56e6))
+* **kakaotalk:** derive settings tab injection from bytecode ([60d33a4](https://github.com/AmpleReVanced/revanced-patches/commit/60d33a43ebc971927ba32c7a5c7989e6bda5fd16))
+* **settings:** respect host app theme in Morphe settings ([cc72810](https://github.com/AmpleReVanced/revanced-patches/commit/cc72810445f29129580e04988b7cb021c2c06a09))
+* **settings:** resync system bars for preference dialogs ([7de7693](https://github.com/AmpleReVanced/revanced-patches/commit/7de7693a36686b2610d0ca5936b70743ef24d041))
+* **settings:** suppress custom preference lint warnings ([31a80fe](https://github.com/AmpleReVanced/revanced-patches/commit/31a80fe5229d6e8cc586f325c08b2506431b643c))
+* use app-specific locales for string checks ([e0343f4](https://github.com/AmpleReVanced/revanced-patches/commit/e0343f4786509b5ce9750084e52cf5625202532f))
+
+
+### Features
+
+* **dcinside:** update dcinside patches for version 5.2.17 ([425a1fe](https://github.com/AmpleReVanced/revanced-patches/commit/425a1fe612d61229fad0b555d4f7531c56103e51))
+* **kakaotalk:** implement HookInitializer and integrate with Kakao application lifecycle ([5ca31dd](https://github.com/AmpleReVanced/revanced-patches/commit/5ca31dda712b37b82667a6720f402e4c26c4a1ee))
+* **settings:** port Piko-derived preference UI ([17c1ac0](https://github.com/AmpleReVanced/revanced-patches/commit/17c1ac0440eca58db1c9cdb2470320caf4eac29f))
+
+# [1.2.0-dev.7](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.6...v1.2.0-dev.7) (2026-06-20)
+
+### Features
+
+* **dcinside:** restore legacy post icons ([bf61958](https://github.com/AmpleReVanced/revanced-patches/commit/bf619581f646e3d97557c87bb5fb6c6cc671c19f))
+
+# [1.2.0-dev.6](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.5...v1.2.0-dev.6) (2026-06-20)
+
+### Bug Fixes
+
+* **kakaotalk:** resolve edited history sender profile from chat model ([c65c9c2](https://github.com/AmpleReVanced/revanced-patches/commit/c65c9c2132cb100464281c3271254dcdd3339018))
+* **kakaotalk:** respect chat theme in edit history screen ([8b94b3b](https://github.com/AmpleReVanced/revanced-patches/commit/8b94b3b7b821bd9deaac11817ae239a89d226e7b))
+
+### Features
+
+* **kakaotalk:** add edited message history ([0e19d4e](https://github.com/AmpleReVanced/revanced-patches/commit/0e19d4e226e07e32cfd1141de6e5f84fa7cb0566))
+* **kakaotalk:** add edited message history ([#139](https://github.com/AmpleReVanced/revanced-patches/issues/139)) ([ff316fa](https://github.com/AmpleReVanced/revanced-patches/commit/ff316fa7fb8e3cd7a4deb1433192ecaf2bba99d2))
+* **kakaotalk:** show sender profile in edit history ([73af0fa](https://github.com/AmpleReVanced/revanced-patches/commit/73af0fa9ce739a668dc7ba3a9041b0174d83fbf4))
+
+# [1.2.0-dev.5](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.4...v1.2.0-dev.5) (2026-06-19)
+
+### Bug Fixes
+
+* **kakaotalk:** hide More tab service groups reliably ([5acd705](https://github.com/AmpleReVanced/revanced-patches/commit/5acd705c2f5a43085b9c410ef82670008fa950c9))
+* **kakaotalk:** update reaction mention flag patch for 26.5.2 ([1e6e967](https://github.com/AmpleReVanced/revanced-patches/commit/1e6e9672a047213e6f8252fb6377ee898a5f09ad))
+
+### Features
+
+* **dcinside:** hide mini gallery cover image ([4d63d1d](https://github.com/AmpleReVanced/revanced-patches/commit/4d63d1d5508aa325aec7a2cb8b35f16ca629cb40))
+
+# [1.2.0-dev.4](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.3...v1.2.0-dev.4) (2026-06-19)
+
+### Features
+
+* **dcinside:** update dcinside patches for version 5.2.15 ([9f0230c](https://github.com/AmpleReVanced/revanced-patches/commit/9f0230c5ad605c5659e433b315398a6f5b4bd8ae))
+
+# [1.2.0-dev.3](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.2...v1.2.0-dev.3) (2026-06-19)
+
+### Bug Fixes
+
+* **kakaotalk:** install pine native library to correct path ([33c90eb](https://github.com/AmpleReVanced/revanced-patches/commit/33c90eb5262ff7fc711ac17f2c0bf014c29d9546))
+* **kakaotalk:** remove Brand tab from Now tab ([2df6d96](https://github.com/AmpleReVanced/revanced-patches/commit/2df6d965e79bb5ea2a277c085c7e6dd22537ccb1))
+
+### Features
+
+* add project support section ([51fd340](https://github.com/AmpleReVanced/revanced-patches/commit/51fd3405f70f228347b8a5a91cf266fe1f26546f))
+* **kakaotalk:** add More tab component hide options ([311418f](https://github.com/AmpleReVanced/revanced-patches/commit/311418f2a81bf55df53675655272f751af57954e))
+* **kakaotalk:** hide game tab in more tab ([aff2e4b](https://github.com/AmpleReVanced/revanced-patches/commit/aff2e4ba1f19fec106eb5b56537a62160301ab6b))
+* **kakaotalk:** restore packet handler for latest version ([5c78139](https://github.com/AmpleReVanced/revanced-patches/commit/5c781398b5820b522a846ff04a1d7d7eead60d59))
+* **kakaotalk:** update kakaotalk patches for version 26.5.0 ([488c238](https://github.com/AmpleReVanced/revanced-patches/commit/488c2383be48a83ecfe42dbf3360996ed1a86d4b))
+* **kakaotalk:** update kakaotalk patches for version 26.5.2 ([8d8e2f2](https://github.com/AmpleReVanced/revanced-patches/commit/8d8e2f225cd916ee2a6615c5eabd99d738b3d1f0))
+
+# [1.2.0-dev.2](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.1...v1.2.0-dev.2) (2026-06-13)
+
+### Features
+
+* **soop:** add DisableP2P Patch to disable griding ([5783410](https://github.com/AmpleReVanced/revanced-patches/commit/5783410761e0d571e8575d673a64ae03495343be))
+
+# [1.2.0-dev.1](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0...v1.2.0-dev.1) (2026-06-13)
+
+### Features
+
+* **chzzk:** update chzzk patches for version 3.6.2 ([5de5e27](https://github.com/AmpleReVanced/revanced-patches/commit/5de5e274b92f757746b205da10f82ebfd3c2d794))
+
 # [1.1.0](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.1...v1.1.0) (2026-06-13)
 
 ### Bug Fixes
