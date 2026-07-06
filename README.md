@@ -4,14 +4,14 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.2.0-dev.8](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.2.0-dev.8)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;85 patches total
+> **[v1.2.0-dev.9](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.2.0-dev.9)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;86 patches total
 <details open>
-<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;57 patches</summary>
+<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;58 patches</summary>
 <br>
 
 **🎯 Supported versions:**
 
-| 26.5.2 |
+| 26.5.3 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
@@ -56,6 +56,7 @@
 | [Hide More tab Game tab](#hide-more-tab-game-tab) | Hides the Game tab from the More tab. |  |
 | [Hide More tab components](#hide-more-tab-components) | Adds options to hide components from the More tab. |  |
 | [Hook Package Manager](#hook-package-manager) | Hooks the Package Manager to bypass integrity checks. |  |
+| [Open profile from open chat feed](#open-profile-from-open-chat-feed) | Opens open chat member profiles from join and leave feed messages. |  |
 | [Override feature flag](#override-feature-flag) | Overrides the feature flag to enable the feature. | • Feature flag overrides |
 | [Play YouTube player in chat room](#play-youtube-player-in-chat-room) | Allows playing YouTube videos in KakaoTalk chat rooms. |  |
 | [Register settings activity](#register-settings-activity) | Registers the Morphe settings activity in the app manifest. |  |

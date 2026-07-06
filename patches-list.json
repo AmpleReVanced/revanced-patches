@@ -1,5 +1,5 @@
 {
-  "version": "1.2.0-dev.8",
+  "version": "1.2.0-dev.9",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -16,10 +16,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -41,10 +43,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -149,10 +153,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -180,10 +186,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -260,10 +268,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -285,10 +295,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -310,10 +322,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -362,10 +376,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -414,10 +430,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -441,10 +459,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -528,10 +548,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -634,10 +656,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -671,10 +695,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -723,10 +749,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -750,10 +778,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -775,10 +805,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -800,10 +832,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -850,10 +884,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -902,10 +938,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -927,10 +965,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -977,10 +1017,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1054,10 +1096,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1079,10 +1123,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1106,10 +1152,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1133,10 +1181,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1166,10 +1216,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1191,10 +1243,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1241,10 +1295,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1268,10 +1324,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1318,10 +1376,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1345,10 +1405,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1395,10 +1457,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1422,10 +1486,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1449,10 +1515,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1476,10 +1544,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1501,10 +1571,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1528,10 +1600,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1607,10 +1681,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1634,10 +1710,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1715,10 +1793,41 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Open profile from open chat feed",
+      "description": "Opens open chat member profiles from join and leave feed messages.",
+      "default": true,
+      "dependencies": [
+        "BytecodePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
+          "targets": [
+            {
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1742,10 +1851,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1779,10 +1890,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1829,10 +1942,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1854,10 +1969,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1879,10 +1996,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1904,10 +2023,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1931,10 +2052,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1956,10 +2079,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1981,10 +2106,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -2006,10 +2133,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -2031,10 +2160,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -2116,10 +2247,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -2147,10 +2280,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -2191,10 +2326,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -2243,10 +2380,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -2268,10 +2407,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -2318,10 +2459,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.5.2",
+              "version": "26.5.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null

@@ -1,3 +1,11 @@
+# [1.2.0-dev.9](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.8...v1.2.0-dev.9) (2026-07-06)
+
+
+### Features
+
+* **kakaotalk:** open profiles from open chat feed names ([8451262](https://github.com/AmpleReVanced/revanced-patches/commit/8451262806d0de3be4c8360358ae6728d9b14003))
+* **kakaotalk:** update kakaotalk patches for version 26.5.3 ([66574b1](https://github.com/AmpleReVanced/revanced-patches/commit/66574b1cc638b72420419ee4bf91ef49010136bb))
+
 # [1.2.0-dev.8](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.7...v1.2.0-dev.8) (2026-06-27)
 
 
