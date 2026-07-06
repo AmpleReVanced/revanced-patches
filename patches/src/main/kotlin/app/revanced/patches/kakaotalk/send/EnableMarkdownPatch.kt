@@ -1,6 +1,6 @@
 package app.revanced.patches.kakaotalk.send
 
-import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.PatchException
@@ -72,30 +72,20 @@ val enableMarkdownPatch = bytecodePatch(
 
         val freeRegisters = method.getFreeRegisterProvider(
             jsonMoveResultIndex + 1,
-            3,
+            2,
             jsonRegister
         )
         val jsonArgumentRegister = freeRegisters.getFreeRegister4Bit()
-        val scratchRegister = freeRegisters.getFreeRegister4Bit()
-        val flagRegister = freeRegisters.getFreeRegister4Bit()
+        val inputTextRegister = freeRegisters.getFreeRegister4Bit()
 
-        method.addInstructionsWithLabels(
+        method.addInstructions(
             jsonMoveResultIndex + 1,
             """
-                invoke-static {}, Lapp/revanced/extension/kakaotalk/settings/Settings;->enableMarkdown()Z
-                move-result v$flagRegister
-                if-eqz v$flagRegister, :morphe_skip_markdown
-                invoke-virtual {p1}, $inputTextReference
-                move-result-object v$scratchRegister
-                invoke-static {v$scratchRegister}, Lkotlin/text/StringsKt__StringsKt;->A0(Ljava/lang/CharSequence;)Z
-                move-result v$flagRegister
-                if-nez v$flagRegister, :morphe_skip_markdown
                 move-object/from16 v$jsonArgumentRegister, v$jsonRegister
-                const-string v$scratchRegister, "markdown"
-                const/4 v$flagRegister, 0x1
-                invoke-virtual {v$jsonArgumentRegister, v$scratchRegister, v$flagRegister}, Lorg/json/JSONObject;->put(Ljava/lang/String;Z)Lorg/json/JSONObject;
-                :morphe_skip_markdown
-                nop
+                move-object/from16 v$inputTextRegister, p1
+                invoke-virtual {v$inputTextRegister}, $inputTextReference
+                move-result-object v$inputTextRegister
+                invoke-static {v$jsonArgumentRegister, v$inputTextRegister}, $EXTENSION_CLASS->enableMarkdown(Lorg/json/JSONObject;Ljava/lang/CharSequence;)V
             """.trimIndent()
         )
     }
