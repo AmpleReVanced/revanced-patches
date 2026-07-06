@@ -314,16 +314,9 @@ val addSettingsTabPatch = bytecodePatch(
             settingsListRegister,
             originalNewInstanceRegister,
         )
-        val contextArgumentRegister = helperCallRegisterProvider.getFreeRegister()
-        val trackingActionArgumentRegister = helperCallRegisterProvider.getFreeRegister()
-        val settingsListArgumentRegister = helperCallRegisterProvider.getFreeRegister()
-        if (
-            contextArgumentRegister >= 16 ||
-            trackingActionArgumentRegister >= 16 ||
-            settingsListArgumentRegister >= 16
-        ) {
-            throw PatchException("Could not reserve low free registers for settings item helper call.")
-        }
+        val contextArgumentRegister = helperCallRegisterProvider.getFreeRegister4Bit()
+        val trackingActionArgumentRegister = helperCallRegisterProvider.getFreeRegister4Bit()
+        val settingsListArgumentRegister = helperCallRegisterProvider.getFreeRegister4Bit()
 
         setupSettingsItemMethod.replaceInstruction(separatorIndex, "nop")
         setupSettingsItemMethod.addInstructions(
@@ -365,6 +358,7 @@ private fun addMorpheSettingsItemMethod(
     MutableMethodImplementation(9),
 ).toMutable().apply {
     addInstructions(
+        0,
         """
             sget-object v0, $themePrefType->${themePrefInstanceField.name}:$themePrefType
             invoke-virtual {v0}, $themePrefType->${themePrefNightModeReader.name}()I

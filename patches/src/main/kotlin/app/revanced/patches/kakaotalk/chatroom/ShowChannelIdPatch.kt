@@ -8,7 +8,7 @@ import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
 import app.morphe.patches.all.misc.resources.addResourcesPatch
-import app.morphe.util.getFreeRegisterProvider
+import app.morphe.util.cloneParameters
 import app.morphe.util.getReference
 import app.revanced.patches.kakaotalk.chatroom.fingerprints.ChatRoomProfileEditBindFingerprint
 import app.revanced.patches.kakaotalk.chatroom.fingerprints.ChatRoomSetIdFingerprint
@@ -120,7 +120,7 @@ private fun BytecodePatchContext.addChatRoomSettingsChannelId() {
         }
         ?: throw PatchException("Could not infer ChatRoom id getter.")
 
-    val bindMethod = ChatRoomProfileEditBindFingerprint.method
+    val bindMethod = ChatRoomProfileEditBindFingerprint.method.cloneParameters()
     val chatRoomType = ChatRoomSetIdFingerprint.classDef.type
     val chatRoomRegister = bindMethod.instructions.withIndex()
         .firstNotNullOfOrNull { (index, instruction) ->
@@ -154,24 +154,12 @@ private fun BytecodePatchContext.addChatRoomSettingsChannelId() {
         )
     )
 
-    val bindChannelIdRegisterProvider = bindMethod.getFreeRegisterProvider(
-        rootStringIndex,
-        2,
-        chatRoomRegister,
-        rootRegister,
-    )
-    val rootArgumentRegister = bindChannelIdRegisterProvider.getFreeRegister()
-    val chatRoomArgumentRegister = bindChannelIdRegisterProvider.getFreeRegister()
-    if (rootArgumentRegister >= 16 || chatRoomArgumentRegister >= 16) {
-        throw PatchException("Could not reserve low free registers for channel ID display.")
-    }
-
     bindMethod.addInstructions(
         rootStringIndex,
         """
-            move-object/from16 v$rootArgumentRegister, v$rootRegister
-            move-object/from16 v$chatRoomArgumentRegister, v$chatRoomRegister
-            invoke-static {v$rootArgumentRegister, v$chatRoomArgumentRegister}, ${bindMethod.definingClass}->$BIND_CHANNEL_ID_METHOD(Landroid/view/View;$chatRoomType)V
+            move-object/from16 p0, v$rootRegister
+            move-object/from16 p1, v$chatRoomRegister
+            invoke-static/range {p0 .. p1}, ${bindMethod.definingClass}->$BIND_CHANNEL_ID_METHOD(Landroid/view/View;$chatRoomType)V
         """.trimIndent(),
     )
 }
@@ -194,6 +182,7 @@ private fun bindChannelIdMethod(
     MutableMethodImplementation(4),
 ).toMutable().apply {
     addInstructions(
+        0,
         """
             invoke-virtual {p1}, ${chatRoomIdGetter.definingClass}->${chatRoomIdGetter.name}()J
             move-result-wide v0

@@ -114,12 +114,9 @@ val openChatFeedProfilePatch = bytecodePatch(
             configureCallRegisters.receiver,
             configureCallRegisters.chatLog,
         )
-        val receiverRegister = bindCallRegisterProvider.getFreeRegister()
-        val chatLogRegister = bindCallRegisterProvider.getFreeRegister()
-        val textViewRegister = bindCallRegisterProvider.getFreeRegister()
-        if (receiverRegister >= 16 || chatLogRegister >= 16 || textViewRegister >= 16) {
-            throw PatchException("Could not reserve low free registers for feed profile bind call.")
-        }
+        val receiverRegister = bindCallRegisterProvider.getFreeRegister4Bit()
+        val chatLogRegister = bindCallRegisterProvider.getFreeRegister4Bit()
+        val textViewRegister = bindCallRegisterProvider.getFreeRegister4Bit()
 
         bindMethod.addInstructions(
             configureCallIndex + 1,

@@ -144,7 +144,7 @@ val bypassMoatCheckPatch = bytecodePatch(
                         invokeIndex,
                         1,
                         *(parameterRegisters + resultRegister).toIntArray(),
-                    ).getFreeRegister()
+                    ).getFreeRegister4Bit()
                     val originalLabel = "morphe_original_moat_native_status_$invokeIndex"
                     val afterLabel = "morphe_after_moat_native_status_$invokeIndex"
 
@@ -156,7 +156,8 @@ val bypassMoatCheckPatch = bytecodePatch(
                             move-result v$tempRegister
                             if-eqz v$tempRegister, :$originalLabel
                             const/4 v$tempRegister, 0x0
-                            new-array v$resultRegister, v$tempRegister, ${nativeStatusMethod.returnType}
+                            new-array v$tempRegister, v$tempRegister, ${nativeStatusMethod.returnType}
+                            move-object/from16 v$resultRegister, v$tempRegister
                             goto :$afterLabel
                             :$originalLabel
                             $originalInvoke

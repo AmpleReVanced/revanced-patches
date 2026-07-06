@@ -72,11 +72,12 @@ val enableMarkdownPatch = bytecodePatch(
 
         val freeRegisters = method.getFreeRegisterProvider(
             jsonMoveResultIndex + 1,
-            2,
+            3,
             jsonRegister
         )
-        val scratchRegister = freeRegisters.getFreeRegister()
-        val flagRegister = freeRegisters.getFreeRegister()
+        val jsonArgumentRegister = freeRegisters.getFreeRegister4Bit()
+        val scratchRegister = freeRegisters.getFreeRegister4Bit()
+        val flagRegister = freeRegisters.getFreeRegister4Bit()
 
         method.addInstructionsWithLabels(
             jsonMoveResultIndex + 1,
@@ -89,9 +90,10 @@ val enableMarkdownPatch = bytecodePatch(
                 invoke-static {v$scratchRegister}, Lkotlin/text/StringsKt__StringsKt;->A0(Ljava/lang/CharSequence;)Z
                 move-result v$flagRegister
                 if-nez v$flagRegister, :morphe_skip_markdown
+                move-object/from16 v$jsonArgumentRegister, v$jsonRegister
                 const-string v$scratchRegister, "markdown"
                 const/4 v$flagRegister, 0x1
-                invoke-virtual {v$jsonRegister, v$scratchRegister, v$flagRegister}, Lorg/json/JSONObject;->put(Ljava/lang/String;Z)Lorg/json/JSONObject;
+                invoke-virtual {v$jsonArgumentRegister, v$scratchRegister, v$flagRegister}, Lorg/json/JSONObject;->put(Ljava/lang/String;Z)Lorg/json/JSONObject;
                 :morphe_skip_markdown
                 nop
             """.trimIndent()
