@@ -8,8 +8,10 @@ import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.util.proxy.mutableTypes.MutableField.Companion.toMutable
+import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
 import app.morphe.patches.all.misc.resources.addResourcesPatch
+import app.morphe.util.getFreeRegisterProvider
 import app.morphe.util.getReference
 import app.revanced.patches.kakaotalk.misc.addExtensionPatch
 import app.revanced.patches.kakaotalk.misc.sharedExtensionPatch
@@ -27,6 +29,9 @@ import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.reference.TypeReference
 import com.android.tools.smali.dexlib2.immutable.ImmutableField
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
+import com.android.tools.smali.dexlib2.immutable.ImmutableMethodParameter
+
+private const val ADD_MORPHE_SETTINGS_ITEM_METHOD = "revanced_addMorpheSettingsItem"
 
 @Suppress("unused")
 val addSettingsTabPatch = bytecodePatch(
@@ -178,12 +183,9 @@ val addSettingsTabPatch = bytecodePatch(
         val settingsModelConstructorInstruction =
             setupSettingsItemMethod.getInstruction(settingsModelConstructorIndex) as? BuilderInstruction3rc
                 ?: throw PatchException("Existing settings model constructor is not a range instruction.")
-        val settingsModelRegister = settingsModelConstructorInstruction.startRegister
-        val settingsItemTypeRegister = settingsModelRegister + 1
-        val firstDefaultRegister = settingsModelRegister + 2
-        val settingsItemRegister = settingsModelRegister + 3
-        val flagsRegister = settingsModelRegister + 4
-        val secondDefaultRegister = settingsModelRegister + 5
+        if (settingsModelConstructorInstruction.registerCount != 6) {
+            throw PatchException("Unexpected settings model constructor register count.")
+        }
 
         val laboratoryTypeIndex = (0 until settingsModelConstructorIndex).lastOrNull { index ->
             val instruction = setupSettingsItemMethod.instructions[index]
@@ -208,11 +210,9 @@ val addSettingsTabPatch = bytecodePatch(
                 ?: throw PatchException("Initial settings item constructor is not a normal invoke instruction.")
         val initialSettingsItemReference = initialSettingsItemInstruction.getReference<MethodReference>()
             ?: throw PatchException("Could not resolve initial settings item constructor.")
-        val itemRegister = initialSettingsItemInstruction.registerC
-        val itemTitleRegister = initialSettingsItemInstruction.registerD
-        val itemIntentRegister = initialSettingsItemInstruction.registerE
-        val itemActionRegister = initialSettingsItemInstruction.registerF
-        val laboratoryActivityRegister = initialSettingsItemInstruction.registerG
+        if (initialSettingsItemInstruction.registerCount != 5) {
+            throw PatchException("Unexpected settings item constructor register count.")
+        }
 
         val settingsItemActionType = initialSettingsItemReference.parameterTypes.getOrNull(2)?.toString()
             ?: throw PatchException("Could not resolve settings item action type.")
@@ -254,18 +254,35 @@ val addSettingsTabPatch = bytecodePatch(
         val settingsListAddReference = setupSettingsItemMethod.instructions[settingsListAddIndex].getReference<MethodReference>()
             ?: throw PatchException("Could not resolve settings list add reference.")
         val settingsListRegister = settingsListAddInstruction.registerC
-        val contextParameterRegister = if (AccessFlags.STATIC.isSet(setupSettingsItemMethod.accessFlags)) {
-            "p0"
-        } else {
-            "p1"
-        }
+        val contextRegister = (initialSettingsItemIndex - 1 downTo laboratoryTypeIndex).firstNotNullOfOrNull { index ->
+            val instruction = setupSettingsItemMethod.instructions[index]
+            if (instruction.opcode != Opcode.INVOKE_DIRECT &&
+                instruction.opcode != Opcode.INVOKE_DIRECT_RANGE
+            ) {
+                return@firstNotNullOfOrNull null
+            }
+
+            val reference = instruction.getReference<MethodReference>() ?: return@firstNotNullOfOrNull null
+            if (reference.definingClass != "Landroid/content/Intent;" ||
+                reference.name != "<init>" ||
+                reference.returnType != "V" ||
+                reference.parameterTypes.map { it.toString() } != listOf("Landroid/content/Context;", "Ljava/lang/Class;")
+            ) {
+                return@firstNotNullOfOrNull null
+            }
+
+            when (instruction) {
+                is BuilderInstruction35c -> instruction.registerD
+                is BuilderInstruction3rc -> instruction.startRegister + 1
+                else -> null
+            }
+        } ?: throw PatchException("Could not resolve settings context register.")
 
         val originalInstruction = setupSettingsItemMethod.instructions[separatorIndex]
         val originalNewInstanceRegister = (originalInstruction as? OneRegisterInstruction)?.registerA
             ?: throw PatchException("Could not read separator new-instance register.")
         val originalNewInstanceType = originalInstruction.getReference<TypeReference>()?.type
             ?: throw PatchException("Could not read separator new-instance type.")
-        setupSettingsItemMethod.replaceInstruction(separatorIndex, "nop")
 
         val themePrefClass = ThemePrefNightModeReadFingerprint.classDef
         val themePrefInstanceField = themePrefClass.fields.firstOrNull {
@@ -274,40 +291,108 @@ val addSettingsTabPatch = bytecodePatch(
         } ?: throw PatchException("Could not find ThemePref singleton field")
         val themePrefNightModeReader = ThemePrefNightModeReadFingerprint.method
 
+        SetupSettingsItemFingerprint.classDef.methods.add(
+            addMorpheSettingsItemMethod(
+                definingClass = setupSettingsItemMethod.definingClass,
+                mainSettingItemType = mainSettingItemTypeClass.type,
+                finishSetupSettingsModel = finishSetupSettingsModel,
+                initialSettingsItemType = initialSettingsItemType,
+                initialSettingsItemReference = initialSettingsItemReference,
+                trackingActionReference = trackingActionReference,
+                settingsListAddReference = settingsListAddReference,
+                themePrefType = themePrefClass.type,
+                themePrefInstanceField = themePrefInstanceField,
+                themePrefNightModeReader = themePrefNightModeReader,
+            )
+        )
+
+        val helperCallRegisterProvider = setupSettingsItemMethod.getFreeRegisterProvider(
+            separatorIndex,
+            3,
+            contextRegister,
+            trackingActionReceiverRegister,
+            settingsListRegister,
+            originalNewInstanceRegister,
+        )
+        val contextArgumentRegister = helperCallRegisterProvider.getFreeRegister()
+        val trackingActionArgumentRegister = helperCallRegisterProvider.getFreeRegister()
+        val settingsListArgumentRegister = helperCallRegisterProvider.getFreeRegister()
+        if (
+            contextArgumentRegister >= 16 ||
+            trackingActionArgumentRegister >= 16 ||
+            settingsListArgumentRegister >= 16
+        ) {
+            throw PatchException("Could not reserve low free registers for settings item helper call.")
+        }
+
+        setupSettingsItemMethod.replaceInstruction(separatorIndex, "nop")
         setupSettingsItemMethod.addInstructions(
             separatorIndex + 1,
             """
-                sget-object v$settingsModelRegister, ${themePrefClass.type}->${themePrefInstanceField.name}:${themePrefClass.type}
-                invoke-virtual/range {v$settingsModelRegister .. v$settingsModelRegister}, ${themePrefClass.type}->${themePrefNightModeReader.name}()I
-                new-instance v$settingsModelRegister, ${finishSetupSettingsModel.definingClass}
-                sget-object v$settingsItemTypeRegister, ${mainSettingItemTypeClass.type}->MORPHE:${mainSettingItemTypeClass.type}
-                invoke-virtual/range {v$settingsItemTypeRegister .. v$settingsItemTypeRegister}, ${mainSettingItemTypeClass.type}->getStringResId()I
-                move-result v$itemTitleRegister
-                move-object/from16 v$itemRegister, $contextParameterRegister
-                invoke-virtual {v$itemRegister, v$itemTitleRegister}, Landroid/content/Context;->getString(I)Ljava/lang/String;
-                move-result-object v$itemTitleRegister
-                new-instance v$itemRegister, $initialSettingsItemType
-                new-instance v$itemIntentRegister, Landroid/content/Intent;
-                move-object/from16 v$itemActionRegister, $contextParameterRegister
-                const-class v$laboratoryActivityRegister, Lapp/revanced/extension/kakaotalk/settings/SettingsActivity;
-                invoke-direct {v$itemIntentRegister, v$itemActionRegister, v$laboratoryActivityRegister}, Landroid/content/Intent;-><init>(Landroid/content/Context;Ljava/lang/Class;)V
-                const/16 v$itemActionRegister, 0x1e
-                invoke-virtual {v$trackingActionReceiverRegister, v$itemActionRegister}, $trackingActionReference
-                move-result-object v$itemActionRegister
-                sget-object v$laboratoryActivityRegister, Lcom/kakao/talk/activity/setting/laboratory/LaboratoryActivity;->O:Lcom/kakao/talk/activity/setting/laboratory/LaboratoryActivity${'$'}a;
-                invoke-direct {v$itemRegister, v$itemTitleRegister, v$itemIntentRegister, v$itemActionRegister, v$laboratoryActivityRegister}, $initialSettingsItemReference
-                const/16 v$flagsRegister, 0x2
-                const/16 v$secondDefaultRegister, 0x0
-                const/16 v$firstDefaultRegister, 0x0
-                move-object/from16 v$settingsItemRegister, v$itemRegister
-                invoke-direct/range {v$settingsModelRegister .. v$secondDefaultRegister}, $finishSetupSettingsModel
-                move-object/from16 v$firstDefaultRegister, v$settingsListRegister
-                move-object/from16 v$settingsItemRegister, v$settingsModelRegister
-                invoke-virtual/range {v$firstDefaultRegister .. v$settingsItemRegister}, $settingsListAddReference
+                move-object/from16 v$contextArgumentRegister, v$contextRegister
+                move-object/from16 v$trackingActionArgumentRegister, v$trackingActionReceiverRegister
+                move-object/from16 v$settingsListArgumentRegister, v$settingsListRegister
+                invoke-static {v$contextArgumentRegister, v$trackingActionArgumentRegister, v$settingsListArgumentRegister}, ${setupSettingsItemMethod.definingClass}->$ADD_MORPHE_SETTINGS_ITEM_METHOD(Landroid/content/Context;${trackingActionReference.definingClass}${settingsListAddReference.definingClass})V
                 new-instance v$originalNewInstanceRegister, $originalNewInstanceType # stub
             """.trimIndent()
         )
     }
+}
+
+private fun addMorpheSettingsItemMethod(
+    definingClass: String,
+    mainSettingItemType: String,
+    finishSetupSettingsModel: MethodReference,
+    initialSettingsItemType: String,
+    initialSettingsItemReference: MethodReference,
+    trackingActionReference: MethodReference,
+    settingsListAddReference: MethodReference,
+    themePrefType: String,
+    themePrefInstanceField: FieldReference,
+    themePrefNightModeReader: MethodReference,
+): MutableMethod = ImmutableMethod(
+    definingClass,
+    ADD_MORPHE_SETTINGS_ITEM_METHOD,
+    listOf(
+        ImmutableMethodParameter("Landroid/content/Context;", null, null),
+        ImmutableMethodParameter(trackingActionReference.definingClass, null, null),
+        ImmutableMethodParameter(settingsListAddReference.definingClass, null, null),
+    ),
+    "V",
+    AccessFlags.PRIVATE.value or AccessFlags.STATIC.value or AccessFlags.FINAL.value,
+    null,
+    null,
+    MutableMethodImplementation(9),
+).toMutable().apply {
+    addInstructions(
+        """
+            sget-object v0, $themePrefType->${themePrefInstanceField.name}:$themePrefType
+            invoke-virtual {v0}, $themePrefType->${themePrefNightModeReader.name}()I
+            sget-object v0, $mainSettingItemType->MORPHE:$mainSettingItemType
+            invoke-virtual {v0}, $mainSettingItemType->getStringResId()I
+            move-result v1
+            invoke-virtual {p0, v1}, Landroid/content/Context;->getString(I)Ljava/lang/String;
+            move-result-object v1
+            new-instance v2, Landroid/content/Intent;
+            const-class v3, Lapp/revanced/extension/kakaotalk/settings/SettingsActivity;
+            invoke-direct {v2, p0, v3}, Landroid/content/Intent;-><init>(Landroid/content/Context;Ljava/lang/Class;)V
+            const/16 v3, 0x1e
+            invoke-virtual {p1, v3}, $trackingActionReference
+            move-result-object v3
+            sget-object v4, Lcom/kakao/talk/activity/setting/laboratory/LaboratoryActivity;->O:Lcom/kakao/talk/activity/setting/laboratory/LaboratoryActivity${'$'}a;
+            new-instance v5, $initialSettingsItemType
+            invoke-direct {v5, v1, v2, v3, v4}, $initialSettingsItemReference
+            new-instance v0, ${finishSetupSettingsModel.definingClass}
+            sget-object v1, $mainSettingItemType->MORPHE:$mainSettingItemType
+            const/4 v2, 0x0
+            move-object v3, v5
+            const/4 v4, 0x2
+            const/4 v5, 0x0
+            invoke-direct/range {v0 .. v5}, $finishSetupSettingsModel
+            invoke-virtual {p2, v0}, $settingsListAddReference
+            return-void
+        """.trimIndent()
+    )
 }
 
 private fun BytecodePatchContext.syncThemeNightModePreference() {

@@ -13,6 +13,7 @@ import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patcher.util.proxy.mutableTypes.MutableField.Companion.toMutable
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
 import app.morphe.patches.all.misc.resources.addResourcesPatch
+import app.morphe.util.getFreeRegisterProvider
 import app.morphe.util.getReference
 import app.morphe.util.returnEarly
 import app.morphe.util.setExtensionIsPatchIncluded
@@ -46,8 +47,8 @@ import app.revanced.patches.kakaotalk.settings.PreferenceScreen
 import app.revanced.patches.kakaotalk.settings.addSettingsTabPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.patches.kakaotalk.shared.addKakaoTalkResources
-import app.revanced.util.localRegisterCount
 import app.revanced.util.parameterTypeNames
+import app.revanced.util.registerWidth
 import app.revanced.util.smaliReference
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
@@ -67,6 +68,7 @@ private const val MODIFIED_PROFILE_NICKNAME_METHOD = "revanced_modified_profile_
 private const val MODIFIED_PROFILE_USER_ID_METHOD = "revanced_modified_profile_user_id"
 private const val MODIFIED_PROFILE_IMAGE_URL_METHOD = "revanced_modified_profile_image_url"
 private const val MODIFIED_PROFILE_IMAGE_TYPE_METHOD = "revanced_modified_profile_image_type"
+private const val PRESERVE_MODIFIED_HISTORY_METHOD = "revanced_preserveModifiedHistory"
 private const val EXTENSION_CLASS =
     "Lapp/revanced/extension/kakaotalk/patches/ShowDeletedHiddenOrEditedMessagePatch;"
 
@@ -541,16 +543,23 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
             .lastOrNull()
             ?: throw PatchException("Could not find modified revision getter.")
 
+        chatLogClass.methods.add(
+            preserveModifiedHistoryMethod(
+                definingClass = chatLogClass.type,
+                chatLogType = chatLogClass.type,
+                vFieldReference = vFieldField.smaliReference,
+                vFieldType = vFieldField.type,
+                messageGetterReference = messageGetterReference.smaliReference,
+                modifyRevisionGetterReference = modifyRevisionGetterReference.smaliReference,
+            )
+        )
+
         ModifiedChatLogApplyFingerprint(chatLogClass.type, modifiedChatLogType)
             .matchAll(1 .. 2)
             .forEach {
                 it.method.addModifiedHistoryHook(
                     chatLogClass.type,
                     modifiedChatLogType,
-                    vFieldField.smaliReference,
-                    vFieldField.type,
-                    messageGetterReference.smaliReference,
-                    modifyRevisionGetterReference.smaliReference,
                 )
             }
 
@@ -721,10 +730,6 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
 private fun MutableMethod.addModifiedHistoryHook(
     chatLogType: String,
     modifiedChatLogType: String,
-    vFieldReference: String,
-    vFieldType: String,
-    messageGetterReference: String,
-    modifyRevisionGetterReference: String,
 ) {
     val newChatLogIndex = instructions.indexOfFirst { instruction ->
         val reference = instruction.getReference<MethodReference>() ?: return@indexOfFirst false
@@ -737,31 +742,78 @@ private fun MutableMethod.addModifiedHistoryHook(
     val newChatLogRegister = (getInstruction(newChatLogIndex + 1) as? OneRegisterInstruction)?.registerA
         ?: throw PatchException("Could not find modified ChatLog result register.")
 
-    val scratchRegisters = (0 until localRegisterCount)
-        .filter { it != newChatLogRegister }
-        .take(4)
-
-    if (scratchRegisters.size < 4) {
-        throw PatchException("Not enough registers to preserve modified message history.")
+    val originalChatLogRegister = parameterRegister(0)
+    val preserveHistoryRegisterProvider = getFreeRegisterProvider(
+        newChatLogIndex + 2,
+        2,
+        originalChatLogRegister,
+        newChatLogRegister,
+    )
+    val originalChatLogArgumentRegister = preserveHistoryRegisterProvider.getFreeRegister()
+    val newChatLogArgumentRegister = preserveHistoryRegisterProvider.getFreeRegister()
+    if (originalChatLogArgumentRegister >= 16 || newChatLogArgumentRegister >= 16) {
+        throw PatchException("Could not reserve low free registers to preserve modified message history.")
     }
-
-    val (messageRegister, historyRegister, revisionRegister, vFieldRegister) = scratchRegisters
 
     addInstructions(
         newChatLogIndex + 2,
         """
-            invoke-virtual {p1}, $messageGetterReference
-            move-result-object v$messageRegister
-            iget-object v$historyRegister, p1, $vFieldReference
-            invoke-virtual {v$historyRegister}, $vFieldType->getModifiedHistory()Ljava/lang/String;
-            move-result-object v$historyRegister
-            iget-object v$revisionRegister, p1, $vFieldReference
-            invoke-virtual {v$revisionRegister}, $modifyRevisionGetterReference
-            move-result v$revisionRegister
-            iget-object v$vFieldRegister, v$newChatLogRegister, $vFieldReference
-            invoke-virtual {v$vFieldRegister, v$messageRegister, v$revisionRegister, v$historyRegister}, $vFieldType->putModifiedMessage(Ljava/lang/String;ILjava/lang/String;)V
+            move-object/from16 v$originalChatLogArgumentRegister, p1
+            move-object/from16 v$newChatLogArgumentRegister, v$newChatLogRegister
+            invoke-static {v$originalChatLogArgumentRegister, v$newChatLogArgumentRegister}, $chatLogType->$PRESERVE_MODIFIED_HISTORY_METHOD($chatLogType$chatLogType)V
         """.trimIndent(),
     )
+}
+
+private fun preserveModifiedHistoryMethod(
+    definingClass: String,
+    chatLogType: String,
+    vFieldReference: String,
+    vFieldType: String,
+    messageGetterReference: String,
+    modifyRevisionGetterReference: String,
+): MutableMethod = ImmutableMethod(
+    definingClass,
+    PRESERVE_MODIFIED_HISTORY_METHOD,
+    listOf(
+        ImmutableMethodParameter(chatLogType, null, null),
+        ImmutableMethodParameter(chatLogType, null, null),
+    ),
+    "V",
+    AccessFlags.PUBLIC.value or AccessFlags.STATIC.value or AccessFlags.FINAL.value,
+    null,
+    null,
+    MutableMethodImplementation(6),
+).toMutable().apply {
+    addInstructions(
+        """
+            invoke-virtual {p0}, $messageGetterReference
+            move-result-object v0
+            iget-object v1, p0, $vFieldReference
+            invoke-virtual {v1}, $vFieldType->getModifiedHistory()Ljava/lang/String;
+            move-result-object v1
+            iget-object v2, p0, $vFieldReference
+            invoke-virtual {v2}, $modifyRevisionGetterReference
+            move-result v2
+            iget-object v3, p1, $vFieldReference
+            invoke-virtual {v3, v0, v2, v1}, $vFieldType->putModifiedMessage(Ljava/lang/String;ILjava/lang/String;)V
+            return-void
+        """.trimIndent(),
+    )
+}
+
+private fun MutableMethod.parameterRegister(parameterIndex: Int): Int {
+    val implementation = implementation
+        ?: throw PatchException("Could not inspect registers for $definingClass->$name.")
+    if (parameterIndex !in parameterTypeNames.indices) {
+        throw PatchException("Parameter $parameterIndex is not available in $definingClass->$name.")
+    }
+
+    val receiverWidth = if (AccessFlags.STATIC.isSet(accessFlags)) 0 else 1
+    val parameterWidth = parameterTypeNames.sumOf { it.registerWidth }
+    val firstParameterRegister = implementation.registerCount - receiverWidth - parameterWidth + receiverWidth
+
+    return firstParameterRegister + parameterTypeNames.take(parameterIndex).sumOf { it.registerWidth }
 }
 
 private fun MutableMethod.resolveModifiedProfileReferences(
