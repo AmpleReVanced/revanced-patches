@@ -1,3 +1,16 @@
+# [1.2.0-dev.10](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.9...v1.2.0-dev.10) (2026-07-15)
+
+
+### Bug Fixes
+
+* **kakaotalk:** reduce markdown hook register pressure ([8507317](https://github.com/AmpleReVanced/revanced-patches/commit/85073179028ea8b762934081e0a75d262efaaf38))
+
+
+### Features
+
+* **kakaotalk:** show message read receipts ([57ba8ff](https://github.com/AmpleReVanced/revanced-patches/commit/57ba8ffb9ac9d2f4d403a831f40214b40c3915df))
+* **kakaotalk:** update kakaotalk patches for version 26.6.0 ([62e7798](https://github.com/AmpleReVanced/revanced-patches/commit/62e779833c2c10cc82a41a63f33195fab5d0011e))
+
 # [1.2.0-dev.9](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.8...v1.2.0-dev.9) (2026-07-06)
 
 

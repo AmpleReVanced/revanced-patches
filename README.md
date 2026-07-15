@@ -4,14 +4,14 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.2.0-dev.9](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.2.0-dev.9)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;86 patches total
+> **[v1.2.0-dev.10](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.2.0-dev.10)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;85 patches total
 <details open>
-<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;58 patches</summary>
+<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;57 patches</summary>
 <br>
 
 **🎯 Supported versions:**
 
-| 26.5.3 |
+| 26.6.0 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
@@ -48,7 +48,6 @@
 | [Disable verifying signature](#disable-verifying-signature) | Disables the signature verification check that prevents the app from running. |  |
 | [Enable Markdown](#enable-markdown) | Render plain text messages with markdown-style formatting. |  |
 | [Enable reaction mention flag](#enable-reaction-mention-flag) | Enables the reaction mention flag in KakaoTalk chat logs. |  |
-| [Enable recording pause/resume feature](#enable-recording-pause-resume-feature) | Enable recording pause/resume feature in KakaoTalk |  |
 | [Enable send big text](#enable-send-big-text) | Allows sending big text messages in KakaoTalk. |  |
 | [Force enable debug mode](#force-enable-debug-mode) | Enables debug mode in the app. |  |
 | [Force enable emoticon plus feature](#force-enable-emoticon-plus-feature) | Force enable emoticon plus feature (Unpurchased emoticon can be sent once per day) |  |
@@ -58,7 +57,6 @@
 | [Hook Package Manager](#hook-package-manager) | Hooks the Package Manager to bypass integrity checks. |  |
 | [Open profile from open chat feed](#open-profile-from-open-chat-feed) | Opens open chat member profiles from join and leave feed messages. |  |
 | [Override feature flag](#override-feature-flag) | Overrides the feature flag to enable the feature. | • Feature flag overrides |
-| [Play YouTube player in chat room](#play-youtube-player-in-chat-room) | Allows playing YouTube videos in KakaoTalk chat rooms. |  |
 | [Register settings activity](#register-settings-activity) | Registers the Morphe settings activity in the app manifest. |  |
 | [Remove BizBoard ads](#remove-bizboard-ads) | Removes the BizBoard ad by forcing its dimensions to 0x0 and visibility to GONE in onMeasure. |  |
 | [Remove More tab ad](#remove-more-tab-ad) | Removes the ad from the More tab. |  |
@@ -70,6 +68,7 @@
 | [Remove shop tab](#remove-shop-tab) | Removes the shop tab from the bottom navigation bar. |  |
 | [Show chatroom channel ID](#show-chatroom-channel-id) | Shows the channel ID in chatroom settings and copies it when tapping the chat side title. |  |
 | [Show deleted, hidden, or edited messages](#show-deleted-hidden-or-edited-messages) | Allows you to see deleted, hidden, and edited message history in chat logs. | • Deleted color<br>• Hidden color |
+| [Show message read receipts](#show-message-read-receipts) | Shows the members who have or have not read each chat message. |  |
 | [Spoof App ID](#spoof-app-id) | Spoofs the App ID to bypass integrity checks. (to bypass biometric auth etc.) |  |
 | [Spoof apk checksums](#spoof-apk-checksums) | Spoofs the apk checksums to pass integrity checks. |  |
 | [Spoof signature](#spoof-signature) | Spoofs the app signature to pass integrity checks. |  |
