@@ -66,3 +66,15 @@ internal val MutableMethod.localRegisterCount: Int
         val parameterWidth = parameterTypeNames.sumOf { it.registerWidth }
         return implementation.registerCount - receiverWidth - parameterWidth
     }
+
+internal fun Method.parameterRegister(parameterIndex: Int): Int {
+    val implementation = implementation
+        ?: throw PatchException("Could not inspect registers for $definingClass->$name.")
+    if (parameterIndex !in parameterTypeNames.indices) {
+        throw PatchException("Parameter $parameterIndex is not available in $definingClass->$name.")
+    }
+
+    val parameterWidth = parameterTypeNames.sumOf { it.registerWidth }
+    return implementation.registerCount - parameterWidth +
+        parameterTypeNames.take(parameterIndex).sumOf { it.registerWidth }
+}

@@ -47,8 +47,8 @@ import app.revanced.patches.kakaotalk.settings.PreferenceScreen
 import app.revanced.patches.kakaotalk.settings.addSettingsTabPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.patches.kakaotalk.shared.addKakaoTalkResources
+import app.revanced.util.parameterRegister
 import app.revanced.util.parameterTypeNames
-import app.revanced.util.registerWidth
 import app.revanced.util.smaliReference
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
@@ -800,20 +800,6 @@ private fun preserveModifiedHistoryMethod(
             return-void
         """.trimIndent(),
     )
-}
-
-private fun MutableMethod.parameterRegister(parameterIndex: Int): Int {
-    val implementation = implementation
-        ?: throw PatchException("Could not inspect registers for $definingClass->$name.")
-    if (parameterIndex !in parameterTypeNames.indices) {
-        throw PatchException("Parameter $parameterIndex is not available in $definingClass->$name.")
-    }
-
-    val receiverWidth = if (AccessFlags.STATIC.isSet(accessFlags)) 0 else 1
-    val parameterWidth = parameterTypeNames.sumOf { it.registerWidth }
-    val firstParameterRegister = implementation.registerCount - receiverWidth - parameterWidth + receiverWidth
-
-    return firstParameterRegister + parameterTypeNames.take(parameterIndex).sumOf { it.registerWidth }
 }
 
 private fun MutableMethod.resolveModifiedProfileReferences(
