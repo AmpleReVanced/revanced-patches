@@ -22,6 +22,24 @@ Second \"item\" text"</string>
     <string name="morphe_kakaotalk_chatlog_modified_history_current">Current message</string>
     <string name="morphe_kakaotalk_chatlog_modified_history_empty">Empty message</string>
     <string name="morphe_kakaotalk_chatlog_modified_history_no_items">No edit history</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_title">Read receipts</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_open">Show read and unread members</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_refresh">Refresh</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_read">Read</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_unread">Unread</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_unknown">Unknown</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_source">Based on KakaoTalk’s current member and watermark state.</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_coverage">%1$d of %2$d current members can be classified</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_partial">Read state is unavailable for %1$d of the members KakaoTalk counts in this chat.</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_tab_read">Read %1$d</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_tab_unread">Unread %1$d</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_empty_read">No confirmed readers</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_empty_unread">No confirmed unread members</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_load_more">Load more (%1$d of %2$d shown)</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_loading_more">Loading…</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_load_more_error">Could not load more. Tap to retry.</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_error">Could not load read receipts. Tap to retry.</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_user">User</string>
     <string name="morphe_kakaotalk_channel_id_label">Channel ID</string>
     <string name="morphe_kakaotalk_channel_id_copied">Channel ID copied</string>
     <string name="morphe_label_for_ample_settings">Morphe Settings</string>
@@ -44,6 +62,7 @@ Second \"item\" text"</string>
     <string name="morphe_settings_patch_open_chat_room_comment_disabled_summary">Uses replies instead of comments in open chat when enabled.</string>
     <string name="morphe_settings_patch_show_modified_message_sender_profile">Show sender profile in edit history</string>
     <string name="morphe_settings_patch_show_modified_message_sender_profile_summary">Shows the sender’s profile image and nickname in message edit history.</string>
+    <string name="morphe_settings_patch_show_message_read_receipts">Show message read receipts</string>
     <string name="morphe_settings_patch_feature_flag_overrides">Feature flag overrides</string>
     <string name="morphe_settings_patch_feature_flag_overrides_summary">Enter overrides as semicolon-separated key=value pairs.</string>
     <string name="morphe_settings_patch_external_browser">Open in external browser</string>
@@ -99,6 +118,7 @@ Second \"item\" text"</string>
     <string name="morphe_pref_play_youtube_player_in_chat_room_summary">Allows supported YouTube links to play directly inside a chat room.</string>
     <string name="morphe_pref_open_chat_room_comment_disabled_summary">Uses replies instead of comments in open chat when enabled.</string>
     <string name="morphe_pref_disable_99_unread_limit_summary">Shows the full unread count instead of limiting the badge to 99+.</string>
+    <string name="morphe_pref_show_message_read_receipts_summary">Tap the time and unread count next to a message to see which members have read it.</string>
     <string name="morphe_pref_show_modified_message_sender_profile_summary">Shows the sender’s profile image and nickname in message edit history.</string>
     <string name="morphe_pref_bypass_moat_integrity_check_summary">May be required to launch KakaoPay. This bypasses an integrity detection path. Use at your own risk.</string>
     <string name="morphe_pref_ghost_mode_summary">Prevents typing and activity updates from being sent to the other side.</string>

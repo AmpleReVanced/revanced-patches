@@ -35,11 +35,14 @@ import app.revanced.extension.kakaotalk.patches.PlayYoutubePlayerInChatRoomPatch
 import app.revanced.extension.kakaotalk.patches.Remove99ClampPatch;
 import app.revanced.extension.kakaotalk.patches.RemoveShortFormTabPatch;
 import app.revanced.extension.kakaotalk.patches.ShowDeletedHiddenOrEditedMessagePatch;
+import app.revanced.extension.kakaotalk.patches.ShowMessageReadReceiptsPatch;
 
 public final class SettingsActivity extends Activity {
     private static final String PREF_GHOST_MODE = "morphe_pref_ghost_mode";
     private static final String PREF_SHOW_MODIFIED_MESSAGE_SENDER_PROFILE =
             "morphe_pref_show_modified_message_sender_profile";
+    private static final String PREF_SHOW_MESSAGE_READ_RECEIPTS =
+            "morphe_pref_show_message_read_receipts";
     private static final String PREF_REMOVE_SHORT_FORM_TAB = "morphe_pref_remove_short_form_tab";
     private static final String PREF_HIDE_MORE_TAB_GAME = "morphe_pref_hide_more_tab_game";
     private static final String PREF_HIDE_MORE_TAB_KAKAO_PAY_SECTION = "morphe_pref_hide_more_tab_kakao_pay_section";
@@ -147,6 +150,7 @@ public final class SettingsActivity extends Activity {
             bindSwitchIfIncluded(PREF_PLAY_YOUTUBE_PLAYER_IN_CHAT_ROOM, Settings.PLAY_YOUTUBE_PLAYER_IN_CHAT_ROOM, PlayYoutubePlayerInChatRoomPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_OPEN_CHAT_ROOM_COMMENT_DISABLED, Settings.OPEN_CHAT_ROOM_COMMENT_DISABLED, DisableOpenChatRoomCommentPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_SHOW_MODIFIED_MESSAGE_SENDER_PROFILE, Settings.SHOW_MODIFIED_MESSAGE_SENDER_PROFILE, ShowDeletedHiddenOrEditedMessagePatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_SHOW_MESSAGE_READ_RECEIPTS, Settings.SHOW_MESSAGE_READ_RECEIPTS, ShowMessageReadReceiptsPatch.isPatchIncluded());
             bindRiskySwitchIfIncluded(PREF_BYPASS_MOAT_INTEGRITY_CHECK, Settings.BYPASS_MOAT_INTEGRITY_CHECK, BypassMoatCheckPatch.isPatchIncluded());
             bindTextIfIncluded(PREF_FEATURE_FLAG_OVERRIDES, Settings.FEATURE_FLAG_OVERRIDES, OverrideFeatureFlagPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_FORCE_DEBUG_MODE, Settings.FORCE_DEBUG_MODE, ForceEnableDebugModePatch.isPatchIncluded());

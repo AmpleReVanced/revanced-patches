@@ -6,6 +6,24 @@
     <string name="morphe_kakaotalk_chatlog_modified_history_current">현재 메시지</string>
     <string name="morphe_kakaotalk_chatlog_modified_history_empty">빈 메시지</string>
     <string name="morphe_kakaotalk_chatlog_modified_history_no_items">수정 이력이 없습니다</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_title">읽음 정보</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_open">읽은 사람 및 읽지 않은 사람 보기</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_refresh">새로고침</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_read">읽음</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_unread">안 읽음</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_unknown">확인 불가</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_source">카카오톡의 현재 멤버 및 워터마크 상태를 기준으로 합니다.</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_coverage">현재 대상 %2$d명 중 %1$d명 판정 가능</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_partial">이 채팅방 멤버 중 %1$d명의 읽음 상태는 이 기기에서 확인할 수 없습니다.</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_tab_read">읽음 %1$d</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_tab_unread">안 읽음 %1$d</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_empty_read">읽음이 확인된 사람이 없습니다</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_empty_unread">안 읽음이 확인된 사람이 없습니다</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_load_more">더 보기 (%2$d명 중 %1$d명 표시)</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_loading_more">불러오는 중…</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_load_more_error">추가 목록을 불러오지 못했습니다. 탭하여 다시 시도하세요.</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_error">읽음 정보를 불러오지 못했습니다. 탭하여 다시 시도하세요.</string>
+    <string name="morphe_kakaotalk_chatlog_read_receipts_user">사용자</string>
     <string name="morphe_kakaotalk_channel_id_label">채널 ID</string>
     <string name="morphe_kakaotalk_channel_id_copied">채널 ID 복사됨</string>
     <string name="morphe_label_for_ample_settings">Morphe 설정</string>
@@ -28,6 +46,7 @@
     <string name="morphe_settings_patch_open_chat_room_comment_disabled_summary">켜면 오픈채팅에서 댓글 대신 답장을 사용합니다.</string>
     <string name="morphe_settings_patch_show_modified_message_sender_profile">수정 이력에 보낸 사람 프로필 표시</string>
     <string name="morphe_settings_patch_show_modified_message_sender_profile_summary">메시지 수정 이력에서 보낸 사람의 프로필 사진과 닉네임을 표시합니다.</string>
+    <string name="morphe_settings_patch_show_message_read_receipts">메시지 읽음 정보 표시</string>
     <string name="morphe_settings_patch_feature_flag_overrides">기능 플래그 오버라이드</string>
     <string name="morphe_settings_patch_feature_flag_overrides_summary">key=value 형식으로 입력하고 여러 항목은 세미콜론으로 구분합니다.</string>
     <string name="morphe_settings_patch_external_browser">외부 브라우저로 열기</string>
@@ -83,6 +102,7 @@
     <string name="morphe_pref_play_youtube_player_in_chat_room_summary">지원되는 유튜브 링크를 채팅방 안에서 바로 재생할 수 있습니다.</string>
     <string name="morphe_pref_open_chat_room_comment_disabled_summary">켜면 오픈채팅에서 댓글 대신 답장을 사용합니다.</string>
     <string name="morphe_pref_disable_99_unread_limit_summary">읽지 않은 수를 99+로 줄이지 않고 실제 숫자로 표시합니다.</string>
+    <string name="morphe_pref_show_message_read_receipts_summary">메시지 옆의 시간과 읽지 않은 수를 탭하면 누가 읽었는지 확인할 수 있습니다.</string>
     <string name="morphe_pref_show_modified_message_sender_profile_summary">메시지 수정 이력에서 보낸 사람의 프로필 사진과 닉네임을 표시합니다.</string>
     <string name="morphe_pref_bypass_moat_integrity_check_summary">카카오페이를 실행하는 데 필요할 수 있습니다. 무결성 감지 경로를 우회하므로 위험을 이해한 경우에만 사용하세요.</string>
     <string name="morphe_pref_ghost_mode_summary">상대방에게 입력 중 상태나 현재 동작 정보가 전달되지 않도록 합니다.</string>
