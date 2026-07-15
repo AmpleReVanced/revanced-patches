@@ -46,9 +46,9 @@ internal object ChatLogViewHolderBindProfileFingerprint : Fingerprint(
     custom = { _, classDef -> classDef.sourceFile == "ChatLogViewHolder.kt" },
 )
 
-internal object CheckViewableChatLogFingerprint : Fingerprint(
+internal fun checkViewableChatLogFingerprint(chatLogType: String) = object : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
-    parameters = listOf("Lcom/kakao/talk/db/model/chatlog/c;"),
+    parameters = listOf(chatLogType),
     returnType = "Z",
     filters = OpcodesFilter.opcodesToFilters(
         Opcode.SGET_OBJECT,
@@ -58,10 +58,10 @@ internal object CheckViewableChatLogFingerprint : Fingerprint(
         Opcode.MOVE_RESULT,
         Opcode.RETURN,
     ),
-    custom = { method, classDef ->
+    custom = { _, classDef ->
         classDef.sourceFile == "ChatLogViewHolder.kt"
-    }
-)
+    },
+) {}
 
 internal object ChatLogItemViewHolderFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),

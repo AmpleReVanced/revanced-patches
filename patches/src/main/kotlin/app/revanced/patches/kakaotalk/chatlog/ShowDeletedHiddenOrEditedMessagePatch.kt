@@ -26,12 +26,12 @@ import app.revanced.patches.kakaotalk.chatlog.fingerprints.ChatLogVFieldPutStrin
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.ChatLogViewHolderBindProfileFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.ChatLogViewHolderSetupChatInfoViewFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.ChatRoomListManagerGetInstanceFingerprint
-import app.revanced.patches.kakaotalk.chatlog.fingerprints.CheckViewableChatLogFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.checkViewableChatLogFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.FilterChatLogItemFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.FlushToDBChatLogFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.GetChatRoomByChannelIdFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.GetDeletedColorFingerprint
-import app.revanced.patches.kakaotalk.chatlog.fingerprints.GetDeletedMessageCacheFingerprint
+import app.revanced.patches.kakaotalk.chatlog.fingerprints.getDeletedMessageCacheFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.GetHiddenColorFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.ModifiedChatLogApplyFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.ModifiedChatLogFingerprint
@@ -647,7 +647,7 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
             )
         }
 
-        CheckViewableChatLogFingerprint.method.returnEarly(true)
+        checkViewableChatLogFingerprint(chatLogClass.type).method.returnEarly(true)
 
         val modifiedProfileReferences = ChatLogViewHolderBindProfileFingerprint.method.resolveModifiedProfileReferences(
             ChatLogItemViewHolderFingerprint.method.definingClass,
@@ -723,7 +723,7 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
 
         PutDeletedMessageCacheFingerprint.method.returnEarly()
 
-        GetDeletedMessageCacheFingerprint.method.returnEarly(false)
+        getDeletedMessageCacheFingerprint(chatLogClass.type).method.returnEarly(false)
     }
 }
 

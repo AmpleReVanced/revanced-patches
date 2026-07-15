@@ -32,9 +32,6 @@ public final class Settings extends BaseSettings {
     public static final BooleanSetting HIDE_MORE_TAB_KAKAO_PAY_SECTION =
             new BooleanSetting("kakaotalk_hide_more_tab_kakao_pay_section", false, true);
 
-    public static final BooleanSetting HIDE_MORE_TAB_GAME_PLAY_SECTION =
-            new BooleanSetting("kakaotalk_hide_more_tab_game_play_section", false, true);
-
     public static final BooleanSetting HIDE_MORE_TAB_KAKAO_NOW_SECTION =
             new BooleanSetting("kakaotalk_hide_more_tab_kakao_now_section", false, true);
 
@@ -53,17 +50,11 @@ public final class Settings extends BaseSettings {
     public static final BooleanSetting DEFAULT_EXTERNAL_BROWSER =
             new BooleanSetting("kakaotalk_default_external_browser", TRUE);
 
-    public static final BooleanSetting ENABLE_RECORDING_PAUSE_RESUME =
-            new BooleanSetting("kakaotalk_enable_recording_pause_resume", TRUE);
-
     public static final BooleanSetting ENABLE_SEND_BIG_TEXT =
             new BooleanSetting("kakaotalk_enable_send_big_text", false);
 
     public static final BooleanSetting ENABLE_MARKDOWN =
             new BooleanSetting("kakaotalk_enable_markdown", false);
-
-    public static final BooleanSetting PLAY_YOUTUBE_PLAYER_IN_CHAT_ROOM =
-            new BooleanSetting("kakaotalk_play_youtube_player_in_chat_room", TRUE);
 
     public static final BooleanSetting OPEN_CHAT_ROOM_COMMENT_DISABLED =
             new BooleanSetting("kakaotalk_open_chat_room_comment_disabled", false);
@@ -101,10 +92,6 @@ public final class Settings extends BaseSettings {
         return HIDE_MORE_TAB_KAKAO_PAY_SECTION.get();
     }
 
-    public static boolean hideMoreTabGamePlaySection() {
-        return HIDE_MORE_TAB_GAME_PLAY_SECTION.get();
-    }
-
     public static boolean hideMoreTabKakaoNowSection() {
         return HIDE_MORE_TAB_KAKAO_NOW_SECTION.get();
     }
@@ -129,20 +116,12 @@ public final class Settings extends BaseSettings {
         return DEFAULT_EXTERNAL_BROWSER.get();
     }
 
-    public static boolean enableRecordingPauseResume() {
-        return ENABLE_RECORDING_PAUSE_RESUME.get();
-    }
-
     public static boolean enableSendBigText() {
         return ENABLE_SEND_BIG_TEXT.get();
     }
 
     public static boolean enableMarkdown() {
         return ENABLE_MARKDOWN.get();
-    }
-
-    public static boolean playYoutubePlayerInChatRoom() {
-        return PLAY_YOUTUBE_PLAYER_IN_CHAT_ROOM.get();
     }
 
     public static boolean openChatRoomCommentDisabled() {

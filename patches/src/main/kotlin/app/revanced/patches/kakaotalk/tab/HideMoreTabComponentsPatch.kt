@@ -16,7 +16,6 @@ import app.revanced.patches.kakaotalk.settings.addSettingsTabPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.patches.kakaotalk.tab.fingerprints.AddMoreTabBodySectionsFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.AddMoreTabServiceSectionsFingerprint
-import app.revanced.patches.kakaotalk.tab.fingerprints.MoreTabGamePlaySectionFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.MoreTabGlobalServiceGroupSectionFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.MoreTabKakaoNowSectionFingerprint
 import app.revanced.patches.kakaotalk.tab.fingerprints.MoreTabKakaoPaySectionFingerprint
@@ -56,11 +55,6 @@ val hideMoreTabComponentsPatch = bytecodePatch(
                 summary = true,
             ),
             SwitchPreference(
-                key = "morphe_pref_hide_more_tab_game_play_section",
-                titleKey = "morphe_settings_catalog_hide_more_tab_game_play_section",
-                summary = true,
-            ),
-            SwitchPreference(
                 key = "morphe_pref_hide_more_tab_kakao_now_section",
                 titleKey = "morphe_settings_catalog_hide_more_tab_kakao_now_section",
                 summary = true,
@@ -96,11 +90,6 @@ val hideMoreTabComponentsPatch = bytecodePatch(
 
         bodySectionsMethod.hideKakaoPaySection(MoreTabKakaoPaySectionFingerprint.classDef.type)
         bodySectionsMethod.hideItemAdditions(
-            SectionSpec(
-                MoreTabGamePlaySectionFingerprint.classDef.type,
-                "hideMoreTabGamePlaySection",
-                "more_tab_game_play",
-            ),
             SectionSpec(
                 MoreTabKakaoNowSectionFingerprint.classDef.type,
                 "hideMoreTabKakaoNowSection",

@@ -133,9 +133,9 @@ internal object PutDeletedMessageCacheFingerprint : Fingerprint(
     }
 )
 
-internal object GetDeletedMessageCacheFingerprint : Fingerprint(
+internal fun getDeletedMessageCacheFingerprint(chatLogType: String) = object : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
-    parameters = listOf("Lcom/kakao/talk/db/model/chatlog/c;"),
+    parameters = listOf(chatLogType),
     returnType = "Z",
     filters = OpcodesFilter.opcodesToFilters(
         Opcode.SGET_OBJECT,
@@ -159,5 +159,5 @@ internal object GetDeletedMessageCacheFingerprint : Fingerprint(
         Opcode.MOVE_RESULT,
         Opcode.RETURN,
     ),
-    custom = { method, classDef -> classDef.sourceFile == "ChatLogsManager.kt" && method.parameterTypes.size == 1 }
-)
+    custom = { method, classDef -> classDef.sourceFile == "ChatLogsManager.kt" && method.parameterTypes.size == 1 },
+) {}

@@ -34,15 +34,6 @@ internal object AddMoreTabServiceSectionsFingerprint : Fingerprint(
     }
 )
 
-internal object MoreTabGamePlaySectionFingerprint : Fingerprint(
-    returnType = "Ljava/lang/String;",
-    strings = listOf("GamePlay(uiModel="),
-    custom = { method, classDef ->
-        classDef.sourceFile == "MoreTabItem.kt" &&
-                method.parameterTypes.isEmpty()
-    }
-)
-
 internal object MoreTabKakaoNowSectionFingerprint : Fingerprint(
     returnType = "Ljava/lang/String;",
     strings = listOf("KakaoNow(uiModel="),

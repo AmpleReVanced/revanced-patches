@@ -4,7 +4,6 @@ import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.OpcodesFilter
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
-import app.morphe.patcher.fingerprint
 import app.morphe.util.getReference
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
@@ -23,7 +22,6 @@ internal object LocoMethodClassFingerprint : Fingerprint(
         "BUYCS",
         "MINI",
         "DOWN",
-        "SHORT",
         "POST"
     ),
     filters = OpcodesFilter.opcodesToFilters(
