@@ -1,3 +1,14 @@
+# [1.2.0-dev.14](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.13...v1.2.0-dev.14) (2026-07-22)
+
+
+### Bug Fixes
+
+* **flexcil:** bind premium gate polarity to the returned value ([dab48b3](https://github.com/AmpleReVanced/revanced-patches/commit/dab48b325efecc34b13e06e62cccb1204531628d))
+* **kakaotalk:** bound the packet server line decoder buffer ([c0a439c](https://github.com/AmpleReVanced/revanced-patches/commit/c0a439c1fed0d05f128aba605d33b2fac3a03542))
+* **kakaotalk:** make feature flag map reads thread-safe ([687fc9e](https://github.com/AmpleReVanced/revanced-patches/commit/687fc9e34473e168806f5353c6f858a920090265))
+* **kakaotalk:** reserve <clinit> registers for the settings tab enum ([a7694a1](https://github.com/AmpleReVanced/revanced-patches/commit/a7694a13a01be3dd519c7856dbde79682958cf23))
+* **kakaotalk:** separate reflection-contract failures from connection state ([9ded0bf](https://github.com/AmpleReVanced/revanced-patches/commit/9ded0bf25a8997bcce1b0edbcd3d3526a2ab28fc))
+
 # [1.2.0-dev.13](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.12...v1.2.0-dev.13) (2026-07-22)
 
 
