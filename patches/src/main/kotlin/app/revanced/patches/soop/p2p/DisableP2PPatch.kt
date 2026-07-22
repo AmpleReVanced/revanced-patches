@@ -9,6 +9,9 @@ import app.morphe.util.getReference
 import app.morphe.util.returnEarly
 import app.revanced.patches.shared.misc.native.nativePatch
 import app.revanced.patches.soop.shared.Constants.COMPATIBILITY_SOOP
+import app.revanced.util.argumentRegister
+import com.android.tools.smali.dexlib2.Opcode
+import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
 private const val P2P_DISABLED_SDK_CONFIG =
@@ -75,11 +78,23 @@ private fun MutableMethod.findGetterBeforeSetter(
         throw PatchException("Could not find playback native setter: $setterName.")
     }
 
-    for (index in setterIndex - 1 downTo 0) {
-        val reference = instructions[index].getReference<MethodReference>() ?: continue
-        if (reference.returnType == getterReturnType && reference.parameterTypes.isEmpty()) {
-            return reference
+    val valueRegister = instructions[setterIndex].argumentRegister(0)
+
+    for (index in setterIndex - 1 downTo 1) {
+        val instruction = instructions[index]
+        if ((instruction.opcode != Opcode.MOVE_RESULT && instruction.opcode != Opcode.MOVE_RESULT_OBJECT) ||
+            (instruction as OneRegisterInstruction).registerA != valueRegister
+        ) {
+            continue
         }
+
+        val getter = instructions[index - 1].getReference<MethodReference>()
+            ?: throw PatchException("Could not resolve getter feeding playback native setter: $setterName.")
+        if (getter.returnType != getterReturnType || getter.parameterTypes.isNotEmpty()) {
+            throw PatchException("Unexpected getter feeding playback native setter: $setterName.")
+        }
+
+        return getter
     }
 
     throw PatchException("Could not find getter feeding playback native setter: $setterName.")
