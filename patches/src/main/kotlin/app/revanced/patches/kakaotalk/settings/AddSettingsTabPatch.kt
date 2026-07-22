@@ -11,6 +11,7 @@ import app.morphe.patcher.util.proxy.mutableTypes.MutableField.Companion.toMutab
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
 import app.morphe.patches.all.misc.resources.addResourcesPatch
+import app.morphe.util.cloneMutable
 import app.morphe.util.getFreeRegisterProvider
 import app.morphe.util.getReference
 import app.revanced.patches.kakaotalk.misc.addExtensionPatch
@@ -115,26 +116,47 @@ val addSettingsTabPatch = bytecodePatch(
         val clinitMethod = mainSettingItemTypeClass.methods.find { it.name == "<clinit>" }
             ?: throw PatchException("Could not find <clinit> method")
 
-        val insertIndex = clinitMethod.instructions.indexOfLast {
+        val morpheClinitRegisters = 6
+        val clinitRegisterCount = clinitMethod.implementation?.registerCount
+            ?: throw PatchException("Could not inspect <clinit> register count.")
+
+        val mutableClinitMethod = if (clinitRegisterCount >= morpheClinitRegisters) {
+            clinitMethod
+        } else {
+            clinitMethod.cloneMutable(additionalRegisters = morpheClinitRegisters - clinitRegisterCount).also {
+                mainSettingItemTypeClass.methods.remove(clinitMethod)
+                mainSettingItemTypeClass.methods.add(it)
+            }
+        }
+
+        val insertIndex = mutableClinitMethod.instructions.indexOfLast {
             it.opcode == Opcode.SPUT_OBJECT &&
                     it.getReference<FieldReference>()?.name == "LANGUAGE"
         }.takeIf { it >= 0 }
             ?: throw PatchException("Could not find LANGUAGE enum initialization.")
 
-        clinitMethod.addInstructions(insertIndex + 1, """
-            new-instance v0, ${mainSettingItemTypeClass.type}
-            const-string v1, "MORPHE"
-            const/16 v2, 0x${morpheOrdinal.toString(16)}
-            const-string v3, "morphe_label_for_ample_settings"
-            const-string v4, "string"
-            invoke-static {v4, v3}, Lapp/revanced/extension/kakaotalk/helper/ResourceHelper;->getResourceId(Ljava/lang/String;Ljava/lang/String;)I
-            move-result v3
-            const-string v4, "morphe_settings_icon_dynamic"
-            const-string v5, "drawable"
-            invoke-static {v5, v4}, Lapp/revanced/extension/kakaotalk/helper/ResourceHelper;->getResourceId(Ljava/lang/String;Ljava/lang/String;)I
-            move-result v4
-            invoke-direct {v0, v1, v2, v3, v4}, ${mainSettingItemTypeClass.type}-><init>(Ljava/lang/String;III)V
-            sput-object v0, ${mainSettingItemTypeClass.type}->MORPHE:${mainSettingItemTypeClass.type}
+        val clinitRegisters = mutableClinitMethod.getFreeRegisterProvider(insertIndex + 1, morpheClinitRegisters)
+        val instanceRegister = clinitRegisters.getFreeRegister4Bit()
+        val nameRegister = clinitRegisters.getFreeRegister4Bit()
+        val ordinalRegister = clinitRegisters.getFreeRegister4Bit()
+        val stringResIdRegister = clinitRegisters.getFreeRegister4Bit()
+        val drawableResIdRegister = clinitRegisters.getFreeRegister4Bit()
+        val resourceTypeRegister = clinitRegisters.getFreeRegister4Bit()
+
+        mutableClinitMethod.addInstructions(insertIndex + 1, """
+            new-instance v$instanceRegister, ${mainSettingItemTypeClass.type}
+            const-string v$nameRegister, "MORPHE"
+            const/16 v$ordinalRegister, 0x${morpheOrdinal.toString(16)}
+            const-string v$stringResIdRegister, "morphe_label_for_ample_settings"
+            const-string v$resourceTypeRegister, "string"
+            invoke-static {v$resourceTypeRegister, v$stringResIdRegister}, Lapp/revanced/extension/kakaotalk/helper/ResourceHelper;->getResourceId(Ljava/lang/String;Ljava/lang/String;)I
+            move-result v$stringResIdRegister
+            const-string v$drawableResIdRegister, "morphe_settings_icon_dynamic"
+            const-string v$resourceTypeRegister, "drawable"
+            invoke-static {v$resourceTypeRegister, v$drawableResIdRegister}, Lapp/revanced/extension/kakaotalk/helper/ResourceHelper;->getResourceId(Ljava/lang/String;Ljava/lang/String;)I
+            move-result v$drawableResIdRegister
+            invoke-direct {v$instanceRegister, v$nameRegister, v$ordinalRegister, v$stringResIdRegister, v$drawableResIdRegister}, ${mainSettingItemTypeClass.type}-><init>(Ljava/lang/String;III)V
+            sput-object v$instanceRegister, ${mainSettingItemTypeClass.type}->MORPHE:${mainSettingItemTypeClass.type}
         """)
 
         val setupSettingsItemMethod = SetupSettingsItemFingerprint.method
