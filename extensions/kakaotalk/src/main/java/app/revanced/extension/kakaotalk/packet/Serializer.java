@@ -1,5 +1,7 @@
 package app.revanced.extension.kakaotalk.packet;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,6 +18,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Serializer {
+
+    private static final String TAG = "Serializer";
 
     private static final Pattern HEADER_PATTERN = Pattern.compile(
             "LocoHeader\\(packetId=(-?\\d+), status=(-?\\d+), method=([^,]+), bodyLength=(-?\\d+)\\)"
@@ -49,6 +53,10 @@ public class Serializer {
             return json;
         }
 
+        Log.w(TAG, "LocoHeader did not match the expected toString() format; "
+                + "falling back to positional field parsing (header type: "
+                + header.getClass().getName() + "). KakaoTalk internals may have changed.");
+
         Integer packetId = null;
         Integer bodyLength = null;
         Integer status = null;
@@ -75,6 +83,7 @@ public class Serializer {
         json.put("status", status == null ? JSONObject.NULL : status);
         json.put("method", method == null ? JSONObject.NULL : method);
         json.put("bodyLength", bodyLength == null ? JSONObject.NULL : bodyLength);
+        json.put("headerHeuristic", true);
         return json;
     }
 

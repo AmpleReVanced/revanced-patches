@@ -36,16 +36,20 @@ public class RemotePacketHandler implements PacketHandlerServer.PacketRequestHan
             Object client = findActiveClient(request);
             Method sendMethod = findSendMethod(client.getClass(), request.getClass());
             if (sendMethod == null) {
-                throw new IllegalStateException("Could not find Loco request send method");
+                throw new PacketContractException("Could not find Loco request send method");
             }
 
             sendMethod.setAccessible(true);
             sendMethod.invoke(client, request);
 
             return createSuccessResponse();
+        } catch (PacketContractException e) {
+            Log.e(TAG, "Loco reflection contract broken while handling remote request; "
+                    + "KakaoTalk internals likely changed after an app update", e);
+            return createErrorResponse("reflection_contract", e.getMessage());
         } catch (Exception e) {
             Log.e(TAG, "Failed to handle remote request", e);
-            return createErrorResponse(e.getMessage() != null ? e.getMessage() : e.getClass().getName());
+            return createErrorResponse("error", e.getMessage() != null ? e.getMessage() : e.getClass().getName());
         }
     }
 
@@ -78,7 +82,7 @@ public class RemotePacketHandler implements PacketHandlerServer.PacketRequestHan
         return Enum.valueOf((Class) methodClass.asSubclass(Enum.class), methodName.toUpperCase(Locale.ROOT));
     }
 
-    private Constructor<?> findBuilderConstructor(Class<?> builderClass, Class<?> methodClass) throws NoSuchMethodException {
+    private Constructor<?> findBuilderConstructor(Class<?> builderClass, Class<?> methodClass) throws PacketContractException {
         for (Constructor<?> constructor : builderClass.getDeclaredConstructors()) {
             Class<?>[] parameterTypes = constructor.getParameterTypes();
             if (parameterTypes.length == 3 &&
@@ -90,10 +94,10 @@ public class RemotePacketHandler implements PacketHandlerServer.PacketRequestHan
             }
         }
 
-        throw new NoSuchMethodException("Could not find LocoReq.Builder constructor");
+        throw new PacketContractException("Could not find LocoReq.Builder constructor");
     }
 
-    private Method findBuilderAddMethod(Class<?> builderClass) throws NoSuchMethodException {
+    private Method findBuilderAddMethod(Class<?> builderClass) throws PacketContractException {
         for (Method method : getInstanceMethods(builderClass)) {
             Class<?>[] parameterTypes = method.getParameterTypes();
             if (parameterTypes.length == 2 &&
@@ -105,7 +109,7 @@ public class RemotePacketHandler implements PacketHandlerServer.PacketRequestHan
             }
         }
 
-        throw new NoSuchMethodException("Could not find LocoReq.Builder body add method");
+        throw new PacketContractException("Could not find LocoReq.Builder body add method");
     }
 
     private Object buildRequest(Object builder) throws Exception {
@@ -124,7 +128,7 @@ public class RemotePacketHandler implements PacketHandlerServer.PacketRequestHan
             }
         }
 
-        throw new NoSuchMethodException("Could not build LocoReq");
+        throw new PacketContractException("Could not build LocoReq");
     }
 
     private Object findActiveClient(Object request) {
@@ -338,14 +342,21 @@ public class RemotePacketHandler implements PacketHandlerServer.PacketRequestHan
         return response;
     }
 
-    private JSONObject createErrorResponse(String error) {
+    private JSONObject createErrorResponse(String errorType, String error) {
         JSONObject response = new JSONObject();
         try {
             response.put("status", "error");
+            response.put("errorType", errorType);
             response.put("error", error);
         } catch (Exception e) {
             Log.e(TAG, "Failed to create error response", e);
         }
         return response;
+    }
+
+    private static final class PacketContractException extends Exception {
+        PacketContractException(String message) {
+            super(message);
+        }
     }
 }
