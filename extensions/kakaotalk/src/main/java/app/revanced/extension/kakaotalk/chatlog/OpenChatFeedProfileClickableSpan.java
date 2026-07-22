@@ -36,6 +36,10 @@ public final class OpenChatFeedProfileClickableSpan extends ClickableSpan {
         }
 
         SpannableString spannable = new SpannableString(text);
+        for (OpenChatFeedProfileClickableSpan staleSpan :
+                spannable.getSpans(0, spannable.length(), OpenChatFeedProfileClickableSpan.class)) {
+            spannable.removeSpan(staleSpan);
+        }
         spannable.setSpan(
                 new OpenChatFeedProfileClickableSpan(holder, member),
                 start,
