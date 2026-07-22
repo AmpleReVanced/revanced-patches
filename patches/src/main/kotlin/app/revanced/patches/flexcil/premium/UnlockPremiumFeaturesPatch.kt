@@ -6,12 +6,22 @@ import app.morphe.util.returnEarly
 import app.revanced.patches.flexcil.shared.Constants.COMPATIBILITY_FLEXCIL
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.NarrowLiteralInstruction
+import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 
 private fun MutableMethod.unlockGate() {
-    val negated = implementation?.instructions?.any {
-        it.opcode == Opcode.XOR_INT_LIT8 && (it as? NarrowLiteralInstruction)?.narrowLiteral == 1
-    } == true
-    returnEarly(!negated)
+    val instructions = implementation?.instructions?.toList().orEmpty()
+    val negatedReturn = instructions.withIndex().any { (index, instruction) ->
+        if (instruction.opcode != Opcode.XOR_INT_LIT8 ||
+            (instruction as NarrowLiteralInstruction).narrowLiteral != 1
+        ) {
+            return@any false
+        }
+
+        val xorRegister = (instruction as OneRegisterInstruction).registerA
+        val next = instructions.getOrNull(index + 1) ?: return@any false
+        next.opcode == Opcode.RETURN && (next as OneRegisterInstruction).registerA == xorRegister
+    }
+    returnEarly(!negatedReturn)
 }
 
 @Suppress("unused")
