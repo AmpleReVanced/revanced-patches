@@ -1,5 +1,6 @@
 package app.revanced.extension.kakaotalk.feature;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,8 +15,10 @@ import app.revanced.extension.kakaotalk.settings.Settings;
 public class Flag {
     private static final String OPEN_CHAT_ROOM_COMMENT_DISABLED = "OPEN_CHAT_ROOM_COMMENT_DISABLED";
 
-    private static final Map<String, Boolean> flags = new HashMap<>();
-    private static String loadedFeatureFlags;
+    private static final Object reloadLock = new Object();
+
+    private static volatile Map<String, Boolean> flags = Collections.emptyMap();
+    private static volatile String loadedFeatureFlags;
 
     private Flag() {
     }
@@ -27,14 +30,21 @@ public class Flag {
         }
         if (raw.equals(loadedFeatureFlags)) return;
 
-        loadedFeatureFlags = raw;
-        flags.clear();
+        synchronized (reloadLock) {
+            if (raw.equals(loadedFeatureFlags)) return;
 
+            flags = parseFlags(raw);
+            loadedFeatureFlags = raw;
+        }
+    }
+
+    private static Map<String, Boolean> parseFlags(String raw) {
         raw = raw.trim();
         if (raw.isEmpty()) {
-            return;
+            return Collections.emptyMap();
         }
 
+        Map<String, Boolean> parsed = new HashMap<>();
         for (String entry : raw.split(";")) {
             if (entry == null) {
                 continue;
@@ -58,11 +68,13 @@ public class Flag {
             }
 
             if ("true".equalsIgnoreCase(value)) {
-                flags.put(key, true);
+                parsed.put(key, true);
             } else if ("false".equalsIgnoreCase(value)) {
-                flags.put(key, false);
+                parsed.put(key, false);
             }
         }
+
+        return Collections.unmodifiableMap(parsed);
     }
 
     private static String getEffectiveFeatureFlags() {
