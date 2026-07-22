@@ -1,3 +1,12 @@
+# [1.2.0-dev.12](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.11...v1.2.0-dev.12) (2026-07-22)
+
+
+### Features
+
+* **chzzk:** update chzzk patches for version 3.9.0 ([85a5bc1](https://github.com/AmpleReVanced/revanced-patches/commit/85a5bc1b5a68c6f109192469868cb2cab73316da))
+* **soop:** make native P2P disable resilient across app versions ([91306fe](https://github.com/AmpleReVanced/revanced-patches/commit/91306fe2bd60bcc44ccc279bf0dcd5390e59becd))
+* **soop:** update soop patches for version 8.28.3 ([a7dbfeb](https://github.com/AmpleReVanced/revanced-patches/commit/a7dbfeb0890e97f3d562c93a4e23743909855c88))
+
 # [1.2.0-dev.11](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.10...v1.2.0-dev.11) (2026-07-22)
 
 
