@@ -15,17 +15,11 @@ private const val P2P_DISABLED_SDK_CONFIG =
     """{"HLS_ENGINE_V2_ANDROID_OFF":true,"LL_ANDROID_OFF":true,"LL_HLS_OFF":true}"""
 
 private val disableNativeP2PPatch = nativePatch(COMPATIBILITY_SOOP) {
-    // In the "New parent Connect" handler, `TBNZ W9, #0x1F, <Server>` selects the parent type
-    // from the sign bit of the connect flag: bit clear -> P2P (grid), bit set -> Server (direct).
-    // Rewriting the TBNZ into an unconditional `B <Server>` (0x1400001d) forces the direct path
-    // and never joins the peer-assisted grid. Word 4 of the fingerprint is an ADR immediate that
-    // shifts between builds, so it must be re-derived per version.
+    // _ParentConnect: force the P2P-vs-direct branch to direct. `????` = version-volatile bytes.
     file("lib/arm64-v8a/libstreamer.so") {
-        replace(
-            fingerprint = "690a40b9 a903f837 1f2003d5 56e28c70 08011e32 e00316aa e1058052 220f8052",
+        forceBranch(
+            fingerprint = "690a40b9 ???????? 1f2003d5 ???????? 08011e32 e00316aa e1058052 220f8052",
             offset = 4,
-            expected = "a903f837",
-            replacement = "1d000014",
         )
     }
 }
