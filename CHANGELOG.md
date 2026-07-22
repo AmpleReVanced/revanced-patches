@@ -1,3 +1,10 @@
+# [1.2.0-dev.16](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.15...v1.2.0-dev.16) (2026-07-22)
+
+
+### Performance Improvements
+
+* **kakaotalk:** speed up chat side title copy setup ([094e18a](https://github.com/AmpleReVanced/revanced-patches/commit/094e18a77e4189fd0c767c0e9fef8a72a6c1775c))
+
 # [1.2.0-dev.15](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.14...v1.2.0-dev.15) (2026-07-22)
 
 
