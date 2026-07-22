@@ -37,6 +37,7 @@ public final class ChannelIdInfoExtension {
     private static Method clickableModifierMethod;
     private static Class<?> function0Class;
     private static Object unitInstance;
+    private static Object copyOnClickProxy;
 
     private ChannelIdInfoExtension() {
     }
@@ -55,12 +56,10 @@ public final class ChannelIdInfoExtension {
             Method method = resolveClickableModifierMethod(modifier);
             if (method == null) return modifier;
 
-            Class<?> function0 = resolveFunction0Class();
-            Object onClick = Proxy.newProxyInstance(
-                    function0.getClassLoader(),
-                    new Class<?>[]{function0},
-                    new CopyCurrentChannelIdInvocationHandler()
-            );
+            // Reuse a single onClick instance: ClickableElement.equals() compares
+            // onClick by reference, so a fresh proxy per recomposition would make
+            // Compose tear down and re-register the clickable node every time.
+            Object onClick = resolveCopyOnClickProxy();
             return method.invoke(null, modifier, null, null, true, null, null, onClick, 0x1c, null);
         } catch (Throwable ignored) {
             return modifier;
@@ -129,7 +128,13 @@ public final class ChannelIdInfoExtension {
     private static Method resolveClickableModifierMethod(Object modifier) {
         if (clickableModifierMethod != null) return clickableModifierMethod;
 
+        // Fast path: unobfuscated Compose. R8 usually renames ClickableKt to a
+        // single-letter file class (e.g. androidx.compose.foundation.c), so probe
+        // those cheaply before falling back to the full-APK dex scan.
         Method method = findClickableModifierMethodByName("androidx.compose.foundation.ClickableKt", modifier);
+        if (method == null) {
+            method = findClickableModifierMethodInFoundationLetterClasses(modifier);
+        }
         if (method == null) {
             method = findClickableModifierMethodFromDex(modifier);
         }
@@ -138,6 +143,14 @@ public final class ChannelIdInfoExtension {
             clickableModifierMethod = method;
         }
         return method;
+    }
+
+    private static Method findClickableModifierMethodInFoundationLetterClasses(Object modifier) {
+        for (char letter = 'a'; letter <= 'z'; letter++) {
+            Method method = findClickableModifierMethodByName("androidx.compose.foundation." + letter, modifier);
+            if (method != null) return method;
+        }
+        return null;
     }
 
     private static Method findClickableModifierMethodByName(String className, Object modifier) {
@@ -195,6 +208,18 @@ public final class ChannelIdInfoExtension {
             return method;
         }
         return null;
+    }
+
+    private static Object resolveCopyOnClickProxy() throws ClassNotFoundException {
+        if (copyOnClickProxy == null) {
+            Class<?> function0 = resolveFunction0Class();
+            copyOnClickProxy = Proxy.newProxyInstance(
+                    function0.getClassLoader(),
+                    new Class<?>[]{function0},
+                    new CopyCurrentChannelIdInvocationHandler()
+            );
+        }
+        return copyOnClickProxy;
     }
 
     private static Class<?> resolveFunction0Class() throws ClassNotFoundException {
