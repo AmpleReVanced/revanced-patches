@@ -1,3 +1,15 @@
+# [1.2.0-dev.13](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.12...v1.2.0-dev.13) (2026-07-22)
+
+
+### Bug Fixes
+
+* **flexcil:** unlock all premium gates in Unlock Premium features ([e5e83b5](https://github.com/AmpleReVanced/revanced-patches/commit/e5e83b51e28fe585a8cb673f6057529fc623e233))
+
+
+### Features
+
+* **flexcil:** update flexcil patches for version 1.4.4.9 ([86b96a1](https://github.com/AmpleReVanced/revanced-patches/commit/86b96a14ca87b40fe47e5aaa67936964dc3f13e4))
+
 # [1.2.0-dev.12](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.11...v1.2.0-dev.12) (2026-07-22)
 
 

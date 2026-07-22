@@ -1,5 +1,5 @@
 {
-  "version": "1.2.0-dev.12",
+  "version": "1.2.0-dev.13",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -2412,7 +2412,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "1.4.3.30",
+              "version": "1.4.4.9",
               "isExperimental": false,
               "minSdk": null,
               "description": null
