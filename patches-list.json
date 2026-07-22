@@ -1,5 +1,5 @@
 {
-  "version": "1.2.0-dev.14",
+  "version": "1.2.0-dev.15",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -436,6 +436,31 @@
           "targets": [
             {
               "version": "26.6.1",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Bypass login",
+      "description": "Skips the mandatory account sign-in on launch and opens the app directly.",
+      "default": true,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.flexcil.flexcilnote",
+          "name": "Flexcil",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#0096FA",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "1.4.4.9",
               "isExperimental": false,
               "minSdk": null,
               "description": null

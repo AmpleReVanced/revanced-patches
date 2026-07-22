@@ -1,3 +1,16 @@
+# [1.2.0-dev.15](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.14...v1.2.0-dev.15) (2026-07-22)
+
+
+### Bug Fixes
+
+* **kakaotalk:** drop stale feed profile spans on recycled text views ([2174227](https://github.com/AmpleReVanced/revanced-patches/commit/2174227b82faf36d6ef4fed1108e95f8802e94c6))
+* **soop:** bind P2P config getter to the setter's value register ([cddb3a9](https://github.com/AmpleReVanced/revanced-patches/commit/cddb3a919edd24bb92afd06c2d603ecc32304bba))
+
+
+### Features
+
+* **flexcil:** add Bypass login patch ([698ac57](https://github.com/AmpleReVanced/revanced-patches/commit/698ac57ba1e6f918fb4050da213a8c2bf845089c))
+
 # [1.2.0-dev.14](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.13...v1.2.0-dev.14) (2026-07-22)
 
 

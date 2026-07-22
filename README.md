@@ -4,7 +4,7 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.2.0-dev.14](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.2.0-dev.14)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;85 patches total
+> **[v1.2.0-dev.15](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.2.0-dev.15)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;86 patches total
 <details open>
 <summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;57 patches</summary>
 <br>
@@ -129,6 +129,22 @@
 </details>
 
 <details open>
+<summary>📦 Flexcil&nbsp;&nbsp;•&nbsp;&nbsp;2 patches</summary>
+<br>
+
+**🎯 Supported versions:**
+
+| 1.4.4.9 |
+| :---: |
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Bypass login](#bypass-login) | Skips the mandatory account sign-in on launch and opens the app directly. |  |
+| [Unlock Premium features](#unlock-premium-features) | Enables app features locked behind the subscription paywall. |  |
+
+</details>
+
+<details open>
 <summary>📦 SOOP&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
 <br>
 
@@ -140,21 +156,6 @@
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
 | [Disable P2P](#disable-p2p) | Disables SOOP peer-assisted grid streaming. |  |
-
-</details>
-
-<details open>
-<summary>📦 Flexcil&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
-<br>
-
-**🎯 Supported versions:**
-
-| 1.4.4.9 |
-| :---: |
-
-| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
-|----------|----------------|-----------|
-| [Unlock Premium features](#unlock-premium-features) | Enables app features locked behind the subscription paywall. |  |
 
 </details>
 
