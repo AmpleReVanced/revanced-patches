@@ -1,3 +1,10 @@
+# [1.2.0-dev.17](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.16...v1.2.0-dev.17) (2026-07-23)
+
+
+### Features
+
+* **dcinside:** update dcinside patches for version 5.3.0 ([c56c131](https://github.com/AmpleReVanced/revanced-patches/commit/c56c13194cb09571b6efbe92c0c758be1817bb0d))
+
 # [1.2.0-dev.16](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.15...v1.2.0-dev.16) (2026-07-22)
 
 
