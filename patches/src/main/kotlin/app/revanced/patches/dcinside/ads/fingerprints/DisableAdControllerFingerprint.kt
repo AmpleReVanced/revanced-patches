@@ -13,7 +13,7 @@ internal object DisableAdControllerFingerprint : Fingerprint(
     filters = OpcodesFilter.opcodesToFilters(
         Opcode.IGET_OBJECT,
         Opcode.IF_NEZ,
-        Opcode.RETURN_VOID,
+        Opcode.GOTO,
         Opcode.IGET_OBJECT,
         Opcode.INVOKE_VIRTUAL,
     )

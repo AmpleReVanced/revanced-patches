@@ -12,6 +12,7 @@ import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.Field
 import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.Instruction
+import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.RegisterRangeInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.TwoRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
@@ -33,7 +34,7 @@ internal data class PostElementMethods(
 )
 
 internal fun MutableMethod.inferPostElementMethods(context: BytecodePatchContext): PostElementMethods {
-    val elementParameterRegister = parameterRegister(1)
+    val elementAliasInvokes = elementParameterAliasInvokeIndices(1)
 
     val attr = instructions.mapNotNull { instruction ->
         instruction.getReference<MethodReference>()?.takeIf { reference ->
@@ -46,15 +47,15 @@ internal fun MutableMethod.inferPostElementMethods(context: BytecodePatchContext
         ?.key
         ?: throw PatchException("Could not infer post element attr(String) method")
 
-    val dataset = instructions.mapNotNull { instruction ->
-        val reference = instruction.getReference<MethodReference>() ?: return@mapNotNull null
+    val dataset = instructions.mapIndexedNotNull { index, instruction ->
+        val reference = instruction.getReference<MethodReference>() ?: return@mapIndexedNotNull null
         if (!instruction.opcode.isVirtualInvoke ||
-            instruction.firstRegister != elementParameterRegister ||
+            index !in elementAliasInvokes ||
             instruction.argumentRegisterCount != 1 ||
             reference.parameterTypes.isNotEmpty() ||
             reference.returnType != "Ljava/util/Map;"
         ) {
-            return@mapNotNull null
+            return@mapIndexedNotNull null
         }
 
         instruction.toNonRangeInvoke() to reference
@@ -66,15 +67,15 @@ internal fun MutableMethod.inferPostElementMethods(context: BytecodePatchContext
         if (reference.signatureKey == removeClass.signatureKey) instruction.toNonRangeInvoke() else null
     } ?: "invoke-virtual"
 
-    val remove = instructions.mapNotNull { instruction ->
-        val reference = instruction.getReference<MethodReference>() ?: return@mapNotNull null
+    val remove = instructions.mapIndexedNotNull { index, instruction ->
+        val reference = instruction.getReference<MethodReference>() ?: return@mapIndexedNotNull null
         if (!instruction.opcode.isVirtualInvoke ||
-            instruction.firstRegister != elementParameterRegister ||
+            index !in elementAliasInvokes ||
             instruction.argumentRegisterCount != 1 ||
             reference.parameterTypes.isNotEmpty() ||
             reference.returnType != "V"
         ) {
-            return@mapNotNull null
+            return@mapIndexedNotNull null
         }
 
         instruction.toNonRangeInvoke() to reference
@@ -261,6 +262,34 @@ private fun MutableMethod.parameterRegister(parameterIndex: Int): Int {
     val firstParameterRegister = implementation.registerCount - receiverWidth - parameterWidth + receiverWidth
 
     return firstParameterRegister + parameterTypes.take(parameterIndex).sumOf { it.registerWidth }
+}
+
+private fun MutableMethod.elementParameterAliasInvokeIndices(parameterIndex: Int): Set<Int> {
+    val parameterRegister = parameterRegister(parameterIndex)
+    val aliases = mutableSetOf(parameterRegister)
+    val aliasInvokeIndices = mutableSetOf<Int>()
+
+    instructions.forEachIndexed { index, instruction ->
+        instruction.firstRegister?.let { receiver ->
+            if (receiver in aliases) aliasInvokeIndices.add(index)
+        }
+
+        val destination = (instruction as? OneRegisterInstruction)?.registerA ?: return@forEachIndexed
+        if (destination == parameterRegister) return@forEachIndexed
+
+        val source = (instruction as? TwoRegisterInstruction)?.registerB
+        val isMoveObject = instruction.opcode == Opcode.MOVE_OBJECT ||
+            instruction.opcode == Opcode.MOVE_OBJECT_FROM16 ||
+            instruction.opcode == Opcode.MOVE_OBJECT_16
+
+        if (isMoveObject && source != null && source in aliases) {
+            aliases.add(destination)
+        } else {
+            aliases.remove(destination)
+        }
+    }
+
+    return aliasInvokeIndices
 }
 
 private val MethodReference.signatureKey: String
