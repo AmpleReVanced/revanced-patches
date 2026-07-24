@@ -4,7 +4,7 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.2.0-dev.19](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.2.0-dev.19)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;98 patches total
+> **[v1.2.0-dev.20](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.2.0-dev.20)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;99 patches total
 <details open>
 <summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;57 patches</summary>
 <br>
@@ -77,7 +77,7 @@
 </details>
 
 <details open>
-<summary>📦 dcinside&nbsp;&nbsp;•&nbsp;&nbsp;22 patches</summary>
+<summary>📦 dcinside&nbsp;&nbsp;•&nbsp;&nbsp;23 patches</summary>
 <br>
 
 **🎯 Supported versions:**
@@ -108,6 +108,7 @@
 | [Register settings activity](#register-settings-activity) | Registers the Morphe settings activity in the app manifest. |  |
 | [Render big DCCon as normal size](#render-big-dccon-as-normal-size) | Adds a setting to render big DCCon at normal DCCon size. |  |
 | [Restore old post icons](#restore-old-post-icons) | Adds a setting to restore DCInside 4.7.x post list and read footer icons. |  |
+| [Show author identifier](#show-author-identifier) | Adds options to show the author identifier next to the nickname in posts, post lists, and the recently-viewed posts list. The recently-viewed list only shows it for posts opened after this patch is installed. |  |
 | [Spoof Signature](#spoof-signature) | Spoofs the app signature to bypass integrity checks. |  |
 
 </details>

@@ -1,3 +1,11 @@
+# [1.2.0-dev.20](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.19...v1.2.0-dev.20) (2026-07-24)
+
+
+### Features
+
+* **dcinside:** show author identifier in posts and post lists ([2f38791](https://github.com/AmpleReVanced/revanced-patches/commit/2f38791fa4d2287f98408de1f61182c2f952b7c0))
+* **dcinside:** show author identifier in recently viewed posts ([5caa2e1](https://github.com/AmpleReVanced/revanced-patches/commit/5caa2e1fcb4770417999a14be3b3a25efe7873b4))
+
 # [1.2.0-dev.19](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.18...v1.2.0-dev.19) (2026-07-24)
 
 
