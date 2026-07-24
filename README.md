@@ -4,7 +4,7 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.2.0-dev.17](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.2.0-dev.17)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;86 patches total
+> **[v1.2.0-dev.18](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.2.0-dev.18)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;93 patches total
 <details open>
 <summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;57 patches</summary>
 <br>
@@ -145,7 +145,7 @@
 </details>
 
 <details open>
-<summary>📦 SOOP&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<summary>📦 SOOP&nbsp;&nbsp;•&nbsp;&nbsp;8 patches</summary>
 <br>
 
 **🎯 Supported versions:**
@@ -156,6 +156,13 @@
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
 | [Disable P2P](#disable-p2p) | Disables SOOP peer-assisted grid streaming. |  |
+| [Remove VOD ads](#remove-vod-ads) | Removes VOD pre-roll ads by reporting every stream as QuickView Plus to the player's own ad-skip check. |  |
+| [Remove banner ads](#remove-banner-ads) | Removes the VOD companion and search banner ads. |  |
+| [Remove intro ads](#remove-intro-ads) | Removes the image, video and cinema intro ad banners shown on launch. |  |
+| [Remove list banner ads](#remove-list-banner-ads) | Removes the native banner ads under the live player and in feeds by stopping their ad request, so no banner is fetched or shown. |  |
+| [Remove live ads](#remove-live-ads) | Removes the live pre-roll ad by routing every ad decision into the app's own no-video path so the stream starts immediately. |  |
+| [Remove live banner ads](#remove-live-banner-ads) | Removes the banner ads shown under the live player by stopping their driver from attaching the banner fragments. |  |
+| [Remove main board ads](#remove-main-board-ads) | Removes the native "main board" banner ad shown in feeds and under the live player. |  |
 
 </details>
 

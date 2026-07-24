@@ -1,3 +1,10 @@
+# [1.2.0-dev.18](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.17...v1.2.0-dev.18) (2026-07-24)
+
+
+### Features
+
+* **soop:** add ad-removal patches ([9983819](https://github.com/AmpleReVanced/revanced-patches/commit/99838193a544573cff447e88df2025532e1707cf))
+
 # [1.2.0-dev.17](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.16...v1.2.0-dev.17) (2026-07-23)
 
 
