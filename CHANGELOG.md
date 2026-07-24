@@ -1,3 +1,12 @@
+# [1.2.0-dev.19](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.18...v1.2.0-dev.19) (2026-07-24)
+
+
+### Features
+
+* **chzzk:** add ad, cheat key, and banner patches ([470a759](https://github.com/AmpleReVanced/revanced-patches/commit/470a759f01ddb3cabbee12b95f10eeae312b8484))
+* **soop:** remove Catch feed ads ([de90288](https://github.com/AmpleReVanced/revanced-patches/commit/de902880d4f9562c57ed1df337c9327868b517fc))
+* **soop:** remove exit dialog ad ([b6fdac3](https://github.com/AmpleReVanced/revanced-patches/commit/b6fdac3a5f421cedab2e5c78d269357af279c661))
+
 # [1.2.0-dev.18](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.17...v1.2.0-dev.18) (2026-07-24)
 
 

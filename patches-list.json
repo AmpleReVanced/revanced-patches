@@ -1,5 +1,5 @@
 {
-  "version": "1.2.0-dev.18",
+  "version": "1.2.0-dev.19",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -1309,6 +1309,31 @@
       "options": []
     },
     {
+      "name": "Disable ads",
+      "description": "Disables CHZZK advertisements, including live stream pre-roll, mid-roll and post-roll ads and clip feed ads.",
+      "default": true,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.navercorp.game.android.community",
+          "name": "Chzzk",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#00FFA3",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "3.9.0",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
       "name": "Disable chat room list ad",
       "description": "Disable the chat room list ad.",
       "default": true,
@@ -1722,6 +1747,31 @@
       "options": []
     },
     {
+      "name": "Hide home banners",
+      "description": "Hides promotional banners on the CHZZK home recommend tab, including the top banner carousel and the in-feed event and image banners.",
+      "default": true,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.navercorp.game.android.community",
+          "name": "Chzzk",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#00FFA3",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "3.9.0",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
       "name": "Hide home components",
       "description": "Adds settings to hide selected DCInside home screen components.",
       "default": true,
@@ -1952,6 +2002,31 @@
       "options": []
     },
     {
+      "name": "Remove Catch ads",
+      "description": "Removes the ads inserted between clips in the Catch feed by reporting no ad slots.",
+      "default": true,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "kr.co.nowcom.mobile.afreeca",
+          "name": "SOOP",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#0068FF",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "8.28.3",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
       "name": "Remove More tab ad",
       "description": "Removes the ad from the More tab.",
       "default": true,
@@ -2062,6 +2137,31 @@
     {
       "name": "Remove banner ads",
       "description": "Removes the VOD companion and search banner ads.",
+      "default": true,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "kr.co.nowcom.mobile.afreeca",
+          "name": "SOOP",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#0068FF",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "8.28.3",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Remove exit dialog ad",
+      "description": "Removes the ad area shown in the app-exit confirmation dialog, keeping the dialog itself.",
       "default": true,
       "dependencies": [],
       "compatiblePackages": [
@@ -2613,6 +2713,31 @@
           "targets": [
             {
               "version": "1.4.4.9",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Unlock cheat key",
+      "description": "Unlocks CHZZK cheat key subscription benefits without an active subscription.",
+      "default": true,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.navercorp.game.android.community",
+          "name": "Chzzk",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#00FFA3",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "3.9.0",
               "isExperimental": false,
               "minSdk": null,
               "description": null

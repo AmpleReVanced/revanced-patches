@@ -4,7 +4,7 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.2.0-dev.18](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.2.0-dev.18)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;93 patches total
+> **[v1.2.0-dev.19](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.2.0-dev.19)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;98 patches total
 <details open>
 <summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;57 patches</summary>
 <br>
@@ -113,7 +113,7 @@
 </details>
 
 <details open>
-<summary>📦 Chzzk&nbsp;&nbsp;•&nbsp;&nbsp;2 patches</summary>
+<summary>📦 Chzzk&nbsp;&nbsp;•&nbsp;&nbsp;5 patches</summary>
 <br>
 
 **🎯 Supported versions:**
@@ -125,6 +125,9 @@
 |----------|----------------|-----------|
 | [Auto claim TongPow](#auto-claim-tongpow) | Automatically claims CHZZK TongPow rewards when they become available while watching streams. |  |
 | [Disable P2P](#disable-p2p) | Disables CHZZK peer-assisted grid streaming and forces CDN playback. |  |
+| [Disable ads](#disable-ads) | Disables CHZZK advertisements, including live stream pre-roll, mid-roll and post-roll ads and clip feed ads. |  |
+| [Hide home banners](#hide-home-banners) | Hides promotional banners on the CHZZK home recommend tab, including the top banner carousel and the in-feed event and image banners. |  |
+| [Unlock cheat key](#unlock-cheat-key) | Unlocks CHZZK cheat key subscription benefits without an active subscription. |  |
 
 </details>
 
@@ -145,7 +148,7 @@
 </details>
 
 <details open>
-<summary>📦 SOOP&nbsp;&nbsp;•&nbsp;&nbsp;8 patches</summary>
+<summary>📦 SOOP&nbsp;&nbsp;•&nbsp;&nbsp;10 patches</summary>
 <br>
 
 **🎯 Supported versions:**
@@ -156,8 +159,10 @@
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
 | [Disable P2P](#disable-p2p) | Disables SOOP peer-assisted grid streaming. |  |
+| [Remove Catch ads](#remove-catch-ads) | Removes the ads inserted between clips in the Catch feed by reporting no ad slots. |  |
 | [Remove VOD ads](#remove-vod-ads) | Removes VOD pre-roll ads by reporting every stream as QuickView Plus to the player's own ad-skip check. |  |
 | [Remove banner ads](#remove-banner-ads) | Removes the VOD companion and search banner ads. |  |
+| [Remove exit dialog ad](#remove-exit-dialog-ad) | Removes the ad area shown in the app-exit confirmation dialog, keeping the dialog itself. |  |
 | [Remove intro ads](#remove-intro-ads) | Removes the image, video and cinema intro ad banners shown on launch. |  |
 | [Remove list banner ads](#remove-list-banner-ads) | Removes the native banner ads under the live player and in feeds by stopping their ad request, so no banner is fetched or shown. |  |
 | [Remove live ads](#remove-live-ads) | Removes the live pre-roll ad by routing every ad decision into the app's own no-video path so the stream starts immediately. |  |
