@@ -41,6 +41,8 @@ public final class Settings extends BaseSettings {
             new BooleanSetting("dcinside_hide_home_live_best", FALSE);
     public static final BooleanSetting HIDE_HOME_RECOMMENDED_POSTS =
             new BooleanSetting("dcinside_hide_home_recommended_posts", FALSE);
+    public static final BooleanSetting SHOW_POST_HISTORY_AUTHOR_IDENTIFIER =
+            new BooleanSetting("dcinside_show_post_history_author_identifier", TRUE);
 
     private static boolean legacyPostIconResourceIdsLoaded;
     private static int listHeadBestIcon;
@@ -207,6 +209,10 @@ public final class Settings extends BaseSettings {
 
     public static boolean hideHomeRecommendedPosts() {
         return HIDE_HOME_RECOMMENDED_POSTS.get();
+    }
+
+    public static boolean showPostHistoryAuthorIdentifier() {
+        return SHOW_POST_HISTORY_AUTHOR_IDENTIFIER.get();
     }
 
     public static boolean hideAnyHomeComponent() {
