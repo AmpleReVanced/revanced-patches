@@ -33,7 +33,7 @@ import app.revanced.extension.dcinside.patches.DisableDcconLoadingPatch;
 import app.revanced.extension.dcinside.patches.HideMiniGalleryCoverImagePatch;
 import app.revanced.extension.dcinside.patches.HomeComponentsPatch;
 import app.revanced.extension.dcinside.patches.OfficialNoticePatch;
-import app.revanced.extension.dcinside.patches.PostHistoryAuthorIdentifierPatch;
+import app.revanced.extension.dcinside.patches.AuthorIdentifierPatch;
 import app.revanced.extension.dcinside.patches.RenderBigDcconAsNormalPatch;
 import app.revanced.extension.dcinside.patches.RestoreOldPostIconsPatch;
 
@@ -47,6 +47,8 @@ public final class SettingsActivity extends Activity {
     private static final String PREF_RESTORE_LEGACY_POST_ICONS = "morphe_pref_restore_legacy_post_icons";
     private static final String PREF_SHOW_POST_HISTORY_AUTHOR_IDENTIFIER =
             "morphe_pref_show_post_history_author_identifier";
+    private static final String PREF_SHOW_POST_AUTHOR_IDENTIFIER =
+            "morphe_pref_show_post_author_identifier";
     private static final String PREF_HIDE_HOME_SEARCH_MENU = "morphe_pref_hide_home_search_menu";
     private static final String PREF_HIDE_HOME_RECENT_GALLERIES = "morphe_pref_hide_home_recent_galleries";
     private static final String PREF_HIDE_HOME_RECOMMENDED_GALLERIES = "morphe_pref_hide_home_recommended_galleries";
@@ -148,7 +150,8 @@ public final class SettingsActivity extends Activity {
             bindSwitchIfIncluded(PREF_RENDER_BIG_DCCON_AS_NORMAL, Settings.RENDER_BIG_DCCON_AS_NORMAL, RenderBigDcconAsNormalPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_HIDE_MINI_GALLERY_COVER_IMAGE, Settings.HIDE_MINI_GALLERY_COVER_IMAGE, HideMiniGalleryCoverImagePatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_RESTORE_LEGACY_POST_ICONS, Settings.RESTORE_LEGACY_POST_ICONS, RestoreOldPostIconsPatch.isPatchIncluded());
-            bindSwitchIfIncluded(PREF_SHOW_POST_HISTORY_AUTHOR_IDENTIFIER, Settings.SHOW_POST_HISTORY_AUTHOR_IDENTIFIER, PostHistoryAuthorIdentifierPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_SHOW_POST_AUTHOR_IDENTIFIER, Settings.SHOW_POST_AUTHOR_IDENTIFIER, AuthorIdentifierPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_SHOW_POST_HISTORY_AUTHOR_IDENTIFIER, Settings.SHOW_POST_HISTORY_AUTHOR_IDENTIFIER, AuthorIdentifierPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_HIDE_HOME_SEARCH_MENU, Settings.HIDE_HOME_SEARCH_MENU, HomeComponentsPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_HIDE_HOME_RECENT_GALLERIES, Settings.HIDE_HOME_RECENT_GALLERIES, HomeComponentsPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_HIDE_HOME_RECOMMENDED_GALLERIES, Settings.HIDE_HOME_RECOMMENDED_GALLERIES, HomeComponentsPatch.isPatchIncluded());

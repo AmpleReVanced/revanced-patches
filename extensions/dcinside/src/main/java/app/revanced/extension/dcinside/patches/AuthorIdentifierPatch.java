@@ -5,13 +5,13 @@ import androidx.annotation.Nullable;
 import app.revanced.extension.dcinside.settings.Settings;
 
 @SuppressWarnings("unused")
-public final class PostHistoryAuthorIdentifierPatch {
+public final class AuthorIdentifierPatch {
     /**
      * Zero width, so the identifier can share the single stored name column.
      */
     private static final char IDENTIFIER_SEPARATOR = '\u2063';
 
-    private PostHistoryAuthorIdentifierPatch() {
+    private AuthorIdentifierPatch() {
     }
 
     public static boolean isPatchIncluded() {
@@ -35,6 +35,19 @@ public final class PostHistoryAuthorIdentifierPatch {
      */
     public static String stripAuthorIdentifier(@Nullable String storedName) {
         return storedName == null ? "" : nicknameOf(storedName);
+    }
+
+    /**
+     * The post header already shows the IP of anonymous authors, so only the
+     * identifier of logged in authors is added.
+     */
+    public static String formatPostAuthorName(@Nullable String name, @Nullable String userId) {
+        String nickname = name == null ? "" : name;
+        if (userId == null || userId.trim().isEmpty() || !Settings.showPostAuthorIdentifier()) {
+            return nickname;
+        }
+
+        return nickname + " (" + userId.trim() + ")";
     }
 
     public static String formatAuthorName(@Nullable String storedName) {

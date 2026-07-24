@@ -3,6 +3,7 @@ package app.revanced.patches.dcinside.history
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.methodCall
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
@@ -10,6 +11,7 @@ import app.morphe.util.getFreeRegisterProvider
 import app.morphe.util.getMutableMethod
 import app.morphe.util.getReference
 import app.morphe.util.indexOfFirstInstructionOrThrow
+import app.morphe.util.matchAllMethodIndicesForEach
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.dcinside.misc.addExtensionPatch
 import app.revanced.patches.dcinside.settings.PreferenceScreen
@@ -18,6 +20,8 @@ import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
 import app.revanced.util.parameterTypeNames
 import app.revanced.util.smaliReference
 import com.android.tools.smali.dexlib2.AccessFlags
+import com.android.tools.smali.dexlib2.Opcode
+import com.android.tools.smali.dexlib2.iface.ClassDef
 import com.android.tools.smali.dexlib2.iface.Method
 import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
@@ -26,19 +30,25 @@ import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.value.StringEncodedValue
 
 private const val EXTENSION_CLASS =
-    "Lapp/revanced/extension/dcinside/patches/PostHistoryAuthorIdentifierPatch;"
+    "Lapp/revanced/extension/dcinside/patches/AuthorIdentifierPatch;"
 
 @Suppress("unused")
-val showPostHistoryAuthorIdentifierPatch = bytecodePatch(
-    name = "Show recent post author identifier",
-    description = "Shows the author identifier next to the nickname in the recently-viewed posts " +
-        "list. Only applies to posts opened after this patch is installed.",
+val showAuthorIdentifierPatch = bytecodePatch(
+    name = "Show author identifier",
+    description = "Adds options to show the author identifier next to the nickname in posts, " +
+        "post lists, and the recently-viewed posts list. The recently-viewed list only shows it " +
+        "for posts opened after this patch is installed.",
 ) {
     compatibleWith(COMPATIBILITY_DC_INSIDE)
     dependsOn(addExtensionPatch, addSettingsPatch)
 
     execute {
         PreferenceScreen.FEATURES.addPreferences(
+            SwitchPreference(
+                key = "morphe_pref_show_post_author_identifier",
+                titleKey = "morphe_settings_show_post_author_identifier",
+                summary = true,
+            ),
             SwitchPreference(
                 key = "morphe_pref_show_post_history_author_identifier",
                 titleKey = "morphe_settings_show_post_history_author_identifier",
@@ -48,25 +58,56 @@ val showPostHistoryAuthorIdentifierPatch = bytecodePatch(
         setExtensionIsPatchIncluded(EXTENSION_CLASS)
 
         val postInfo = classDefBy(POST_INFO_CLASS)
-        fun serializedField(serializedName: String) = postInfo.fields.first { field ->
-            field.annotations.any { annotation ->
-                annotation.elements.any { element ->
-                    element.name == "value" &&
-                        (element.value as? StringEncodedValue)?.value == serializedName
+        val nameGetters = postInfo.gettersOf("name").map { method -> method.name }.toSet()
+        val userIdGetter = postInfo.gettersOf("user_id").first()
+        val ipGetter = postInfo.gettersOf("ip").first()
+
+        val authorSpanBuilder = PostAuthorLineFingerprint.method.instructions.firstNotNullOf { instruction ->
+            instruction.getReference<MethodReference>()
+                ?.takeIf { reference -> reference.returnType == "Landroid/text/Spannable;" }
+        }
+
+        // Posts and post lists render the author line in obfuscated classes, so every method that
+        // builds one is patched instead of fingerprinting each of them.
+        listOf(POST_INFO_CLASS, POST_ITEM_CLASS).forEach { modelType ->
+            val model = classDefBy(modelType)
+            val modelUserIdGetter = model.gettersOf("user_id").first()
+
+            model.gettersOf("name").forEach { nicknameGetter ->
+                methodCall(
+                    definingClass = modelType,
+                    name = nicknameGetter.name,
+                    parameters = emptyList(),
+                    returnType = "Ljava/lang/String;",
+                ).matchAllMethodIndicesForEach(requireMatches = false) { index ->
+                    val buildsAuthorLine = instructions.any { instruction ->
+                        instruction.getReference<MethodReference>()?.smaliReference ==
+                            authorSpanBuilder.smaliReference
+                    }
+                    if (!buildsAuthorLine ||
+                        getInstruction(index + 1).opcode != Opcode.MOVE_RESULT_OBJECT
+                    ) {
+                        return@matchAllMethodIndicesForEach
+                    }
+
+                    val modelRegister = getInstruction<FiveRegisterInstruction>(index).registerC
+                    val nameRegister = getInstruction<OneRegisterInstruction>(index + 1).registerA
+                    val userIdRegister =
+                        getFreeRegisterProvider(index + 2, 1, modelRegister, nameRegister)
+                            .getFreeRegister4Bit()
+
+                    addInstructions(
+                        index + 2,
+                        """
+                            invoke-virtual {v$modelRegister}, ${modelUserIdGetter.smaliReference}
+                            move-result-object v$userIdRegister
+                            invoke-static {v$nameRegister, v$userIdRegister}, $EXTENSION_CLASS->formatPostAuthorName(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+                            move-result-object v$nameRegister
+                        """.trimIndent(),
+                    )
                 }
             }
         }
-
-        val nameField = serializedField("name")
-        val userIdField = serializedField("user_id")
-        val ipField = serializedField("ip")
-
-        val nameGetters = postInfo.methods
-            .filter { method -> method.readsOnly(nameField) }
-            .map { method -> method.name }
-            .toSet()
-        val userIdGetter = postInfo.methods.first { method -> method.readsOnly(userIdField) }
-        val ipGetter = postInfo.methods.first { method -> method.readsOnly(ipField) }
 
         // PostHistory has no spare column for the identifier and adding one requires
         // a Realm migration, so fold it into the nickname that is stored.
@@ -160,6 +201,19 @@ val showPostHistoryAuthorIdentifierPatch = bytecodePatch(
 }
 
 // Matches a getter, and not methods such as 'toString' that read every field.
+private fun ClassDef.gettersOf(serializedName: String): List<Method> {
+    val field = fields.first { field ->
+        field.annotations.any { annotation ->
+            annotation.elements.any { element ->
+                element.name == "value" &&
+                    (element.value as? StringEncodedValue)?.value == serializedName
+            }
+        }
+    }
+
+    return methods.filter { method -> method.readsOnly(field) }
+}
+
 private fun Method.readsOnly(field: FieldReference) =
     parameterTypes.isEmpty() &&
         returnType == field.type &&

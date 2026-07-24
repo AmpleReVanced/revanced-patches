@@ -28,6 +28,8 @@
     <string name="morphe_settings_hide_home_recommended_posts_summary">홈 화면의 추천글 영역을 제거합니다.</string>
     <string name="morphe_settings_show_post_history_author_identifier">최근 본 글에 작성자 식별코드 표시</string>
     <string name="morphe_settings_show_post_history_author_identifier_summary">최근 본 글 목록에서 닉네임 옆에 작성자 식별코드를 표시합니다. 글을 열 때 저장되므로 패치 설치 후 새로 연 글에만 적용됩니다.</string>
+    <string name="morphe_settings_show_post_author_identifier">게시글·목록에 작성자 식별코드 표시</string>
+    <string name="morphe_settings_show_post_author_identifier_summary">게시글과 글 목록에서 닉네임 옆에 작성자 식별코드를 표시합니다. 유동은 이미 IP가 표시되므로 변화가 없습니다.</string>
     <string name="morphe_settings_section_support">후원</string>
     <string name="morphe_settings_support">프로젝트 후원하기</string>
     <string name="morphe_settings_support_summary">결과물이 마음에 드시나요? 후원으로 더 나은 결과물을 만드는 데 힘을 보태주세요. 여러분의 지원으로 이 프로젝트는 계속 개발됩니다.</string>
@@ -81,6 +83,7 @@
     <string name="morphe_pref_hide_home_live_best_summary">홈 화면의 실시간 베스트 목록과 필터를 제거합니다.</string>
     <string name="morphe_pref_hide_home_recommended_posts_summary">홈 화면의 추천글 영역을 제거합니다.</string>
     <string name="morphe_pref_show_post_history_author_identifier_summary">최근 본 글 목록에서 닉네임 옆에 작성자 식별코드를 표시합니다. 글을 열 때 저장되므로 패치 설치 후 새로 연 글에만 적용됩니다.</string>
+    <string name="morphe_pref_show_post_author_identifier_summary">게시글과 글 목록에서 닉네임 옆에 작성자 식별코드를 표시합니다. 유동은 이미 IP가 표시되므로 변화가 없습니다.</string>
     <string name="morphe_pref_restore_legacy_post_icons_summary">글 목록과 본문에서 DCInside 4.7.x 스타일의 사진, 동영상, 개념글 아이콘을 사용합니다.</string>
     <string name="morphe_pref_hide_official_notices_summary">갤러리 공지 목록에서 디시인사이드 운영자 공지를 제거합니다.</string>
     <string name="morphe_pref_hide_mini_gallery_cover_image_summary">글 목록 위에 표시되는 미니 갤러리 대문사진을 숨깁니다.</string>
