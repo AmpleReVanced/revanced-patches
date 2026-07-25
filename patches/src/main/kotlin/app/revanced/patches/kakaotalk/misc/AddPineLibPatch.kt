@@ -1,8 +1,12 @@
 package app.revanced.patches.kakaotalk.misc
 
+import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.resourcePatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import java.io.File
+
+private const val PINE_LIB_RESOURCE_DIRECTORY = "kakaotalk/libpine"
+private val PINE_LIB_ABIS = listOf("armeabi-v7a", "arm64-v8a")
 
 @Suppress("unused")
 val addPineLibPatch = resourcePatch(
@@ -13,21 +17,17 @@ val addPineLibPatch = resourcePatch(
     compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        val targetArm32Lib = get("root/lib/armeabi-v7a/")
-        val targetArm64Lib = get("root/lib/arm64-v8a/")
+        val classLoader = ::javaClass.javaClass.classLoader
 
-        val pineLib32 =
-            ::javaClass.javaClass.classLoader.getResourceAsStream("kakaotalk/libpine/armeabi-v7a/libpine.so")?.readAllBytes()
-                ?: error("Failed to load libpine.so for armeabi-v7a")
-        val pineLib64 =
-            ::javaClass.javaClass.classLoader.getResourceAsStream("kakaotalk/libpine/arm64-v8a/libpine.so")?.readAllBytes()
-                ?: error("Failed to load libpine.so for arm64-v8a")
+        PINE_LIB_ABIS.forEach { abi ->
+            val resourcePath = "$PINE_LIB_RESOURCE_DIRECTORY/$abi/libpine.so"
+            val pineLib = classLoader.getResourceAsStream(resourcePath)?.use { it.readAllBytes() }
+                ?: throw PatchException("Failed to load libpine.so for $abi")
 
-        File(targetArm32Lib, "libpine.so").apply {
-            writeBytes(pineLib32)
-        }
-        File(targetArm64Lib, "libpine.so").apply {
-            writeBytes(pineLib64)
+            File(get("lib/$abi").toString()).apply {
+                mkdirs()
+                File(this, "libpine.so").writeBytes(pineLib)
+            }
         }
 
         document("AndroidManifest.xml").use { document ->

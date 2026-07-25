@@ -1,5 +1,6 @@
 package app.revanced.extension.kakaotalk.settings;
 
+import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -14,7 +15,6 @@ import androidx.annotation.Nullable;
 
 import app.morphe.extension.shared.ResourceUtils;
 import app.morphe.extension.shared.Utils;
-import app.revanced.extension.kakaotalk.helper.ResourceHelper;
 
 @SuppressWarnings("unused")
 public final class MorpheSettingsIconDynamicDrawable extends Drawable {
@@ -67,7 +67,16 @@ public final class MorpheSettingsIconDynamicDrawable extends Drawable {
             return darkModeFromTint;
         }
 
-        Boolean darkModeFromThemeTitleColor = getDarkModeFromThemeTitleColor();
+        return isAppDarkMode(Utils.getContext());
+    }
+
+    public static boolean isAppDarkMode(Context context) {
+        Boolean darkModeFromAppSetting = KakaoThemeSettings.isDarkMode();
+        if (darkModeFromAppSetting != null) {
+            return darkModeFromAppSetting;
+        }
+
+        Boolean darkModeFromThemeTitleColor = getDarkModeFromThemeTitleColor(context);
         if (darkModeFromThemeTitleColor != null) {
             return darkModeFromThemeTitleColor;
         }
@@ -86,21 +95,25 @@ public final class MorpheSettingsIconDynamicDrawable extends Drawable {
     }
 
     @Nullable
-    private Boolean getDarkModeFromThemeTitleColor() {
+    private static Boolean getDarkModeFromThemeTitleColor(Context context) {
         try {
-            int colorResId = ResourceHelper.getResourceId("color", "theme_title_color");
+            int colorResId = context.getResources().getIdentifier(
+                    "theme_title_color",
+                    "color",
+                    context.getPackageName()
+            );
             if (colorResId == 0) {
                 return null;
             }
 
-            int color = Utils.getContext().getResources().getColor(colorResId);
+            int color = context.getResources().getColor(colorResId);
             return isLightColor(color);
         } catch (Exception ignored) {
             return null;
         }
     }
 
-    private boolean isLightColor(int color) {
+    private static boolean isLightColor(int color) {
         return Color.alpha(color) != 0
                 && ((Color.red(color) * 299) + (Color.green(color) * 587) + (Color.blue(color) * 114)) >= 128000;
     }

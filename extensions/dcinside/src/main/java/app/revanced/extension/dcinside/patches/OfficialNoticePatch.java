@@ -13,6 +13,13 @@ public final class OfficialNoticePatch {
     private OfficialNoticePatch() {
     }
 
+    /**
+     * @return If this patch was included during patching.
+     */
+    public static boolean isPatchIncluded() {
+        return false;  // Modified during patching.
+    }
+
     public static void filterNoticeList(List<?> posts, Object tabType) {
         if (!hideOfficialNotices()) {
             return;

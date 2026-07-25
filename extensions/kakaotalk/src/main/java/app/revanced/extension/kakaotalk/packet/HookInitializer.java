@@ -2,32 +2,30 @@ package app.revanced.extension.kakaotalk.packet;
 
 import android.content.Context;
 import android.util.Log;
-import org.jetbrains.annotations.NotNull;
-import top.canyie.pine.Pine;
 
-import java.util.Collections;
-import java.util.List;
-
-public class HookInitializer implements B5.b<Void> {
+public final class HookInitializer {
 
     private static final String TAG = "HookInitializer";
     private static final int SERVER_PORT = 8080;
+    private static boolean initialized;
 
-    @NotNull
-    @Override
-    public Void create(@NotNull Context context) {
-        Pine.disableHiddenApiPolicy(true, true);
+    private HookInitializer() {
+    }
+
+    public static synchronized void initialize(Context context) {
+        if (initialized) {
+            return;
+        }
+        initialized = true;
 
         Serializer serializer = new Serializer();
         RemotePacketHandler remoteHandler = new RemotePacketHandler();
 
+        PacketHook.initialize(serializer);
         startServer(remoteHandler);
-        installHook(serializer);
-
-        return null;
     }
 
-    private void startServer(RemotePacketHandler handler) {
+    private static void startServer(RemotePacketHandler handler) {
         PacketHandlerServer.setRequestHandler(handler);
 
         new Thread(() -> {
@@ -37,16 +35,5 @@ public class HookInitializer implements B5.b<Void> {
                 Log.e(TAG, "Failed to start server", e);
             }
         }).start();
-    }
-
-    private void installHook(Serializer serializer) {
-        PacketHook hook = new PacketHook(serializer);
-        hook.install();
-    }
-
-    @NotNull
-    @Override
-    public List<Class<? extends B5.b<?>>> dependencies() {
-        return Collections.emptyList();
     }
 }

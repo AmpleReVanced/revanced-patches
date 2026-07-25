@@ -2,11 +2,11 @@ package app.revanced.patches.kakaotalk.ads.fingerprints
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.OpcodesFilter
-import app.morphe.patcher.fingerprint
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
 internal object MeasuringBizBoardFingerprint : Fingerprint(
+    definingClass = "Lcom/kakao/talk/widget/ad/BizBoardFrameLayout;",
     accessFlags = listOf(AccessFlags.PUBLIC),
     returnType = "V",
     parameters = listOf("I", "I"),

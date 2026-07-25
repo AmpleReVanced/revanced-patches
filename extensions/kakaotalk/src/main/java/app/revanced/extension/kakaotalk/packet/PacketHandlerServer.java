@@ -76,39 +76,62 @@ public class PacketHandlerServer {
         private static final byte LINE_FEED = '\n';
         
         private ByteBuf buffer;
+        private boolean discarding;
+        private int scanOffset;
 
         @Override
         public void channelRead(ChannelHandlerContext ctx, Object msg) {
             ByteBuf in = (ByteBuf) msg;
-            
+
             try {
                 if (buffer == null) {
                     buffer = ctx.alloc().buffer();
                 }
-                
+
                 buffer.writeBytes(in);
-                
+
                 while (buffer.isReadable()) {
-                    int lineEndIndex = findLineEnd(buffer);
-                    
+                    if (discarding) {
+                        int lineEndIndex = findLineEnd(buffer, buffer.readerIndex());
+                        if (lineEndIndex == -1) {
+                            buffer.skipBytes(buffer.readableBytes());
+                            break;
+                        }
+                        buffer.readerIndex(lineEndIndex + 1);
+                        discarding = false;
+                        continue;
+                    }
+
+                    int lineEndIndex = findLineEnd(buffer, buffer.readerIndex() + scanOffset);
+
                     if (lineEndIndex == -1) {
+                        if (buffer.readableBytes() > MAX_FRAME_LENGTH) {
+                            buffer.skipBytes(buffer.readableBytes());
+                            scanOffset = 0;
+                            discarding = true;
+                            Log.w(TAG, "Pending frame exceeded " + MAX_FRAME_LENGTH
+                                    + " bytes without a newline, discarding until next newline");
+                        } else {
+                            scanOffset = buffer.readableBytes();
+                        }
                         break;
                     }
-                    
+
                     int frameLength = lineEndIndex - buffer.readerIndex();
-                    
+                    scanOffset = 0;
+
                     if (frameLength > MAX_FRAME_LENGTH) {
                         buffer.skipBytes(frameLength + 1);
                         Log.w(TAG, "Frame too large, skipped");
                         continue;
                     }
-                    
+
                     ByteBuf frame = buffer.readRetainedSlice(frameLength);
                     buffer.skipBytes(1);
-                    
+
                     ctx.fireChannelRead(frame);
                 }
-                
+
                 buffer.discardReadBytes();
             } finally {
                 in.release();
@@ -124,9 +147,8 @@ public class PacketHandlerServer {
             super.channelInactive(ctx);
         }
 
-        private int findLineEnd(ByteBuf buf) {
-            int totalLength = buf.readableBytes();
-            return buf.indexOf(buf.readerIndex(), buf.readerIndex() + totalLength, LINE_FEED);
+        private int findLineEnd(ByteBuf buf, int fromIndex) {
+            return buf.indexOf(fromIndex, buf.writerIndex(), LINE_FEED);
         }
     }
 

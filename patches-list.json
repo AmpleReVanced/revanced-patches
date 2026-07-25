@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0",
+  "version": "1.2.0-dev.20",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -7,8 +7,7 @@
       "default": false,
       "dependencies": [
         "BytecodePatch",
-        "BytecodePatch",
-        "ResourcePatch"
+        "BytecodePatch"
       ],
       "compatiblePackages": [
         {
@@ -17,10 +16,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -42,10 +43,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -72,7 +75,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.3.0",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -103,7 +106,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.3.0",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -128,7 +131,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.3.0",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -150,10 +153,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -181,10 +186,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -229,7 +236,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.3.0",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -261,10 +268,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -286,10 +295,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -311,10 +322,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -339,7 +352,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "3.6.0",
+              "version": "3.9.0",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -363,10 +376,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -393,7 +408,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.3.0",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -415,10 +430,37 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
+          "targets": [
+            {
+              "version": "26.6.1",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Bypass login",
+      "description": "Skips the mandatory account sign-in on launch and opens the app directly.",
+      "default": true,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.flexcil.flexcilnote",
+          "name": "Flexcil",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#0096FA",
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "1.4.4.9",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -442,10 +484,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -474,7 +518,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.3.0",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -529,10 +573,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -589,7 +635,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.3.0",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -635,10 +681,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -672,10 +720,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -702,7 +752,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.3.0",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -724,10 +774,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -751,10 +803,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -776,10 +830,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -801,10 +857,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -829,7 +887,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.3.0",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -851,10 +909,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -881,7 +941,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.3.0",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -903,10 +963,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -928,10 +990,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -956,7 +1020,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.3.0",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -978,10 +1042,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1006,7 +1072,34 @@
           "signatures": null,
           "targets": [
             {
-              "version": "3.6.0",
+              "version": "3.9.0",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Disable P2P",
+      "description": "Disables SOOP peer-assisted grid streaming.",
+      "default": true,
+      "dependencies": [
+        "ResourcePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "kr.co.nowcom.mobile.afreeca",
+          "name": "SOOP",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#0068FF",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "8.28.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1028,10 +1121,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1053,10 +1148,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1080,10 +1177,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1107,10 +1206,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1140,10 +1241,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1165,10 +1268,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1193,7 +1298,32 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.3.0",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Disable ads",
+      "description": "Disables CHZZK advertisements, including live stream pre-roll, mid-roll and post-roll ads and clip feed ads.",
+      "default": true,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.navercorp.game.android.community",
+          "name": "Chzzk",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#00FFA3",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "3.9.0",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1215,10 +1345,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1233,7 +1365,6 @@
       "description": "Adds a setting to disable comments in open chat rooms.",
       "default": true,
       "dependencies": [
-        "BytecodePatch",
         "BytecodePatch"
       ],
       "compatiblePackages": [
@@ -1243,10 +1374,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1271,7 +1404,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.3.0",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1293,10 +1426,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1320,10 +1455,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1348,7 +1485,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.3.0",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1370,37 +1507,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
-              "isExperimental": false,
-              "minSdk": null,
-              "description": null
-            }
-          ]
-        }
-      ],
-      "options": []
-    },
-    {
-      "name": "Enable recording pause/resume feature",
-      "description": "Enable recording pause/resume feature in KakaoTalk",
-      "default": true,
-      "dependencies": [
-        "BytecodePatch"
-      ],
-      "compatiblePackages": [
-        {
-          "packageName": "com.kakao.talk",
-          "name": "Kakao Talk",
-          "description": null,
-          "apkFileType": "APKM",
-          "appIconColor": "#FEE500",
-          "signatures": null,
-          "targets": [
-            {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1424,10 +1536,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1451,10 +1565,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1476,10 +1592,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1503,10 +1621,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1533,7 +1653,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.3.0",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1558,7 +1678,90 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.3.0",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Hide More tab Game tab",
+      "description": "Hides the Game tab from the More tab.",
+      "default": true,
+      "dependencies": [
+        "BytecodePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
+          "targets": [
+            {
+              "version": "26.6.1",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Hide More tab components",
+      "description": "Adds options to hide components from the More tab.",
+      "default": true,
+      "dependencies": [
+        "BytecodePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
+          "targets": [
+            {
+              "version": "26.6.1",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Hide home banners",
+      "description": "Hides promotional banners on the CHZZK home recommend tab, including the top banner carousel and the in-feed event and image banners.",
+      "default": true,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.navercorp.game.android.community",
+          "name": "Chzzk",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#00FFA3",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "3.9.0",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1585,7 +1788,34 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.3.0",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Hide mini gallery cover image",
+      "description": "Adds a setting to hide the mini gallery cover image above post lists.",
+      "default": true,
+      "dependencies": [
+        "BytecodePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "com.dcinside.app.android",
+          "name": "dcinside",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#3D4491",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "5.3.0",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1609,10 +1839,41 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Open profile from open chat feed",
+      "description": "Opens open chat member profiles from join and leave feed messages.",
+      "default": true,
+      "dependencies": [
+        "BytecodePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
+          "targets": [
+            {
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1636,10 +1897,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1660,33 +1923,6 @@
       ]
     },
     {
-      "name": "Play YouTube player in chat room",
-      "description": "Allows playing YouTube videos in KakaoTalk chat rooms.",
-      "default": true,
-      "dependencies": [
-        "BytecodePatch"
-      ],
-      "compatiblePackages": [
-        {
-          "packageName": "com.kakao.talk",
-          "name": "Kakao Talk",
-          "description": null,
-          "apkFileType": "APKM",
-          "appIconColor": "#FEE500",
-          "signatures": null,
-          "targets": [
-            {
-              "version": "26.4.2",
-              "isExperimental": false,
-              "minSdk": null,
-              "description": null
-            }
-          ]
-        }
-      ],
-      "options": []
-    },
-    {
       "name": "Register settings activity",
       "description": "Registers the Morphe settings activity in the app manifest.",
       "default": true,
@@ -1701,7 +1937,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.3.0",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1723,10 +1959,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1748,10 +1986,37 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
+          "targets": [
+            {
+              "version": "26.6.1",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Remove Catch ads",
+      "description": "Removes the ads inserted between clips in the Catch feed by reporting no ad slots.",
+      "default": true,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "kr.co.nowcom.mobile.afreeca",
+          "name": "SOOP",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#0068FF",
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "8.28.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1773,10 +2038,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1798,10 +2065,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1825,10 +2094,87 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
+          "targets": [
+            {
+              "version": "26.6.1",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Remove VOD ads",
+      "description": "Removes VOD pre-roll ads by reporting every stream as QuickView Plus to the player's own ad-skip check.",
+      "default": true,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "kr.co.nowcom.mobile.afreeca",
+          "name": "SOOP",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#0068FF",
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "8.28.3",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Remove banner ads",
+      "description": "Removes the VOD companion and search banner ads.",
+      "default": true,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "kr.co.nowcom.mobile.afreeca",
+          "name": "SOOP",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#0068FF",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "8.28.3",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Remove exit dialog ad",
+      "description": "Removes the ad area shown in the app-exit confirmation dialog, keeping the dialog itself.",
+      "default": true,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "kr.co.nowcom.mobile.afreeca",
+          "name": "SOOP",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#0068FF",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "8.28.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1850,10 +2196,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1875,10 +2223,137 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
+          "targets": [
+            {
+              "version": "26.6.1",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Remove intro ads",
+      "description": "Removes the image, video and cinema intro ad banners shown on launch.",
+      "default": true,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "kr.co.nowcom.mobile.afreeca",
+          "name": "SOOP",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#0068FF",
           "signatures": null,
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "8.28.3",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Remove list banner ads",
+      "description": "Removes the native banner ads under the live player and in feeds by stopping their ad request, so no banner is fetched or shown.",
+      "default": true,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "kr.co.nowcom.mobile.afreeca",
+          "name": "SOOP",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#0068FF",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "8.28.3",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Remove live ads",
+      "description": "Removes the live pre-roll ad by routing every ad decision into the app's own no-video path so the stream starts immediately.",
+      "default": true,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "kr.co.nowcom.mobile.afreeca",
+          "name": "SOOP",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#0068FF",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "8.28.3",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Remove live banner ads",
+      "description": "Removes the banner ads shown under the live player by stopping their driver from attaching the banner fragments.",
+      "default": true,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "kr.co.nowcom.mobile.afreeca",
+          "name": "SOOP",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#0068FF",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "8.28.3",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Remove main board ads",
+      "description": "Removes the native \"main board\" banner ad shown in feeds and under the live player.",
+      "default": true,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "kr.co.nowcom.mobile.afreeca",
+          "name": "SOOP",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#0068FF",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "8.28.3",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1900,10 +2375,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1925,10 +2402,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1955,7 +2434,64 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.3.0",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Restore old post icons",
+      "description": "Adds a setting to restore DCInside 4.7.x post list and read footer icons.",
+      "default": true,
+      "dependencies": [
+        "BytecodePatch",
+        "ResourcePatch",
+        "ResourcePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "com.dcinside.app.android",
+          "name": "dcinside",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#3D4491",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "5.3.0",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Show author identifier",
+      "description": "Adds options to show the author identifier next to the nickname in posts, post lists, and the recently-viewed posts list. The recently-viewed list only shows it for posts opened after this patch is installed.",
+      "default": true,
+      "dependencies": [
+        "BytecodePatch",
+        "BytecodePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "com.dcinside.app.android",
+          "name": "dcinside",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#3D4491",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "5.3.0",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1981,10 +2517,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1995,13 +2533,15 @@
       "options": []
     },
     {
-      "name": "Show deleted or hidden messages",
-      "description": "Allows you to see deleted/hidden messages in chat logs.",
+      "name": "Show deleted, hidden, or edited messages",
+      "description": "Allows you to see deleted, hidden, and edited message history in chat logs.",
       "default": true,
       "dependencies": [
         "BytecodePatch",
+        "BytecodePatch",
         "ResourcePatch",
-        "BytecodePatch"
+        "BytecodePatch",
+        "ResourcePatch"
       ],
       "compatiblePackages": [
         {
@@ -2010,10 +2550,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -2043,6 +2585,39 @@
       ]
     },
     {
+      "name": "Show message read receipts",
+      "description": "Shows the members who have or have not read each chat message.",
+      "default": true,
+      "dependencies": [
+        "BytecodePatch",
+        "ResourcePatch",
+        "BytecodePatch",
+        "BytecodePatch",
+        "ResourcePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
+          "targets": [
+            {
+              "version": "26.6.1",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
       "name": "Spoof App ID",
       "description": "Spoofs the App ID to bypass integrity checks. (to bypass biometric auth etc.)",
       "default": true,
@@ -2054,10 +2629,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -2084,7 +2661,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "5.2.9",
+              "version": "5.3.0",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -2106,10 +2683,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -2131,10 +2710,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -2159,7 +2740,32 @@
           "signatures": null,
           "targets": [
             {
-              "version": "1.4.3.30",
+              "version": "1.4.4.9",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Unlock cheat key",
+      "description": "Unlocks CHZZK cheat key subscription benefits without an active subscription.",
+      "default": true,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.navercorp.game.android.community",
+          "name": "Chzzk",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#00FFA3",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "3.9.0",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -2181,10 +2787,12 @@
           "description": null,
           "apkFileType": "APKM",
           "appIconColor": "#FEE500",
-          "signatures": null,
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
           "targets": [
             {
-              "version": "26.4.2",
+              "version": "26.6.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null

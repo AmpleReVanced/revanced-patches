@@ -1,8 +1,9 @@
 package app.revanced.patches.kakaotalk.tracker.fingerprints
 
 import app.morphe.patcher.Fingerprint
-import app.revanced.util.hasFieldReference
+import app.morphe.util.getReference
 import com.android.tools.smali.dexlib2.AccessFlags
+import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 
 internal object TalkShareLogAsyncFlagFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC),
@@ -10,6 +11,8 @@ internal object TalkShareLogAsyncFlagFingerprint : Fingerprint(
     returnType = "Ljava/lang/Object;",
     custom = { method, classDef ->
         classDef.sourceFile == "Available2.kt" &&
-                method.hasFieldReference("${classDef.type.split("/")[0]}/c\$b;", "USE_TALK_SHARE_LOG")
-    }
+            method.implementation?.instructions?.any { instruction ->
+                instruction.getReference<FieldReference>()?.name == "USE_TALK_SHARE_LOG"
+            } == true
+    },
 )

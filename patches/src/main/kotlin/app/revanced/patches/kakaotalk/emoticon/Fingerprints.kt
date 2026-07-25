@@ -5,8 +5,11 @@ import app.morphe.patcher.OpcodesFilter
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
+internal const val EMOTICON_PLUS_ME_RESULT_CLASS =
+    "Lcom/kakao/talk/emoticon/membership/data/remote/dto/EmoticonPlusMeResult;"
+
 internal object EmoticonPlusMeResultConstructorFingerprint : Fingerprint(
-    definingClass = "Lcom/kakao/talk/emoticon/itemstore/plus/EmoticonPlusMeResult;",
+    definingClass = EMOTICON_PLUS_ME_RESULT_CLASS,
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.CONSTRUCTOR),
     parameters = listOf("Z", "J", "J"),
     returnType = "V",
@@ -38,7 +41,6 @@ internal object UserPreferenceIsActiveEmoticonPlusFingerprint : Fingerprint(
 )
 
 internal object EmoticonPlusManagerIsActiveFingerprint : Fingerprint(
-    definingClass = "Lcom/kakao/talk/emoticon/itemstore/plus",
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     returnType = "Z",
     filters = OpcodesFilter.opcodesToFilters(

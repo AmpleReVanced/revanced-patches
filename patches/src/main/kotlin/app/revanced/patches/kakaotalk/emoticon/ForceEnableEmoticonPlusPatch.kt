@@ -27,7 +27,7 @@ val forceEnableEmoticonPlusPatch = bytecodePatch(
         val caller = EmoticonPlusManagerIsActiveFingerprint.method.instructions
             .first { it.opcode == Opcode.INVOKE_VIRTUAL }
             .getReference<MethodReference>()
-        if (caller!!.definingClass != "Lcom/kakao/talk/emoticon/itemstore/plus/EmoticonPlusMeResult;") {
+        if (caller!!.definingClass != EMOTICON_PLUS_ME_RESULT_CLASS) {
             error("Force enable emoticon plus feature is not supported")
         }
 

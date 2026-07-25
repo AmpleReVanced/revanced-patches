@@ -1,3 +1,197 @@
+# [1.2.0-dev.20](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.19...v1.2.0-dev.20) (2026-07-24)
+
+
+### Features
+
+* **dcinside:** show author identifier in posts and post lists ([2f38791](https://github.com/AmpleReVanced/revanced-patches/commit/2f38791fa4d2287f98408de1f61182c2f952b7c0))
+* **dcinside:** show author identifier in recently viewed posts ([5caa2e1](https://github.com/AmpleReVanced/revanced-patches/commit/5caa2e1fcb4770417999a14be3b3a25efe7873b4))
+
+# [1.2.0-dev.19](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.18...v1.2.0-dev.19) (2026-07-24)
+
+
+### Features
+
+* **chzzk:** add ad, cheat key, and banner patches ([470a759](https://github.com/AmpleReVanced/revanced-patches/commit/470a759f01ddb3cabbee12b95f10eeae312b8484))
+* **soop:** remove Catch feed ads ([de90288](https://github.com/AmpleReVanced/revanced-patches/commit/de902880d4f9562c57ed1df337c9327868b517fc))
+* **soop:** remove exit dialog ad ([b6fdac3](https://github.com/AmpleReVanced/revanced-patches/commit/b6fdac3a5f421cedab2e5c78d269357af279c661))
+
+# [1.2.0-dev.18](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.17...v1.2.0-dev.18) (2026-07-24)
+
+
+### Features
+
+* **soop:** add ad-removal patches ([9983819](https://github.com/AmpleReVanced/revanced-patches/commit/99838193a544573cff447e88df2025532e1707cf))
+
+# [1.2.0-dev.17](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.16...v1.2.0-dev.17) (2026-07-23)
+
+
+### Features
+
+* **dcinside:** update dcinside patches for version 5.3.0 ([c56c131](https://github.com/AmpleReVanced/revanced-patches/commit/c56c13194cb09571b6efbe92c0c758be1817bb0d))
+
+# [1.2.0-dev.16](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.15...v1.2.0-dev.16) (2026-07-22)
+
+
+### Performance Improvements
+
+* **kakaotalk:** speed up chat side title copy setup ([094e18a](https://github.com/AmpleReVanced/revanced-patches/commit/094e18a77e4189fd0c767c0e9fef8a72a6c1775c))
+
+# [1.2.0-dev.15](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.14...v1.2.0-dev.15) (2026-07-22)
+
+
+### Bug Fixes
+
+* **kakaotalk:** drop stale feed profile spans on recycled text views ([2174227](https://github.com/AmpleReVanced/revanced-patches/commit/2174227b82faf36d6ef4fed1108e95f8802e94c6))
+* **soop:** bind P2P config getter to the setter's value register ([cddb3a9](https://github.com/AmpleReVanced/revanced-patches/commit/cddb3a919edd24bb92afd06c2d603ecc32304bba))
+
+
+### Features
+
+* **flexcil:** add Bypass login patch ([698ac57](https://github.com/AmpleReVanced/revanced-patches/commit/698ac57ba1e6f918fb4050da213a8c2bf845089c))
+
+# [1.2.0-dev.14](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.13...v1.2.0-dev.14) (2026-07-22)
+
+
+### Bug Fixes
+
+* **flexcil:** bind premium gate polarity to the returned value ([dab48b3](https://github.com/AmpleReVanced/revanced-patches/commit/dab48b325efecc34b13e06e62cccb1204531628d))
+* **kakaotalk:** bound the packet server line decoder buffer ([c0a439c](https://github.com/AmpleReVanced/revanced-patches/commit/c0a439c1fed0d05f128aba605d33b2fac3a03542))
+* **kakaotalk:** make feature flag map reads thread-safe ([687fc9e](https://github.com/AmpleReVanced/revanced-patches/commit/687fc9e34473e168806f5353c6f858a920090265))
+* **kakaotalk:** reserve <clinit> registers for the settings tab enum ([a7694a1](https://github.com/AmpleReVanced/revanced-patches/commit/a7694a13a01be3dd519c7856dbde79682958cf23))
+* **kakaotalk:** separate reflection-contract failures from connection state ([9ded0bf](https://github.com/AmpleReVanced/revanced-patches/commit/9ded0bf25a8997bcce1b0edbcd3d3526a2ab28fc))
+
+# [1.2.0-dev.13](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.12...v1.2.0-dev.13) (2026-07-22)
+
+
+### Bug Fixes
+
+* **flexcil:** unlock all premium gates in Unlock Premium features ([e5e83b5](https://github.com/AmpleReVanced/revanced-patches/commit/e5e83b51e28fe585a8cb673f6057529fc623e233))
+
+
+### Features
+
+* **flexcil:** update flexcil patches for version 1.4.4.9 ([86b96a1](https://github.com/AmpleReVanced/revanced-patches/commit/86b96a14ca87b40fe47e5aaa67936964dc3f13e4))
+
+# [1.2.0-dev.12](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.11...v1.2.0-dev.12) (2026-07-22)
+
+
+### Features
+
+* **chzzk:** update chzzk patches for version 3.9.0 ([85a5bc1](https://github.com/AmpleReVanced/revanced-patches/commit/85a5bc1b5a68c6f109192469868cb2cab73316da))
+* **soop:** make native P2P disable resilient across app versions ([91306fe](https://github.com/AmpleReVanced/revanced-patches/commit/91306fe2bd60bcc44ccc279bf0dcd5390e59becd))
+* **soop:** update soop patches for version 8.28.3 ([a7dbfeb](https://github.com/AmpleReVanced/revanced-patches/commit/a7dbfeb0890e97f3d562c93a4e23743909855c88))
+
+# [1.2.0-dev.11](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.10...v1.2.0-dev.11) (2026-07-22)
+
+
+### Features
+
+* **kakaotalk:** update kakaotalk patches for version 26.6.1 ([3607e94](https://github.com/AmpleReVanced/revanced-patches/commit/3607e94970acc53486072ad1321dbae5503ea87d))
+
+# [1.2.0-dev.10](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.9...v1.2.0-dev.10) (2026-07-15)
+
+
+### Bug Fixes
+
+* **kakaotalk:** reduce markdown hook register pressure ([8507317](https://github.com/AmpleReVanced/revanced-patches/commit/85073179028ea8b762934081e0a75d262efaaf38))
+
+
+### Features
+
+* **kakaotalk:** show message read receipts ([57ba8ff](https://github.com/AmpleReVanced/revanced-patches/commit/57ba8ffb9ac9d2f4d403a831f40214b40c3915df))
+* **kakaotalk:** update kakaotalk patches for version 26.6.0 ([62e7798](https://github.com/AmpleReVanced/revanced-patches/commit/62e779833c2c10cc82a41a63f33195fab5d0011e))
+
+# [1.2.0-dev.9](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.8...v1.2.0-dev.9) (2026-07-06)
+
+
+### Features
+
+* **kakaotalk:** open profiles from open chat feed names ([8451262](https://github.com/AmpleReVanced/revanced-patches/commit/8451262806d0de3be4c8360358ae6728d9b14003))
+* **kakaotalk:** update kakaotalk patches for version 26.5.3 ([66574b1](https://github.com/AmpleReVanced/revanced-patches/commit/66574b1cc638b72420419ee4bf91ef49010136bb))
+
+# [1.2.0-dev.8](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.7...v1.2.0-dev.8) (2026-06-27)
+
+
+### Bug Fixes
+
+* **kakaotalk:** avoid hardcoded settings model registers ([4b637ec](https://github.com/AmpleReVanced/revanced-patches/commit/4b637ec41d32ec603fae68e207caf5c15d3d56e6))
+* **kakaotalk:** derive settings tab injection from bytecode ([60d33a4](https://github.com/AmpleReVanced/revanced-patches/commit/60d33a43ebc971927ba32c7a5c7989e6bda5fd16))
+* **settings:** respect host app theme in Morphe settings ([cc72810](https://github.com/AmpleReVanced/revanced-patches/commit/cc72810445f29129580e04988b7cb021c2c06a09))
+* **settings:** resync system bars for preference dialogs ([7de7693](https://github.com/AmpleReVanced/revanced-patches/commit/7de7693a36686b2610d0ca5936b70743ef24d041))
+* **settings:** suppress custom preference lint warnings ([31a80fe](https://github.com/AmpleReVanced/revanced-patches/commit/31a80fe5229d6e8cc586f325c08b2506431b643c))
+* use app-specific locales for string checks ([e0343f4](https://github.com/AmpleReVanced/revanced-patches/commit/e0343f4786509b5ce9750084e52cf5625202532f))
+
+
+### Features
+
+* **dcinside:** update dcinside patches for version 5.2.17 ([425a1fe](https://github.com/AmpleReVanced/revanced-patches/commit/425a1fe612d61229fad0b555d4f7531c56103e51))
+* **kakaotalk:** implement HookInitializer and integrate with Kakao application lifecycle ([5ca31dd](https://github.com/AmpleReVanced/revanced-patches/commit/5ca31dda712b37b82667a6720f402e4c26c4a1ee))
+* **settings:** port Piko-derived preference UI ([17c1ac0](https://github.com/AmpleReVanced/revanced-patches/commit/17c1ac0440eca58db1c9cdb2470320caf4eac29f))
+
+# [1.2.0-dev.7](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.6...v1.2.0-dev.7) (2026-06-20)
+
+### Features
+
+* **dcinside:** restore legacy post icons ([bf61958](https://github.com/AmpleReVanced/revanced-patches/commit/bf619581f646e3d97557c87bb5fb6c6cc671c19f))
+
+# [1.2.0-dev.6](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.5...v1.2.0-dev.6) (2026-06-20)
+
+### Bug Fixes
+
+* **kakaotalk:** resolve edited history sender profile from chat model ([c65c9c2](https://github.com/AmpleReVanced/revanced-patches/commit/c65c9c2132cb100464281c3271254dcdd3339018))
+* **kakaotalk:** respect chat theme in edit history screen ([8b94b3b](https://github.com/AmpleReVanced/revanced-patches/commit/8b94b3b7b821bd9deaac11817ae239a89d226e7b))
+
+### Features
+
+* **kakaotalk:** add edited message history ([0e19d4e](https://github.com/AmpleReVanced/revanced-patches/commit/0e19d4e226e07e32cfd1141de6e5f84fa7cb0566))
+* **kakaotalk:** add edited message history ([#139](https://github.com/AmpleReVanced/revanced-patches/issues/139)) ([ff316fa](https://github.com/AmpleReVanced/revanced-patches/commit/ff316fa7fb8e3cd7a4deb1433192ecaf2bba99d2))
+* **kakaotalk:** show sender profile in edit history ([73af0fa](https://github.com/AmpleReVanced/revanced-patches/commit/73af0fa9ce739a668dc7ba3a9041b0174d83fbf4))
+
+# [1.2.0-dev.5](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.4...v1.2.0-dev.5) (2026-06-19)
+
+### Bug Fixes
+
+* **kakaotalk:** hide More tab service groups reliably ([5acd705](https://github.com/AmpleReVanced/revanced-patches/commit/5acd705c2f5a43085b9c410ef82670008fa950c9))
+* **kakaotalk:** update reaction mention flag patch for 26.5.2 ([1e6e967](https://github.com/AmpleReVanced/revanced-patches/commit/1e6e9672a047213e6f8252fb6377ee898a5f09ad))
+
+### Features
+
+* **dcinside:** hide mini gallery cover image ([4d63d1d](https://github.com/AmpleReVanced/revanced-patches/commit/4d63d1d5508aa325aec7a2cb8b35f16ca629cb40))
+
+# [1.2.0-dev.4](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.3...v1.2.0-dev.4) (2026-06-19)
+
+### Features
+
+* **dcinside:** update dcinside patches for version 5.2.15 ([9f0230c](https://github.com/AmpleReVanced/revanced-patches/commit/9f0230c5ad605c5659e433b315398a6f5b4bd8ae))
+
+# [1.2.0-dev.3](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.2...v1.2.0-dev.3) (2026-06-19)
+
+### Bug Fixes
+
+* **kakaotalk:** install pine native library to correct path ([33c90eb](https://github.com/AmpleReVanced/revanced-patches/commit/33c90eb5262ff7fc711ac17f2c0bf014c29d9546))
+* **kakaotalk:** remove Brand tab from Now tab ([2df6d96](https://github.com/AmpleReVanced/revanced-patches/commit/2df6d965e79bb5ea2a277c085c7e6dd22537ccb1))
+
+### Features
+
+* add project support section ([51fd340](https://github.com/AmpleReVanced/revanced-patches/commit/51fd3405f70f228347b8a5a91cf266fe1f26546f))
+* **kakaotalk:** add More tab component hide options ([311418f](https://github.com/AmpleReVanced/revanced-patches/commit/311418f2a81bf55df53675655272f751af57954e))
+* **kakaotalk:** hide game tab in more tab ([aff2e4b](https://github.com/AmpleReVanced/revanced-patches/commit/aff2e4ba1f19fec106eb5b56537a62160301ab6b))
+* **kakaotalk:** restore packet handler for latest version ([5c78139](https://github.com/AmpleReVanced/revanced-patches/commit/5c781398b5820b522a846ff04a1d7d7eead60d59))
+* **kakaotalk:** update kakaotalk patches for version 26.5.0 ([488c238](https://github.com/AmpleReVanced/revanced-patches/commit/488c2383be48a83ecfe42dbf3360996ed1a86d4b))
+* **kakaotalk:** update kakaotalk patches for version 26.5.2 ([8d8e2f2](https://github.com/AmpleReVanced/revanced-patches/commit/8d8e2f225cd916ee2a6615c5eabd99d738b3d1f0))
+
+# [1.2.0-dev.2](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0-dev.1...v1.2.0-dev.2) (2026-06-13)
+
+### Features
+
+* **soop:** add DisableP2P Patch to disable griding ([5783410](https://github.com/AmpleReVanced/revanced-patches/commit/5783410761e0d571e8575d673a64ae03495343be))
+
+# [1.2.0-dev.1](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0...v1.2.0-dev.1) (2026-06-13)
+
+### Features
+
+* **chzzk:** update chzzk patches for version 3.6.2 ([5de5e27](https://github.com/AmpleReVanced/revanced-patches/commit/5de5e274b92f757746b205da10f82ebfd3c2d794))
+
 # [1.1.0](https://github.com/AmpleReVanced/revanced-patches/compare/v1.0.1...v1.1.0) (2026-06-13)
 
 ### Bug Fixes

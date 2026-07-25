@@ -39,6 +39,13 @@ public final class UserMemoPatch {
     private UserMemoPatch() {
     }
 
+    /**
+     * @return If this patch was included during patching.
+     */
+    public static boolean isPatchIncluded() {
+        return false;  // Modified during patching.
+    }
+
     public static Preset[] getPresets() {
         return PRESETS.clone();
     }

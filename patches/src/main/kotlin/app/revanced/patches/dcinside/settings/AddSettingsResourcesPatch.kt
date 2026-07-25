@@ -23,8 +23,19 @@ internal val addSettingsResourcesPatch = resourcePatch(
         copyResources(
             "settings",
             ResourceGroup(
+                "drawable",
+                "morphe_pref_icon_features.xml",
+                "morphe_pref_icon_home.xml",
+                "morphe_pref_icon_support.xml",
+                "morphe_pref_icon_information.xml",
+                "morphe_pref_icon_debug.xml",
+                "morphe_pref_icon_manage.xml",
+                "morphe_pref_icon_links.xml",
+            ),
+            ResourceGroup(
                 "layout",
                 "morphe_dcinside_settings.xml",
+                "morphe_preference_screen.xml",
             ),
             ResourceGroup(
                 "xml",
@@ -32,8 +43,28 @@ internal val addSettingsResourcesPatch = resourcePatch(
             ),
         )
 
+        addDefaultDcInsideSettingsPreferences()
+
         document("res/layout/fragment_settings.xml").use { document ->
             document.addSettingsShortcut()
+        }
+    }
+
+    finalize {
+        PreferenceScreen.close()
+
+        document("res/xml/morphe_dcinside_settings_preferences.xml").use { document ->
+            val preferenceScreen = document.getElementsByTagName("PreferenceScreen").item(0)
+                ?: throw IllegalStateException("Missing PreferenceScreen root")
+
+            while (preferenceScreen.hasChildNodes()) {
+                preferenceScreen.removeChild(preferenceScreen.firstChild)
+            }
+
+            orderedDcInsideSettingsPreferences().forEach { preference ->
+                preferenceScreen.appendChild(preference.serialize(document) { })
+                preferenceScreen.appendChild(document.createTextNode("\n"))
+            }
         }
     }
 }

@@ -20,7 +20,7 @@ internal object NativeGetSignatureByTypeFingerprint : Fingerprint(
 )
 
 internal object GenerateXAndroidCertFingerprint : Fingerprint(
-    accessFlags = listOf(AccessFlags.PRIVATE, AccessFlags.STATIC, AccessFlags.SYNTHETIC),
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.SYNTHETIC),
     returnType = "V",
     definingClass = "Lcom/dcinside/app/util",
     filters = OpcodesFilter.opcodesToFilters(

@@ -2,7 +2,6 @@ package app.revanced.patches.kakaotalk.chatlog.fingerprints
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.OpcodesFilter
-import app.morphe.patcher.fingerprint
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
@@ -16,7 +15,7 @@ internal object ProcessWatermarkCountFingerprint : Fingerprint(
         Opcode.INVOKE_VIRTUAL,
         Opcode.MOVE_RESULT_OBJECT,
     ),
-   custom = { _, classDef -> classDef.sourceFile == "ChatLogRecyclerItem.kt" }
+    custom = { _, classDef -> classDef.sourceFile == "ChatLogRecyclerItem.kt" }
 )
 
 internal object GetWatermarkCountFromCacheFingerprint : Fingerprint(
@@ -32,5 +31,5 @@ internal object GetWatermarkCountFromCacheFingerprint : Fingerprint(
         Opcode.MOVE_RESULT,
         Opcode.IF_EQZ,
     ),
-   custom = { method, classDef -> classDef.sourceFile == "WatermarksManager.kt" }
+    custom = { _, classDef -> classDef.sourceFile == "WatermarksManager.kt" }
 )

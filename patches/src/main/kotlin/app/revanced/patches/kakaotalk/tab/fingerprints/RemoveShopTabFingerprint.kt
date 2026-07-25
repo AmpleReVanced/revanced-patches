@@ -8,7 +8,6 @@ import com.android.tools.smali.dexlib2.Opcode
 internal object AddNavigationTabFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     returnType = "Ljava/util/List;",
-    parameters = listOf("Lcom/kakao/talk/activity/main/d\$b;"),
     strings = listOf("<get-values>(...)"),
     filters = OpcodesFilter.opcodesToFilters(
         Opcode.NEW_INSTANCE,
@@ -25,5 +24,9 @@ internal object AddNavigationTabFingerprint : Fingerprint(
         Opcode.INVOKE_VIRTUAL,
         Opcode.MOVE_RESULT_OBJECT,
         Opcode.INVOKE_INTERFACE,
-    )
+    ),
+    custom = { _, classDef ->
+        classDef.sourceFile == "MainTabConfig.kt" &&
+                !classDef.type.contains("$")
+    }
 )

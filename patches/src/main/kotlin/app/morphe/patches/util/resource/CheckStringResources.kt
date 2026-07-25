@@ -33,9 +33,10 @@
 
 package app.morphe.patches.util.resource
 
-import app.morphe.patches.all.misc.resources.localesAll
 import app.morphe.patches.util.resource.StringResourceSanitizer.sanitizeAndroidResourceString
 import app.morphe.util.inputStreamFromBundledResource
+import app.revanced.patches.dcinside.shared.localesDcInside
+import app.revanced.patches.kakaotalk.shared.localesKakaoTalk
 import org.w3c.dom.Element
 import org.w3c.dom.Node
 import javax.xml.parsers.DocumentBuilderFactory
@@ -48,11 +49,11 @@ internal fun main(args: Array<String>) {
 
     val exceptions = mutableListOf<Exception>()
 
-    arrayOf(
-        "dcinside",
-        "kakaotalk"
-    ).forEach { appId ->
-        localesAll.forEach { locale ->
+    mapOf(
+        "dcinside" to localesDcInside,
+        "kakaotalk" to localesKakaoTalk
+    ).forEach { (appId, locales) ->
+        locales.forEach { locale ->
             val srcFolderName = locale.getSrcLocaleFolderName()
             val srcSubPath = "$srcFolderName/$appId/strings.xml"
 

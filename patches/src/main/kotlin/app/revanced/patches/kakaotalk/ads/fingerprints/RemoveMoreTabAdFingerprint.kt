@@ -6,29 +6,16 @@ import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
 internal object AddSectionToMoreTabUIFingerprint : Fingerprint(
-    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
-    parameters = listOf("Ljava/lang/Object;"),
-    returnType = "Ljava/lang/Object;",
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.FINAL),
+    returnType = "V",
     strings = listOf(
-        "null cannot be cast to non-null type com.kakao.talk.moretab.ui.model.KakaoPayUiState",
-        "null cannot be cast to non-null type com.kakao.talk.moretab.ui.model.WeatherUiModel",
-        "null cannot be cast to non-null type com.kakao.talk.moretab.ui.model.KakaoNowUiModel",
-        "null cannot be cast to non-null type com.kakao.talk.moretab.ui.model.GridServiceUiModel",
-        "null cannot be cast to non-null type com.kakao.talk.moretab.ui.model.AdBigUiModel",
-        "null cannot be cast to non-null type com.kakao.talk.moretab.ui.model.AdLocalUiModel",
-        "null cannot be cast to non-null type com.kakao.talk.moretab.ui.model.MoreTabConfiguration",
-        "null cannot be cast to non-null type com.kakao.talk.moretab.ui.model.GamePlayUiModel",
-        "null cannot be cast to non-null type kotlin.collections.List<com.kakao.talk.moretab.domain.model.MoreTabFeature>",
-        "call to 'resume' before 'invoke' with coroutine",
+        "2604_vari_A_app",
+        "2604_vari_B_cat",
+        "2604_vari_C_ad",
     ),
-    filters = OpcodesFilter.opcodesToFilters(
-        Opcode.MOVE_OBJECT_FROM16,
-        Opcode.INVOKE_STATIC,
-        Opcode.MOVE_RESULT_OBJECT,
-        Opcode.IGET,
-        Opcode.CONST_4,
-        Opcode.IF_EQZ
-    )
+    custom = { _, classDef ->
+        classDef.sourceFile == "MoreTabViewModel.kt"
+    }
 )
 
 internal object AdBigUIModelFingerprint : Fingerprint(

@@ -5,7 +5,11 @@ import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.util.getReference
+import app.morphe.util.setExtensionIsPatchIncluded
+import app.revanced.patches.dcinside.settings.PreferenceScreen
+import app.revanced.patches.dcinside.settings.addSettingsPatch
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
+import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.ClassDef
 import com.android.tools.smali.dexlib2.iface.Method
@@ -23,9 +27,18 @@ val hideDcOfficialNoticesPatch = bytecodePatch(
     description = "Hides official DCInside operator notices from gallery notice lists.",
 ) {
     compatibleWith(COMPATIBILITY_DC_INSIDE)
-    dependsOn(addExtensionPatch)
+    dependsOn(addSettingsPatch)
 
     execute {
+        PreferenceScreen.FEATURES.addPreferences(
+            SwitchPreference(
+                key = "morphe_pref_hide_official_notices",
+                titleKey = "morphe_settings_hide_official_notices",
+                summary = true,
+            ),
+        )
+        setExtensionIsPatchIncluded(OFFICIAL_NOTICE_EXTENSION_CLASS)
+
         val classDefsByType = mutableMapOf<String, ClassDef>()
         classDefForEach { classDef ->
             classDefsByType[classDef.type] = classDef

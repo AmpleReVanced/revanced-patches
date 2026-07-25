@@ -2,6 +2,7 @@ package app.revanced.patches.kakaotalk.chatlog.fingerprints
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.OpcodesFilter
+import app.morphe.patcher.methodCall
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
@@ -34,9 +35,20 @@ internal object ChatLogViewHolderSetupChatInfoViewFingerprint : Fingerprint(
     custom = { _, classDef -> classDef.sourceFile == "ChatLogViewHolder.kt" }
 )
 
-internal object CheckViewableChatLogFingerprint : Fingerprint(
+internal object ChatLogViewHolderBindProfileFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
-    parameters = listOf("Lcom/kakao/talk/db/model/chatlog/c;"),
+    parameters = emptyList(),
+    returnType = "V",
+    filters = listOf(
+        methodCall("Lcom/kakao/talk/widget/ProfileView;->load(JLjava/lang/String;I)V"),
+        methodCall("Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V"),
+    ),
+    custom = { _, classDef -> classDef.sourceFile == "ChatLogViewHolder.kt" },
+)
+
+internal fun checkViewableChatLogFingerprint(chatLogType: String) = object : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf(chatLogType),
     returnType = "Z",
     filters = OpcodesFilter.opcodesToFilters(
         Opcode.SGET_OBJECT,
@@ -46,10 +58,10 @@ internal object CheckViewableChatLogFingerprint : Fingerprint(
         Opcode.MOVE_RESULT,
         Opcode.RETURN,
     ),
-    custom = { method, classDef ->
+    custom = { _, classDef ->
         classDef.sourceFile == "ChatLogViewHolder.kt"
-    }
-)
+    },
+) {}
 
 internal object ChatLogItemViewHolderFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),

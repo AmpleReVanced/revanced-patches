@@ -7,14 +7,20 @@ import app.morphe.patcher.extensions.InstructionExtensions.removeInstructions
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.util.getFreeRegisterProvider
+import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.GetWatermarkCountFromCacheFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.ProcessWatermarkCountFingerprint
-import app.revanced.patches.kakaotalk.misc.addExtensionPatch
+import app.revanced.patches.kakaotalk.settings.PreferenceScreen
+import app.revanced.patches.kakaotalk.settings.addSettingsTabPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
+import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.TwoRegisterInstruction
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction22t
+
+private const val EXTENSION_CLASS =
+    "Lapp/revanced/extension/kakaotalk/patches/Remove99ClampPatch;"
 
 @Suppress("unused")
 val remove99ClampPatch = bytecodePatch(
@@ -22,9 +28,18 @@ val remove99ClampPatch = bytecodePatch(
     description = "Skip the 99-cap so unread count shows full value"
 ) {
     compatibleWith(COMPATIBILITY_KAKAO)
-    dependsOn(addExtensionPatch)
+    dependsOn(addSettingsTabPatch)
 
     execute {
+        PreferenceScreen.CHAT.addPreferences(
+            SwitchPreference(
+                key = "morphe_pref_disable_99_unread_limit",
+                titleKey = "morphe_settings_patch_disable_99_unread_limit",
+                summary = true,
+            ),
+        )
+        setExtensionIsPatchIncluded(EXTENSION_CLASS)
+
         ProcessWatermarkCountFingerprint.method.apply {
             val clamp = instructions
                 .filterIsInstance<BuilderInstruction22t>()

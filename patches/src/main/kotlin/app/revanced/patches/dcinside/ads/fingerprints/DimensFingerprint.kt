@@ -36,7 +36,7 @@ object ReadFooterAdContainerSetupFingerprint : Fingerprint(
         Opcode.INVOKE_STATIC,
         Opcode.IGET_BOOLEAN,
         Opcode.IF_EQZ,
-        Opcode.RETURN_VOID,
+        Opcode.GOTO,
         Opcode.IGET_OBJECT,
         Opcode.INVOKE_STATIC,
         Opcode.MOVE_RESULT,

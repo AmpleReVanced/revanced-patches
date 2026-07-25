@@ -2,6 +2,7 @@ package app.revanced.patches.kakaotalk.chatroom.fingerprints
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.OpcodesFilter
+import app.morphe.patcher.methodCall
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
@@ -16,17 +17,15 @@ internal object ChatRoomSideInitFingerprint : Fingerprint(
 )
 
 internal object ChatRoomSideTitleItemLambdaFingerprint : Fingerprint(
-    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
-    returnType = "V",
     strings = listOf("\$this\$item"),
-    custom = { method, classDef ->
-        classDef.sourceFile == "ChatRoomSideContent.kt" &&
-            method.parameterTypes.size == 3 &&
-            method.parameterTypes[1].toString() == "Landroidx/compose/runtime/k;" &&
-            method.parameterTypes[2].toString() == "I" &&
-            classDef.fields.any { it.type == "Lkotlin/jvm/functions/Function4;" } &&
-            classDef.fields.any { it.type == "Ljava/lang/String;" }
-    },
+    filters = listOf(
+        methodCall(
+            definingClass = "Lkotlin/jvm/functions/Function4;",
+            name = "invoke",
+            opcode = Opcode.INVOKE_INTERFACE,
+        ),
+    ),
+    custom = { _, classDef -> classDef.sourceFile == "ChatRoomSideContent.kt" },
 )
 
 internal object ChatRoomProfileEditBindFingerprint : Fingerprint(

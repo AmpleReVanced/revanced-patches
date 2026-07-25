@@ -4,14 +4,14 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.1.0](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.1.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;82 patches total
+> **[v1.2.0-dev.20](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.2.0-dev.20)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;99 patches total
 <details open>
-<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;55 patches</summary>
+<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;57 patches</summary>
 <br>
 
 **🎯 Supported versions:**
 
-| 26.4.2 |
+| 26.6.1 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
@@ -48,14 +48,15 @@
 | [Disable verifying signature](#disable-verifying-signature) | Disables the signature verification check that prevents the app from running. |  |
 | [Enable Markdown](#enable-markdown) | Render plain text messages with markdown-style formatting. |  |
 | [Enable reaction mention flag](#enable-reaction-mention-flag) | Enables the reaction mention flag in KakaoTalk chat logs. |  |
-| [Enable recording pause/resume feature](#enable-recording-pause-resume-feature) | Enable recording pause/resume feature in KakaoTalk |  |
 | [Enable send big text](#enable-send-big-text) | Allows sending big text messages in KakaoTalk. |  |
 | [Force enable debug mode](#force-enable-debug-mode) | Enables debug mode in the app. |  |
 | [Force enable emoticon plus feature](#force-enable-emoticon-plus-feature) | Force enable emoticon plus feature (Unpurchased emoticon can be sent once per day) |  |
 | [Ghost Mode](#ghost-mode) | Don't expose your typing status to the other party. |  |
+| [Hide More tab Game tab](#hide-more-tab-game-tab) | Hides the Game tab from the More tab. |  |
+| [Hide More tab components](#hide-more-tab-components) | Adds options to hide components from the More tab. |  |
 | [Hook Package Manager](#hook-package-manager) | Hooks the Package Manager to bypass integrity checks. |  |
+| [Open profile from open chat feed](#open-profile-from-open-chat-feed) | Opens open chat member profiles from join and leave feed messages. |  |
 | [Override feature flag](#override-feature-flag) | Overrides the feature flag to enable the feature. | • Feature flag overrides |
-| [Play YouTube player in chat room](#play-youtube-player-in-chat-room) | Allows playing YouTube videos in KakaoTalk chat rooms. |  |
 | [Register settings activity](#register-settings-activity) | Registers the Morphe settings activity in the app manifest. |  |
 | [Remove BizBoard ads](#remove-bizboard-ads) | Removes the BizBoard ad by forcing its dimensions to 0x0 and visibility to GONE in onMeasure. |  |
 | [Remove More tab ad](#remove-more-tab-ad) | Removes the ad from the More tab. |  |
@@ -66,7 +67,8 @@
 | [Remove native ad](#remove-native-ad) | Removes the native ad from the app. |  |
 | [Remove shop tab](#remove-shop-tab) | Removes the shop tab from the bottom navigation bar. |  |
 | [Show chatroom channel ID](#show-chatroom-channel-id) | Shows the channel ID in chatroom settings and copies it when tapping the chat side title. |  |
-| [Show deleted or hidden messages](#show-deleted-or-hidden-messages) | Allows you to see deleted/hidden messages in chat logs. | • Deleted color<br>• Hidden color |
+| [Show deleted, hidden, or edited messages](#show-deleted-hidden-or-edited-messages) | Allows you to see deleted, hidden, and edited message history in chat logs. | • Deleted color<br>• Hidden color |
+| [Show message read receipts](#show-message-read-receipts) | Shows the members who have or have not read each chat message. |  |
 | [Spoof App ID](#spoof-app-id) | Spoofs the App ID to bypass integrity checks. (to bypass biometric auth etc.) |  |
 | [Spoof apk checksums](#spoof-apk-checksums) | Spoofs the apk checksums to pass integrity checks. |  |
 | [Spoof signature](#spoof-signature) | Spoofs the app signature to pass integrity checks. |  |
@@ -75,12 +77,12 @@
 </details>
 
 <details open>
-<summary>📦 dcinside&nbsp;&nbsp;•&nbsp;&nbsp;20 patches</summary>
+<summary>📦 dcinside&nbsp;&nbsp;•&nbsp;&nbsp;23 patches</summary>
 <br>
 
 **🎯 Supported versions:**
 
-| 5.2.9 |
+| 5.3.0 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
@@ -102,40 +104,71 @@
 | [Hide DC official notices](#hide-dc-official-notices) | Hides official DCInside operator notices from gallery notice lists. |  |
 | [Hide Main Ad](#hide-main-ad) | Hides the main ad in the app. |  |
 | [Hide home components](#hide-home-components) | Adds settings to hide selected DCInside home screen components. |  |
+| [Hide mini gallery cover image](#hide-mini-gallery-cover-image) | Adds a setting to hide the mini gallery cover image above post lists. |  |
 | [Register settings activity](#register-settings-activity) | Registers the Morphe settings activity in the app manifest. |  |
 | [Render big DCCon as normal size](#render-big-dccon-as-normal-size) | Adds a setting to render big DCCon at normal DCCon size. |  |
+| [Restore old post icons](#restore-old-post-icons) | Adds a setting to restore DCInside 4.7.x post list and read footer icons. |  |
+| [Show author identifier](#show-author-identifier) | Adds options to show the author identifier next to the nickname in posts, post lists, and the recently-viewed posts list. The recently-viewed list only shows it for posts opened after this patch is installed. |  |
 | [Spoof Signature](#spoof-signature) | Spoofs the app signature to bypass integrity checks. |  |
 
 </details>
 
 <details open>
-<summary>📦 Chzzk&nbsp;&nbsp;•&nbsp;&nbsp;2 patches</summary>
+<summary>📦 Chzzk&nbsp;&nbsp;•&nbsp;&nbsp;5 patches</summary>
 <br>
 
 **🎯 Supported versions:**
 
-| 3.6.0 |
+| 3.9.0 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
 | [Auto claim TongPow](#auto-claim-tongpow) | Automatically claims CHZZK TongPow rewards when they become available while watching streams. |  |
 | [Disable P2P](#disable-p2p) | Disables CHZZK peer-assisted grid streaming and forces CDN playback. |  |
+| [Disable ads](#disable-ads) | Disables CHZZK advertisements, including live stream pre-roll, mid-roll and post-roll ads and clip feed ads. |  |
+| [Hide home banners](#hide-home-banners) | Hides promotional banners on the CHZZK home recommend tab, including the top banner carousel and the in-feed event and image banners. |  |
+| [Unlock cheat key](#unlock-cheat-key) | Unlocks CHZZK cheat key subscription benefits without an active subscription. |  |
 
 </details>
 
 <details open>
-<summary>📦 Flexcil&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<summary>📦 Flexcil&nbsp;&nbsp;•&nbsp;&nbsp;2 patches</summary>
 <br>
 
 **🎯 Supported versions:**
 
-| 1.4.3.30 |
+| 1.4.4.9 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
+| [Bypass login](#bypass-login) | Skips the mandatory account sign-in on launch and opens the app directly. |  |
 | [Unlock Premium features](#unlock-premium-features) | Enables app features locked behind the subscription paywall. |  |
+
+</details>
+
+<details open>
+<summary>📦 SOOP&nbsp;&nbsp;•&nbsp;&nbsp;10 patches</summary>
+<br>
+
+**🎯 Supported versions:**
+
+| 8.28.3 |
+| :---: |
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Disable P2P](#disable-p2p) | Disables SOOP peer-assisted grid streaming. |  |
+| [Remove Catch ads](#remove-catch-ads) | Removes the ads inserted between clips in the Catch feed by reporting no ad slots. |  |
+| [Remove VOD ads](#remove-vod-ads) | Removes VOD pre-roll ads by reporting every stream as QuickView Plus to the player's own ad-skip check. |  |
+| [Remove banner ads](#remove-banner-ads) | Removes the VOD companion and search banner ads. |  |
+| [Remove exit dialog ad](#remove-exit-dialog-ad) | Removes the ad area shown in the app-exit confirmation dialog, keeping the dialog itself. |  |
+| [Remove intro ads](#remove-intro-ads) | Removes the image, video and cinema intro ad banners shown on launch. |  |
+| [Remove list banner ads](#remove-list-banner-ads) | Removes the native banner ads under the live player and in feeds by stopping their ad request, so no banner is fetched or shown. |  |
+| [Remove live ads](#remove-live-ads) | Removes the live pre-roll ad by routing every ad decision into the app's own no-video path so the stream starts immediately. |  |
+| [Remove live banner ads](#remove-live-banner-ads) | Removes the banner ads shown under the live player by stopping their driver from attaching the banner fragments. |  |
+| [Remove main board ads](#remove-main-board-ads) | Removes the native "main board" banner ad shown in feeds and under the live player. |  |
 
 </details>
 
