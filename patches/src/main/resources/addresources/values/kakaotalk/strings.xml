@@ -58,6 +58,8 @@ Second \"item\" text"</string>
     <string name="morphe_settings_patch_ghost_mode_summary">Prevents typing and activity updates from being sent to the other side.</string>
     <string name="morphe_settings_patch_disable_99_unread_limit">Show full unread count</string>
     <string name="morphe_settings_patch_disable_99_unread_limit_summary">Shows the full unread count instead of limiting the badge to 99+.</string>
+    <string name="morphe_settings_patch_allow_invisible_characters">Allow invisible characters</string>
+    <string name="morphe_settings_patch_allow_invisible_characters_summary">Keeps zero width and other invisible characters instead of stripping them from the chat input and from displayed messages.</string>
     <string name="morphe_settings_patch_open_chat_room_comment_disabled">Disable comments in open chat</string>
     <string name="morphe_settings_patch_open_chat_room_comment_disabled_summary">Uses replies instead of comments in open chat when enabled.</string>
     <string name="morphe_settings_patch_show_modified_message_sender_profile">Show sender profile in edit history</string>
@@ -129,4 +131,5 @@ Second \"item\" text"</string>
     <string name="morphe_pref_hide_more_tab_line_service_section_summary">Hides individual service items from the More tab. Restart KakaoTalk after changing this setting.</string>
     <string name="morphe_pref_enable_send_big_text_summary">Lets you long-press the send button to send a single-line message in large text.</string>
     <string name="morphe_pref_enable_markdown_summary">Sends regular text messages with markdown enabled.</string>
+    <string name="morphe_pref_allow_invisible_characters_summary">Keeps zero width and other invisible characters instead of stripping them from the chat input and from displayed messages.</string>
 </resources>

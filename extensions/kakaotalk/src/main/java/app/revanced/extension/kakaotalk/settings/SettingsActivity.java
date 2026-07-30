@@ -20,6 +20,7 @@ import app.morphe.extension.shared.settings.StringSetting;
 import app.morphe.extension.shared.settings.preference.MorphePreferenceStyle;
 import app.morphe.extension.shared.settings.preference.SettingsActivityLayout;
 import app.morphe.extension.shared.settings.preference.ToolbarPreferenceFragment;
+import app.revanced.extension.kakaotalk.patches.AllowInvisibleCharactersPatch;
 import app.revanced.extension.kakaotalk.patches.BypassMoatCheckPatch;
 import app.revanced.extension.kakaotalk.patches.DefaultExternalBrowserPatch;
 import app.revanced.extension.kakaotalk.patches.DisableOpenChatRoomCommentPatch;
@@ -52,6 +53,7 @@ public final class SettingsActivity extends Activity {
     private static final String PREF_DEFAULT_EXTERNAL_BROWSER = "morphe_pref_default_external_browser";
     private static final String PREF_ENABLE_SEND_BIG_TEXT = "morphe_pref_enable_send_big_text";
     private static final String PREF_ENABLE_MARKDOWN = "morphe_pref_enable_markdown";
+    private static final String PREF_ALLOW_INVISIBLE_CHARACTERS = "morphe_pref_allow_invisible_characters";
     private static final String PREF_OPEN_CHAT_ROOM_COMMENT_DISABLED = "morphe_pref_open_chat_room_comment_disabled";
     private static final String PREF_BYPASS_MOAT_INTEGRITY_CHECK = "morphe_pref_bypass_moat_integrity_check";
     private static final String PREF_FEATURE_FLAG_OVERRIDES = "morphe_pref_feature_flag_overrides";
@@ -139,6 +141,7 @@ public final class SettingsActivity extends Activity {
             bindSwitchIfIncluded(PREF_DEFAULT_EXTERNAL_BROWSER, Settings.DEFAULT_EXTERNAL_BROWSER, DefaultExternalBrowserPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_ENABLE_SEND_BIG_TEXT, Settings.ENABLE_SEND_BIG_TEXT, EnableSendBigTextPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_ENABLE_MARKDOWN, Settings.ENABLE_MARKDOWN, EnableMarkdownPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_ALLOW_INVISIBLE_CHARACTERS, Settings.ALLOW_INVISIBLE_CHARACTERS, AllowInvisibleCharactersPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_OPEN_CHAT_ROOM_COMMENT_DISABLED, Settings.OPEN_CHAT_ROOM_COMMENT_DISABLED, DisableOpenChatRoomCommentPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_SHOW_MODIFIED_MESSAGE_SENDER_PROFILE, Settings.SHOW_MODIFIED_MESSAGE_SENDER_PROFILE, ShowDeletedHiddenOrEditedMessagePatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_SHOW_MESSAGE_READ_RECEIPTS, Settings.SHOW_MESSAGE_READ_RECEIPTS, ShowMessageReadReceiptsPatch.isPatchIncluded());

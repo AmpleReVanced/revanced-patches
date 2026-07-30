@@ -42,6 +42,8 @@
     <string name="morphe_settings_patch_ghost_mode_summary">상대방에게 입력 중 상태나 현재 동작 정보가 전달되지 않도록 합니다.</string>
     <string name="morphe_settings_patch_disable_99_unread_limit">읽지 않은 수 전체 표시</string>
     <string name="morphe_settings_patch_disable_99_unread_limit_summary">읽지 않은 수를 99+로 줄이지 않고 실제 숫자로 표시합니다.</string>
+    <string name="morphe_settings_patch_allow_invisible_characters">투명 문자 허용</string>
+    <string name="morphe_settings_patch_allow_invisible_characters_summary">입력창과 표시되는 메시지에서 폭 없는 공백을 비롯한 투명 문자가 제거되지 않고 그대로 남습니다.</string>
     <string name="morphe_settings_patch_open_chat_room_comment_disabled">오픈채팅에서 댓글 기능 끄기</string>
     <string name="morphe_settings_patch_open_chat_room_comment_disabled_summary">켜면 오픈채팅에서 댓글 대신 답장을 사용합니다.</string>
     <string name="morphe_settings_patch_show_modified_message_sender_profile">수정 이력에 보낸 사람 프로필 표시</string>
@@ -113,4 +115,5 @@
     <string name="morphe_pref_hide_more_tab_line_service_section_summary">더보기 탭에서 개별 서비스 항목을 숨깁니다. 이 설정을 바꾼 뒤에는 카카오톡을 다시 시작해야 합니다.</string>
     <string name="morphe_pref_enable_send_big_text_summary">전송 버튼을 길게 눌러 한 줄 텍스트를 큰 글씨로 보낼 수 있습니다.</string>
     <string name="morphe_pref_enable_markdown_summary">일반 텍스트를 마크다운이 적용된 형태로 전송합니다.</string>
+    <string name="morphe_pref_allow_invisible_characters_summary">입력창과 표시되는 메시지에서 폭 없는 공백을 비롯한 투명 문자가 제거되지 않고 그대로 남습니다.</string>
 </resources>

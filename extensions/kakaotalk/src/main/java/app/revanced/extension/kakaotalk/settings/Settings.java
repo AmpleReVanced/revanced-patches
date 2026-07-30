@@ -56,6 +56,9 @@ public final class Settings extends BaseSettings {
     public static final BooleanSetting ENABLE_MARKDOWN =
             new BooleanSetting("kakaotalk_enable_markdown", false);
 
+    public static final BooleanSetting ALLOW_INVISIBLE_CHARACTERS =
+            new BooleanSetting("kakaotalk_allow_invisible_characters", false);
+
     public static final BooleanSetting OPEN_CHAT_ROOM_COMMENT_DISABLED =
             new BooleanSetting("kakaotalk_open_chat_room_comment_disabled", false);
 
@@ -122,6 +125,10 @@ public final class Settings extends BaseSettings {
 
     public static boolean enableMarkdown() {
         return ENABLE_MARKDOWN.get();
+    }
+
+    public static boolean allowInvisibleCharacters() {
+        return ALLOW_INVISIBLE_CHARACTERS.get();
     }
 
     public static boolean openChatRoomCommentDisabled() {
