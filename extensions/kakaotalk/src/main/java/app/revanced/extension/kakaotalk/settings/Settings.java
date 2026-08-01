@@ -59,6 +59,9 @@ public final class Settings extends BaseSettings {
     public static final BooleanSetting ALLOW_INVISIBLE_CHARACTERS =
             new BooleanSetting("kakaotalk_allow_invisible_characters", false);
 
+    public static final BooleanSetting ALLOW_PROFILE_MEDIA_DOWNLOAD =
+            new BooleanSetting("kakaotalk_allow_profile_media_download", TRUE);
+
     public static final BooleanSetting OPEN_CHAT_ROOM_COMMENT_DISABLED =
             new BooleanSetting("kakaotalk_open_chat_room_comment_disabled", false);
 
@@ -129,6 +132,10 @@ public final class Settings extends BaseSettings {
 
     public static boolean allowInvisibleCharacters() {
         return ALLOW_INVISIBLE_CHARACTERS.get();
+    }
+
+    public static boolean allowProfileMediaDownload() {
+        return ALLOW_PROFILE_MEDIA_DOWNLOAD.get();
     }
 
     public static boolean openChatRoomCommentDisabled() {
