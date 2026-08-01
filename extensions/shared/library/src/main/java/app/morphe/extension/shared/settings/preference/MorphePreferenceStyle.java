@@ -627,14 +627,12 @@ public final class MorphePreferenceStyle {
             int onTrack = dark ? Color.rgb(220, 222, 230) : Color.BLACK;
             int offThumb = dark ? Color.rgb(145, 150, 162) : Color.rgb(108, 114, 123);
             int onThumb = dark ? Color.BLACK : Color.WHITE;
-            int stroke = dark ? Color.rgb(145, 150, 162) : Color.rgb(108, 114, 123);
 
             if (!enabled) {
                 offTrack = dark ? Color.rgb(40, 44, 50) : Color.rgb(238, 239, 242);
                 onTrack = offTrack;
                 offThumb = disabledTextColor(getContext());
                 onThumb = offThumb;
-                stroke = disabledTextColor(getContext());
             }
 
             boolean animating = isAnimating();
@@ -660,6 +658,7 @@ public final class MorphePreferenceStyle {
 
             int trackColor = blend(offTrack, onTrack, colorProgress);
             int thumbColor = blend(offThumb, onThumb, colorProgress);
+            int stroke = blend(offThumb, onTrack, colorProgress);
 
             float strokeWidth = dp(getContext(), 2);
             float radius = getHeight() / 2f;
@@ -669,15 +668,12 @@ public final class MorphePreferenceStyle {
             canvas.drawRoundRect(0, 0, getWidth(), getHeight(), radius, radius, paint);
 
             float strokeProgress;
-            if (dark) {
-                strokeProgress = 1f - colorProgress;
-            } else if (animating) {
+            if (animating) {
                 strokeProgress = smoothStep(clamp01((0.62f - colorProgress) / 0.42f));
             } else {
                 strokeProgress = 1f - progress;
             }
-            float strokeOpacity = dark ? strokeProgress * strokeProgress : strokeProgress;
-            int strokeAlpha = Math.round(Color.alpha(stroke) * strokeOpacity);
+            int strokeAlpha = Math.round(Color.alpha(stroke) * strokeProgress);
             if (strokeAlpha > 0) {
                 paint.setStyle(Paint.Style.STROKE);
                 paint.setStrokeWidth(strokeWidth);
@@ -723,6 +719,32 @@ public final class MorphePreferenceStyle {
             paint.setStyle(Paint.Style.FILL);
             paint.setColor(thumbColor);
             canvas.drawCircle(cx, cy, thumbRadius, paint);
+
+            if (enabled && colorProgress > 0f) {
+                int checkColor = onTrack;
+                paint.setStyle(Paint.Style.STROKE);
+                paint.setStrokeWidth(dp(getContext(), 2));
+                paint.setStrokeCap(Paint.Cap.ROUND);
+                paint.setStrokeJoin(Paint.Join.ROUND);
+                paint.setColor(Color.argb(
+                        Math.round(Color.alpha(checkColor) * colorProgress),
+                        Color.red(checkColor),
+                        Color.green(checkColor),
+                        Color.blue(checkColor)
+                ));
+
+                float checkSize = thumbRadius * 0.82f;
+                float startX = cx - (checkSize * 0.34f);
+                float startY = cy - (checkSize * 0.03f);
+                float midX = cx - (checkSize * 0.09f);
+                float midY = cy + (checkSize * 0.23f);
+                float endX = cx + (checkSize * 0.38f);
+                float endY = cy - (checkSize * 0.27f);
+                canvas.drawLine(startX, startY, midX, midY, paint);
+                canvas.drawLine(midX, midY, endX, endY, paint);
+                paint.setStrokeCap(Paint.Cap.BUTT);
+                paint.setStrokeJoin(Paint.Join.MITER);
+            }
         }
 
         private float lerp(float from, float to, float amount) {
