@@ -3,15 +3,17 @@ package app.revanced.patches.kakaotalk.profile
 import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
-import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patches.all.misc.resources.ResourceType
 import app.morphe.patches.all.misc.resources.getResourceId
 import app.morphe.patches.all.misc.resources.resourceMappingPatch
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
+import app.morphe.util.findInstructionIndicesReversedOrThrow
 import app.morphe.util.getFreeRegisterProvider
 import app.morphe.util.getReference
+import app.morphe.util.indexOfFirstInstructionOrThrow
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.kakaotalk.settings.PreferenceScreen
 import app.revanced.patches.kakaotalk.settings.addSettingsTabPatch
@@ -44,18 +46,15 @@ val allowProfileMediaDownloadPatch = bytecodePatch(
 
         val screen = ProfileMediaViewerScreenFingerprint
 
-        val iconButtonReference = screen.method.instructions
-            .drop(screen.instructionMatches.first().index)
-            .mapNotNull { instruction ->
-                if (instruction.opcode != Opcode.INVOKE_STATIC &&
-                    instruction.opcode != Opcode.INVOKE_STATIC_RANGE
-                ) {
-                    return@mapNotNull null
-                }
-                instruction.getReference<MethodReference>()
+        val iconButtonReference = screen.method.run {
+            val iconButtonIndex = indexOfFirstInstructionOrThrow(screen.instructionMatches.first().index) {
+                (opcode == Opcode.INVOKE_STATIC || opcode == Opcode.INVOKE_STATIC_RANGE) &&
+                        getReference<MethodReference>()?.let {
+                            it.returnType == "V" && it.parameterTypes.firstOrNull() == "I"
+                        } == true
             }
-            .firstOrNull { it.returnType == "V" && it.parameterTypes.firstOrNull() == "I" }
-            ?: throw PatchException("Could not find the profile edit icon button call")
+            getInstruction(iconButtonIndex).getReference<MethodReference>()!!
+        }
 
         val editButtonLabelId = getResourceId(ResourceType.STRING, PROFILE_EDIT_BUTTON_LABEL)
 
@@ -102,16 +101,9 @@ val allowProfileMediaDownloadPatch = bytecodePatch(
         // The mini profile image viewer is a separate screen without such an action bar, and its
         // onCreate returns separately for video and for image profiles.
         ProfileItemDetailOnCreateFingerprint.method.apply {
-            val returnIndices = instructions.withIndex()
-                .filter { it.value.opcode == Opcode.RETURN_VOID }
-                .map { it.index }
-            if (returnIndices.isEmpty()) {
-                throw PatchException("Profile item detail onCreate has no return")
-            }
-
-            returnIndices.reversed().forEach { index ->
+            findInstructionIndicesReversedOrThrow(Opcode.RETURN_VOID).forEach { returnIndex ->
                 addInstruction(
-                    index,
+                    returnIndex,
                     "invoke-static { p0 }, $EXTENSION_CLASS->setUpProfileItemDetailDownload(Landroid/app/Activity;)V"
                 )
             }
