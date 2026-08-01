@@ -139,4 +139,9 @@ Second \"item\" text"</string>
     <string name="morphe_kakaotalk_profile_media_download_saved">Profile media saved</string>
     <string name="morphe_kakaotalk_profile_media_download_failed">Could not save the profile media</string>
     <string name="morphe_kakaotalk_profile_media_download_save">Save</string>
+    <string name="morphe_settings_export">Back up settings</string>
+    <string name="morphe_settings_export_summary">Writes the Morphe settings to a file so they survive patching the app again.</string>
+    <string name="morphe_settings_import">Restore settings</string>
+    <string name="morphe_settings_import_summary">Reads the Morphe settings back from a file.</string>
+    <string name="morphe_settings_import_failed">Could not restore the settings</string>
 </resources>

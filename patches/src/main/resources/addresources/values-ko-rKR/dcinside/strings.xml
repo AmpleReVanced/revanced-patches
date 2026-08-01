@@ -90,4 +90,12 @@
     <string name="morphe_pref_debug_summary">Morphe 패치의 추가 진단 로그를 기록합니다.</string>
     <string name="morphe_pref_debug_stacktrace_summary">오류 보고에 전체 스택 트레이스를 함께 표시합니다.</string>
     <string name="morphe_pref_debug_toast_summary">확장에서 오류를 잡았을 때 화면에 토스트를 표시합니다.</string>
+    <string name="morphe_settings_export">설정 백업</string>
+    <string name="morphe_settings_export_summary">Morphe 설정을 파일로 저장해, 앱을 다시 패치해도 남도록 합니다.</string>
+    <string name="morphe_settings_import">설정 복원</string>
+    <string name="morphe_settings_import_summary">파일에서 Morphe 설정을 다시 불러옵니다.</string>
+    <string name="morphe_settings_import_failed">설정을 복원하지 못했습니다</string>
+    <string name="morphe_settings_restart_required_title">다시 시작 필요</string>
+    <string name="morphe_settings_restart_required">이 설정을 적용하려면 앱을 다시 시작해야 합니다.</string>
+    <string name="morphe_settings_restart_required_restart">다시 시작</string>
 </resources>

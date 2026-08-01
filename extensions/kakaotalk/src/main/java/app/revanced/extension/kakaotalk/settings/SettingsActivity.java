@@ -67,6 +67,8 @@ public final class SettingsActivity extends Activity {
     private static final String PREF_PATCHES_VERSION = "morphe_pref_patches_version";
     private static final String PREF_PACKAGE_NAME = "morphe_pref_package_name";
     private static final String PREF_RESET = "morphe_pref_reset";
+    private static final String PREF_EXPORT_SETTINGS = "morphe_pref_export_settings";
+    private static final String PREF_IMPORT_SETTINGS = "morphe_pref_import_settings";
     private static final String MESSAGE_RESTART_REQUIRED_TITLE = "morphe_settings_restart_required_title";
     private static final String MESSAGE_RESTART_REQUIRED = "morphe_settings_restart_required";
     private static final String MESSAGE_RESTART_REQUIRED_RESTART = "morphe_settings_restart_required_restart";
@@ -158,6 +160,7 @@ public final class SettingsActivity extends Activity {
             bindInfoPreference(PREF_APP_VERSION, Utils.getAppVersionName());
             bindInfoPreference(PREF_PATCHES_VERSION, Utils.getPatchesReleaseVersion());
             bindInfoPreference(PREF_PACKAGE_NAME, requireActivity().getPackageName());
+            bindBackupPreferences();
             bindResetPreference();
             removeEmptyPreferenceGroups();
             setPreferenceScreenToolbar(getPreferenceScreen());
@@ -242,25 +245,9 @@ public final class SettingsActivity extends Activity {
         }
 
         private void maybeShowRestartRequiredNotice(String key) {
-            if (!RESTART_SENSITIVE_PREFERENCES.contains(key)) {
-                return;
+            if (RESTART_SENSITIVE_PREFERENCES.contains(key)) {
+                showRestartRequiredDialog();
             }
-
-            new AlertDialog.Builder(requireActivity())
-                    .setTitle(resString(
-                            MESSAGE_RESTART_REQUIRED_TITLE,
-                            "Restart required"
-                    ))
-                    .setMessage(resString(
-                            MESSAGE_RESTART_REQUIRED,
-                            "Restart is required to apply this setting."
-                    ))
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .setPositiveButton(resString(
-                            MESSAGE_RESTART_REQUIRED_RESTART,
-                            "Restart"
-                    ), (dialog, which) -> Utils.restartApp(requireActivity()))
-                    .show();
         }
 
         private void showMoatBypassConfirmation(String key, BooleanSetting setting) {
@@ -290,6 +277,36 @@ public final class SettingsActivity extends Activity {
             preference.setPersistent(false);
             preference.setSelectable(false);
             preference.setSummary(normalizeSummary(summary));
+        }
+
+        private void bindBackupPreferences() {
+            requirePreference(PREF_EXPORT_SETTINGS, Preference.class)
+                    .setOnPreferenceClickListener(preference -> {
+                        exportSettings();
+                        return true;
+                    });
+            requirePreference(PREF_IMPORT_SETTINGS, Preference.class)
+                    .setOnPreferenceClickListener(preference -> {
+                        importSettings();
+                        return true;
+                    });
+        }
+
+        @Override
+        protected void onSettingsImported(boolean restartNeeded) {
+            refreshPreferences();
+            if (restartNeeded) {
+                showRestartRequiredDialog();
+            }
+        }
+
+        private void showRestartRequiredDialog() {
+            showRestartDialog(
+                    requireActivity(),
+                    resString(MESSAGE_RESTART_REQUIRED_TITLE, "Restart required"),
+                    resString(MESSAGE_RESTART_REQUIRED, "Restart the app to apply this setting."),
+                    resString(MESSAGE_RESTART_REQUIRED_RESTART, "Restart")
+            );
         }
 
         private void bindResetPreference() {

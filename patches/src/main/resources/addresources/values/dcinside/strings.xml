@@ -90,4 +90,12 @@
     <string name="morphe_pref_debug_summary">Writes additional diagnostic logs for Morphe patches.</string>
     <string name="morphe_pref_debug_stacktrace_summary">Includes full stack traces in error reports.</string>
     <string name="morphe_pref_debug_toast_summary">Shows an on-screen toast when the extension catches an error.</string>
+    <string name="morphe_settings_export">Back up settings</string>
+    <string name="morphe_settings_export_summary">Writes the Morphe settings to a file so they survive patching the app again.</string>
+    <string name="morphe_settings_import">Restore settings</string>
+    <string name="morphe_settings_import_summary">Reads the Morphe settings back from a file.</string>
+    <string name="morphe_settings_import_failed">Could not restore the settings</string>
+    <string name="morphe_settings_restart_required_title">Restart required</string>
+    <string name="morphe_settings_restart_required">Restart the app to apply this setting.</string>
+    <string name="morphe_settings_restart_required_restart">Restart</string>
 </resources>

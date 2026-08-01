@@ -123,4 +123,9 @@
     <string name="morphe_kakaotalk_profile_media_download_saved">프로필 사진을 저장했습니다</string>
     <string name="morphe_kakaotalk_profile_media_download_failed">프로필 사진을 저장하지 못했습니다</string>
     <string name="morphe_kakaotalk_profile_media_download_save">저장</string>
+    <string name="morphe_settings_export">설정 백업</string>
+    <string name="morphe_settings_export_summary">Morphe 설정을 파일로 저장해, 앱을 다시 패치해도 남도록 합니다.</string>
+    <string name="morphe_settings_import">설정 복원</string>
+    <string name="morphe_settings_import_summary">파일에서 Morphe 설정을 다시 불러옵니다.</string>
+    <string name="morphe_settings_import_failed">설정을 복원하지 못했습니다</string>
 </resources>
