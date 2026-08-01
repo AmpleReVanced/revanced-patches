@@ -1,3 +1,15 @@
+# [1.3.0-dev.2](https://github.com/AmpleReVanced/revanced-patches/compare/v1.3.0-dev.1...v1.3.0-dev.2) (2026-08-01)
+
+
+### Bug Fixes
+
+* **kakaotalk:** allow swiping feed messages while comments are enabled ([8ec8bd0](https://github.com/AmpleReVanced/revanced-patches/commit/8ec8bd052d4f498b8bbd155d5d723670ff795ed7))
+
+
+### Features
+
+* **dcinside:** show author identifier in comments ([4bee018](https://github.com/AmpleReVanced/revanced-patches/commit/4bee018f51ee2843593967192683f7aedacdb0c0))
+
 # [1.3.0-dev.1](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0...v1.3.0-dev.1) (2026-08-01)
 
 
