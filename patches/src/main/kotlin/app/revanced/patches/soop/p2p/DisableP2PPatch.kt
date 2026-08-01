@@ -18,10 +18,12 @@ private const val P2P_DISABLED_SDK_CONFIG =
     """{"HLS_ENGINE_V2_ANDROID_OFF":true,"LL_ANDROID_OFF":true,"LL_HLS_OFF":true}"""
 
 private val disableNativeP2PPatch = nativePatch(COMPATIBILITY_SOOP) {
-    // _ParentConnect: force the P2P-vs-direct branch to direct. `????` = version-volatile bytes.
     file("lib/arm64-v8a/libstreamer.so") {
+        // Load of the parent descriptor's skip field, followed by the sign-bit test that picks
+        // the P2P peer over a direct server connection. Forcing the branch always picks direct.
         forceBranch(
-            fingerprint = "690a40b9 ???????? 1f2003d5 ???????? 08011e32 e00316aa e1058052 220f8052",
+            symbol = "_ZN9AfreecaTV7Service14_ParentConnectEPv",
+            fingerprint = "690a40b9 ????????",
             offset = 4,
         )
     }
