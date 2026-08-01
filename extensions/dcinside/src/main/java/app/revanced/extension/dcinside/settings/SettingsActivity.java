@@ -47,6 +47,8 @@ public final class SettingsActivity extends Activity {
             "morphe_pref_show_post_history_author_identifier";
     private static final String PREF_SHOW_POST_AUTHOR_IDENTIFIER =
             "morphe_pref_show_post_author_identifier";
+    private static final String PREF_SHOW_COMMENT_AUTHOR_IDENTIFIER =
+            "morphe_pref_show_comment_author_identifier";
     private static final String PREF_HIDE_HOME_SEARCH_MENU = "morphe_pref_hide_home_search_menu";
     private static final String PREF_HIDE_HOME_RECENT_GALLERIES = "morphe_pref_hide_home_recent_galleries";
     private static final String PREF_HIDE_HOME_RECOMMENDED_GALLERIES = "morphe_pref_hide_home_recommended_galleries";
@@ -154,6 +156,7 @@ public final class SettingsActivity extends Activity {
             bindSwitchIfIncluded(PREF_HIDE_MINI_GALLERY_COVER_IMAGE, Settings.HIDE_MINI_GALLERY_COVER_IMAGE, HideMiniGalleryCoverImagePatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_RESTORE_LEGACY_POST_ICONS, Settings.RESTORE_LEGACY_POST_ICONS, RestoreOldPostIconsPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_SHOW_POST_AUTHOR_IDENTIFIER, Settings.SHOW_POST_AUTHOR_IDENTIFIER, AuthorIdentifierPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_SHOW_COMMENT_AUTHOR_IDENTIFIER, Settings.SHOW_COMMENT_AUTHOR_IDENTIFIER, AuthorIdentifierPatch.isCommentPatchIncluded());
             bindSwitchIfIncluded(PREF_SHOW_POST_HISTORY_AUTHOR_IDENTIFIER, Settings.SHOW_POST_HISTORY_AUTHOR_IDENTIFIER, AuthorIdentifierPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_HIDE_HOME_SEARCH_MENU, Settings.HIDE_HOME_SEARCH_MENU, HomeComponentsPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_HIDE_HOME_RECENT_GALLERIES, Settings.HIDE_HOME_RECENT_GALLERIES, HomeComponentsPatch.isPatchIncluded());

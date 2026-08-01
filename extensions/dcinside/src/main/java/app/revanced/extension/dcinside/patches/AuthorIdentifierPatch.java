@@ -1,5 +1,7 @@
 package app.revanced.extension.dcinside.patches;
 
+import android.text.SpannableStringBuilder;
+
 import androidx.annotation.Nullable;
 
 import app.revanced.extension.dcinside.settings.Settings;
@@ -15,6 +17,13 @@ public final class AuthorIdentifierPatch {
     }
 
     public static boolean isPatchIncluded() {
+        return false;  // Modified during patching.
+    }
+
+    /**
+     * Only the comment surfaces, which are patched independently of the post surfaces.
+     */
+    public static boolean isCommentPatchIncluded() {
         return false;  // Modified during patching.
     }
 
@@ -48,6 +57,36 @@ public final class AuthorIdentifierPatch {
         }
 
         return nickname + " (" + userId.trim() + ")";
+    }
+
+    /**
+     * The comment list already shows the IP of anonymous authors, so only the
+     * identifier of logged in authors is added.
+     */
+    @Nullable
+    public static CharSequence formatCommentAuthorLine(
+            @Nullable CharSequence authorLine,
+            @Nullable Object comment
+    ) {
+        if (authorLine == null || comment == null || !Settings.showCommentAuthorIdentifier()) {
+            return authorLine;
+        }
+
+        String userId = getCommentUserId(comment);
+        if (userId == null || userId.trim().isEmpty()) {
+            return authorLine;
+        }
+
+        // Copied instead of appended in place, as the capture screen builds an immutable Spannable.
+        return new SpannableStringBuilder(authorLine)
+                .append(" (")
+                .append(userId.trim())
+                .append(")");
+    }
+
+    @Nullable
+    private static String getCommentUserId(Object comment) {
+        return null;  // Modified during patching.
     }
 
     public static String formatAuthorName(@Nullable String storedName) {

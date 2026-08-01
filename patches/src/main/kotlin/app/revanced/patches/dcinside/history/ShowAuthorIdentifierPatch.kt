@@ -4,14 +4,18 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.methodCall
+import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import app.morphe.util.getFreeRegisterProvider
 import app.morphe.util.getMutableMethod
 import app.morphe.util.getReference
+import app.morphe.util.indexOfFirstInstruction
 import app.morphe.util.indexOfFirstInstructionOrThrow
 import app.morphe.util.matchAllMethodIndicesForEach
+import app.morphe.util.matchSingle
+import app.morphe.util.returnEarly
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.dcinside.misc.addExtensionPatch
 import app.revanced.patches.dcinside.settings.PreferenceScreen
@@ -28,16 +32,16 @@ import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.value.StringEncodedValue
+import java.util.logging.Logger
 
-private const val EXTENSION_CLASS =
-    "Lapp/revanced/extension/dcinside/patches/AuthorIdentifierPatch;"
+private const val loggerName = "app.revanced.patches.dcinside.history.ShowAuthorIdentifierPatch"
 
 @Suppress("unused")
 val showAuthorIdentifierPatch = bytecodePatch(
     name = "Show author identifier",
     description = "Adds options to show the author identifier next to the nickname in posts, " +
-        "post lists, and the recently-viewed posts list. The recently-viewed list only shows it " +
-        "for posts opened after this patch is installed.",
+        "post lists, comments, and the recently-viewed posts list. The recently-viewed list only " +
+        "shows it for posts opened after this patch is installed.",
 ) {
     compatibleWith(COMPATIBILITY_DC_INSIDE)
     dependsOn(addExtensionPatch, addSettingsPatch)
@@ -47,6 +51,11 @@ val showAuthorIdentifierPatch = bytecodePatch(
             SwitchPreference(
                 key = "morphe_pref_show_post_author_identifier",
                 titleKey = "morphe_settings_show_post_author_identifier",
+                summary = true,
+            ),
+            SwitchPreference(
+                key = "morphe_pref_show_comment_author_identifier",
+                titleKey = "morphe_settings_show_comment_author_identifier",
                 summary = true,
             ),
             SwitchPreference(
@@ -107,6 +116,16 @@ val showAuthorIdentifierPatch = bytecodePatch(
                     )
                 }
             }
+        }
+
+        // Isolated, so that a comment side app change cannot drop the post identifiers as well.
+        // On failure the comment preference stays hidden instead of becoming a dead toggle.
+        try {
+            addCommentAuthorIdentifier()
+        } catch (exception: Exception) {
+            Logger.getLogger(loggerName).warning(
+                "Could not show the author identifier in comments: $exception",
+            )
         }
 
         // PostHistory has no spare column for the identifier and adding one requires
@@ -197,6 +216,100 @@ val showAuthorIdentifierPatch = bytecodePatch(
                 """.trimIndent(),
             )
         }
+    }
+}
+
+private fun BytecodePatchContext.addCommentAuthorIdentifier() {
+    // Matched exhaustively, as the signature is what identifies the builder and a second
+    // method of the same shape must not silently decide the type the bridge casts to.
+    val commentAuthorLine = CommentAuthorLineFingerprint.matchSingle().originalMethod
+    val commentType = commentAuthorLine.parameterTypes.first().toString()
+    val commentModel = classDefBy(commentType)
+    val commentUserIdGetter = commentModel.gettersOf("user_id").first()
+
+    fun formatAuthorLine(authorLineRegister: Int, commentRegister: Int) =
+        """
+            invoke-static {v$authorLineRegister, v$commentRegister}, $EXTENSION_CLASS->formatCommentAuthorLine(Ljava/lang/CharSequence;Ljava/lang/Object;)Ljava/lang/CharSequence;
+            move-result-object v$authorLineRegister
+        """.trimIndent()
+
+    var authorLineCallSites = 0
+    val injections = mutableListOf<() -> Unit>()
+    methodCall(commentAuthorLine).matchAllMethodIndicesForEach { index ->
+        authorLineCallSites++
+        if (getInstruction(index + 1).opcode != Opcode.MOVE_RESULT_OBJECT) {
+            return@matchAllMethodIndicesForEach
+        }
+
+        val smaliInstructions = formatAuthorLine(
+            getInstruction<OneRegisterInstruction>(index + 1).registerA,
+            getInstruction<FiveRegisterInstruction>(index).registerD,
+        )
+        injections += { addInstructions(index + 2, smaliInstructions) }
+    }
+
+    if (injections.size != authorLineCallSites) {
+        throw PatchException(
+            "Only ${injections.size} of $authorLineCallSites comment author line call sites are patchable",
+        )
+    }
+
+    CommentUserIdBridgeFingerprint.method.addInstructions(
+        0,
+        """
+            check-cast p0, $commentType
+            invoke-virtual {p0}, ${commentUserIdGetter.smaliReference}
+            move-result-object p0
+            return-object p0
+        """.trimIndent(),
+    )
+    injections.forEach { injection -> injection() }
+    CommentPatchIncludedFingerprint.method.returnEarly(true)
+
+    // The capture screen builds the author line itself instead of calling the builder.
+    var patchedCaptures = 0
+    commentModel.gettersOf("name").forEach { nicknameGetter ->
+        methodCall(
+            definingClass = commentType,
+            name = nicknameGetter.name,
+            parameters = emptyList(),
+            returnType = "Ljava/lang/String;",
+        ).matchAllMethodIndicesForEach(requireMatches = false) { index ->
+            val spannableIndex = indexOfFirstInstruction(
+                index,
+                methodCall(returnType = "Landroid/text/Spannable;"),
+            )
+            if (spannableIndex < 0 ||
+                getInstruction(spannableIndex + 1).opcode != Opcode.MOVE_RESULT_OBJECT
+            ) {
+                return@matchAllMethodIndicesForEach
+            }
+
+            val authorLineRegister =
+                getInstruction<OneRegisterInstruction>(spannableIndex + 1).registerA
+            val consumer = getInstruction(spannableIndex + 2)
+            if (consumer.getReference<MethodReference>()?.name != "setText" ||
+                (consumer as? FiveRegisterInstruction)?.registerD != authorLineRegister
+            ) {
+                return@matchAllMethodIndicesForEach
+            }
+
+            addInstructions(
+                spannableIndex + 2,
+                formatAuthorLine(
+                    authorLineRegister,
+                    getInstruction<FiveRegisterInstruction>(index).registerC,
+                ),
+            )
+            patchedCaptures++
+        }
+    }
+
+    if (patchedCaptures == 0) {
+        Logger.getLogger(loggerName).warning(
+            "Could not patch the captured comment author line, " +
+                "the author identifier will not be shown in comment captures.",
+        )
     }
 }
 
