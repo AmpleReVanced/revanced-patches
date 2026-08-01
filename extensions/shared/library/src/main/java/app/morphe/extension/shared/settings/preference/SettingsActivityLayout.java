@@ -59,8 +59,8 @@ public final class SettingsActivityLayout {
         toolbar.setOrientation(LinearLayout.HORIZONTAL);
         toolbar.setGravity(Gravity.CENTER_VERTICAL);
         toolbar.setBackgroundColor(backgroundColor);
-        int toolbarPadding = dp(activity, 15);
-        toolbar.setPadding(toolbarPadding, dp(activity, 10), toolbarPadding, dp(activity, 8));
+        int toolbarPadding = MorphePreferenceStyle.dp(activity, 15);
+        toolbar.setPadding(toolbarPadding, MorphePreferenceStyle.dp(activity, 10), toolbarPadding, MorphePreferenceStyle.dp(activity, 8));
 
         toolbar.addView(createBackArrowView(activity, view -> activity.finish()));
         toolbar.addView(createToolbarTitle(activity, title, foregroundColor));
@@ -85,7 +85,7 @@ public final class SettingsActivityLayout {
     }
 
     static int resolveToolbarHeight(Context context) {
-        return dp(context, 70);
+        return MorphePreferenceStyle.dp(context, 70);
     }
 
     static int resolveBackgroundColor(Context context) {
@@ -98,7 +98,7 @@ public final class SettingsActivityLayout {
 
     static View createBackArrowView(Context context, View.OnClickListener onClickListener) {
         BackArrowView back = new BackArrowView(context);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(dp(context, 44), dp(context, 44));
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(MorphePreferenceStyle.dp(context, 44), MorphePreferenceStyle.dp(context, 44));
         params.gravity = Gravity.CENTER_VERTICAL;
         back.setLayoutParams(params);
         back.setOnClickListener(onClickListener);
@@ -130,7 +130,7 @@ public final class SettingsActivityLayout {
                 1.0f
         );
         titleParams.gravity = Gravity.CENTER_VERTICAL;
-        titleParams.leftMargin = dp(context, 7);
+        titleParams.leftMargin = MorphePreferenceStyle.dp(context, 7);
         titleTextView.setLayoutParams(titleParams);
         return titleTextView;
     }
@@ -209,14 +209,6 @@ public final class SettingsActivityLayout {
         return luminance >= 186;
     }
 
-    private static int dp(Context context, float value) {
-        return (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                value,
-                context.getResources().getDisplayMetrics()
-        );
-    }
-
     private static final class BackArrowView extends View {
         private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
@@ -229,13 +221,13 @@ public final class SettingsActivityLayout {
             super.onDraw(canvas);
 
             float centerY = getHeight() / 2f;
-            float tipX = dp(getContext(), 2);
-            float endX = dp(getContext(), 21);
-            float headEndX = dp(getContext(), 10);
-            float headOffset = dp(getContext(), 7);
+            float tipX = MorphePreferenceStyle.dp(getContext(), 2);
+            float endX = MorphePreferenceStyle.dp(getContext(), 21);
+            float headEndX = MorphePreferenceStyle.dp(getContext(), 10);
+            float headOffset = MorphePreferenceStyle.dp(getContext(), 7);
 
             paint.setStyle(Paint.Style.STROKE);
-            paint.setStrokeWidth(dp(getContext(), 1.9f));
+            paint.setStrokeWidth(MorphePreferenceStyle.dp(getContext(), 1.9f));
             paint.setStrokeCap(Paint.Cap.ROUND);
             paint.setStrokeJoin(Paint.Join.ROUND);
             paint.setColor(MorphePreferenceStyle.primaryTextColor(getContext()));

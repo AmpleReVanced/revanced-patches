@@ -182,7 +182,7 @@ public abstract class AbstractPreferenceFragment extends PreferenceFragment {
         }
     }
 
-    private static ListView findListView(View view) {
+    static ListView findListView(View view) {
         if (view instanceof ListView) {
             return (ListView) view;
         }
@@ -190,6 +190,18 @@ public abstract class AbstractPreferenceFragment extends PreferenceFragment {
         View list = view.findViewById(android.R.id.list);
         if (list instanceof ListView) {
             return (ListView) list;
+        }
+
+        if (!(view instanceof ViewGroup)) {
+            return null;
+        }
+
+        ViewGroup viewGroup = (ViewGroup) view;
+        for (int i = 0, count = viewGroup.getChildCount(); i < count; i++) {
+            ListView listView = findListView(viewGroup.getChildAt(i));
+            if (listView != null) {
+                return listView;
+            }
         }
 
         return null;

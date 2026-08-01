@@ -39,7 +39,6 @@ public final class MorphePreferenceStyle {
     private static final String TAG_TRAILING = "morphe_pref_trailing";
     private static ThemeModeProvider themeModeProvider;
 
-    public static final int TRAILING_NONE = 0;
     public static final int TRAILING_SWITCH = 1;
     public static final int TRAILING_CHEVRON = 2;
 
@@ -90,10 +89,6 @@ public final class MorphePreferenceStyle {
         return isDark(context) ? Color.rgb(245, 245, 245) : Color.rgb(9, 12, 16);
     }
 
-    public static int primaryIconColor(Context context) {
-        return primaryTextColor(context);
-    }
-
     public static int secondaryTextColor(Context context) {
         return isDark(context) ? Color.rgb(166, 169, 176) : Color.rgb(104, 107, 115);
     }
@@ -103,18 +98,14 @@ public final class MorphePreferenceStyle {
     }
 
     public static View createPreferenceView(Context context, int trailingType) {
-        return createPreferenceView(context, trailingType, null);
-    }
-
-    public static View createPreferenceView(Context context, int trailingType, String iconResName) {
-        return createPreferenceView(context, trailingType, iconResName != null, iconResName);
+        return createPreferenceView(context, trailingType, false);
     }
 
     public static View createPreferenceViewWithIconSlot(Context context, int trailingType) {
-        return createPreferenceView(context, trailingType, true, null);
+        return createPreferenceView(context, trailingType, true);
     }
 
-    private static View createPreferenceView(Context context, int trailingType, boolean includeIconSlot, String iconResName) {
+    private static View createPreferenceView(Context context, int trailingType, boolean includeIconSlot) {
         PreferenceRow row = new PreferenceRow(context, trailingType);
         row.setOrientation(trailingType == TRAILING_SWITCH ? LinearLayout.VERTICAL : LinearLayout.HORIZONTAL);
         row.setGravity(Gravity.CENTER_VERTICAL);
@@ -127,7 +118,7 @@ public final class MorphePreferenceStyle {
         ));
 
         if (includeIconSlot) {
-            row.setIcon(iconResName);
+            row.addIconSlot();
         }
 
         if (trailingType == TRAILING_SWITCH) {
@@ -334,44 +325,26 @@ public final class MorphePreferenceStyle {
         private boolean switchClickAllowed = true;
         private boolean drawPressedHighlight;
         private boolean switchAccessibilityChecked;
-        private ImageView iconView;
-
 
         PreferenceRow(Context context, int trailingType) {
-            this(context, trailingType, null);
-        }
-
-        PreferenceRow(Context context, int trailingType, String iconResName) {
             super(context);
             this.trailingType = trailingType;
-            setOrientation(LinearLayout.HORIZONTAL);
-            setGravity(Gravity.CENTER_VERTICAL);
             setWillNotDraw(false);
         }
 
-        private void initIconView(Context context, String iconResName) {
-            iconView = new ImageView(context);
+        void addIconSlot() {
+            Context context = getContext();
+            ImageView iconView = new ImageView(context);
             iconView.setId(android.R.id.icon);
+            iconView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            iconView.setVisibility(View.GONE);
+            applyIconTint(iconView);
 
             int iconSize = dp(context, 24);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(iconSize, iconSize);
-
             params.setMarginStart(dp(context, 16));
             params.setMarginEnd(dp(context, 16));
-            iconView.setLayoutParams(params);
-
-            if (iconResName == null) {
-                iconView.setVisibility(View.GONE);
-                applyIconTint(iconView);
-            } else {
-                setThemedIcon(iconView, iconResName);
-            }
-            iconView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            addView(iconView, 0);
-        }
-
-        void setIcon(String iconResName) {
-            initIconView(getContext(), iconResName);
+            addView(iconView, 0, params);
         }
 
         void setHighlightView(View highlightView) {
@@ -511,26 +484,9 @@ public final class MorphePreferenceStyle {
         return null;
     }
 
-    private static void setThemedIcon(ImageView imageView, String drawableName) {
-        Context context = imageView.getContext();
-        applyIconTint(imageView);
-
-        int drawableId = context.getResources().getIdentifier(drawableName, "drawable", context.getPackageName());
-        if (drawableId == 0) {
-            return;
-        }
-
-        Drawable drawable = context.getDrawable(drawableId);
-        if (drawable == null) {
-            return;
-        }
-
-        imageView.setImageDrawable(drawable);
-    }
-
     private static void applyIconTint(ImageView imageView) {
         Context context = imageView.getContext();
-        imageView.setColorFilter(new PorterDuffColorFilter(primaryIconColor(context), PorterDuff.Mode.SRC_ATOP));
+        imageView.setColorFilter(new PorterDuffColorFilter(primaryTextColor(context), PorterDuff.Mode.SRC_ATOP));
     }
 
     private static class ChevronView extends View {
