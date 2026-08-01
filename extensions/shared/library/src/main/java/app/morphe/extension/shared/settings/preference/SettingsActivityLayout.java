@@ -106,16 +106,28 @@ public final class SettingsActivityLayout {
     }
 
     static TextView createToolbarTitle(Context context, CharSequence title, int color) {
+        return createToolbarTitle(context, title, color, true);
+    }
+
+    static TextView createToolbarTitle(Context context, CharSequence title, int color, boolean rootScreen) {
         TextView titleTextView = new TextView(context);
         titleTextView.setText(title);
-        titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 26);
+        titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, rootScreen ? 25 : 20);
         titleTextView.setTypeface(Typeface.create("sans-serif", Typeface.NORMAL));
         titleTextView.setIncludeFontPadding(false);
         titleTextView.setTextColor(color);
+        titleTextView.setMaxLines(1);
+
+        // Titles of nested screens are longer than the screen title, so they shrink to fit.
+        if (!rootScreen) {
+            titleTextView.setAutoSizeTextTypeUniformWithConfiguration(
+                    18, 20, 1, TypedValue.COMPLEX_UNIT_SP);
+        }
 
         LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
+                0,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
+                1.0f
         );
         titleParams.gravity = Gravity.CENTER_VERTICAL;
         titleParams.leftMargin = dp(context, 7);

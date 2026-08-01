@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -346,25 +344,6 @@ public final class SettingsActivity extends Activity {
                     : requireActivity().getString(resourceId, formatArgs);
         }
 
-        private static int dp(Context context, int value) {
-            return (int) (value * context.getResources().getDisplayMetrics().density + 0.5f);
-        }
-
-        private static ColorStateList resolveTextColor(Context context, int attr) {
-            TypedArray array = context.obtainStyledAttributes(new int[]{attr});
-            try {
-                return array.getColorStateList(0);
-            } finally {
-                array.recycle();
-            }
-        }
-
-        private static void setTextColor(TextView view, ColorStateList color) {
-            if (color != null) {
-                view.setTextColor(color);
-            }
-        }
-
         private Activity requireActivity() {
             Activity activity = getActivity();
             if (activity == null) {
@@ -375,15 +354,11 @@ public final class SettingsActivity extends Activity {
 
         private static final class PresetAdapter extends BaseAdapter {
             private final Context context;
-            private final ColorStateList primaryTextColor;
-            private final ColorStateList secondaryTextColor;
             private final UserMemoPatch.Preset[] presets;
 
             PresetAdapter(Context context, UserMemoPatch.Preset[] presets) {
                 this.context = context;
                 this.presets = presets;
-                primaryTextColor = resolveTextColor(context, android.R.attr.textColorPrimary);
-                secondaryTextColor = resolveTextColor(context, android.R.attr.textColorSecondary);
             }
 
             @Override
@@ -413,21 +388,22 @@ public final class SettingsActivity extends Activity {
                             AbsListView.LayoutParams.MATCH_PARENT,
                             AbsListView.LayoutParams.WRAP_CONTENT
                     ));
-                    layout.setMinimumHeight(dp(context, 64));
-                    layout.setPadding(dp(context, 24), dp(context, 12), dp(context, 24), dp(context, 12));
+                    layout.setMinimumHeight(MorphePreferenceStyle.dp(context, 64));
+                    layout.setPadding(MorphePreferenceStyle.dp(context, 24), MorphePreferenceStyle.dp(context, 12),
+                            MorphePreferenceStyle.dp(context, 24), MorphePreferenceStyle.dp(context, 12));
 
                     TextView title = new TextView(context);
                     title.setTypeface(Typeface.DEFAULT_BOLD);
                     title.setTextSize(16);
                     title.setSingleLine(false);
-                    setTextColor(title, primaryTextColor);
+                    title.setTextColor(MorphePreferenceStyle.primaryTextColor(context));
 
                     TextView description = new TextView(context);
                     description.setTextSize(13);
                     description.setSingleLine(false);
                     description.setLineSpacing(0, 1.1f);
-                    description.setPadding(0, dp(context, 4), 0, 0);
-                    setTextColor(description, secondaryTextColor);
+                    description.setPadding(0, MorphePreferenceStyle.dp(context, 4), 0, 0);
+                    description.setTextColor(MorphePreferenceStyle.secondaryTextColor(context));
 
                     layout.addView(title, new LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.MATCH_PARENT,

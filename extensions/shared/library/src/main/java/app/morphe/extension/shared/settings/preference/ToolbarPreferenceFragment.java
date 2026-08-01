@@ -33,11 +33,16 @@ public abstract class ToolbarPreferenceFragment extends AbstractPreferenceFragme
                 PreferenceScreen childScreen = (PreferenceScreen) childPreference;
                 setPreferenceScreenToolbar(childScreen);
                 childScreen.setOnPreferenceClickListener(preference -> {
+                    // The dialog is already shown by the time this runs, so the toolbar goes in
+                    // before the first frame instead of shifting the list down after it.
+                    AbstractPreferenceFragment.stylePreferenceScreenDialog(childScreen);
+                    if (addPreferenceScreenToolbar(childScreen)) {
+                        return false;
+                    }
+
                     View view = getView();
                     if (view != null) {
                         postAddPreferenceScreenToolbar(childScreen, view, 0);
-                    } else {
-                        addPreferenceScreenToolbar(childScreen);
                     }
                     return false;
                 });
@@ -105,7 +110,7 @@ public abstract class ToolbarPreferenceFragment extends AbstractPreferenceFragme
         toolbar.setPadding(toolbarPadding, dp(context, 10), toolbarPadding, dp(context, 8));
 
         toolbar.addView(SettingsActivityLayout.createBackArrowView(context, view -> dialog.dismiss()));
-        toolbar.addView(SettingsActivityLayout.createToolbarTitle(context, childScreen.getTitle(), foregroundColor));
+        toolbar.addView(SettingsActivityLayout.createToolbarTitle(context, childScreen.getTitle(), foregroundColor, false));
 
         root.addView(toolbar, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,

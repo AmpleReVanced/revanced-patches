@@ -39,8 +39,8 @@ public class MorphePreferenceCategory extends PreferenceCategory {
     @SuppressLint("MissingSuperCall")
     protected View onCreateView(ViewGroup parent) {
         TextView title = new TextView(getContext());
-        title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-        title.setTypeface(Typeface.DEFAULT, Typeface.NORMAL);
+        title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+        title.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
         title.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
