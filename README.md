@@ -4,14 +4,14 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.2.0](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.2.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;99 patches total
+> **[v1.3.0-dev.1](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.3.0-dev.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;101 patches total
 <details open>
-<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;57 patches</summary>
+<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;59 patches</summary>
 <br>
 
 **🎯 Supported versions:**
 
-| 26.6.1 |
+| 26.6.3 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
@@ -21,6 +21,8 @@
 | [Add settings resources](#add-settings-resources) | Adds Morphe settings layout resources to the app. |  |
 | [Add settings tab](#add-settings-tab) | Adds a settings tab to the app. |  |
 | [Allow Hide on Any Chat](#allow-hide-on-any-chat) | Users with hiding privileges can hide any chat, including their own messages. |  |
+| [Allow invisible characters](#allow-invisible-characters) | Stops zero width and other invisible characters from being stripped out of the chat input and out of the messages shown in a chat room. |  |
+| [Allow profile media download](#allow-profile-media-download) | Adds the save option of the profile media viewer to the profile pictures and background images of other people. |  |
 | [Allow reply to feed](#allow-reply-to-feed) | Allows replying to feed messages |  |
 | [Always Show Kick Button](#always-show-kick-button) | Always shows the kick button in group member management. |  |
 | [Bypass Moat check](#bypass-moat-check) | Add a setting to bypass the Moat integrity check that can prevent KakaoPay from running. |  |
@@ -82,7 +84,7 @@
 
 **🎯 Supported versions:**
 
-| 5.3.0 |
+| 5.3.2 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
@@ -119,8 +121,8 @@
 
 **🎯 Supported versions:**
 
-| 3.9.0 |
-| :---: |
+| 3.10.0 | 3.9.0 |
+| :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
@@ -138,8 +140,8 @@
 
 **🎯 Supported versions:**
 
-| 1.4.4.9 |
-| :---: |
+| 1.4.4.10 | 1.4.4.9 |
+| :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
@@ -154,7 +156,7 @@
 
 **🎯 Supported versions:**
 
-| 8.28.3 |
+| 8.28.5 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |

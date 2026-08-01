@@ -1,3 +1,25 @@
+# [1.3.0-dev.1](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0...v1.3.0-dev.1) (2026-08-01)
+
+
+### Bug Fixes
+
+* **kakaotalk:** allocate registers for Allow invisible characters ([ec4bcad](https://github.com/AmpleReVanced/revanced-patches/commit/ec4bcadfb0b2e06aa79fe347864a2f508fa163b4))
+* **settings:** adopt piko switch checkmark and stroke blending ([4204a1c](https://github.com/AmpleReVanced/revanced-patches/commit/4204a1cc37d0978a793be7e0daa880a827a88883))
+* **settings:** align preference styling with piko and fix nested screen toolbar ([b7edcf3](https://github.com/AmpleReVanced/revanced-patches/commit/b7edcf3f6907775c1c7598f9fc301bb6c0c4f581))
+
+
+### Features
+
+* **chzzk:** add support chzzk patches for version `3.10.0` ([4d6972e](https://github.com/AmpleReVanced/revanced-patches/commit/4d6972e778f846cb18ee8d4cc9be56bbd5b8e6a6))
+* **dcinside:** update dcinside patches for version `5.3.2` ([7c58146](https://github.com/AmpleReVanced/revanced-patches/commit/7c5814633dd8a67050c42f8bfd1013ef310e7ce5))
+* **flexcil:** add support flexcil patches for version `1.4.4.10` ([ba011f0](https://github.com/AmpleReVanced/revanced-patches/commit/ba011f0b9d21cc0e12f0cd45160489797b900d0d))
+* **kakaotalk:** add Allow invisible characters patch ([8ad87d0](https://github.com/AmpleReVanced/revanced-patches/commit/8ad87d084742dc04a764fae3e1f0c85d9c41fcbc))
+* **kakaotalk:** add Allow profile media download patch ([b6d3822](https://github.com/AmpleReVanced/revanced-patches/commit/b6d382288009ec337841aac5cdcf639bda91578c))
+* **kakaotalk:** update kakaotalk patches for version `26.6.2` ([52fcbb6](https://github.com/AmpleReVanced/revanced-patches/commit/52fcbb6ea2f56accb05b9913d4662a6c197b79a7))
+* **kakaotalk:** update kakaotalk patches for version `26.6.3` ([1982c1f](https://github.com/AmpleReVanced/revanced-patches/commit/1982c1fa97d01d01c1c8070d47b49f5a4b3da673))
+* **settings:** back up and restore settings to a file ([05d7236](https://github.com/AmpleReVanced/revanced-patches/commit/05d7236b7d3e4e03edf161dec341fa3748bb2d95))
+* **soop:** update soop patches for version `8.28.5` ([bd831f9](https://github.com/AmpleReVanced/revanced-patches/commit/bd831f94e9fcbad442bf4cd41280ff10f88b6fe5))
+
 # [1.2.0](https://github.com/AmpleReVanced/revanced-patches/compare/v1.1.0...v1.2.0) (2026-07-25)
 
 
