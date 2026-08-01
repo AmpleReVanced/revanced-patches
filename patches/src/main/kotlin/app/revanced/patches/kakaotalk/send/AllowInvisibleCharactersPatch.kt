@@ -3,6 +3,8 @@ package app.revanced.patches.kakaotalk.send
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
+import app.morphe.util.findFreeRegister
+import app.morphe.util.getFreeRegisterProvider
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.kakaotalk.send.fingerprints.StripInvalidCharFormatPredicateFingerprint
 import app.revanced.patches.kakaotalk.send.fingerprints.StripInvalidCharFormatSanitizerFingerprint
@@ -38,29 +40,37 @@ val allowInvisibleCharactersPatch = bytecodePatch(
         // A null return value tells the input filter contract to keep the typed text as is.
         StripInvalidCharFormatPredicateFingerprint.classDef.methods
             .first { it.name == "filter" }
-            .addInstructionsWithLabels(
+            .apply {
+                val free = getFreeRegisterProvider(0, 1).getFreeRegister4Bit()
+
+                addInstructionsWithLabels(
+                    0,
+                    """
+                        invoke-static {}, $ALLOW_INVISIBLE_CHARACTERS
+                        move-result v$free
+                        if-eqz v$free, :morphe_original
+                        const/4 v$free, 0x0
+                        return-object v$free
+                        :morphe_original
+                        nop
+                    """
+                )
+            }
+
+        StripInvalidCharFormatSanitizerFingerprint.method.apply {
+            val free = findFreeRegister(0)
+
+            addInstructionsWithLabels(
                 0,
                 """
                     invoke-static {}, $ALLOW_INVISIBLE_CHARACTERS
-                    move-result v0
-                    if-eqz v0, :morphe_original
-                    const/4 v0, 0x0
-                    return-object v0
+                    move-result v$free
+                    if-eqz v$free, :morphe_original
+                    return-object p0
                     :morphe_original
                     nop
                 """
             )
-
-        StripInvalidCharFormatSanitizerFingerprint.method.addInstructionsWithLabels(
-            0,
-            """
-                invoke-static {}, $ALLOW_INVISIBLE_CHARACTERS
-                move-result v0
-                if-eqz v0, :morphe_original
-                return-object p0
-                :morphe_original
-                nop
-            """
-        )
+        }
     }
 }
