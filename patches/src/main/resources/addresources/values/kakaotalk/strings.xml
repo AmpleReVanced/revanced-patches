@@ -147,4 +147,7 @@ Second \"item\" text"</string>
     <string name="morphe_settings_patch_allow_open_chat_media_bundle">Allow media bundling in open chat</string>
     <string name="morphe_settings_patch_allow_open_chat_media_bundle_summary">Lets webp, gif and other media be sent as a single bundled multi-photo message in open chat rooms.</string>
     <string name="morphe_pref_allow_open_chat_media_bundle_summary">Lets webp, gif and other media be sent as a single bundled multi-photo message in open chat rooms.</string>
+    <string name="morphe_settings_patch_strip_image_metadata">Strip metadata from sent images</string>
+    <string name="morphe_settings_patch_strip_image_metadata_summary">Removes EXIF metadata, including GPS location, from images sent in original quality.</string>
+    <string name="morphe_pref_strip_image_metadata_summary">Removes EXIF metadata, including GPS location, from images sent in original quality.</string>
 </resources>
