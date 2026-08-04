@@ -1,3 +1,10 @@
+# [1.3.0-dev.3](https://github.com/AmpleReVanced/revanced-patches/compare/v1.3.0-dev.2...v1.3.0-dev.3) (2026-08-04)
+
+
+### Features
+
+* **kakaotalk:** add Allow open chat media bundle patch ([d234282](https://github.com/AmpleReVanced/revanced-patches/commit/d234282f9ac5aedebbc90cd4b105aa378e3485e4))
+
 # [1.3.0-dev.2](https://github.com/AmpleReVanced/revanced-patches/compare/v1.3.0-dev.1...v1.3.0-dev.2) (2026-08-01)
 
 

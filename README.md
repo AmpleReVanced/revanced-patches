@@ -4,9 +4,9 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.3.0-dev.2](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.3.0-dev.2)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;101 patches total
+> **[v1.3.0-dev.3](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.3.0-dev.3)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;102 patches total
 <details open>
-<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;59 patches</summary>
+<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;60 patches</summary>
 <br>
 
 **🎯 Supported versions:**
@@ -22,6 +22,7 @@
 | [Add settings tab](#add-settings-tab) | Adds a settings tab to the app. |  |
 | [Allow Hide on Any Chat](#allow-hide-on-any-chat) | Users with hiding privileges can hide any chat, including their own messages. |  |
 | [Allow invisible characters](#allow-invisible-characters) | Stops zero width and other invisible characters from being stripped out of the chat input and out of the messages shown in a chat room. |  |
+| [Allow open chat media bundle](#allow-open-chat-media-bundle) | Removes the open chat restriction that stops webp, gif and other media from being bundled into a single multi-photo message. |  |
 | [Allow profile media download](#allow-profile-media-download) | Adds the save option of the profile media viewer to the profile pictures and background images of other people. |  |
 | [Allow reply to feed](#allow-reply-to-feed) | Allows swiping feed messages to reply, or to comment where chat room comments are enabled. |  |
 | [Always Show Kick Button](#always-show-kick-button) | Always shows the kick button in group member management. |  |
