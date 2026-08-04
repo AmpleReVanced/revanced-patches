@@ -68,6 +68,9 @@ public final class Settings extends BaseSettings {
     public static final BooleanSetting BYPASS_MOAT_INTEGRITY_CHECK =
             new BooleanSetting("kakaotalk_bypass_moat_integrity_check", false);
 
+    public static final BooleanSetting ALLOW_OPEN_CHAT_MEDIA_BUNDLE =
+            new BooleanSetting("kakaotalk_allow_open_chat_media_bundle", TRUE);
+
     public static final StringSetting FEATURE_FLAG_OVERRIDES =
             new StringSetting("kakaotalk_feature_flag_overrides", "");
 
@@ -144,6 +147,10 @@ public final class Settings extends BaseSettings {
 
     public static boolean bypassMoatIntegrityCheck() {
         return BYPASS_MOAT_INTEGRITY_CHECK.get();
+    }
+
+    public static boolean allowOpenChatMediaBundle() {
+        return ALLOW_OPEN_CHAT_MEDIA_BUNDLE.get();
     }
 
     public static String featureFlagOverrides() {

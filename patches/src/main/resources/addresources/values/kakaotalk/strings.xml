@@ -144,4 +144,7 @@ Second \"item\" text"</string>
     <string name="morphe_settings_import">Restore settings</string>
     <string name="morphe_settings_import_summary">Reads the Morphe settings back from a file.</string>
     <string name="morphe_settings_import_failed">Could not restore the settings</string>
+    <string name="morphe_settings_patch_allow_open_chat_media_bundle">Allow media bundling in open chat</string>
+    <string name="morphe_settings_patch_allow_open_chat_media_bundle_summary">Lets webp, gif and other media be sent as a single bundled multi-photo message in open chat rooms.</string>
+    <string name="morphe_pref_allow_open_chat_media_bundle_summary">Lets webp, gif and other media be sent as a single bundled multi-photo message in open chat rooms.</string>
 </resources>
