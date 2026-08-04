@@ -1,3 +1,10 @@
+# [1.3.0-dev.5](https://github.com/AmpleReVanced/revanced-patches/compare/v1.3.0-dev.4...v1.3.0-dev.5) (2026-08-04)
+
+
+### Features
+
+* **kakaotalk:** replace framework ExifInterface with AndroidX ([727b8c5](https://github.com/AmpleReVanced/revanced-patches/commit/727b8c5de240a477021266408ea1aa0953dd67ae))
+
 # [1.3.0-dev.4](https://github.com/AmpleReVanced/revanced-patches/compare/v1.3.0-dev.3...v1.3.0-dev.4) (2026-08-04)
 
 
