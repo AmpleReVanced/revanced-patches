@@ -1,3 +1,10 @@
+# [1.3.0-dev.4](https://github.com/AmpleReVanced/revanced-patches/compare/v1.3.0-dev.3...v1.3.0-dev.4) (2026-08-04)
+
+
+### Features
+
+* **kakaotalk:** add Strip image metadata patch ([64293b4](https://github.com/AmpleReVanced/revanced-patches/commit/64293b42c3017570ec52cfc3a721aa07d9cc0fc3))
+
 # [1.3.0-dev.3](https://github.com/AmpleReVanced/revanced-patches/compare/v1.3.0-dev.2...v1.3.0-dev.3) (2026-08-04)
 
 

@@ -4,9 +4,9 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.3.0-dev.3](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.3.0-dev.3)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;102 patches total
+> **[v1.3.0-dev.4](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.3.0-dev.4)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;103 patches total
 <details open>
-<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;60 patches</summary>
+<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;61 patches</summary>
 <br>
 
 **🎯 Supported versions:**
@@ -75,6 +75,7 @@
 | [Spoof App ID](#spoof-app-id) | Spoofs the App ID to bypass integrity checks. (to bypass biometric auth etc.) |  |
 | [Spoof apk checksums](#spoof-apk-checksums) | Spoofs the apk checksums to pass integrity checks. |  |
 | [Spoof signature](#spoof-signature) | Spoofs the app signature to pass integrity checks. |  |
+| [Strip image metadata](#strip-image-metadata) | Removes EXIF metadata, including the GPS capture location, from images sent in original quality, while keeping the picture and its orientation intact. |  |
 | [Version info patch](#version-info-patch) | Patches the version info to include '(ReVanced)' in the version string. |  |
 
 </details>
