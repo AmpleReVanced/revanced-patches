@@ -1,6 +1,6 @@
 package app.revanced.extension.kakaotalk.patches;
 
-import android.media.ExifInterface;
+import androidx.exifinterface.media.ExifInterface;
 
 import app.morphe.extension.shared.Utils;
 import app.revanced.extension.kakaotalk.settings.Settings;
@@ -29,6 +29,12 @@ public final class StripImageMetadataPatch {
             ExifInterface.TAG_IMAGE_DESCRIPTION,
             ExifInterface.TAG_USER_COMMENT,
             ExifInterface.TAG_IMAGE_UNIQUE_ID,
+            ExifInterface.TAG_CAMERA_OWNER_NAME,
+            ExifInterface.TAG_BODY_SERIAL_NUMBER,
+            ExifInterface.TAG_LENS_MAKE,
+            ExifInterface.TAG_LENS_MODEL,
+            ExifInterface.TAG_LENS_SERIAL_NUMBER,
+            ExifInterface.TAG_LENS_SPECIFICATION,
             // Capture time
             ExifInterface.TAG_DATETIME,
             ExifInterface.TAG_DATETIME_ORIGINAL,
@@ -66,7 +72,8 @@ public final class StripImageMetadataPatch {
             ExifInterface.TAG_SUBJECT_DISTANCE,
             ExifInterface.TAG_SUBJECT_DISTANCE_RANGE,
             ExifInterface.TAG_SUBJECT_AREA,
-            ExifInterface.TAG_ISO_SPEED_RATINGS,
+            ExifInterface.TAG_PHOTOGRAPHIC_SENSITIVITY,
+            ExifInterface.TAG_SENSITIVITY_TYPE,
             // Location
             ExifInterface.TAG_GPS_VERSION_ID,
             ExifInterface.TAG_GPS_LATITUDE,
@@ -102,7 +109,7 @@ public final class StripImageMetadataPatch {
     };
 
     /**
-     * Returns a copy of the image with its identifying EXIF metadata removed via the framework's own
+     * Returns a copy of the image with its identifying EXIF metadata removed via AndroidX
      * {@link ExifInterface} (only the orientation is kept), or the original file when stripping is
      * disabled, unnecessary, or unsupported for the format. The source file is never modified.
      */

@@ -5,6 +5,7 @@ smali = "d92701d947"
 agp = "9.1.0"
 annotation = "1.10.0"
 appcompat = "1.7.1"
+exifinterface = "1.4.2"
 okhttp = "5.4.0"
 retrofit = "3.0.0"
 gson = "2.14.0"
@@ -26,6 +27,7 @@ morphe-extensions-library = { module = "app.morphe:morphe-extensions-library", v
 annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
 antlr4 = { module = "org.antlr:antlr4", version.ref = "antlr4" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+exifinterface = { module = "androidx.exifinterface:exifinterface", version.ref = "exifinterface" }
 nanohttpd = { module = "org.nanohttpd:nanohttpd", version.ref = "nanohttpd" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 protobuf-javalite = { module = "com.google.protobuf:protobuf-javalite", version.ref = "protobuf-javalite" }
