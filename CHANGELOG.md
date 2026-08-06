@@ -1,3 +1,10 @@
+# [1.3.0-dev.7](https://github.com/AmpleReVanced/revanced-patches/compare/v1.3.0-dev.6...v1.3.0-dev.7) (2026-08-06)
+
+
+### Features
+
+* **flexcil:** add support flexcil patches for version `1.4.4.12` ([7b854a3](https://github.com/AmpleReVanced/revanced-patches/commit/7b854a346dd6e0a9d0a04d573c46366586bc3ab9))
+
 # [1.3.0-dev.6](https://github.com/AmpleReVanced/revanced-patches/compare/v1.3.0-dev.5...v1.3.0-dev.6) (2026-08-06)
 
 
