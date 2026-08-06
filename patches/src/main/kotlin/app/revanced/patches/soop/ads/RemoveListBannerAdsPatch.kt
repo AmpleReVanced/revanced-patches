@@ -1,9 +1,10 @@
 package app.revanced.patches.soop.ads
 
-import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.util.returnEarly
 import app.revanced.patches.soop.ads.fingerprints.*
 import app.revanced.patches.soop.common.fingerprints.KotlinUnitInstanceFingerprint
+import app.revanced.patches.soop.common.utils.returnUnitEarly
 import app.revanced.patches.soop.shared.Constants.COMPATIBILITY_SOOP
 
 @Suppress("unused")
@@ -15,22 +16,10 @@ val removeListBannerAdsPatch = bytecodePatch(
     compatibleWith(COMPATIBILITY_SOOP)
 
     execute {
-        val unitClass = KotlinUnitInstanceFingerprint.classDef.type
-        ListBannerAdRequestFingerprint.matchAll().forEach {
-            it.method.addInstructions(
-                0,
-                """
-                    sget-object v0, $unitClass->a:$unitClass
-                    return-object v0
-                """.trimIndent()
-            )
-        }
-        LiveDownBannerRequestFingerprint.method.addInstructions(
-            0,
-            """
-                sget-object v0, $unitClass->a:$unitClass
-                return-object v0
-            """.trimIndent()
-        )
+        val unitClass = KotlinUnitInstanceFingerprint.originalClassDef
+
+        ListBannerAdRequestFingerprint.method.returnEarly(null)
+        ListBannerAdFlowFingerprint.method.returnUnitEarly(unitClass)
+        LiveDownBannerRequestFingerprint.method.returnUnitEarly(unitClass)
     }
 }
