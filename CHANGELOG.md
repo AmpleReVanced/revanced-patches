@@ -1,3 +1,11 @@
+# [1.3.0-dev.6](https://github.com/AmpleReVanced/revanced-patches/compare/v1.3.0-dev.5...v1.3.0-dev.6) (2026-08-06)
+
+
+### Bug Fixes
+
+* **soop:** remove the main board banner ad shown on the Live tab ([030a3f3](https://github.com/AmpleReVanced/revanced-patches/commit/030a3f3e90c20b66cd2185f0ade7d0b20fc27df6))
+* **soop:** stop the Live tab erroring when list banner ads are removed ([b8fe59b](https://github.com/AmpleReVanced/revanced-patches/commit/b8fe59ba781afcf027d55b709f10998897f91852))
+
 # [1.3.0-dev.5](https://github.com/AmpleReVanced/revanced-patches/compare/v1.3.0-dev.4...v1.3.0-dev.5) (2026-08-04)
 
 
