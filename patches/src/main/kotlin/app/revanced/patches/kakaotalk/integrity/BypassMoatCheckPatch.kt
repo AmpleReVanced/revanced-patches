@@ -8,10 +8,13 @@ import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.util.findMutableMethodOf
 import app.morphe.util.getFreeRegisterProvider
+import app.morphe.util.getMutableMethod
 import app.morphe.util.getReference
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.kakaotalk.integrity.fingerprints.CheckApkChecksumsFingerprint
 import app.revanced.patches.kakaotalk.integrity.fingerprints.MoatResultClassFingerprint
+import app.revanced.patches.kakaotalk.integrity.fingerprints.PayMoatWrapperFingerprint
+import app.revanced.util.parameterTypeNames
 import app.revanced.patches.kakaotalk.settings.PreferenceScreen
 import app.revanced.patches.kakaotalk.settings.addSettingsTabPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
@@ -31,7 +34,9 @@ private const val EXTENSION_CLASS =
 @Suppress("unused")
 val bypassMoatCheckPatch = bytecodePatch(
     name = "Bypass Moat check",
-    description = "Add a setting to bypass the Moat integrity check that can prevent KakaoPay from running.",
+    description = "Add a setting to bypass the KakaoPay Moat integrity check. It stops the native " +
+            "scan from running, so the tamper/root/hook verdict is never computed or reported and " +
+            "KakaoPay is not force-closed. Payments on a modified build are still risky.",
 ) {
     compatibleWith(COMPATIBILITY_KAKAO)
     dependsOn(addSettingsTabPatch)
@@ -45,6 +50,49 @@ val bypassMoatCheckPatch = bytecodePatch(
             ),
         )
         setExtensionIsPatchIncluded(EXTENSION_CLASS)
+
+        // Gate the native Moat scan dispatcher above the JNI call. Every entry (pay worker, pay
+        // webview) funnels through it, and the app cannot spoof a native APK-signature scan, so the
+        // only defence is to never run the scan. A clean empty result is delivered to the callback
+        // and a completed future returned so pay flows do not hang.
+        val wrapperMethod = PayMoatWrapperFingerprint.classDef.methods.first { method ->
+            method.returnType == "V" &&
+                    method.parameterTypeNames == listOf("Ljava/lang/String;", "Lkotlin/jvm/functions/Function3;")
+        }
+        val scanReference = wrapperMethod.instructions
+            .mapNotNull { it.getReference<MethodReference>() }
+            .first { reference ->
+                reference.returnType == "Ljava/util/concurrent/CompletableFuture;" &&
+                        reference.parameterTypeNames.size == 4 &&
+                        reference.parameterTypeNames.first() == "Ljava/util/ArrayList;"
+            }
+        val callbackType = scanReference.parameterTypeNames[1]
+        val callbackMethodName = classDefBy(callbackType).methods.first { method ->
+            method.returnType == "V" &&
+                    method.parameterTypeNames == listOf("Ljava/util/List;", "Ljava/lang/String;", "Ljava/lang/String;")
+        }.name
+
+        scanReference.getMutableMethod().apply {
+            val free = getFreeRegisterProvider(0, 1).getFreeRegister4Bit()
+
+            addInstructionsWithLabels(
+                0,
+                """
+                    invoke-static {}, Lapp/revanced/extension/kakaotalk/settings/Settings;->bypassMoatIntegrityCheck()Z
+                    move-result v$free
+                    if-eqz v$free, :morphe_moat_scan
+                    invoke-static {}, Ljava/util/Collections;->emptyList()Ljava/util/List;
+                    move-result-object v$free
+                    invoke-interface {p2, v$free, p3, p4}, $callbackType->$callbackMethodName(Ljava/util/List;Ljava/lang/String;Ljava/lang/String;)V
+                    const/4 v$free, 0x0
+                    invoke-static {v$free}, Ljava/util/concurrent/CompletableFuture;->completedFuture(Ljava/lang/Object;)Ljava/util/concurrent/CompletableFuture;
+                    move-result-object v$free
+                    return-object v$free
+                    :morphe_moat_scan
+                    nop
+                """.trimIndent(),
+            )
+        }
 
         CheckApkChecksumsFingerprint.method.apply {
             val lastSgetObjectType = instructions.last { it.opcode == Opcode.SGET_OBJECT }.getReference<FieldReference>()?.type
