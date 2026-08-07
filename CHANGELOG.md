@@ -1,3 +1,16 @@
+# [1.3.0-dev.10](https://github.com/AmpleReVanced/revanced-patches/compare/v1.3.0-dev.9...v1.3.0-dev.10) (2026-08-07)
+
+
+### Bug Fixes
+
+* **kakaotalk:** answer the abuse-detection nonce with a failure token instead of silence ([5d8e03b](https://github.com/AmpleReVanced/revanced-patches/commit/5d8e03b8213a3f702fd66b8b0e3769689e972fc9))
+
+
+### Features
+
+* **kakaotalk:** add Spoof attestation package name patch ([0fda71d](https://github.com/AmpleReVanced/revanced-patches/commit/0fda71deb3d4d41a0e6a392891c2b78a8c821649))
+* **kakaotalk:** bypass the native Moat scan at its dispatcher ([d836233](https://github.com/AmpleReVanced/revanced-patches/commit/d8362334f0fa9e5e0ec9484b58fe0ba1bb072b72))
+
 # [1.3.0-dev.9](https://github.com/AmpleReVanced/revanced-patches/compare/v1.3.0-dev.8...v1.3.0-dev.9) (2026-08-07)
 
 
