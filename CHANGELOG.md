@@ -1,3 +1,19 @@
+# [1.3.0-dev.9](https://github.com/AmpleReVanced/revanced-patches/compare/v1.3.0-dev.8...v1.3.0-dev.9) (2026-08-07)
+
+
+### Bug Fixes
+
+* **kakaotalk:** align Build.ID, DISPLAY, TYPE and TAGS with the fingerprint in Change model ([97a9e49](https://github.com/AmpleReVanced/revanced-patches/commit/97a9e493809cfc3ff7cb3b970f2560a9ca1a5f7b))
+* **kakaotalk:** fail loudly when the kick button membership check is missing ([a3a03b1](https://github.com/AmpleReVanced/revanced-patches/commit/a3a03b1d5dc594af8a0ab85556413f1b06859a07))
+* **kakaotalk:** restore INVOKE_VIRTUAL constraint on Show deleted lookups ([cf65006](https://github.com/AmpleReVanced/revanced-patches/commit/cf65006811a1655ee96897820a5e81a5fe501bd0))
+
+
+### Features
+
+* **kakaotalk:** add a setting to toggle Allow reply to feed ([990f6ee](https://github.com/AmpleReVanced/revanced-patches/commit/990f6ee45877328179a0cfeba0a2f4d4f32f422b))
+* **kakaotalk:** add Block reactions on deleted or hidden messages patch ([511e1a8](https://github.com/AmpleReVanced/revanced-patches/commit/511e1a89b45a5287331eed1617ab523fe2f7f6f9))
+* **kakaotalk:** block replies and comments on deleted or hidden messages ([753c605](https://github.com/AmpleReVanced/revanced-patches/commit/753c605469b845be73d175c5fc1f9daa81972ca8))
+
 # [1.3.0-dev.8](https://github.com/AmpleReVanced/revanced-patches/compare/v1.3.0-dev.7...v1.3.0-dev.8) (2026-08-07)
 
 
