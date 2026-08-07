@@ -1,14 +1,15 @@
 package app.revanced.patches.kakaotalk.member
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
-import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
+import app.morphe.patcher.methodCall
+import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.util.getReference
+import app.morphe.util.indexOfFirstInstructionOrThrow
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction11n
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
-import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
 @Suppress("unused")
 val alwaysShowKickButtonPatch = bytecodePatch(
@@ -19,29 +20,25 @@ val alwaysShowKickButtonPatch = bytecodePatch(
 
     execute {
         val containsUserByIdMethod = ContainsUserByIdFingerprint.method
-        val kickButtonManageMethod = KickButtonManageMethodFingerprint.method
 
-        kickButtonManageMethod.instructions.indexOfFirst {
-            it.opcode == Opcode.INVOKE_VIRTUAL &&
-                    it.getReference<MethodReference>()?.name == containsUserByIdMethod.name &&
-                    it.getReference<MethodReference>()?.definingClass == containsUserByIdMethod.definingClass
-        }.let {
-            if (it != -1) {
-                val moveResultInst = kickButtonManageMethod.instructions.getOrNull(it + 1) as? OneRegisterInstruction
+        KickButtonManageMethodFingerprint.method.apply {
+            val index = indexOfFirstInstructionOrThrow(
+                methodCall(
+                    definingClass = containsUserByIdMethod.definingClass,
+                    name = containsUserByIdMethod.name,
+                    opcodes = listOf(Opcode.INVOKE_VIRTUAL),
+                ),
+            )
 
-                if (moveResultInst != null && moveResultInst.opcode == Opcode.MOVE_RESULT) {
-                    val register = moveResultInst.registerA
-
-                    kickButtonManageMethod.addInstruction(
-                        it + 2,
-                        BuilderInstruction11n(
-                            Opcode.CONST_4,
-                            register,
-                            0x1
-                        )
-                    )
-                }
+            val moveResult = getInstruction(index + 1)
+            if (moveResult.opcode != Opcode.MOVE_RESULT) {
+                throw PatchException("The result of the membership check is not captured.")
             }
+
+            addInstruction(
+                index + 2,
+                BuilderInstruction11n(Opcode.CONST_4, (moveResult as OneRegisterInstruction).registerA, 0x1),
+            )
         }
     }
 }
