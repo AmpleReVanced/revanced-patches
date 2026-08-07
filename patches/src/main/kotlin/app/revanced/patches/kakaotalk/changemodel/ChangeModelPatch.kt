@@ -18,6 +18,12 @@ val spoofBuildInfoPatch = baseSpoofBuildInfoPatch {
         socManufacturer = "QTI",
         socModel = "SM8550",
         fingerprint = "samsung/gts9wifixx/qssi:14/UP1A.231005.007/X710XXU5BYA1:user/release-keys",
+        // Keep the standalone Build fields consistent with the values encoded in the fingerprint,
+        // so a server cross-checking Build.ID/TYPE/TAGS against the fingerprint sees no mismatch.
+        id = "UP1A.231005.007",
+        display = "UP1A.231005.007.X710XXU5BYA1",
+        type = "user",
+        tags = "release-keys",
     )
 }
 
