@@ -22,6 +22,7 @@ import app.morphe.extension.shared.settings.preference.SettingsActivityLayout;
 import app.morphe.extension.shared.settings.preference.ToolbarPreferenceFragment;
 import app.revanced.extension.kakaotalk.patches.AllowInvisibleCharactersPatch;
 import app.revanced.extension.kakaotalk.patches.AllowProfileMediaDownloadPatch;
+import app.revanced.extension.kakaotalk.patches.BlockModifiedMessageReactionPatch;
 import app.revanced.extension.kakaotalk.patches.BypassMoatCheckPatch;
 import app.revanced.extension.kakaotalk.patches.DefaultExternalBrowserPatch;
 import app.revanced.extension.kakaotalk.patches.DisableOpenChatRoomCommentPatch;
@@ -41,6 +42,8 @@ public final class SettingsActivity extends Activity {
     private static final String PREF_GHOST_MODE = "morphe_pref_ghost_mode";
     private static final String PREF_SHOW_MODIFIED_MESSAGE_SENDER_PROFILE =
             "morphe_pref_show_modified_message_sender_profile";
+    private static final String PREF_BLOCK_MODIFIED_MESSAGE_REACTION =
+            "morphe_pref_block_modified_message_reaction";
     private static final String PREF_SHOW_MESSAGE_READ_RECEIPTS =
             "morphe_pref_show_message_read_receipts";
     private static final String PREF_REMOVE_SHORT_FORM_TAB = "morphe_pref_remove_short_form_tab";
@@ -149,6 +152,7 @@ public final class SettingsActivity extends Activity {
             bindSwitchIfIncluded(PREF_ALLOW_PROFILE_MEDIA_DOWNLOAD, Settings.ALLOW_PROFILE_MEDIA_DOWNLOAD, AllowProfileMediaDownloadPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_OPEN_CHAT_ROOM_COMMENT_DISABLED, Settings.OPEN_CHAT_ROOM_COMMENT_DISABLED, DisableOpenChatRoomCommentPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_SHOW_MODIFIED_MESSAGE_SENDER_PROFILE, Settings.SHOW_MODIFIED_MESSAGE_SENDER_PROFILE, ShowDeletedHiddenOrEditedMessagePatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_BLOCK_MODIFIED_MESSAGE_REACTION, Settings.BLOCK_MODIFIED_MESSAGE_REACTION, BlockModifiedMessageReactionPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_SHOW_MESSAGE_READ_RECEIPTS, Settings.SHOW_MESSAGE_READ_RECEIPTS, ShowMessageReadReceiptsPatch.isPatchIncluded());
             bindRiskySwitchIfIncluded(PREF_BYPASS_MOAT_INTEGRITY_CHECK, Settings.BYPASS_MOAT_INTEGRITY_CHECK, BypassMoatCheckPatch.isPatchIncluded());
             bindTextIfIncluded(PREF_FEATURE_FLAG_OVERRIDES, Settings.FEATURE_FLAG_OVERRIDES, OverrideFeatureFlagPatch.isPatchIncluded());

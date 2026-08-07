@@ -17,6 +17,9 @@ public final class Settings extends BaseSettings {
     public static final BooleanSetting SHOW_MODIFIED_MESSAGE_SENDER_PROFILE =
             new BooleanSetting("kakaotalk_show_modified_message_sender_profile", TRUE);
 
+    public static final BooleanSetting BLOCK_MODIFIED_MESSAGE_REACTION =
+            new BooleanSetting("kakaotalk_block_modified_message_reaction", TRUE);
+
     public static final BooleanSetting SHOW_MESSAGE_READ_RECEIPTS =
             new BooleanSetting("kakaotalk_show_message_read_receipts", TRUE);
 
@@ -82,6 +85,10 @@ public final class Settings extends BaseSettings {
 
     public static boolean showModifiedMessageSenderProfile() {
         return SHOW_MODIFIED_MESSAGE_SENDER_PROFILE.get();
+    }
+
+    public static boolean blockModifiedMessageReaction() {
+        return BLOCK_MODIFIED_MESSAGE_REACTION.get();
     }
 
     public static boolean showMessageReadReceipts() {
