@@ -76,6 +76,8 @@ private const val PRESERVE_MODIFIED_HISTORY_METHOD = "revanced_preserveModifiedH
 private const val EXTENSION_CLASS =
     "Lapp/revanced/extension/kakaotalk/patches/ShowDeletedHiddenOrEditedMessagePatch;"
 
+internal const val MODIFIED_MESSAGE_IS_DELETED_OR_HIDDEN_METHOD = "revanced_isDeletedOrHidden"
+
 private data class ModifiedProfileReferences(
     val getRecyclerItemReference: MethodReference,
     val getProfileUserIdReference: MethodReference,
@@ -521,6 +523,15 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
 
         val chatLogClass = ChatLogFingerprint.classDef
         val vFieldField = chatLogClass.fields.first { it.type == chatLogVFieldClass.type }
+
+        chatLogClass.methods.add(
+            isDeletedOrHiddenMethod(
+                chatLogClass.type,
+                vFieldField.smaliReference,
+                chatLogVFieldClass.type,
+            ),
+        )
+
         val modifiedChatLogType = ModifiedChatLogFingerprint.classDef.type
         val modifyLogBuilderMethod = ModifyLogBuilderFingerprint(chatLogClass.type).method
 
@@ -766,6 +777,46 @@ private fun MutableMethod.addModifiedHistoryHook(
             move-object/from16 v$originalChatLogArgumentRegister, p1
             move-object/from16 v$newChatLogArgumentRegister, v$newChatLogRegister
             invoke-static {v$originalChatLogArgumentRegister, v$newChatLogArgumentRegister}, $chatLogType->$PRESERVE_MODIFIED_HISTORY_METHOD($chatLogType$chatLogType)V
+        """.trimIndent(),
+    )
+}
+
+private fun isDeletedOrHiddenMethod(
+    definingClass: String,
+    vFieldReference: String,
+    vFieldType: String,
+): MutableMethod = ImmutableMethod(
+    definingClass,
+    MODIFIED_MESSAGE_IS_DELETED_OR_HIDDEN_METHOD,
+    emptyList(),
+    "Z",
+    AccessFlags.PUBLIC.value or AccessFlags.FINAL.value,
+    null,
+    null,
+    MutableMethodImplementation(4),
+).toMutable().apply {
+    // The adapter's instance keeps its flag stale until reloaded, so also check the id cache. Read
+    // the id first, while p0 still holds the chat log, so later register reuse cannot clobber it.
+    addInstructionsWithLabels(
+        0,
+        """
+            invoke-virtual {p0}, $definingClass->getId()J
+            move-result-wide v0
+            iget-object v2, p0, $vFieldReference
+            if-eqz v2, :revanced_check_cache
+            invoke-virtual {v2}, $vFieldType->getDeleted()Z
+            move-result v3
+            if-nez v3, :revanced_modified
+            invoke-virtual {v2}, $vFieldType->getHidden()Z
+            move-result v3
+            if-nez v3, :revanced_modified
+            :revanced_check_cache
+            invoke-static {v0, v1}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->isDeletedOrHiddenById(J)Z
+            move-result v0
+            return v0
+            :revanced_modified
+            const/4 v0, 0x1
+            return v0
         """.trimIndent(),
     )
 }

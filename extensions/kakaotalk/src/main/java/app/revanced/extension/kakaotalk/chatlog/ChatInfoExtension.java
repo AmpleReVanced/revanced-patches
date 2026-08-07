@@ -12,7 +12,10 @@ import com.kakao.talk.widget.chatlog.MyChatInfoView;
 import com.kakao.talk.widget.chatlog.OthersChatInfoView;
 
 import java.lang.ref.WeakReference;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static app.morphe.extension.shared.StringRef.str;
@@ -20,6 +23,19 @@ import static app.morphe.extension.shared.StringRef.str;
 public class ChatInfoExtension {
     private static final Map<Long, WeakReference<ChatInfoExtension>> EXTENSIONS_BY_CHAT_LOG_ID =
             new ConcurrentHashMap<>();
+
+    /**
+     * Ids kept this session, updated synchronously so gates see the state before the adapter's
+     * ChatLog instance refreshes from the database. Bounded to cap growth.
+     */
+    private static final int MODIFIED_CHAT_LOG_ID_LIMIT = 4096;
+    private static final Set<Long> MODIFIED_CHAT_LOG_IDS = Collections.newSetFromMap(
+            Collections.synchronizedMap(new LinkedHashMap<Long, Boolean>(64, 0.75f, false) {
+                @Override
+                protected boolean removeEldestEntry(Map.Entry<Long, Boolean> eldest) {
+                    return size() > MODIFIED_CHAT_LOG_ID_LIMIT;
+                }
+            }));
 
     // Related to a deleted message
     private boolean isDeleted = false;
@@ -60,6 +76,14 @@ public class ChatInfoExtension {
     }
 
     public static void updateByChatLogId(long chatLogId, boolean deleted, boolean hidden) {
+        if (chatLogId != 0L) {
+            if (deleted || hidden) {
+                MODIFIED_CHAT_LOG_IDS.add(chatLogId);
+            } else {
+                MODIFIED_CHAT_LOG_IDS.remove(chatLogId);
+            }
+        }
+
         WeakReference<ChatInfoExtension> reference = EXTENSIONS_BY_CHAT_LOG_ID.get(chatLogId);
         ChatInfoExtension extension = reference == null ? null : reference.get();
 
@@ -338,6 +362,10 @@ public class ChatInfoExtension {
             hiddenLayout.draw(canvas);
             canvas.restore();
         }
+    }
+
+    public static boolean isDeletedOrHiddenById(long chatLogId) {
+        return chatLogId != 0L && MODIFIED_CHAT_LOG_IDS.contains(chatLogId);
     }
 
     public boolean isDeleted() {

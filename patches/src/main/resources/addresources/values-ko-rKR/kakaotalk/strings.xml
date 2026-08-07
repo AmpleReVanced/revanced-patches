@@ -52,6 +52,8 @@
     <string name="morphe_settings_patch_show_modified_message_sender_profile_summary">메시지 수정 이력에서 보낸 사람의 프로필 사진과 닉네임을 표시합니다.</string>
     <string name="morphe_settings_patch_block_modified_message_reaction">삭제된 메시지 리액션 차단</string>
     <string name="morphe_settings_patch_block_modified_message_reaction_summary">패치로만 남아 있는 삭제·가려진 메시지에 더블 탭을 비롯한 리액션이 전송되지 않도록 차단합니다.</string>
+    <string name="morphe_settings_patch_block_modified_message_reply">삭제된 메시지 답장·댓글 차단</string>
+    <string name="morphe_settings_patch_block_modified_message_reply_summary">패치로만 남아 있는 삭제·가려진 메시지에 스와이프, 그리고 답장·댓글 전송이 되지 않도록 차단합니다.</string>
     <string name="morphe_settings_patch_show_message_read_receipts">메시지 읽음 정보 표시</string>
     <string name="morphe_settings_patch_feature_flag_overrides">기능 플래그 오버라이드</string>
     <string name="morphe_settings_patch_feature_flag_overrides_summary">key=value 형식으로 입력하고 여러 항목은 세미콜론으로 구분합니다.</string>
@@ -103,6 +105,7 @@
     <string name="morphe_pref_disable_99_unread_limit_summary">읽지 않은 수를 99+로 줄이지 않고 실제 숫자로 표시합니다.</string>
     <string name="morphe_pref_show_message_read_receipts_summary">메시지 옆의 시간과 읽지 않은 수를 탭하면 누가 읽었는지 확인할 수 있습니다.</string>
     <string name="morphe_pref_block_modified_message_reaction_summary">패치로만 남아 있는 삭제·가려진 메시지에 더블 탭을 비롯한 리액션이 전송되지 않도록 차단합니다.</string>
+    <string name="morphe_pref_block_modified_message_reply_summary">패치로만 남아 있는 삭제·가려진 메시지에 스와이프, 그리고 답장·댓글 전송이 되지 않도록 차단합니다.</string>
     <string name="morphe_pref_show_modified_message_sender_profile_summary">메시지 수정 이력에서 보낸 사람의 프로필 사진과 닉네임을 표시합니다.</string>
     <string name="morphe_pref_bypass_moat_integrity_check_summary">카카오페이를 실행하는 데 필요할 수 있습니다. 무결성 감지 경로를 우회하므로 위험을 이해한 경우에만 사용하세요.</string>
     <string name="morphe_pref_ghost_mode_summary">상대방에게 입력 중 상태나 현재 동작 정보가 전달되지 않도록 합니다.</string>
