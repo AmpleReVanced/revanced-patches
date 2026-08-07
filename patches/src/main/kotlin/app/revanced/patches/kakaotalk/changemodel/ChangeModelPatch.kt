@@ -12,6 +12,11 @@ val spoofBuildInfoPatch = baseSpoofBuildInfoPatch {
         device = "qssi",
         product = "gts9wifixx",
         model = "SM-X710",
+        board = "kalama",
+        hardware = "qcom",
+        cpuAbi = "arm64-v8a",
+        socManufacturer = "QTI",
+        socModel = "SM8550",
         fingerprint = "samsung/gts9wifixx/qssi:14/UP1A.231005.007/X710XXU5BYA1:user/release-keys",
     )
 }
