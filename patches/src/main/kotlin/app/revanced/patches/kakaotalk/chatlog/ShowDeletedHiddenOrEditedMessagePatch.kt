@@ -8,6 +8,8 @@ import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.fieldAccess
+import app.morphe.patcher.methodCall
 import app.morphe.patcher.patch.stringOption
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patcher.util.proxy.mutableTypes.MutableField.Companion.toMutable
@@ -15,6 +17,8 @@ import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMuta
 import app.morphe.patches.all.misc.resources.addResourcesPatch
 import app.morphe.util.getFreeRegisterProvider
 import app.morphe.util.getReference
+import app.morphe.util.indexOfFirstInstructionOrThrow
+import app.morphe.util.indexOfFirstInstructionReversedOrThrow
 import app.morphe.util.returnEarly
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
@@ -204,10 +208,9 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
         )
 
         val getMaxHeightMethod = chatInfoViewClass.methods.first { it.name == "getMaxHeight" }
-        val paddingTopIndex = getMaxHeightMethod.instructions.indexOfFirst {
-            it.opcode == Opcode.INVOKE_VIRTUAL &&
-                    it.getReference<MethodReference>()?.name == "getPaddingTop"
-        }
+        val paddingTopIndex = getMaxHeightMethod.indexOfFirstInstructionOrThrow(
+            methodCall(name = "getPaddingTop"),
+        )
         getMaxHeightMethod.addInstructions(
             paddingTopIndex,
             "move-object v4, p0"
@@ -226,7 +229,7 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
         )
 
         val onDrawMethod = chatInfoViewClass.methods.first { it.name == "onDraw" }
-        val firstInvokeSuperIdx = onDrawMethod.instructions.indexOfFirst { it.opcode == Opcode.INVOKE_SUPER }
+        val firstInvokeSuperIdx = onDrawMethod.indexOfFirstInstructionOrThrow(Opcode.INVOKE_SUPER)
         onDrawMethod.addInstructionsWithLabels(
             firstInvokeSuperIdx + 1,
             """
@@ -285,9 +288,9 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
         val otherChatInfoViewClass = OthersChatInfoViewClassFingerprint.classDef
         otherChatInfoViewClass.let {
             val getTotalWidthMethod = otherChatInfoViewClass.methods.first { it.name == "getTotalWidth" }
-            val getPaddingLeftIndex = getTotalWidthMethod.instructions.first {
-                it.opcode == Opcode.INVOKE_VIRTUAL && it.getReference<MethodReference>()?.name == "getPaddingLeft"
-            }.location.index
+            val getPaddingLeftIndex = getTotalWidthMethod.indexOfFirstInstructionOrThrow(
+                methodCall(name = "getPaddingLeft"),
+            )
             getTotalWidthMethod.addInstructionsWithLabels(
                 getPaddingLeftIndex,
                 """
@@ -304,9 +307,9 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
             )
 
             val makeRectMethod = otherChatInfoViewClass.methods.first { it.name == "makeRect" }
-            val getBookmarkIconIndex = makeRectMethod.instructions.first {
-                it.opcode == Opcode.INVOKE_VIRTUAL && it.getReference<MethodReference>()?.name == "getBookmarkIcon"
-            }.location.index
+            val getBookmarkIconIndex = makeRectMethod.indexOfFirstInstructionOrThrow(
+                methodCall(name = "getBookmarkIcon"),
+            )
             makeRectMethod.replaceInstruction(
                 getBookmarkIconIndex,
                 "invoke-virtual {p0}, Lcom/kakao/talk/widget/chatlog/ChatInfoView;->getExtension()Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;"
@@ -328,9 +331,9 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
 
         MyChatInfoViewClassFingerprint.classDef.let {
             val getTotalWidthMethod = it.methods.first { it.name == "getTotalWidth" }
-            val getPaddingLeftIndex = getTotalWidthMethod.instructions.first {
-                it.opcode == Opcode.INVOKE_VIRTUAL && it.getReference<MethodReference>()?.name == "getPaddingLeft"
-            }.location.index
+            val getPaddingLeftIndex = getTotalWidthMethod.indexOfFirstInstructionOrThrow(
+                methodCall(name = "getPaddingLeft"),
+            )
             getTotalWidthMethod.addInstructionsWithLabels(
                 getPaddingLeftIndex,
                 """
@@ -348,9 +351,9 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
 
             val makeRectMethod =
                 MyChatInfoViewClassFingerprint.classDef.methods.first { it.name == "makeRect" }
-            val getDateLayoutIndex = makeRectMethod.instructions.first {
-                it.opcode == Opcode.INVOKE_VIRTUAL && it.getReference<MethodReference>()?.name == "getDateLayout"
-            }.location.index
+            val getDateLayoutIndex = makeRectMethod.indexOfFirstInstructionOrThrow(
+                methodCall(name = "getDateLayout"),
+            )
             makeRectMethod.replaceInstruction(
                 getDateLayoutIndex,
                 "invoke-virtual {p0}, Lcom/kakao/talk/widget/chatlog/ChatInfoView;->getExtension()Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;"
@@ -576,7 +579,9 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
             val invokeVirtualInst = originalSyncMethod.instructions.last { it.opcode == Opcode.INVOKE_VIRTUAL }
             val invokeStaticInst = originalSyncMethod.instructions.last { it.opcode == Opcode.INVOKE_STATIC }
 
-            val sgetObjectDeleteToAllIndex = it.instructions.indexOfFirst { it.opcode == Opcode.SGET_OBJECT && it.getReference<FieldReference>()?.name == "DELETE_TO_ALL" }
+            val sgetObjectDeleteToAllIndex = it.indexOfFirstInstructionOrThrow(
+                fieldAccess(name = "DELETE_TO_ALL", opcode = Opcode.SGET_OBJECT),
+            )
             it.replaceInstruction(
                 sgetObjectDeleteToAllIndex,
                 "nop"
@@ -611,7 +616,9 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
                 """.trimIndent()
             )
 
-            val lastSgetFeedIndex = it.instructions.indexOfLast { it.opcode == Opcode.SGET_OBJECT && it.getReference<FieldReference>()?.name == "Feed" }
+            val lastSgetFeedIndex = it.indexOfFirstInstructionReversedOrThrow(
+                fieldAccess(name = "Feed", opcode = Opcode.SGET_OBJECT),
+            )
             it.replaceInstruction(
                 lastSgetFeedIndex,
                 "nop"
@@ -661,10 +668,9 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
         chatLogViewHolderSetupChatInfoViewMethod.let {
             val getChatLogItemMethod = ChatLogItemViewHolderFingerprint.method
 
-            val setModifyIndex = it.instructions.indexOfFirst {
-                it.opcode == Opcode.INVOKE_VIRTUAL &&
-                        it.getReference<MethodReference>()?.name == "setModify"
-            }
+            val setModifyIndex = it.indexOfFirstInstructionOrThrow(
+                methodCall(name = "setModify"),
+            )
 
             it.addInstructionsWithLabels(
                 setModifyIndex + 1,
@@ -731,13 +737,12 @@ private fun MutableMethod.addModifiedHistoryHook(
     chatLogType: String,
     modifiedChatLogType: String,
 ) {
-    val newChatLogIndex = instructions.indexOfFirst { instruction ->
-        val reference = instruction.getReference<MethodReference>() ?: return@indexOfFirst false
+    val newChatLogIndex = indexOfFirstInstructionOrThrow {
+        val reference = getReference<MethodReference>() ?: return@indexOfFirstInstructionOrThrow false
 
         reference.parameterTypeNames == listOf(chatLogType, modifiedChatLogType, "Ljava/lang/String;") &&
                 reference.returnType == chatLogType
-    }.takeIf { it >= 0 }
-        ?: throw PatchException("Could not find modified ChatLog builder call.")
+    }
 
     val newChatLogRegister = (getInstruction(newChatLogIndex + 1) as? OneRegisterInstruction)?.registerA
         ?: throw PatchException("Could not find modified ChatLog result register.")
