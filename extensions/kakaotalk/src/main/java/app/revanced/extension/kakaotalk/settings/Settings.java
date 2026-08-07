@@ -23,6 +23,9 @@ public final class Settings extends BaseSettings {
     public static final BooleanSetting BLOCK_MODIFIED_MESSAGE_REPLY =
             new BooleanSetting("kakaotalk_block_modified_message_reply", TRUE);
 
+    public static final BooleanSetting ALLOW_REPLY_TO_FEED =
+            new BooleanSetting("kakaotalk_allow_reply_to_feed", TRUE);
+
     public static final BooleanSetting SHOW_MESSAGE_READ_RECEIPTS =
             new BooleanSetting("kakaotalk_show_message_read_receipts", TRUE);
 
@@ -96,6 +99,10 @@ public final class Settings extends BaseSettings {
 
     public static boolean blockModifiedMessageReply() {
         return BLOCK_MODIFIED_MESSAGE_REPLY.get();
+    }
+
+    public static boolean allowReplyToFeed() {
+        return ALLOW_REPLY_TO_FEED.get();
     }
 
     public static boolean showMessageReadReceipts() {
