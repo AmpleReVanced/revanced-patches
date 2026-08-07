@@ -55,3 +55,61 @@ internal object PostHistorySummaryBindFingerprint : Fingerprint(
         methodCall(returnType = "Landroid/text/Spannable;"),
     ),
 )
+
+internal const val POST_HISTORY_ACTIVITY_CLASS = "Lcom/dcinside/app/history/PostHistoryActivity;"
+
+internal const val GALLERY_FILTER_EXTENSION_CLASS =
+    "Lapp/revanced/extension/dcinside/patches/PostHistoryGalleryFilterPatch;"
+
+internal const val GALLERY_FILTER_HOST_INTERFACE =
+    "Lapp/revanced/extension/dcinside/patches/PostHistoryGalleryFilterPatch\$Host;"
+
+internal object PostHistoryActivityOnCreateFingerprint : Fingerprint(
+    definingClass = POST_HISTORY_ACTIVITY_CLASS,
+    name = "onCreate",
+    parameters = listOf("Landroid/os/Bundle;"),
+    returnType = "V",
+)
+
+// The only method that stops the list from laying out while the item manager is rebuilt.
+internal object PostHistoryReloadFingerprint : Fingerprint(
+    definingClass = POST_HISTORY_ACTIVITY_CLASS,
+    accessFlags = listOf(AccessFlags.PRIVATE, AccessFlags.FINAL),
+    parameters = emptyList(),
+    returnType = "V",
+    filters = listOf(
+        methodCall("Landroidx/recyclerview/widget/RecyclerView;->suppressLayout(Z)V"),
+    ),
+)
+
+internal object PostHistoryQueryFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf("L", "J", "J"),
+    returnType = "Ljava/util/List;",
+    strings = listOf("this.where(T::class.java)", "findAll(...)", "hide", "likes"),
+)
+
+// The Realm proxy names every column next to the accessor that reads it,
+// so the filters match the gallery accessors in declaration order.
+internal object PostHistoryRealmProxyFingerprint : Fingerprint(
+    name = "toString",
+    parameters = emptyList(),
+    returnType = "Ljava/lang/String;",
+    strings = listOf("PostHistory = proxy["),
+    filters = listOf(
+        string("{galleryId:"),
+        methodCall(definingClass = "this", parameters = emptyList(), returnType = "Ljava/lang/String;"),
+        string("{galleryName:"),
+        methodCall(definingClass = "this", parameters = emptyList(), returnType = "Ljava/lang/String;"),
+    ),
+)
+
+internal object GalleryIdBridgeFingerprint : Fingerprint(
+    definingClass = GALLERY_FILTER_EXTENSION_CLASS,
+    name = "getGalleryId",
+)
+
+internal object GalleryNameBridgeFingerprint : Fingerprint(
+    definingClass = GALLERY_FILTER_EXTENSION_CLASS,
+    name = "getGalleryName",
+)

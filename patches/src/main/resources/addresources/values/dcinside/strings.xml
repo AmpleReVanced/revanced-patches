@@ -98,4 +98,7 @@
     <string name="morphe_settings_restart_required_title">Restart required</string>
     <string name="morphe_settings_restart_required">Restart the app to apply this setting.</string>
     <string name="morphe_settings_restart_required_restart">Restart</string>
+    <string name="morphe_post_history_gallery_filter">Gallery</string>
+    <string name="morphe_post_history_gallery_filter_title">Filter by gallery</string>
+    <string name="morphe_post_history_gallery_filter_all">All</string>
 </resources>

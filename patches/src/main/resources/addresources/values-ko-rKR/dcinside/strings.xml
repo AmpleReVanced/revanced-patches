@@ -98,4 +98,7 @@
     <string name="morphe_settings_restart_required_title">다시 시작 필요</string>
     <string name="morphe_settings_restart_required">이 설정을 적용하려면 앱을 다시 시작해야 합니다.</string>
     <string name="morphe_settings_restart_required_restart">다시 시작</string>
+    <string name="morphe_post_history_gallery_filter">갤러리</string>
+    <string name="morphe_post_history_gallery_filter_title">갤러리별 보기</string>
+    <string name="morphe_post_history_gallery_filter_all">전체</string>
 </resources>
