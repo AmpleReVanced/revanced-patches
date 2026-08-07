@@ -211,7 +211,7 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
 
         val getMaxHeightMethod = chatInfoViewClass.methods.first { it.name == "getMaxHeight" }
         val paddingTopIndex = getMaxHeightMethod.indexOfFirstInstructionOrThrow(
-            methodCall(name = "getPaddingTop"),
+            methodCall(name = "getPaddingTop", opcodes = listOf(Opcode.INVOKE_VIRTUAL)),
         )
         getMaxHeightMethod.addInstructions(
             paddingTopIndex,
@@ -291,7 +291,7 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
         otherChatInfoViewClass.let {
             val getTotalWidthMethod = otherChatInfoViewClass.methods.first { it.name == "getTotalWidth" }
             val getPaddingLeftIndex = getTotalWidthMethod.indexOfFirstInstructionOrThrow(
-                methodCall(name = "getPaddingLeft"),
+                methodCall(name = "getPaddingLeft", opcodes = listOf(Opcode.INVOKE_VIRTUAL)),
             )
             getTotalWidthMethod.addInstructionsWithLabels(
                 getPaddingLeftIndex,
@@ -310,7 +310,7 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
 
             val makeRectMethod = otherChatInfoViewClass.methods.first { it.name == "makeRect" }
             val getBookmarkIconIndex = makeRectMethod.indexOfFirstInstructionOrThrow(
-                methodCall(name = "getBookmarkIcon"),
+                methodCall(name = "getBookmarkIcon", opcodes = listOf(Opcode.INVOKE_VIRTUAL)),
             )
             makeRectMethod.replaceInstruction(
                 getBookmarkIconIndex,
@@ -334,7 +334,7 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
         MyChatInfoViewClassFingerprint.classDef.let {
             val getTotalWidthMethod = it.methods.first { it.name == "getTotalWidth" }
             val getPaddingLeftIndex = getTotalWidthMethod.indexOfFirstInstructionOrThrow(
-                methodCall(name = "getPaddingLeft"),
+                methodCall(name = "getPaddingLeft", opcodes = listOf(Opcode.INVOKE_VIRTUAL)),
             )
             getTotalWidthMethod.addInstructionsWithLabels(
                 getPaddingLeftIndex,
@@ -354,7 +354,7 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
             val makeRectMethod =
                 MyChatInfoViewClassFingerprint.classDef.methods.first { it.name == "makeRect" }
             val getDateLayoutIndex = makeRectMethod.indexOfFirstInstructionOrThrow(
-                methodCall(name = "getDateLayout"),
+                methodCall(name = "getDateLayout", opcodes = listOf(Opcode.INVOKE_VIRTUAL)),
             )
             makeRectMethod.replaceInstruction(
                 getDateLayoutIndex,
@@ -680,7 +680,7 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
             val getChatLogItemMethod = ChatLogItemViewHolderFingerprint.method
 
             val setModifyIndex = it.indexOfFirstInstructionOrThrow(
-                methodCall(name = "setModify"),
+                methodCall(name = "setModify", opcodes = listOf(Opcode.INVOKE_VIRTUAL)),
             )
 
             it.addInstructionsWithLabels(
