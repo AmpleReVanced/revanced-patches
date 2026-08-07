@@ -2,9 +2,9 @@ package app.revanced.patches.kakaotalk.feature
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
-import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.stringOption
+import app.morphe.util.indexOfFirstInstructionOrThrow
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.kakaotalk.settings.PreferenceScreen
 import app.revanced.patches.kakaotalk.settings.addSettingsTabPatch
@@ -56,7 +56,7 @@ val overrideFeatureFlagPatch = bytecodePatch(
 
         val method = GetFeatureFlagValueFingerprint.method
         val parameterType = method.parameterTypes[0]
-        val invokeStaticIdx = method.instructions.indexOfFirst { it.opcode == Opcode.INVOKE_STATIC }
+        val invokeStaticIdx = method.indexOfFirstInstructionOrThrow(Opcode.INVOKE_STATIC)
 
         method.addInstructionsWithLabels(
             invokeStaticIdx,

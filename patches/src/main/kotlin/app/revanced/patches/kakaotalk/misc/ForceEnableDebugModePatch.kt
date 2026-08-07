@@ -1,8 +1,8 @@
 package app.revanced.patches.kakaotalk.misc
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
-import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.util.indexOfFirstInstructionOrThrow
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.kakaotalk.misc.fingerprints.ConfigConstructorFingerprint
 import app.revanced.patches.kakaotalk.settings.PreferenceScreen
@@ -33,8 +33,7 @@ val forceEnableDebugModePatch = bytecodePatch(
         setExtensionIsPatchIncluded(EXTENSION_CLASS)
 
         val method = ConfigConstructorFingerprint.method
-        val insns = method.instructions
-        val idxReturn = insns.indexOfFirst { it.opcode == Opcode.RETURN_VOID } // RETURN_VOID
+        val idxReturn = method.indexOfFirstInstructionOrThrow(Opcode.RETURN_VOID)
 
         val clazz = method.definingClass
 
