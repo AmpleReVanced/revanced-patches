@@ -1,3 +1,16 @@
+# [1.3.0-dev.8](https://github.com/AmpleReVanced/revanced-patches/compare/v1.3.0-dev.7...v1.3.0-dev.8) (2026-08-07)
+
+
+### Bug Fixes
+
+* **kakaotalk:** spoof board and hardware in Change model ([af43935](https://github.com/AmpleReVanced/revanced-patches/commit/af4393517342bcbcc0b39961596e81c188037a7b))
+
+
+### Features
+
+* **dcinside:** filter recently viewed posts by gallery ([2cac65b](https://github.com/AmpleReVanced/revanced-patches/commit/2cac65b9d0b8c6033045c069626a74b212164bef))
+* **kakaotalk:** add Disable abuse detection report patch ([06e04b2](https://github.com/AmpleReVanced/revanced-patches/commit/06e04b24b40891393ef9abde68b5b3cbf57bb768))
+
 # [1.3.0-dev.7](https://github.com/AmpleReVanced/revanced-patches/compare/v1.3.0-dev.6...v1.3.0-dev.7) (2026-08-06)
 
 
