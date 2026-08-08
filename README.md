@@ -4,14 +4,14 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.2.0](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.2.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;99 patches total
+> **[v1.3.0-dev.11](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.3.0-dev.11)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;110 patches total
 <details open>
-<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;57 patches</summary>
+<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;67 patches</summary>
 <br>
 
 **🎯 Supported versions:**
 
-| 26.6.1 |
+| 26.6.3 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
@@ -21,9 +21,14 @@
 | [Add settings resources](#add-settings-resources) | Adds Morphe settings layout resources to the app. |  |
 | [Add settings tab](#add-settings-tab) | Adds a settings tab to the app. |  |
 | [Allow Hide on Any Chat](#allow-hide-on-any-chat) | Users with hiding privileges can hide any chat, including their own messages. |  |
-| [Allow reply to feed](#allow-reply-to-feed) | Allows replying to feed messages |  |
+| [Allow invisible characters](#allow-invisible-characters) | Stops zero width and other invisible characters from being stripped out of the chat input and out of the messages shown in a chat room. |  |
+| [Allow open chat media bundle](#allow-open-chat-media-bundle) | Removes the open chat restriction that stops webp, gif and other media from being bundled into a single multi-photo message. |  |
+| [Allow profile media download](#allow-profile-media-download) | Adds the save option of the profile media viewer to the profile pictures and background images of other people. |  |
+| [Allow reply to feed](#allow-reply-to-feed) | Adds a setting to allow swiping feed messages to reply, or to comment where chat room comments are enabled. |  |
 | [Always Show Kick Button](#always-show-kick-button) | Always shows the kick button in group member management. |  |
-| [Bypass Moat check](#bypass-moat-check) | Add a setting to bypass the Moat integrity check that can prevent KakaoPay from running. |  |
+| [Block reactions on deleted or hidden messages](#block-reactions-on-deleted-or-hidden-messages) | Stops reactions, including the double tap gesture, from being sent on messages that the server considers deleted or hidden and that are only still visible because they are kept by a patch. |  |
+| [Block replies on deleted or hidden messages](#block-replies-on-deleted-or-hidden-messages) | Stops the swipe gesture, and any reply or comment send, from targeting messages that the server considers deleted or hidden and that are only still visible because they are kept by a patch. |  |
+| [Bypass Moat check](#bypass-moat-check) | Add a setting to bypass the KakaoPay Moat integrity check. It stops the native scan from running, so the tamper/root/hook verdict is never computed or reported and KakaoPay is not force-closed. Payments on a modified build are still risky. |  |
 | [Bypass input mention limit in non-multichat](#bypass-input-mention-limit-in-non-multichat) | Bypass the limit of input mentions in non-multichat rooms |  |
 | [Change model](#change-model) | Changes the device model to supporting subdevice features |  |
 | [Change package name](#change-package-name) | Appends ".revanced" to the package name by default. For KakaoTalk only | • Package name<br>• Update permissions<br>• Update providers |
@@ -31,6 +36,7 @@
 | [Default external browser](#default-external-browser) | Sets the default external browser for KakaoTalk to the system's default browser. |  |
 | [Disable 300+ unread limit](#disable-300-unread-limit) | Always show the real unread count instead of '300+' in chatroom list |  |
 | [Disable 99 unread limit](#disable-99-unread-limit) | Skip the 99-cap so unread count shows full value |  |
+| [Disable AdFit environment detection](#disable-adfit-environment-detection) | Stops the AdFit ad SDK from reporting a root or emulator verdict to its telemetry and ad request endpoints. |  |
 | [Disable ChatRoomAdController](#disable-chatroomadcontroller) | Disables the open-link chat room BizBoard ad controller. |  |
 | [Disable Collapse Button](#disable-collapse-button) | Disable collapse button on OpenChatList |  |
 | [Disable Community Tab](#disable-community-tab) | Disables Community Tab |  |
@@ -43,6 +49,7 @@
 | [Disable Sentry](#disable-sentry) | Disables Sentry error reporting in KakaoTalk. |  |
 | [Disable ShortForm ad](#disable-shortform-ad) | Disables the shortform ad load and render paths. |  |
 | [Disable Talk Share Log](#disable-talk-share-log) | Disable talk share log |  |
+| [Disable abuse detection report](#disable-abuse-detection-report) | Answers the startup and login integrity challenge with an empty token and a benign Play Integrity failure code instead of a Google-signed token that would expose the re-signed certificate. The report itself is still sent, so the client does not go conspicuously silent on the server's nonce the way suppressing it entirely would. |  |
 | [Disable chat room list ad](#disable-chat-room-list-ad) | Disable the chat room list ad. |  |
 | [Disable open chat room comments](#disable-open-chat-room-comments) | Adds a setting to disable comments in open chat rooms. |  |
 | [Disable verifying signature](#disable-verifying-signature) | Disables the signature verification check that prevents the app from running. |  |
@@ -71,18 +78,21 @@
 | [Show message read receipts](#show-message-read-receipts) | Shows the members who have or have not read each chat message. |  |
 | [Spoof App ID](#spoof-app-id) | Spoofs the App ID to bypass integrity checks. (to bypass biometric auth etc.) |  |
 | [Spoof apk checksums](#spoof-apk-checksums) | Spoofs the apk checksums to pass integrity checks. |  |
+| [Spoof attestation package name](#spoof-attestation-package-name) | Reports the original package name in the attestation report, which otherwise reveals a renamed install. Only the report is affected, so the app keeps using its real package name everywhere else. |  |
+| [Spoof installer package name](#spoof-installer-package-name) | Reports Google Play as the install source in the integrity report, which otherwise reveals a sideloaded install. |  |
 | [Spoof signature](#spoof-signature) | Spoofs the app signature to pass integrity checks. |  |
+| [Strip image metadata](#strip-image-metadata) | Removes EXIF metadata, including the GPS capture location, from images sent in original quality, while keeping the picture and its orientation intact. |  |
 | [Version info patch](#version-info-patch) | Patches the version info to include '(ReVanced)' in the version string. |  |
 
 </details>
 
 <details open>
-<summary>📦 dcinside&nbsp;&nbsp;•&nbsp;&nbsp;23 patches</summary>
+<summary>📦 dcinside&nbsp;&nbsp;•&nbsp;&nbsp;24 patches</summary>
 <br>
 
 **🎯 Supported versions:**
 
-| 5.3.0 |
+| 5.3.2 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
@@ -101,6 +111,7 @@
 | [Disable ad controller](#disable-ad-controller) | Disables the ad controller that manages ads in the app. |  |
 | [Disable update check](#disable-update-check) | Disables the app's update check. |  |
 | [Enable OneStore feature](#enable-onestore-feature) | Enables the OneStore feature in DC Inside app. |  |
+| [Filter recently viewed posts by gallery](#filter-recently-viewed-posts-by-gallery) | Adds a gallery filter below the recently viewed posts filters, which narrows the list down to the posts of a single gallery. |  |
 | [Hide DC official notices](#hide-dc-official-notices) | Hides official DCInside operator notices from gallery notice lists. |  |
 | [Hide Main Ad](#hide-main-ad) | Hides the main ad in the app. |  |
 | [Hide home components](#hide-home-components) | Adds settings to hide selected DCInside home screen components. |  |
@@ -108,7 +119,7 @@
 | [Register settings activity](#register-settings-activity) | Registers the Morphe settings activity in the app manifest. |  |
 | [Render big DCCon as normal size](#render-big-dccon-as-normal-size) | Adds a setting to render big DCCon at normal DCCon size. |  |
 | [Restore old post icons](#restore-old-post-icons) | Adds a setting to restore DCInside 4.7.x post list and read footer icons. |  |
-| [Show author identifier](#show-author-identifier) | Adds options to show the author identifier next to the nickname in posts, post lists, and the recently-viewed posts list. The recently-viewed list only shows it for posts opened after this patch is installed. |  |
+| [Show author identifier](#show-author-identifier) | Adds options to show the author identifier next to the nickname in posts, post lists, comments, and the recently-viewed posts list. The recently-viewed list only shows it for posts opened after this patch is installed. |  |
 | [Spoof Signature](#spoof-signature) | Spoofs the app signature to bypass integrity checks. |  |
 
 </details>
@@ -119,8 +130,8 @@
 
 **🎯 Supported versions:**
 
-| 3.9.0 |
-| :---: |
+| 3.10.0 | 3.9.0 |
+| :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
@@ -138,8 +149,8 @@
 
 **🎯 Supported versions:**
 
-| 1.4.4.9 |
-| :---: |
+| 1.4.4.12 | 1.4.4.10 | 1.4.4.9 |
+| :---: | :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
@@ -154,7 +165,7 @@
 
 **🎯 Supported versions:**
 
-| 8.28.3 |
+| 8.28.5 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |

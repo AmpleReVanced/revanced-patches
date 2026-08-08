@@ -4,6 +4,7 @@ import app.morphe.patcher.patch.Compatibility
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.ResourcePatch
 import app.morphe.patcher.patch.resourcePatch
+import net.fornwall.jelf.ElfFile
 import java.io.File
 
 internal fun nativePatch(
@@ -21,7 +22,8 @@ internal fun nativePatch(
             if (!file.exists()) return@forEach
 
             val fileBytes = file.readBytes()
-            fileReplacements.forEach { it.replaceIn(fileBytes) }
+            val elfFile = lazy { ElfFile.from(fileBytes) }
+            fileReplacements.forEach { it.replaceIn(fileBytes, elfFile) }
             file.writeBytes(fileBytes)
             patchedFiles++
         }
@@ -52,11 +54,13 @@ internal class NativeFilePatchBuilder(
 
     /**
      * Overwrite the 32-bit word at [offset] in the unique [fingerprint] match, guarded by
-     * [expected]. The [fingerprint] may contain `??` wildcard bytes.
+     * [expected]. The [fingerprint] may contain `??` wildcard bytes and is searched within
+     * [symbol] when given, which keeps it short enough to avoid relocated operands.
      */
     fun replace(
         fingerprint: String,
         offset: Int = 0,
+        symbol: String? = null,
         expected: String,
         replacement: String,
     ) {
@@ -64,7 +68,7 @@ internal class NativeFilePatchBuilder(
         val replacementWord = replacement.hexToWord()
         val (pattern, mask) = fingerprint.hexToPattern()
 
-        replacements += NativeReplacement(filePath, pattern, mask, offset) { word ->
+        replacements += NativeReplacement(filePath, symbol, pattern, mask, offset) { word ->
             if (word != expectedWord) {
                 throw PatchException("Unexpected native bytes in $filePath.")
             }
@@ -75,15 +79,16 @@ internal class NativeFilePatchBuilder(
     /**
      * Rewrite the AArch64 `TBZ`/`TBNZ` at [offset] in the unique [fingerprint] match into an
      * unconditional `B` to the same target (branch always taken). The displacement is read from
-     * the matched instruction, so it need not be hard-coded. The [fingerprint] may contain `??`.
+     * the matched instruction, so it need not be hard-coded.
      */
     fun forceBranch(
         fingerprint: String,
         offset: Int = 0,
+        symbol: String? = null,
     ) {
         val (pattern, mask) = fingerprint.hexToPattern()
 
-        replacements += NativeReplacement(filePath, pattern, mask, offset) { word ->
+        replacements += NativeReplacement(filePath, symbol, pattern, mask, offset) { word ->
             testBitBranchToUnconditional(word)
                 ?: throw PatchException("Expected an AArch64 TBZ/TBNZ at the patch site in $filePath.")
         }
@@ -94,17 +99,19 @@ internal class NativeFilePatchBuilder(
 
 internal class NativeReplacement(
     val filePath: String,
+    private val symbol: String?,
     private val pattern: ByteArray,
     private val mask: BooleanArray,
     private val offset: Int,
     private val transform: (Int) -> Int,
 ) {
-    fun replaceIn(fileBytes: ByteArray) {
-        val matches = fileBytes.findAll(pattern, mask)
+    fun replaceIn(fileBytes: ByteArray, elfFile: Lazy<ElfFile>) {
+        val bounds = symbol?.let { elfFile.value.boundsOf(it, filePath) } ?: fileBytes.indices
+        val matches = fileBytes.findAll(pattern, mask, bounds)
 
         if (matches.size != 1) {
             throw PatchException(
-                "Expected exactly one native pattern in $filePath, found ${matches.size}.",
+                "Expected exactly one native pattern in ${symbol ?: filePath}, found ${matches.size}.",
             )
         }
 
@@ -128,10 +135,22 @@ private fun testBitBranchToUnconditional(word: Int): Int? {
     return 0x14000000 or imm26
 }
 
-private fun ByteArray.findAll(pattern: ByteArray, mask: BooleanArray): List<Int> {
-    if (pattern.isEmpty() || size < pattern.size) return emptyList()
+/**
+ * File offsets the exported [name] spans. Scoping a byte pattern to a symbol keeps it short
+ * enough to leave out operands the linker rewrites between builds, such as `adrp`/`bl` targets
+ * and `__LINE__` constants.
+ */
+private fun ElfFile.boundsOf(name: String, filePath: String): IntRange {
+    val symbol = dynamicSymbolTableSection.symbols.firstOrNull { it.name == name }
+        ?: throw PatchException("Could not find the symbol $name in $filePath.")
 
-    return (0..size - pattern.size).filter { start ->
+    return symbol.st_value.toInt() until (symbol.st_value + symbol.st_size).toInt()
+}
+
+private fun ByteArray.findAll(pattern: ByteArray, mask: BooleanArray, bounds: IntRange): List<Int> {
+    if (pattern.isEmpty()) return emptyList()
+
+    return (bounds.first..bounds.last - pattern.size + 1).filter { start ->
         pattern.indices.all { index -> !mask[index] || this[start + index] == pattern[index] }
     }
 }

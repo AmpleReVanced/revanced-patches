@@ -23,6 +23,9 @@ dependencies {
 
     implementation(libs.apksig)
 
+    // ELF symbol lookup for native patches.
+    implementation(libs.jelf)
+
     // Android API stubs defined here.
     compileOnly(project(":patches:stub"))
 }

@@ -42,10 +42,20 @@
     <string name="morphe_settings_patch_ghost_mode_summary">상대방에게 입력 중 상태나 현재 동작 정보가 전달되지 않도록 합니다.</string>
     <string name="morphe_settings_patch_disable_99_unread_limit">읽지 않은 수 전체 표시</string>
     <string name="morphe_settings_patch_disable_99_unread_limit_summary">읽지 않은 수를 99+로 줄이지 않고 실제 숫자로 표시합니다.</string>
+    <string name="morphe_settings_patch_allow_invisible_characters">투명 문자 허용</string>
+    <string name="morphe_settings_patch_allow_invisible_characters_summary">입력창과 표시되는 메시지에서 폭 없는 공백을 비롯한 투명 문자가 제거되지 않고 그대로 남습니다.</string>
+    <string name="morphe_settings_patch_allow_profile_media_download">프로필 사진/배경 저장 허용</string>
+    <string name="morphe_settings_patch_allow_profile_media_download_summary">다른 사람의 프로필 사진과 배경 이미지에 저장 메뉴를 추가합니다.</string>
     <string name="morphe_settings_patch_open_chat_room_comment_disabled">오픈채팅에서 댓글 기능 끄기</string>
     <string name="morphe_settings_patch_open_chat_room_comment_disabled_summary">켜면 오픈채팅에서 댓글 대신 답장을 사용합니다.</string>
     <string name="morphe_settings_patch_show_modified_message_sender_profile">수정 이력에 보낸 사람 프로필 표시</string>
     <string name="morphe_settings_patch_show_modified_message_sender_profile_summary">메시지 수정 이력에서 보낸 사람의 프로필 사진과 닉네임을 표시합니다.</string>
+    <string name="morphe_settings_patch_block_modified_message_reaction">삭제된 메시지 리액션 차단</string>
+    <string name="morphe_settings_patch_block_modified_message_reaction_summary">패치로만 남아 있는 삭제·가려진 메시지에 더블 탭을 비롯한 리액션이 전송되지 않도록 차단합니다.</string>
+    <string name="morphe_settings_patch_block_modified_message_reply">삭제된 메시지 답장·댓글 차단</string>
+    <string name="morphe_settings_patch_block_modified_message_reply_summary">패치로만 남아 있는 삭제·가려진 메시지에 스와이프, 그리고 답장·댓글 전송이 되지 않도록 차단합니다.</string>
+    <string name="morphe_settings_patch_allow_reply_to_feed">피드 메시지 답장 허용</string>
+    <string name="morphe_settings_patch_allow_reply_to_feed_summary">피드 메시지를 스와이프해 답장하거나, 댓글이 켜진 방에서는 댓글을 달 수 있게 합니다. 피드 메시지 답장은 표준 동작이 아닙니다.</string>
     <string name="morphe_settings_patch_show_message_read_receipts">메시지 읽음 정보 표시</string>
     <string name="morphe_settings_patch_feature_flag_overrides">기능 플래그 오버라이드</string>
     <string name="morphe_settings_patch_feature_flag_overrides_summary">key=value 형식으로 입력하고 여러 항목은 세미콜론으로 구분합니다.</string>
@@ -96,6 +106,9 @@
     <string name="morphe_pref_open_chat_room_comment_disabled_summary">켜면 오픈채팅에서 댓글 대신 답장을 사용합니다.</string>
     <string name="morphe_pref_disable_99_unread_limit_summary">읽지 않은 수를 99+로 줄이지 않고 실제 숫자로 표시합니다.</string>
     <string name="morphe_pref_show_message_read_receipts_summary">메시지 옆의 시간과 읽지 않은 수를 탭하면 누가 읽었는지 확인할 수 있습니다.</string>
+    <string name="morphe_pref_block_modified_message_reaction_summary">패치로만 남아 있는 삭제·가려진 메시지에 더블 탭을 비롯한 리액션이 전송되지 않도록 차단합니다.</string>
+    <string name="morphe_pref_block_modified_message_reply_summary">패치로만 남아 있는 삭제·가려진 메시지에 스와이프, 그리고 답장·댓글 전송이 되지 않도록 차단합니다.</string>
+    <string name="morphe_pref_allow_reply_to_feed_summary">피드 메시지를 스와이프해 답장하거나, 댓글이 켜진 방에서는 댓글을 달 수 있게 합니다. 피드 메시지 답장은 표준 동작이 아닙니다.</string>
     <string name="morphe_pref_show_modified_message_sender_profile_summary">메시지 수정 이력에서 보낸 사람의 프로필 사진과 닉네임을 표시합니다.</string>
     <string name="morphe_pref_bypass_moat_integrity_check_summary">카카오페이를 실행하는 데 필요할 수 있습니다. 무결성 감지 경로를 우회하므로 위험을 이해한 경우에만 사용하세요.</string>
     <string name="morphe_pref_ghost_mode_summary">상대방에게 입력 중 상태나 현재 동작 정보가 전달되지 않도록 합니다.</string>
@@ -113,4 +126,21 @@
     <string name="morphe_pref_hide_more_tab_line_service_section_summary">더보기 탭에서 개별 서비스 항목을 숨깁니다. 이 설정을 바꾼 뒤에는 카카오톡을 다시 시작해야 합니다.</string>
     <string name="morphe_pref_enable_send_big_text_summary">전송 버튼을 길게 눌러 한 줄 텍스트를 큰 글씨로 보낼 수 있습니다.</string>
     <string name="morphe_pref_enable_markdown_summary">일반 텍스트를 마크다운이 적용된 형태로 전송합니다.</string>
+    <string name="morphe_pref_allow_invisible_characters_summary">입력창과 표시되는 메시지에서 폭 없는 공백을 비롯한 투명 문자가 제거되지 않고 그대로 남습니다.</string>
+    <string name="morphe_pref_allow_profile_media_download_summary">다른 사람의 프로필 사진과 배경 이미지에 저장 메뉴를 추가합니다.</string>
+    <string name="morphe_kakaotalk_profile_media_download_started">프로필 사진을 저장하는 중…</string>
+    <string name="morphe_kakaotalk_profile_media_download_saved">프로필 사진을 저장했습니다</string>
+    <string name="morphe_kakaotalk_profile_media_download_failed">프로필 사진을 저장하지 못했습니다</string>
+    <string name="morphe_kakaotalk_profile_media_download_save">저장</string>
+    <string name="morphe_settings_export">설정 백업</string>
+    <string name="morphe_settings_export_summary">Morphe 설정을 파일로 저장해, 앱을 다시 패치해도 남도록 합니다.</string>
+    <string name="morphe_settings_import">설정 복원</string>
+    <string name="morphe_settings_import_summary">파일에서 Morphe 설정을 다시 불러옵니다.</string>
+    <string name="morphe_settings_import_failed">설정을 복원하지 못했습니다</string>
+    <string name="morphe_settings_patch_allow_open_chat_media_bundle">오픈채팅에서 미디어 묶어보내기 허용</string>
+    <string name="morphe_settings_patch_allow_open_chat_media_bundle_summary">켜면 오픈채팅에서도 webp, gif 등 모든 형식의 미디어를 하나의 묶음사진으로 보낼 수 있습니다.</string>
+    <string name="morphe_pref_allow_open_chat_media_bundle_summary">켜면 오픈채팅에서도 webp, gif 등 모든 형식의 미디어를 하나의 묶음사진으로 보낼 수 있습니다.</string>
+    <string name="morphe_settings_patch_strip_image_metadata">보낸 이미지에서 메타데이터 제거</string>
+    <string name="morphe_settings_patch_strip_image_metadata_summary">원본 화질로 보내는 이미지의 EXIF 메타데이터(GPS 위치 포함)를 제거합니다.</string>
+    <string name="morphe_pref_strip_image_metadata_summary">원본 화질로 보내는 이미지의 EXIF 메타데이터(GPS 위치 포함)를 제거합니다.</string>
 </resources>

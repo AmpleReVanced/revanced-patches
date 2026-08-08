@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -49,6 +47,8 @@ public final class SettingsActivity extends Activity {
             "morphe_pref_show_post_history_author_identifier";
     private static final String PREF_SHOW_POST_AUTHOR_IDENTIFIER =
             "morphe_pref_show_post_author_identifier";
+    private static final String PREF_SHOW_COMMENT_AUTHOR_IDENTIFIER =
+            "morphe_pref_show_comment_author_identifier";
     private static final String PREF_HIDE_HOME_SEARCH_MENU = "morphe_pref_hide_home_search_menu";
     private static final String PREF_HIDE_HOME_RECENT_GALLERIES = "morphe_pref_hide_home_recent_galleries";
     private static final String PREF_HIDE_HOME_RECOMMENDED_GALLERIES = "morphe_pref_hide_home_recommended_galleries";
@@ -64,6 +64,11 @@ public final class SettingsActivity extends Activity {
     private static final String PREF_PATCHES_VERSION = "morphe_pref_patches_version";
     private static final String PREF_PACKAGE_NAME = "morphe_pref_package_name";
     private static final String PREF_RESET = "morphe_pref_reset";
+    private static final String MESSAGE_RESTART_REQUIRED_TITLE = "morphe_settings_restart_required_title";
+    private static final String MESSAGE_RESTART_REQUIRED = "morphe_settings_restart_required";
+    private static final String MESSAGE_RESTART_REQUIRED_RESTART = "morphe_settings_restart_required_restart";
+    private static final String PREF_EXPORT_SETTINGS = "morphe_pref_export_settings";
+    private static final String PREF_IMPORT_SETTINGS = "morphe_pref_import_settings";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,6 +156,7 @@ public final class SettingsActivity extends Activity {
             bindSwitchIfIncluded(PREF_HIDE_MINI_GALLERY_COVER_IMAGE, Settings.HIDE_MINI_GALLERY_COVER_IMAGE, HideMiniGalleryCoverImagePatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_RESTORE_LEGACY_POST_ICONS, Settings.RESTORE_LEGACY_POST_ICONS, RestoreOldPostIconsPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_SHOW_POST_AUTHOR_IDENTIFIER, Settings.SHOW_POST_AUTHOR_IDENTIFIER, AuthorIdentifierPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_SHOW_COMMENT_AUTHOR_IDENTIFIER, Settings.SHOW_COMMENT_AUTHOR_IDENTIFIER, AuthorIdentifierPatch.isCommentPatchIncluded());
             bindSwitchIfIncluded(PREF_SHOW_POST_HISTORY_AUTHOR_IDENTIFIER, Settings.SHOW_POST_HISTORY_AUTHOR_IDENTIFIER, AuthorIdentifierPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_HIDE_HOME_SEARCH_MENU, Settings.HIDE_HOME_SEARCH_MENU, HomeComponentsPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_HIDE_HOME_RECENT_GALLERIES, Settings.HIDE_HOME_RECENT_GALLERIES, HomeComponentsPatch.isPatchIncluded());
@@ -167,6 +173,7 @@ public final class SettingsActivity extends Activity {
             bindInfoPreference(PREF_PATCHES_VERSION, Utils.getPatchesReleaseVersion());
             bindInfoPreference(PREF_PACKAGE_NAME, requireActivity().getPackageName());
             bindClearUserMemosPreferenceIfIncluded(UserMemoPatch.isPatchIncluded());
+            bindBackupPreferences();
             bindResetPreference();
             removeEmptyPreferenceGroups();
             setPreferenceScreenToolbar(getPreferenceScreen());
@@ -306,6 +313,36 @@ public final class SettingsActivity extends Activity {
             preference.setSummary(normalizeSummary(summary));
         }
 
+        private void bindBackupPreferences() {
+            requirePreference(PREF_EXPORT_SETTINGS, Preference.class)
+                    .setOnPreferenceClickListener(preference -> {
+                        exportSettings();
+                        return true;
+                    });
+            requirePreference(PREF_IMPORT_SETTINGS, Preference.class)
+                    .setOnPreferenceClickListener(preference -> {
+                        importSettings();
+                        return true;
+                    });
+        }
+
+        @Override
+        protected void onSettingsImported(boolean restartNeeded) {
+            refreshPreferences();
+            if (restartNeeded) {
+                showRestartRequiredDialog();
+            }
+        }
+
+        private void showRestartRequiredDialog() {
+            showRestartDialog(
+                    requireActivity(),
+                    resString(MESSAGE_RESTART_REQUIRED_TITLE, "Restart required"),
+                    resString(MESSAGE_RESTART_REQUIRED, "Restart the app to apply this setting."),
+                    resString(MESSAGE_RESTART_REQUIRED_RESTART, "Restart")
+            );
+        }
+
         private void bindResetPreference() {
             Preference preference = requirePreference(PREF_RESET, Preference.class);
             preference.setPersistent(false);
@@ -346,25 +383,6 @@ public final class SettingsActivity extends Activity {
                     : requireActivity().getString(resourceId, formatArgs);
         }
 
-        private static int dp(Context context, int value) {
-            return (int) (value * context.getResources().getDisplayMetrics().density + 0.5f);
-        }
-
-        private static ColorStateList resolveTextColor(Context context, int attr) {
-            TypedArray array = context.obtainStyledAttributes(new int[]{attr});
-            try {
-                return array.getColorStateList(0);
-            } finally {
-                array.recycle();
-            }
-        }
-
-        private static void setTextColor(TextView view, ColorStateList color) {
-            if (color != null) {
-                view.setTextColor(color);
-            }
-        }
-
         private Activity requireActivity() {
             Activity activity = getActivity();
             if (activity == null) {
@@ -375,15 +393,11 @@ public final class SettingsActivity extends Activity {
 
         private static final class PresetAdapter extends BaseAdapter {
             private final Context context;
-            private final ColorStateList primaryTextColor;
-            private final ColorStateList secondaryTextColor;
             private final UserMemoPatch.Preset[] presets;
 
             PresetAdapter(Context context, UserMemoPatch.Preset[] presets) {
                 this.context = context;
                 this.presets = presets;
-                primaryTextColor = resolveTextColor(context, android.R.attr.textColorPrimary);
-                secondaryTextColor = resolveTextColor(context, android.R.attr.textColorSecondary);
             }
 
             @Override
@@ -413,21 +427,22 @@ public final class SettingsActivity extends Activity {
                             AbsListView.LayoutParams.MATCH_PARENT,
                             AbsListView.LayoutParams.WRAP_CONTENT
                     ));
-                    layout.setMinimumHeight(dp(context, 64));
-                    layout.setPadding(dp(context, 24), dp(context, 12), dp(context, 24), dp(context, 12));
+                    layout.setMinimumHeight(MorphePreferenceStyle.dp(context, 64));
+                    layout.setPadding(MorphePreferenceStyle.dp(context, 24), MorphePreferenceStyle.dp(context, 12),
+                            MorphePreferenceStyle.dp(context, 24), MorphePreferenceStyle.dp(context, 12));
 
                     TextView title = new TextView(context);
                     title.setTypeface(Typeface.DEFAULT_BOLD);
                     title.setTextSize(16);
                     title.setSingleLine(false);
-                    setTextColor(title, primaryTextColor);
+                    title.setTextColor(MorphePreferenceStyle.primaryTextColor(context));
 
                     TextView description = new TextView(context);
                     description.setTextSize(13);
                     description.setSingleLine(false);
                     description.setLineSpacing(0, 1.1f);
-                    description.setPadding(0, dp(context, 4), 0, 0);
-                    setTextColor(description, secondaryTextColor);
+                    description.setPadding(0, MorphePreferenceStyle.dp(context, 4), 0, 0);
+                    description.setTextColor(MorphePreferenceStyle.secondaryTextColor(context));
 
                     layout.addView(title, new LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.MATCH_PARENT,

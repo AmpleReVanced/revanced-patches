@@ -3,6 +3,7 @@ package app.revanced.patches.kakaotalk.chatlog
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.methodCall
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.resourcePatch
@@ -11,6 +12,8 @@ import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMuta
 import app.morphe.patches.all.misc.resources.addResourcesPatch
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import app.morphe.util.getReference
+import app.morphe.util.indexOfFirstInstructionOrThrow
+import app.morphe.util.indexOfFirstStringInstructionOrThrow
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.ChatLogFingerprint
 import app.revanced.patches.kakaotalk.chatlog.fingerprints.ChatLogItemViewHolderFingerprint
@@ -50,7 +53,6 @@ import com.android.tools.smali.dexlib2.iface.instruction.RegisterRangeInstructio
 import com.android.tools.smali.dexlib2.iface.instruction.TwoRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
-import com.android.tools.smali.dexlib2.iface.reference.StringReference
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethodParameter
 import org.w3c.dom.Element
@@ -296,16 +298,15 @@ val showMessageReadReceiptsPatch = bytecodePatch(
 
         val setupChatInfoViewMethod = ChatLogViewHolderSetupChatInfoViewFingerprint.method
         val getChatLogItemMethod = ChatLogItemViewHolderFingerprint.method
-        val setModifyIndex = setupChatInfoViewMethod.instructions.indexOfFirst { instruction ->
-            instruction.opcode == Opcode.INVOKE_VIRTUAL &&
-                instruction.getReference<MethodReference>()?.let { reference ->
-                    reference.definingClass == CHAT_INFO_VIEW_CLASS &&
-                        reference.name == "setModify" &&
-                        reference.parameterTypeNames == listOf("Z") &&
-                        reference.returnType == "V"
-                } == true
-        }.takeIf { it >= 0 }
-            ?: throw PatchException("Could not find ChatInfoView modify binding call.")
+        val setModifyIndex = setupChatInfoViewMethod.indexOfFirstInstructionOrThrow(
+            methodCall(
+                definingClass = CHAT_INFO_VIEW_CLASS,
+                name = "setModify",
+                parameters = listOf("Z"),
+                returnType = "V",
+                opcodes = listOf(Opcode.INVOKE_VIRTUAL),
+            ),
+        )
 
         val chatInfoViewRegister =
             (setupChatInfoViewMethod.getInstruction(setModifyIndex) as FiveRegisterInstruction)
@@ -575,15 +576,14 @@ private fun wideFieldGetter(
 )
 
 private fun MutableMethod.profileImageTypeConstant(profileStateType: String): FieldReference {
-    val profileLoadIndex = instructions.indexOfFirst { instruction ->
-        instruction.getReference<MethodReference>()?.let { reference ->
-            reference.definingClass == PROFILE_VIEW_CLASS &&
-                reference.name == "load" &&
-                reference.parameterTypeNames == listOf("J", "Ljava/lang/String;", "I") &&
-                reference.returnType == "V"
-        } == true
-    }.takeIf { it >= 0 }
-        ?: throw PatchException("Could not find the profile view load call.")
+    val profileLoadIndex = indexOfFirstInstructionOrThrow(
+        methodCall(
+            definingClass = PROFILE_VIEW_CLASS,
+            name = "load",
+            parameters = listOf("J", "Ljava/lang/String;", "I"),
+            returnType = "V",
+        ),
+    )
 
     return instructions.take(profileLoadIndex)
         .asSequence()
@@ -598,10 +598,7 @@ private fun MutableMethod.profileImageTypeConstant(profileStateType: String): Fi
 private fun Method.requirePrintedWideField(label: String): FieldReference {
     val instructions = implementation?.instructions?.toList()
         ?: throw PatchException("Method $definingClass->$name has no implementation.")
-    val labelIndex = instructions.indexOfFirst { instruction ->
-        instruction.getReference<StringReference>()?.string == label
-    }.takeIf { it >= 0 }
-        ?: throw PatchException("Could not find ChatLog label: $label")
+    val labelIndex = indexOfFirstStringInstructionOrThrow(label)
     val appendInstruction = instructions.asSequence()
         .drop(labelIndex + 1)
         .firstOrNull { instruction ->

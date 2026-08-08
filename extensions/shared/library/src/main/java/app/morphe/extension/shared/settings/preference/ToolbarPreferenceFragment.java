@@ -33,11 +33,16 @@ public abstract class ToolbarPreferenceFragment extends AbstractPreferenceFragme
                 PreferenceScreen childScreen = (PreferenceScreen) childPreference;
                 setPreferenceScreenToolbar(childScreen);
                 childScreen.setOnPreferenceClickListener(preference -> {
+                    // The dialog is already shown by the time this runs, so the toolbar goes in
+                    // before the first frame instead of shifting the list down after it.
+                    AbstractPreferenceFragment.stylePreferenceScreenDialog(childScreen);
+                    if (addPreferenceScreenToolbar(childScreen)) {
+                        return false;
+                    }
+
                     View view = getView();
                     if (view != null) {
                         postAddPreferenceScreenToolbar(childScreen, view, 0);
-                    } else {
-                        addPreferenceScreenToolbar(childScreen);
                     }
                     return false;
                 });
@@ -101,11 +106,11 @@ public abstract class ToolbarPreferenceFragment extends AbstractPreferenceFragme
         toolbar.setOrientation(LinearLayout.HORIZONTAL);
         toolbar.setGravity(android.view.Gravity.CENTER_VERTICAL);
         toolbar.setBackgroundColor(backgroundColor);
-        int toolbarPadding = dp(context, 15);
-        toolbar.setPadding(toolbarPadding, dp(context, 10), toolbarPadding, dp(context, 8));
+        int toolbarPadding = MorphePreferenceStyle.dp(context, 15);
+        toolbar.setPadding(toolbarPadding, MorphePreferenceStyle.dp(context, 10), toolbarPadding, MorphePreferenceStyle.dp(context, 8));
 
         toolbar.addView(SettingsActivityLayout.createBackArrowView(context, view -> dialog.dismiss()));
-        toolbar.addView(SettingsActivityLayout.createToolbarTitle(context, childScreen.getTitle(), foregroundColor));
+        toolbar.addView(SettingsActivityLayout.createToolbarTitle(context, childScreen.getTitle(), foregroundColor, false));
 
         root.addView(toolbar, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -134,30 +139,4 @@ public abstract class ToolbarPreferenceFragment extends AbstractPreferenceFragme
         return true;
     }
 
-    private static ListView findListView(View view) {
-        if (view instanceof ListView) {
-            return (ListView) view;
-        }
-        if (!(view instanceof ViewGroup)) {
-            return null;
-        }
-
-        ViewGroup viewGroup = (ViewGroup) view;
-        for (int i = 0, count = viewGroup.getChildCount(); i < count; i++) {
-            ListView listView = findListView(viewGroup.getChildAt(i));
-            if (listView != null) {
-                return listView;
-            }
-        }
-
-        return null;
-    }
-
-    private static int dp(Context context, float value) {
-        return (int) android.util.TypedValue.applyDimension(
-                android.util.TypedValue.COMPLEX_UNIT_DIP,
-                value,
-                context.getResources().getDisplayMetrics()
-        );
-    }
 }

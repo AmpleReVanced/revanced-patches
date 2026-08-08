@@ -8,6 +8,8 @@ import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.fieldAccess
+import app.morphe.patcher.methodCall
 import app.morphe.patcher.patch.stringOption
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patcher.util.proxy.mutableTypes.MutableField.Companion.toMutable
@@ -15,6 +17,8 @@ import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMuta
 import app.morphe.patches.all.misc.resources.addResourcesPatch
 import app.morphe.util.getFreeRegisterProvider
 import app.morphe.util.getReference
+import app.morphe.util.indexOfFirstInstructionOrThrow
+import app.morphe.util.indexOfFirstInstructionReversedOrThrow
 import app.morphe.util.returnEarly
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
@@ -71,6 +75,8 @@ private const val MODIFIED_PROFILE_IMAGE_TYPE_METHOD = "revanced_modified_profil
 private const val PRESERVE_MODIFIED_HISTORY_METHOD = "revanced_preserveModifiedHistory"
 private const val EXTENSION_CLASS =
     "Lapp/revanced/extension/kakaotalk/patches/ShowDeletedHiddenOrEditedMessagePatch;"
+
+internal const val MODIFIED_MESSAGE_IS_DELETED_OR_HIDDEN_METHOD = "revanced_isDeletedOrHidden"
 
 private data class ModifiedProfileReferences(
     val getRecyclerItemReference: MethodReference,
@@ -204,10 +210,9 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
         )
 
         val getMaxHeightMethod = chatInfoViewClass.methods.first { it.name == "getMaxHeight" }
-        val paddingTopIndex = getMaxHeightMethod.instructions.indexOfFirst {
-            it.opcode == Opcode.INVOKE_VIRTUAL &&
-                    it.getReference<MethodReference>()?.name == "getPaddingTop"
-        }
+        val paddingTopIndex = getMaxHeightMethod.indexOfFirstInstructionOrThrow(
+            methodCall(name = "getPaddingTop", opcodes = listOf(Opcode.INVOKE_VIRTUAL)),
+        )
         getMaxHeightMethod.addInstructions(
             paddingTopIndex,
             "move-object v4, p0"
@@ -226,7 +231,7 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
         )
 
         val onDrawMethod = chatInfoViewClass.methods.first { it.name == "onDraw" }
-        val firstInvokeSuperIdx = onDrawMethod.instructions.indexOfFirst { it.opcode == Opcode.INVOKE_SUPER }
+        val firstInvokeSuperIdx = onDrawMethod.indexOfFirstInstructionOrThrow(Opcode.INVOKE_SUPER)
         onDrawMethod.addInstructionsWithLabels(
             firstInvokeSuperIdx + 1,
             """
@@ -285,9 +290,9 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
         val otherChatInfoViewClass = OthersChatInfoViewClassFingerprint.classDef
         otherChatInfoViewClass.let {
             val getTotalWidthMethod = otherChatInfoViewClass.methods.first { it.name == "getTotalWidth" }
-            val getPaddingLeftIndex = getTotalWidthMethod.instructions.first {
-                it.opcode == Opcode.INVOKE_VIRTUAL && it.getReference<MethodReference>()?.name == "getPaddingLeft"
-            }.location.index
+            val getPaddingLeftIndex = getTotalWidthMethod.indexOfFirstInstructionOrThrow(
+                methodCall(name = "getPaddingLeft", opcodes = listOf(Opcode.INVOKE_VIRTUAL)),
+            )
             getTotalWidthMethod.addInstructionsWithLabels(
                 getPaddingLeftIndex,
                 """
@@ -304,9 +309,9 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
             )
 
             val makeRectMethod = otherChatInfoViewClass.methods.first { it.name == "makeRect" }
-            val getBookmarkIconIndex = makeRectMethod.instructions.first {
-                it.opcode == Opcode.INVOKE_VIRTUAL && it.getReference<MethodReference>()?.name == "getBookmarkIcon"
-            }.location.index
+            val getBookmarkIconIndex = makeRectMethod.indexOfFirstInstructionOrThrow(
+                methodCall(name = "getBookmarkIcon", opcodes = listOf(Opcode.INVOKE_VIRTUAL)),
+            )
             makeRectMethod.replaceInstruction(
                 getBookmarkIconIndex,
                 "invoke-virtual {p0}, Lcom/kakao/talk/widget/chatlog/ChatInfoView;->getExtension()Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;"
@@ -328,9 +333,9 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
 
         MyChatInfoViewClassFingerprint.classDef.let {
             val getTotalWidthMethod = it.methods.first { it.name == "getTotalWidth" }
-            val getPaddingLeftIndex = getTotalWidthMethod.instructions.first {
-                it.opcode == Opcode.INVOKE_VIRTUAL && it.getReference<MethodReference>()?.name == "getPaddingLeft"
-            }.location.index
+            val getPaddingLeftIndex = getTotalWidthMethod.indexOfFirstInstructionOrThrow(
+                methodCall(name = "getPaddingLeft", opcodes = listOf(Opcode.INVOKE_VIRTUAL)),
+            )
             getTotalWidthMethod.addInstructionsWithLabels(
                 getPaddingLeftIndex,
                 """
@@ -348,9 +353,9 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
 
             val makeRectMethod =
                 MyChatInfoViewClassFingerprint.classDef.methods.first { it.name == "makeRect" }
-            val getDateLayoutIndex = makeRectMethod.instructions.first {
-                it.opcode == Opcode.INVOKE_VIRTUAL && it.getReference<MethodReference>()?.name == "getDateLayout"
-            }.location.index
+            val getDateLayoutIndex = makeRectMethod.indexOfFirstInstructionOrThrow(
+                methodCall(name = "getDateLayout", opcodes = listOf(Opcode.INVOKE_VIRTUAL)),
+            )
             makeRectMethod.replaceInstruction(
                 getDateLayoutIndex,
                 "invoke-virtual {p0}, Lcom/kakao/talk/widget/chatlog/ChatInfoView;->getExtension()Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;"
@@ -518,6 +523,15 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
 
         val chatLogClass = ChatLogFingerprint.classDef
         val vFieldField = chatLogClass.fields.first { it.type == chatLogVFieldClass.type }
+
+        chatLogClass.methods.add(
+            isDeletedOrHiddenMethod(
+                chatLogClass.type,
+                vFieldField.smaliReference,
+                chatLogVFieldClass.type,
+            ),
+        )
+
         val modifiedChatLogType = ModifiedChatLogFingerprint.classDef.type
         val modifyLogBuilderMethod = ModifyLogBuilderFingerprint(chatLogClass.type).method
 
@@ -576,7 +590,9 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
             val invokeVirtualInst = originalSyncMethod.instructions.last { it.opcode == Opcode.INVOKE_VIRTUAL }
             val invokeStaticInst = originalSyncMethod.instructions.last { it.opcode == Opcode.INVOKE_STATIC }
 
-            val sgetObjectDeleteToAllIndex = it.instructions.indexOfFirst { it.opcode == Opcode.SGET_OBJECT && it.getReference<FieldReference>()?.name == "DELETE_TO_ALL" }
+            val sgetObjectDeleteToAllIndex = it.indexOfFirstInstructionOrThrow(
+                fieldAccess(name = "DELETE_TO_ALL", opcode = Opcode.SGET_OBJECT),
+            )
             it.replaceInstruction(
                 sgetObjectDeleteToAllIndex,
                 "nop"
@@ -611,7 +627,9 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
                 """.trimIndent()
             )
 
-            val lastSgetFeedIndex = it.instructions.indexOfLast { it.opcode == Opcode.SGET_OBJECT && it.getReference<FieldReference>()?.name == "Feed" }
+            val lastSgetFeedIndex = it.indexOfFirstInstructionReversedOrThrow(
+                fieldAccess(name = "Feed", opcode = Opcode.SGET_OBJECT),
+            )
             it.replaceInstruction(
                 lastSgetFeedIndex,
                 "nop"
@@ -661,10 +679,9 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
         chatLogViewHolderSetupChatInfoViewMethod.let {
             val getChatLogItemMethod = ChatLogItemViewHolderFingerprint.method
 
-            val setModifyIndex = it.instructions.indexOfFirst {
-                it.opcode == Opcode.INVOKE_VIRTUAL &&
-                        it.getReference<MethodReference>()?.name == "setModify"
-            }
+            val setModifyIndex = it.indexOfFirstInstructionOrThrow(
+                methodCall(name = "setModify", opcodes = listOf(Opcode.INVOKE_VIRTUAL)),
+            )
 
             it.addInstructionsWithLabels(
                 setModifyIndex + 1,
@@ -731,13 +748,12 @@ private fun MutableMethod.addModifiedHistoryHook(
     chatLogType: String,
     modifiedChatLogType: String,
 ) {
-    val newChatLogIndex = instructions.indexOfFirst { instruction ->
-        val reference = instruction.getReference<MethodReference>() ?: return@indexOfFirst false
+    val newChatLogIndex = indexOfFirstInstructionOrThrow {
+        val reference = getReference<MethodReference>() ?: return@indexOfFirstInstructionOrThrow false
 
         reference.parameterTypeNames == listOf(chatLogType, modifiedChatLogType, "Ljava/lang/String;") &&
                 reference.returnType == chatLogType
-    }.takeIf { it >= 0 }
-        ?: throw PatchException("Could not find modified ChatLog builder call.")
+    }
 
     val newChatLogRegister = (getInstruction(newChatLogIndex + 1) as? OneRegisterInstruction)?.registerA
         ?: throw PatchException("Could not find modified ChatLog result register.")
@@ -761,6 +777,46 @@ private fun MutableMethod.addModifiedHistoryHook(
             move-object/from16 v$originalChatLogArgumentRegister, p1
             move-object/from16 v$newChatLogArgumentRegister, v$newChatLogRegister
             invoke-static {v$originalChatLogArgumentRegister, v$newChatLogArgumentRegister}, $chatLogType->$PRESERVE_MODIFIED_HISTORY_METHOD($chatLogType$chatLogType)V
+        """.trimIndent(),
+    )
+}
+
+private fun isDeletedOrHiddenMethod(
+    definingClass: String,
+    vFieldReference: String,
+    vFieldType: String,
+): MutableMethod = ImmutableMethod(
+    definingClass,
+    MODIFIED_MESSAGE_IS_DELETED_OR_HIDDEN_METHOD,
+    emptyList(),
+    "Z",
+    AccessFlags.PUBLIC.value or AccessFlags.FINAL.value,
+    null,
+    null,
+    MutableMethodImplementation(4),
+).toMutable().apply {
+    // The adapter's instance keeps its flag stale until reloaded, so also check the id cache. Read
+    // the id first, while p0 still holds the chat log, so later register reuse cannot clobber it.
+    addInstructionsWithLabels(
+        0,
+        """
+            invoke-virtual {p0}, $definingClass->getId()J
+            move-result-wide v0
+            iget-object v2, p0, $vFieldReference
+            if-eqz v2, :revanced_check_cache
+            invoke-virtual {v2}, $vFieldType->getDeleted()Z
+            move-result v3
+            if-nez v3, :revanced_modified
+            invoke-virtual {v2}, $vFieldType->getHidden()Z
+            move-result v3
+            if-nez v3, :revanced_modified
+            :revanced_check_cache
+            invoke-static {v0, v1}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->isDeletedOrHiddenById(J)Z
+            move-result v0
+            return v0
+            :revanced_modified
+            const/4 v0, 0x1
+            return v0
         """.trimIndent(),
     )
 }

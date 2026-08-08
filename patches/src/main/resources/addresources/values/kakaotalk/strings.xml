@@ -58,10 +58,20 @@ Second \"item\" text"</string>
     <string name="morphe_settings_patch_ghost_mode_summary">Prevents typing and activity updates from being sent to the other side.</string>
     <string name="morphe_settings_patch_disable_99_unread_limit">Show full unread count</string>
     <string name="morphe_settings_patch_disable_99_unread_limit_summary">Shows the full unread count instead of limiting the badge to 99+.</string>
+    <string name="morphe_settings_patch_allow_invisible_characters">Allow invisible characters</string>
+    <string name="morphe_settings_patch_allow_invisible_characters_summary">Keeps zero width and other invisible characters instead of stripping them from the chat input and from displayed messages.</string>
+    <string name="morphe_settings_patch_allow_profile_media_download">Allow profile media download</string>
+    <string name="morphe_settings_patch_allow_profile_media_download_summary">Adds the save option to the profile pictures and background images of other people.</string>
     <string name="morphe_settings_patch_open_chat_room_comment_disabled">Disable comments in open chat</string>
     <string name="morphe_settings_patch_open_chat_room_comment_disabled_summary">Uses replies instead of comments in open chat when enabled.</string>
     <string name="morphe_settings_patch_show_modified_message_sender_profile">Show sender profile in edit history</string>
     <string name="morphe_settings_patch_show_modified_message_sender_profile_summary">Shows the sender’s profile image and nickname in message edit history.</string>
+    <string name="morphe_settings_patch_block_modified_message_reaction">Block reactions on deleted messages</string>
+    <string name="morphe_settings_patch_block_modified_message_reaction_summary">Blocks reactions, including the double tap gesture, on deleted or hidden messages that are only kept visible by a patch.</string>
+    <string name="morphe_settings_patch_block_modified_message_reply">Block replies and comments on deleted messages</string>
+    <string name="morphe_settings_patch_block_modified_message_reply_summary">Stops the swipe gesture, and any reply or comment send, on deleted or hidden messages that are only kept visible by a patch.</string>
+    <string name="morphe_settings_patch_allow_reply_to_feed">Allow reply to feed</string>
+    <string name="morphe_settings_patch_allow_reply_to_feed_summary">Lets you swipe feed messages to reply, or to comment where chat room comments are enabled. Replying to feed messages is not standard behavior.</string>
     <string name="morphe_settings_patch_show_message_read_receipts">Show message read receipts</string>
     <string name="morphe_settings_patch_feature_flag_overrides">Feature flag overrides</string>
     <string name="morphe_settings_patch_feature_flag_overrides_summary">Enter overrides as semicolon-separated key=value pairs.</string>
@@ -111,6 +121,9 @@ Second \"item\" text"</string>
     <string name="morphe_settings_restart_required_restart">Restart</string>
     <string name="morphe_pref_open_chat_room_comment_disabled_summary">Uses replies instead of comments in open chat when enabled.</string>
     <string name="morphe_pref_disable_99_unread_limit_summary">Shows the full unread count instead of limiting the badge to 99+.</string>
+    <string name="morphe_pref_block_modified_message_reaction_summary">Blocks reactions, including the double tap gesture, on deleted or hidden messages that are only kept visible by a patch.</string>
+    <string name="morphe_pref_block_modified_message_reply_summary">Stops the swipe gesture, and any reply or comment send, on deleted or hidden messages that are only kept visible by a patch.</string>
+    <string name="morphe_pref_allow_reply_to_feed_summary">Lets you swipe feed messages to reply, or to comment where chat room comments are enabled. Replying to feed messages is not standard behavior.</string>
     <string name="morphe_pref_show_message_read_receipts_summary">Tap the time and unread count next to a message to see which members have read it.</string>
     <string name="morphe_pref_show_modified_message_sender_profile_summary">Shows the sender’s profile image and nickname in message edit history.</string>
     <string name="morphe_pref_bypass_moat_integrity_check_summary">May be required to launch KakaoPay. This bypasses an integrity detection path. Use at your own risk.</string>
@@ -129,4 +142,21 @@ Second \"item\" text"</string>
     <string name="morphe_pref_hide_more_tab_line_service_section_summary">Hides individual service items from the More tab. Restart KakaoTalk after changing this setting.</string>
     <string name="morphe_pref_enable_send_big_text_summary">Lets you long-press the send button to send a single-line message in large text.</string>
     <string name="morphe_pref_enable_markdown_summary">Sends regular text messages with markdown enabled.</string>
+    <string name="morphe_pref_allow_invisible_characters_summary">Keeps zero width and other invisible characters instead of stripping them from the chat input and from displayed messages.</string>
+    <string name="morphe_pref_allow_profile_media_download_summary">Adds the save option to the profile pictures and background images of other people.</string>
+    <string name="morphe_kakaotalk_profile_media_download_started">Saving profile media…</string>
+    <string name="morphe_kakaotalk_profile_media_download_saved">Profile media saved</string>
+    <string name="morphe_kakaotalk_profile_media_download_failed">Could not save the profile media</string>
+    <string name="morphe_kakaotalk_profile_media_download_save">Save</string>
+    <string name="morphe_settings_export">Back up settings</string>
+    <string name="morphe_settings_export_summary">Writes the Morphe settings to a file so they survive patching the app again.</string>
+    <string name="morphe_settings_import">Restore settings</string>
+    <string name="morphe_settings_import_summary">Reads the Morphe settings back from a file.</string>
+    <string name="morphe_settings_import_failed">Could not restore the settings</string>
+    <string name="morphe_settings_patch_allow_open_chat_media_bundle">Allow media bundling in open chat</string>
+    <string name="morphe_settings_patch_allow_open_chat_media_bundle_summary">Lets webp, gif and other media be sent as a single bundled multi-photo message in open chat rooms.</string>
+    <string name="morphe_pref_allow_open_chat_media_bundle_summary">Lets webp, gif and other media be sent as a single bundled multi-photo message in open chat rooms.</string>
+    <string name="morphe_settings_patch_strip_image_metadata">Strip metadata from sent images</string>
+    <string name="morphe_settings_patch_strip_image_metadata_summary">Removes EXIF metadata, including GPS location, from images sent in original quality.</string>
+    <string name="morphe_pref_strip_image_metadata_summary">Removes EXIF metadata, including GPS location, from images sent in original quality.</string>
 </resources>

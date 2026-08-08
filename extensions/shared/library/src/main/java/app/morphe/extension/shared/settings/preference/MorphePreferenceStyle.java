@@ -39,7 +39,6 @@ public final class MorphePreferenceStyle {
     private static final String TAG_TRAILING = "morphe_pref_trailing";
     private static ThemeModeProvider themeModeProvider;
 
-    public static final int TRAILING_NONE = 0;
     public static final int TRAILING_SWITCH = 1;
     public static final int TRAILING_CHEVRON = 2;
 
@@ -90,10 +89,6 @@ public final class MorphePreferenceStyle {
         return isDark(context) ? Color.rgb(245, 245, 245) : Color.rgb(9, 12, 16);
     }
 
-    public static int primaryIconColor(Context context) {
-        return primaryTextColor(context);
-    }
-
     public static int secondaryTextColor(Context context) {
         return isDark(context) ? Color.rgb(166, 169, 176) : Color.rgb(104, 107, 115);
     }
@@ -103,18 +98,14 @@ public final class MorphePreferenceStyle {
     }
 
     public static View createPreferenceView(Context context, int trailingType) {
-        return createPreferenceView(context, trailingType, null);
-    }
-
-    public static View createPreferenceView(Context context, int trailingType, String iconResName) {
-        return createPreferenceView(context, trailingType, iconResName != null, iconResName);
+        return createPreferenceView(context, trailingType, false);
     }
 
     public static View createPreferenceViewWithIconSlot(Context context, int trailingType) {
-        return createPreferenceView(context, trailingType, true, null);
+        return createPreferenceView(context, trailingType, true);
     }
 
-    private static View createPreferenceView(Context context, int trailingType, boolean includeIconSlot, String iconResName) {
+    private static View createPreferenceView(Context context, int trailingType, boolean includeIconSlot) {
         PreferenceRow row = new PreferenceRow(context, trailingType);
         row.setOrientation(trailingType == TRAILING_SWITCH ? LinearLayout.VERTICAL : LinearLayout.HORIZONTAL);
         row.setGravity(Gravity.CENTER_VERTICAL);
@@ -127,7 +118,7 @@ public final class MorphePreferenceStyle {
         ));
 
         if (includeIconSlot) {
-            row.setIcon(iconResName);
+            row.addIconSlot();
         }
 
         if (trailingType == TRAILING_SWITCH) {
@@ -334,44 +325,26 @@ public final class MorphePreferenceStyle {
         private boolean switchClickAllowed = true;
         private boolean drawPressedHighlight;
         private boolean switchAccessibilityChecked;
-        private ImageView iconView;
-
 
         PreferenceRow(Context context, int trailingType) {
-            this(context, trailingType, null);
-        }
-
-        PreferenceRow(Context context, int trailingType, String iconResName) {
             super(context);
             this.trailingType = trailingType;
-            setOrientation(LinearLayout.HORIZONTAL);
-            setGravity(Gravity.CENTER_VERTICAL);
             setWillNotDraw(false);
         }
 
-        private void initIconView(Context context, String iconResName) {
-            iconView = new ImageView(context);
+        void addIconSlot() {
+            Context context = getContext();
+            ImageView iconView = new ImageView(context);
             iconView.setId(android.R.id.icon);
+            iconView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            iconView.setVisibility(View.GONE);
+            applyIconTint(iconView);
 
             int iconSize = dp(context, 24);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(iconSize, iconSize);
-
             params.setMarginStart(dp(context, 16));
             params.setMarginEnd(dp(context, 16));
-            iconView.setLayoutParams(params);
-
-            if (iconResName == null) {
-                iconView.setVisibility(View.GONE);
-                applyIconTint(iconView);
-            } else {
-                setThemedIcon(iconView, iconResName);
-            }
-            iconView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            addView(iconView, 0);
-        }
-
-        void setIcon(String iconResName) {
-            initIconView(getContext(), iconResName);
+            addView(iconView, 0, params);
         }
 
         void setHighlightView(View highlightView) {
@@ -511,26 +484,9 @@ public final class MorphePreferenceStyle {
         return null;
     }
 
-    private static void setThemedIcon(ImageView imageView, String drawableName) {
-        Context context = imageView.getContext();
-        applyIconTint(imageView);
-
-        int drawableId = context.getResources().getIdentifier(drawableName, "drawable", context.getPackageName());
-        if (drawableId == 0) {
-            return;
-        }
-
-        Drawable drawable = context.getDrawable(drawableId);
-        if (drawable == null) {
-            return;
-        }
-
-        imageView.setImageDrawable(drawable);
-    }
-
     private static void applyIconTint(ImageView imageView) {
         Context context = imageView.getContext();
-        imageView.setColorFilter(new PorterDuffColorFilter(primaryIconColor(context), PorterDuff.Mode.SRC_ATOP));
+        imageView.setColorFilter(new PorterDuffColorFilter(primaryTextColor(context), PorterDuff.Mode.SRC_ATOP));
     }
 
     private static class ChevronView extends View {
@@ -627,14 +583,12 @@ public final class MorphePreferenceStyle {
             int onTrack = dark ? Color.rgb(220, 222, 230) : Color.BLACK;
             int offThumb = dark ? Color.rgb(145, 150, 162) : Color.rgb(108, 114, 123);
             int onThumb = dark ? Color.BLACK : Color.WHITE;
-            int stroke = dark ? Color.rgb(145, 150, 162) : Color.rgb(108, 114, 123);
 
             if (!enabled) {
                 offTrack = dark ? Color.rgb(40, 44, 50) : Color.rgb(238, 239, 242);
                 onTrack = offTrack;
                 offThumb = disabledTextColor(getContext());
                 onThumb = offThumb;
-                stroke = disabledTextColor(getContext());
             }
 
             boolean animating = isAnimating();
@@ -660,6 +614,7 @@ public final class MorphePreferenceStyle {
 
             int trackColor = blend(offTrack, onTrack, colorProgress);
             int thumbColor = blend(offThumb, onThumb, colorProgress);
+            int stroke = blend(offThumb, onTrack, colorProgress);
 
             float strokeWidth = dp(getContext(), 2);
             float radius = getHeight() / 2f;
@@ -669,15 +624,12 @@ public final class MorphePreferenceStyle {
             canvas.drawRoundRect(0, 0, getWidth(), getHeight(), radius, radius, paint);
 
             float strokeProgress;
-            if (dark) {
-                strokeProgress = 1f - colorProgress;
-            } else if (animating) {
+            if (animating) {
                 strokeProgress = smoothStep(clamp01((0.62f - colorProgress) / 0.42f));
             } else {
                 strokeProgress = 1f - progress;
             }
-            float strokeOpacity = dark ? strokeProgress * strokeProgress : strokeProgress;
-            int strokeAlpha = Math.round(Color.alpha(stroke) * strokeOpacity);
+            int strokeAlpha = Math.round(Color.alpha(stroke) * strokeProgress);
             if (strokeAlpha > 0) {
                 paint.setStyle(Paint.Style.STROKE);
                 paint.setStrokeWidth(strokeWidth);
@@ -723,6 +675,32 @@ public final class MorphePreferenceStyle {
             paint.setStyle(Paint.Style.FILL);
             paint.setColor(thumbColor);
             canvas.drawCircle(cx, cy, thumbRadius, paint);
+
+            if (enabled && colorProgress > 0f) {
+                int checkColor = onTrack;
+                paint.setStyle(Paint.Style.STROKE);
+                paint.setStrokeWidth(dp(getContext(), 2));
+                paint.setStrokeCap(Paint.Cap.ROUND);
+                paint.setStrokeJoin(Paint.Join.ROUND);
+                paint.setColor(Color.argb(
+                        Math.round(Color.alpha(checkColor) * colorProgress),
+                        Color.red(checkColor),
+                        Color.green(checkColor),
+                        Color.blue(checkColor)
+                ));
+
+                float checkSize = thumbRadius * 0.82f;
+                float startX = cx - (checkSize * 0.34f);
+                float startY = cy - (checkSize * 0.03f);
+                float midX = cx - (checkSize * 0.09f);
+                float midY = cy + (checkSize * 0.23f);
+                float endX = cx + (checkSize * 0.38f);
+                float endY = cy - (checkSize * 0.27f);
+                canvas.drawLine(startX, startY, midX, midY, paint);
+                canvas.drawLine(midX, midY, endX, endY, paint);
+                paint.setStrokeCap(Paint.Cap.BUTT);
+                paint.setStrokeJoin(Paint.Join.MITER);
+            }
         }
 
         private float lerp(float from, float to, float amount) {

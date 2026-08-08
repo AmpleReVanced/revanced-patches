@@ -20,6 +20,11 @@ import app.morphe.extension.shared.settings.StringSetting;
 import app.morphe.extension.shared.settings.preference.MorphePreferenceStyle;
 import app.morphe.extension.shared.settings.preference.SettingsActivityLayout;
 import app.morphe.extension.shared.settings.preference.ToolbarPreferenceFragment;
+import app.revanced.extension.kakaotalk.patches.AllowInvisibleCharactersPatch;
+import app.revanced.extension.kakaotalk.patches.AllowProfileMediaDownloadPatch;
+import app.revanced.extension.kakaotalk.patches.AllowReplyToFeedPatch;
+import app.revanced.extension.kakaotalk.patches.BlockModifiedMessageReactionPatch;
+import app.revanced.extension.kakaotalk.patches.BlockModifiedMessageReplyPatch;
 import app.revanced.extension.kakaotalk.patches.BypassMoatCheckPatch;
 import app.revanced.extension.kakaotalk.patches.DefaultExternalBrowserPatch;
 import app.revanced.extension.kakaotalk.patches.DisableOpenChatRoomCommentPatch;
@@ -39,6 +44,11 @@ public final class SettingsActivity extends Activity {
     private static final String PREF_GHOST_MODE = "morphe_pref_ghost_mode";
     private static final String PREF_SHOW_MODIFIED_MESSAGE_SENDER_PROFILE =
             "morphe_pref_show_modified_message_sender_profile";
+    private static final String PREF_BLOCK_MODIFIED_MESSAGE_REACTION =
+            "morphe_pref_block_modified_message_reaction";
+    private static final String PREF_BLOCK_MODIFIED_MESSAGE_REPLY =
+            "morphe_pref_block_modified_message_reply";
+    private static final String PREF_ALLOW_REPLY_TO_FEED = "morphe_pref_allow_reply_to_feed";
     private static final String PREF_SHOW_MESSAGE_READ_RECEIPTS =
             "morphe_pref_show_message_read_receipts";
     private static final String PREF_REMOVE_SHORT_FORM_TAB = "morphe_pref_remove_short_form_tab";
@@ -52,6 +62,8 @@ public final class SettingsActivity extends Activity {
     private static final String PREF_DEFAULT_EXTERNAL_BROWSER = "morphe_pref_default_external_browser";
     private static final String PREF_ENABLE_SEND_BIG_TEXT = "morphe_pref_enable_send_big_text";
     private static final String PREF_ENABLE_MARKDOWN = "morphe_pref_enable_markdown";
+    private static final String PREF_ALLOW_INVISIBLE_CHARACTERS = "morphe_pref_allow_invisible_characters";
+    private static final String PREF_ALLOW_PROFILE_MEDIA_DOWNLOAD = "morphe_pref_allow_profile_media_download";
     private static final String PREF_OPEN_CHAT_ROOM_COMMENT_DISABLED = "morphe_pref_open_chat_room_comment_disabled";
     private static final String PREF_BYPASS_MOAT_INTEGRITY_CHECK = "morphe_pref_bypass_moat_integrity_check";
     private static final String PREF_FEATURE_FLAG_OVERRIDES = "morphe_pref_feature_flag_overrides";
@@ -63,6 +75,8 @@ public final class SettingsActivity extends Activity {
     private static final String PREF_PATCHES_VERSION = "morphe_pref_patches_version";
     private static final String PREF_PACKAGE_NAME = "morphe_pref_package_name";
     private static final String PREF_RESET = "morphe_pref_reset";
+    private static final String PREF_EXPORT_SETTINGS = "morphe_pref_export_settings";
+    private static final String PREF_IMPORT_SETTINGS = "morphe_pref_import_settings";
     private static final String MESSAGE_RESTART_REQUIRED_TITLE = "morphe_settings_restart_required_title";
     private static final String MESSAGE_RESTART_REQUIRED = "morphe_settings_restart_required";
     private static final String MESSAGE_RESTART_REQUIRED_RESTART = "morphe_settings_restart_required_restart";
@@ -139,8 +153,13 @@ public final class SettingsActivity extends Activity {
             bindSwitchIfIncluded(PREF_DEFAULT_EXTERNAL_BROWSER, Settings.DEFAULT_EXTERNAL_BROWSER, DefaultExternalBrowserPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_ENABLE_SEND_BIG_TEXT, Settings.ENABLE_SEND_BIG_TEXT, EnableSendBigTextPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_ENABLE_MARKDOWN, Settings.ENABLE_MARKDOWN, EnableMarkdownPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_ALLOW_INVISIBLE_CHARACTERS, Settings.ALLOW_INVISIBLE_CHARACTERS, AllowInvisibleCharactersPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_ALLOW_PROFILE_MEDIA_DOWNLOAD, Settings.ALLOW_PROFILE_MEDIA_DOWNLOAD, AllowProfileMediaDownloadPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_OPEN_CHAT_ROOM_COMMENT_DISABLED, Settings.OPEN_CHAT_ROOM_COMMENT_DISABLED, DisableOpenChatRoomCommentPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_SHOW_MODIFIED_MESSAGE_SENDER_PROFILE, Settings.SHOW_MODIFIED_MESSAGE_SENDER_PROFILE, ShowDeletedHiddenOrEditedMessagePatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_BLOCK_MODIFIED_MESSAGE_REACTION, Settings.BLOCK_MODIFIED_MESSAGE_REACTION, BlockModifiedMessageReactionPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_BLOCK_MODIFIED_MESSAGE_REPLY, Settings.BLOCK_MODIFIED_MESSAGE_REPLY, BlockModifiedMessageReplyPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_ALLOW_REPLY_TO_FEED, Settings.ALLOW_REPLY_TO_FEED, AllowReplyToFeedPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_SHOW_MESSAGE_READ_RECEIPTS, Settings.SHOW_MESSAGE_READ_RECEIPTS, ShowMessageReadReceiptsPatch.isPatchIncluded());
             bindRiskySwitchIfIncluded(PREF_BYPASS_MOAT_INTEGRITY_CHECK, Settings.BYPASS_MOAT_INTEGRITY_CHECK, BypassMoatCheckPatch.isPatchIncluded());
             bindTextIfIncluded(PREF_FEATURE_FLAG_OVERRIDES, Settings.FEATURE_FLAG_OVERRIDES, OverrideFeatureFlagPatch.isPatchIncluded());
@@ -152,6 +171,7 @@ public final class SettingsActivity extends Activity {
             bindInfoPreference(PREF_APP_VERSION, Utils.getAppVersionName());
             bindInfoPreference(PREF_PATCHES_VERSION, Utils.getPatchesReleaseVersion());
             bindInfoPreference(PREF_PACKAGE_NAME, requireActivity().getPackageName());
+            bindBackupPreferences();
             bindResetPreference();
             removeEmptyPreferenceGroups();
             setPreferenceScreenToolbar(getPreferenceScreen());
@@ -236,25 +256,9 @@ public final class SettingsActivity extends Activity {
         }
 
         private void maybeShowRestartRequiredNotice(String key) {
-            if (!RESTART_SENSITIVE_PREFERENCES.contains(key)) {
-                return;
+            if (RESTART_SENSITIVE_PREFERENCES.contains(key)) {
+                showRestartRequiredDialog();
             }
-
-            new AlertDialog.Builder(requireActivity())
-                    .setTitle(resString(
-                            MESSAGE_RESTART_REQUIRED_TITLE,
-                            "Restart required"
-                    ))
-                    .setMessage(resString(
-                            MESSAGE_RESTART_REQUIRED,
-                            "Restart is required to apply this setting."
-                    ))
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .setPositiveButton(resString(
-                            MESSAGE_RESTART_REQUIRED_RESTART,
-                            "Restart"
-                    ), (dialog, which) -> Utils.restartApp(requireActivity()))
-                    .show();
         }
 
         private void showMoatBypassConfirmation(String key, BooleanSetting setting) {
@@ -284,6 +288,36 @@ public final class SettingsActivity extends Activity {
             preference.setPersistent(false);
             preference.setSelectable(false);
             preference.setSummary(normalizeSummary(summary));
+        }
+
+        private void bindBackupPreferences() {
+            requirePreference(PREF_EXPORT_SETTINGS, Preference.class)
+                    .setOnPreferenceClickListener(preference -> {
+                        exportSettings();
+                        return true;
+                    });
+            requirePreference(PREF_IMPORT_SETTINGS, Preference.class)
+                    .setOnPreferenceClickListener(preference -> {
+                        importSettings();
+                        return true;
+                    });
+        }
+
+        @Override
+        protected void onSettingsImported(boolean restartNeeded) {
+            refreshPreferences();
+            if (restartNeeded) {
+                showRestartRequiredDialog();
+            }
+        }
+
+        private void showRestartRequiredDialog() {
+            showRestartDialog(
+                    requireActivity(),
+                    resString(MESSAGE_RESTART_REQUIRED_TITLE, "Restart required"),
+                    resString(MESSAGE_RESTART_REQUIRED, "Restart the app to apply this setting."),
+                    resString(MESSAGE_RESTART_REQUIRED_RESTART, "Restart")
+            );
         }
 
         private void bindResetPreference() {

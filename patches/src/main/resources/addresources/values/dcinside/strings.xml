@@ -27,9 +27,8 @@
     <string name="morphe_settings_hide_home_recommended_posts">Hide recommended posts</string>
     <string name="morphe_settings_hide_home_recommended_posts_summary">Removes the recommended post section from the home screen.</string>
     <string name="morphe_settings_show_post_history_author_identifier">Show author ID in recent posts</string>
-    <string name="morphe_settings_show_post_history_author_identifier_summary">Adds the author identification code next to the nickname in the recently-viewed posts list. The code is captured when you open a post, so it only applies to posts opened after this patch is installed.</string>
     <string name="morphe_settings_show_post_author_identifier">Show author ID in posts and lists</string>
-    <string name="morphe_settings_show_post_author_identifier_summary">Adds the author identification code next to the nickname in posts and post lists. Anonymous authors are unaffected, as their IP is already shown.</string>
+    <string name="morphe_settings_show_comment_author_identifier">Show author ID in comments</string>
     <string name="morphe_settings_section_support">Support</string>
     <string name="morphe_settings_support">Support the project</string>
     <string name="morphe_settings_support_summary">Like the results? Support the project with a donation. Your support keeps development going.</string>
@@ -84,10 +83,22 @@
     <string name="morphe_pref_hide_home_recommended_posts_summary">Removes the recommended post section from the home screen.</string>
     <string name="morphe_pref_show_post_history_author_identifier_summary">Adds the author identification code next to the nickname in the recently-viewed posts list. The code is captured when you open a post, so it only applies to posts opened after this patch is installed.</string>
     <string name="morphe_pref_show_post_author_identifier_summary">Adds the author identification code next to the nickname in posts and post lists. Anonymous authors are unaffected, as their IP is already shown.</string>
+    <string name="morphe_pref_show_comment_author_identifier_summary">Adds the author identification code next to the nickname in comment lists. Anonymous authors are unaffected, as their IP is already shown.</string>
     <string name="morphe_pref_restore_legacy_post_icons_summary">Uses the DCInside 4.7.x photo, video, and recommended-post icons in post lists and post bodies.</string>
     <string name="morphe_pref_hide_official_notices_summary">Removes DCInside operator notices from gallery notice lists.</string>
     <string name="morphe_pref_hide_mini_gallery_cover_image_summary">Hides the mini gallery cover image shown above the post list.</string>
     <string name="morphe_pref_debug_summary">Writes additional diagnostic logs for Morphe patches.</string>
     <string name="morphe_pref_debug_stacktrace_summary">Includes full stack traces in error reports.</string>
     <string name="morphe_pref_debug_toast_summary">Shows an on-screen toast when the extension catches an error.</string>
+    <string name="morphe_settings_export">Back up settings</string>
+    <string name="morphe_settings_export_summary">Writes the Morphe settings to a file so they survive patching the app again.</string>
+    <string name="morphe_settings_import">Restore settings</string>
+    <string name="morphe_settings_import_summary">Reads the Morphe settings back from a file.</string>
+    <string name="morphe_settings_import_failed">Could not restore the settings</string>
+    <string name="morphe_settings_restart_required_title">Restart required</string>
+    <string name="morphe_settings_restart_required">Restart the app to apply this setting.</string>
+    <string name="morphe_settings_restart_required_restart">Restart</string>
+    <string name="morphe_post_history_gallery_filter">Gallery</string>
+    <string name="morphe_post_history_gallery_filter_title">Filter by gallery</string>
+    <string name="morphe_post_history_gallery_filter_all">All</string>
 </resources>

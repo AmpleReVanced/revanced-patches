@@ -79,6 +79,18 @@ internal fun addDefaultDcInsideSettingsPreferences() {
 
     PreferenceScreen.MANAGE.addPreferences(
         NonInteractivePreference(
+            key = "morphe_pref_export_settings",
+            titleKey = "morphe_settings_export",
+            summaryKey = "morphe_settings_export_summary",
+            selectable = true,
+        ),
+        NonInteractivePreference(
+            key = "morphe_pref_import_settings",
+            titleKey = "morphe_settings_import",
+            summaryKey = "morphe_settings_import_summary",
+            selectable = true,
+        ),
+        NonInteractivePreference(
             key = "morphe_pref_reset",
             titleKey = "morphe_settings_reset_all",
             summaryKey = "morphe_settings_reset_all_summary",

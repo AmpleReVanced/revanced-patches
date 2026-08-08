@@ -45,6 +45,8 @@ public final class Settings extends BaseSettings {
             new BooleanSetting("dcinside_show_post_history_author_identifier", TRUE);
     public static final BooleanSetting SHOW_POST_AUTHOR_IDENTIFIER =
             new BooleanSetting("dcinside_show_post_author_identifier", TRUE);
+    public static final BooleanSetting SHOW_COMMENT_AUTHOR_IDENTIFIER =
+            new BooleanSetting("dcinside_show_comment_author_identifier", TRUE);
 
     private static boolean legacyPostIconResourceIdsLoaded;
     private static int listHeadBestIcon;
@@ -219,6 +221,10 @@ public final class Settings extends BaseSettings {
 
     public static boolean showPostAuthorIdentifier() {
         return SHOW_POST_AUTHOR_IDENTIFIER.get();
+    }
+
+    public static boolean showCommentAuthorIdentifier() {
+        return SHOW_COMMENT_AUTHOR_IDENTIFIER.get();
     }
 
     public static boolean hideAnyHomeComponent() {

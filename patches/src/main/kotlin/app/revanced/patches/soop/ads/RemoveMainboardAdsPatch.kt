@@ -4,6 +4,7 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.util.returnEarly
 import app.revanced.patches.soop.ads.fingerprints.*
 import app.revanced.patches.soop.shared.Constants.COMPATIBILITY_SOOP
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
@@ -17,6 +18,8 @@ val removeMainboardAdsPatch = bytecodePatch(
     compatibleWith(COMPATIBILITY_SOOP)
 
     execute {
+        MainBoardAdRequestFingerprint.method.returnEarly(null)
+
         val bind = MainBoardAdBindFingerprint.method
         val holderClass = mutableClassDefBy(bind.definingClass)
 
