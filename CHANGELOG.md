@@ -1,3 +1,48 @@
+# [1.3.0](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0...v1.3.0) (2026-08-08)
+
+
+### Bug Fixes
+
+* **kakaotalk:** align Build.ID, DISPLAY, TYPE and TAGS with the fingerprint in Change model ([97a9e49](https://github.com/AmpleReVanced/revanced-patches/commit/97a9e493809cfc3ff7cb3b970f2560a9ca1a5f7b))
+* **kakaotalk:** allocate registers for Allow invisible characters ([ec4bcad](https://github.com/AmpleReVanced/revanced-patches/commit/ec4bcadfb0b2e06aa79fe347864a2f508fa163b4))
+* **kakaotalk:** allow swiping feed messages while comments are enabled ([8ec8bd0](https://github.com/AmpleReVanced/revanced-patches/commit/8ec8bd052d4f498b8bbd155d5d723670ff795ed7))
+* **kakaotalk:** answer the abuse-detection nonce with a failure token instead of silence ([5d8e03b](https://github.com/AmpleReVanced/revanced-patches/commit/5d8e03b8213a3f702fd66b8b0e3769689e972fc9))
+* **kakaotalk:** fail loudly when the kick button membership check is missing ([a3a03b1](https://github.com/AmpleReVanced/revanced-patches/commit/a3a03b1d5dc594af8a0ab85556413f1b06859a07))
+* **kakaotalk:** restore INVOKE_VIRTUAL constraint on Show deleted lookups ([cf65006](https://github.com/AmpleReVanced/revanced-patches/commit/cf65006811a1655ee96897820a5e81a5fe501bd0))
+* **kakaotalk:** spoof board and hardware in Change model ([af43935](https://github.com/AmpleReVanced/revanced-patches/commit/af4393517342bcbcc0b39961596e81c188037a7b))
+* **kakaotalk:** spoof the platform signing-cert hash used by the attestation report ([77d5143](https://github.com/AmpleReVanced/revanced-patches/commit/77d5143f02bd77654c2fb8bd9a6eda0f10379cf3))
+* **settings:** adopt piko switch checkmark and stroke blending ([4204a1c](https://github.com/AmpleReVanced/revanced-patches/commit/4204a1cc37d0978a793be7e0daa880a827a88883))
+* **settings:** align preference styling with piko and fix nested screen toolbar ([b7edcf3](https://github.com/AmpleReVanced/revanced-patches/commit/b7edcf3f6907775c1c7598f9fc301bb6c0c4f581))
+* **soop:** remove the main board banner ad shown on the Live tab ([030a3f3](https://github.com/AmpleReVanced/revanced-patches/commit/030a3f3e90c20b66cd2185f0ade7d0b20fc27df6))
+* **soop:** stop the Live tab erroring when list banner ads are removed ([b8fe59b](https://github.com/AmpleReVanced/revanced-patches/commit/b8fe59ba781afcf027d55b709f10998897f91852))
+
+
+### Features
+
+* **chzzk:** add support chzzk patches for version `3.10.0` ([4d6972e](https://github.com/AmpleReVanced/revanced-patches/commit/4d6972e778f846cb18ee8d4cc9be56bbd5b8e6a6))
+* **dcinside:** filter recently viewed posts by gallery ([2cac65b](https://github.com/AmpleReVanced/revanced-patches/commit/2cac65b9d0b8c6033045c069626a74b212164bef))
+* **dcinside:** show author identifier in comments ([4bee018](https://github.com/AmpleReVanced/revanced-patches/commit/4bee018f51ee2843593967192683f7aedacdb0c0))
+* **dcinside:** update dcinside patches for version `5.3.2` ([7c58146](https://github.com/AmpleReVanced/revanced-patches/commit/7c5814633dd8a67050c42f8bfd1013ef310e7ce5))
+* **flexcil:** add support flexcil patches for version `1.4.4.10` ([ba011f0](https://github.com/AmpleReVanced/revanced-patches/commit/ba011f0b9d21cc0e12f0cd45160489797b900d0d))
+* **flexcil:** add support flexcil patches for version `1.4.4.12` ([7b854a3](https://github.com/AmpleReVanced/revanced-patches/commit/7b854a346dd6e0a9d0a04d573c46366586bc3ab9))
+* **kakaotalk:** add a setting to toggle Allow reply to feed ([990f6ee](https://github.com/AmpleReVanced/revanced-patches/commit/990f6ee45877328179a0cfeba0a2f4d4f32f422b))
+* **kakaotalk:** add Allow invisible characters patch ([8ad87d0](https://github.com/AmpleReVanced/revanced-patches/commit/8ad87d084742dc04a764fae3e1f0c85d9c41fcbc))
+* **kakaotalk:** add Allow open chat media bundle patch ([d234282](https://github.com/AmpleReVanced/revanced-patches/commit/d234282f9ac5aedebbc90cd4b105aa378e3485e4))
+* **kakaotalk:** add Allow profile media download patch ([b6d3822](https://github.com/AmpleReVanced/revanced-patches/commit/b6d382288009ec337841aac5cdcf639bda91578c))
+* **kakaotalk:** add Block reactions on deleted or hidden messages patch ([511e1a8](https://github.com/AmpleReVanced/revanced-patches/commit/511e1a89b45a5287331eed1617ab523fe2f7f6f9))
+* **kakaotalk:** add Disable abuse detection report patch ([06e04b2](https://github.com/AmpleReVanced/revanced-patches/commit/06e04b24b40891393ef9abde68b5b3cbf57bb768))
+* **kakaotalk:** add Disable AdFit environment detection patch ([19adfdb](https://github.com/AmpleReVanced/revanced-patches/commit/19adfdb0dd35f8f050880f3f65e7f0ee0caa197b))
+* **kakaotalk:** add Spoof attestation package name patch ([0fda71d](https://github.com/AmpleReVanced/revanced-patches/commit/0fda71deb3d4d41a0e6a392891c2b78a8c821649))
+* **kakaotalk:** add Spoof installer package name patch ([3d77010](https://github.com/AmpleReVanced/revanced-patches/commit/3d77010041828e2fb09d4b26ad924f4b963e29a4))
+* **kakaotalk:** add Strip image metadata patch ([64293b4](https://github.com/AmpleReVanced/revanced-patches/commit/64293b42c3017570ec52cfc3a721aa07d9cc0fc3))
+* **kakaotalk:** block replies and comments on deleted or hidden messages ([753c605](https://github.com/AmpleReVanced/revanced-patches/commit/753c605469b845be73d175c5fc1f9daa81972ca8))
+* **kakaotalk:** bypass the native Moat scan at its dispatcher ([d836233](https://github.com/AmpleReVanced/revanced-patches/commit/d8362334f0fa9e5e0ec9484b58fe0ba1bb072b72))
+* **kakaotalk:** replace framework ExifInterface with AndroidX ([727b8c5](https://github.com/AmpleReVanced/revanced-patches/commit/727b8c5de240a477021266408ea1aa0953dd67ae))
+* **kakaotalk:** update kakaotalk patches for version `26.6.2` ([52fcbb6](https://github.com/AmpleReVanced/revanced-patches/commit/52fcbb6ea2f56accb05b9913d4662a6c197b79a7))
+* **kakaotalk:** update kakaotalk patches for version `26.6.3` ([1982c1f](https://github.com/AmpleReVanced/revanced-patches/commit/1982c1fa97d01d01c1c8070d47b49f5a4b3da673))
+* **settings:** back up and restore settings to a file ([05d7236](https://github.com/AmpleReVanced/revanced-patches/commit/05d7236b7d3e4e03edf161dec341fa3748bb2d95))
+* **soop:** update soop patches for version `8.28.5` ([bd831f9](https://github.com/AmpleReVanced/revanced-patches/commit/bd831f94e9fcbad442bf4cd41280ff10f88b6fe5))
+
 # [1.3.0-dev.11](https://github.com/AmpleReVanced/revanced-patches/compare/v1.3.0-dev.10...v1.3.0-dev.11) (2026-08-08)
 
 
