@@ -6,9 +6,14 @@ import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.util.getReference
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
-import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction21s
 import com.android.tools.smali.dexlib2.iface.instruction.formats.Instruction21s
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
+
+internal object MoatScanDispatcherFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf("Ljava/util/ArrayList;", "L", "Ljava/lang/String;", "Ljava/lang/String;"),
+    returnType = "Ljava/util/concurrent/CompletableFuture;",
+)
 
 internal object CheckApkChecksumsFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),

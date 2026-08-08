@@ -6,19 +6,19 @@ import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.removeInstructions
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
+import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import app.morphe.util.findMutableMethodOf
 import app.morphe.util.getFreeRegisterProvider
-import app.morphe.util.getMutableMethod
 import app.morphe.util.getReference
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.kakaotalk.integrity.fingerprints.CheckApkChecksumsFingerprint
 import app.revanced.patches.kakaotalk.integrity.fingerprints.MoatResultClassFingerprint
-import app.revanced.patches.kakaotalk.integrity.fingerprints.PayMoatWrapperFingerprint
-import app.revanced.util.parameterTypeNames
+import app.revanced.patches.kakaotalk.integrity.fingerprints.MoatScanDispatcherFingerprint
 import app.revanced.patches.kakaotalk.settings.PreferenceScreen
 import app.revanced.patches.kakaotalk.settings.addSettingsTabPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
-import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
+import app.revanced.util.parameterTypeNames
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.Method
@@ -30,6 +30,10 @@ import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
 private const val EXTENSION_CLASS =
     "Lapp/revanced/extension/kakaotalk/patches/BypassMoatCheckPatch;"
+private const val BYPASS_MOAT =
+    "Lapp/revanced/extension/kakaotalk/settings/Settings;->bypassMoatIntegrityCheck()Z"
+private val NATIVE_FLAGS =
+    AccessFlags.STATIC.value or AccessFlags.FINAL.value or AccessFlags.NATIVE.value
 
 @Suppress("unused")
 val bypassMoatCheckPatch = bytecodePatch(
@@ -51,34 +55,18 @@ val bypassMoatCheckPatch = bytecodePatch(
         )
         setExtensionIsPatchIncluded(EXTENSION_CLASS)
 
-        // Gate the native Moat scan dispatcher above the JNI call. Every entry (pay worker, pay
-        // webview) funnels through it, and the app cannot spoof a native APK-signature scan, so the
-        // only defence is to never run the scan. A clean empty result is delivered to the callback
-        // and a completed future returned so pay flows do not hang.
-        val wrapperMethod = PayMoatWrapperFingerprint.classDef.methods.first { method ->
-            method.returnType == "V" &&
-                    method.parameterTypeNames == listOf("Ljava/lang/String;", "Lkotlin/jvm/functions/Function3;")
-        }
-        val scanReference = wrapperMethod.instructions
-            .mapNotNull { it.getReference<MethodReference>() }
-            .first { reference ->
-                reference.returnType == "Ljava/util/concurrent/CompletableFuture;" &&
-                        reference.parameterTypeNames.size == 4 &&
-                        reference.parameterTypeNames.first() == "Ljava/util/ArrayList;"
-            }
-        val callbackType = scanReference.parameterTypeNames[1]
-        val callbackMethodName = classDefBy(callbackType).methods.first { method ->
-            method.returnType == "V" &&
-                    method.parameterTypeNames == listOf("Ljava/util/List;", "Ljava/lang/String;", "Ljava/lang/String;")
-        }.name
-
-        scanReference.getMutableMethod().apply {
+        MoatScanDispatcherFingerprint.method.apply {
+            val callbackType = parameterTypeNames[1]
+            val callbackMethodName = classDefBy(callbackType).methods.first { method ->
+                method.returnType == "V" &&
+                        method.parameterTypeNames == listOf("Ljava/util/List;", "Ljava/lang/String;", "Ljava/lang/String;")
+            }.name
             val free = getFreeRegisterProvider(0, 1).getFreeRegister4Bit()
 
             addInstructionsWithLabels(
                 0,
                 """
-                    invoke-static {}, Lapp/revanced/extension/kakaotalk/settings/Settings;->bypassMoatIntegrityCheck()Z
+                    invoke-static {}, $BYPASS_MOAT
                     move-result v$free
                     if-eqz v$free, :morphe_moat_scan
                     invoke-static {}, Ljava/util/Collections;->emptyList()Ljava/util/List;
@@ -95,32 +83,55 @@ val bypassMoatCheckPatch = bytecodePatch(
         }
 
         CheckApkChecksumsFingerprint.method.apply {
-            val lastSgetObjectType = instructions.last { it.opcode == Opcode.SGET_OBJECT }.getReference<FieldReference>()?.type
+            val verifiedType = instructions.last { it.opcode == Opcode.SGET_OBJECT }
+                .getReference<FieldReference>()?.type
 
             addInstructionsWithLabels(
                 0,
                 """
-                    invoke-static {}, Lapp/revanced/extension/kakaotalk/settings/Settings;->bypassMoatIntegrityCheck()Z
+                    invoke-static {}, $BYPASS_MOAT
                     move-result v0
                     if-eqz v0, :morphe_original_moat_checksum
                     new-instance v0, Lkotlin/Pair;
-                    sget-object v1, $lastSgetObjectType->VERIFIED:$lastSgetObjectType
+                    sget-object v1, $verifiedType->VERIFIED:$verifiedType
                     const-string v2, ""
                     invoke-direct {v0, v1, v2}, Lkotlin/Pair;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V
                     return-object v0
                     :morphe_original_moat_checksum
                     nop
-                """.trimIndent()
+                """.trimIndent(),
             )
         }
 
+        // Rewrite every invoke-static call site of a native Moat method, latest index first so the
+        // earlier ones stay valid after each edit.
+        fun forEachCallSite(target: Method, gate: MutableMethod.(Int) -> Unit) {
+            classDefForEach { classDef ->
+                val callSites = classDef.methods.mapNotNull { method ->
+                    val methodInstructions = method.implementation?.instructions?.toList() ?: return@mapNotNull null
+                    methodInstructions.indices.filter { index ->
+                        val instruction = methodInstructions[index]
+                        val reference = instruction.getReference<MethodReference>()
+                        (instruction.opcode == Opcode.INVOKE_STATIC || instruction.opcode == Opcode.INVOKE_STATIC_RANGE) &&
+                                reference?.definingClass == target.definingClass &&
+                                reference.name == target.name &&
+                                reference.parameterTypes == target.parameterTypes &&
+                                reference.returnType == target.returnType
+                    }.takeIf { it.isNotEmpty() }?.let { method to it }
+                }
+
+                callSites.forEach { (method, indices) ->
+                    val mutableMethod = mutableClassDefBy(classDef).findMutableMethodOf(method)
+                    indices.asReversed().forEach { mutableMethod.gate(it) }
+                }
+            }
+        }
+
         val moatResultArrayType = "[${MoatResultClassFingerprint.classDef.type}"
-        val nativeStatusAccessFlags =
-            AccessFlags.STATIC.value or AccessFlags.FINAL.value or AccessFlags.NATIVE.value
-        val nativeStatusMethods = buildList<Method> {
+        val nativeStatusMethods = buildList {
             classDefForEach { classDef ->
                 classDef.methods.filterTo(this) { method ->
-                    method.accessFlags and nativeStatusAccessFlags == nativeStatusAccessFlags &&
+                    method.accessFlags and NATIVE_FLAGS == NATIVE_FLAGS &&
                             method.parameterTypes == listOf("I", "I") &&
                             method.returnType == moatResultArrayType
                 }
@@ -129,97 +140,51 @@ val bypassMoatCheckPatch = bytecodePatch(
         val nativeStatusMethod = nativeStatusMethods.singleOrNull()
             ?: throw PatchException("Expected one Moat native status method, found ${nativeStatusMethods.size}.")
 
-        var patchedCallSites = 0
-        buildMap {
-            classDefForEach { classDef ->
-                val methodCallSites = classDef.methods.mapNotNull { method ->
-                    val instructions = method.implementation?.instructions?.toList()
-                        ?: return@mapNotNull null
+        var patchedStatusReads = 0
+        forEachCallSite(nativeStatusMethod) { index ->
+            val resultInstruction = getInstruction(index + 1)
+            if (resultInstruction.opcode != Opcode.MOVE_RESULT_OBJECT) return@forEachCallSite
+            val resultRegister = (resultInstruction as OneRegisterInstruction).registerA
 
-                    val invokeIndices = instructions.mapIndexedNotNull { index, instruction ->
-                        val reference = instruction.getReference<MethodReference>()
-                        index.takeIf {
-                            (instruction.opcode == Opcode.INVOKE_STATIC || instruction.opcode == Opcode.INVOKE_STATIC_RANGE) &&
-                                    reference?.definingClass == nativeStatusMethod.definingClass &&
-                                    reference.name == nativeStatusMethod.name &&
-                                    reference.parameterTypes == nativeStatusMethod.parameterTypes &&
-                                    reference.returnType == nativeStatusMethod.returnType &&
-                                    instructions.getOrNull(index + 1)?.opcode == Opcode.MOVE_RESULT_OBJECT
-                        }
-                    }
-
-                    invokeIndices.takeIf { it.isNotEmpty() }?.let { method to it }
+            val invoke = getInstruction(index)
+            val (registers, originalInvoke) = when (invoke) {
+                is FiveRegisterInstruction -> {
+                    val registers = listOf(invoke.registerC, invoke.registerD, invoke.registerE, invoke.registerF, invoke.registerG)
+                        .take(invoke.registerCount)
+                    registers to "invoke-static {${registers.joinToString(", ") { "v$it" }}}, $nativeStatusMethod"
                 }
 
-                if (methodCallSites.isNotEmpty()) {
-                    put(classDef, methodCallSites)
+                is RegisterRangeInstruction -> {
+                    val registers = (invoke.startRegister until invoke.startRegister + invoke.registerCount).toList()
+                    registers to "invoke-static/range {v${invoke.startRegister} .. v${registers.last()}}, $nativeStatusMethod"
                 }
+
+                else -> throw PatchException("Unsupported Moat invoke instruction: ${invoke.opcode}")
             }
-        }.forEach { (classDef, methodCallSites) ->
-            val mutableClass = mutableClassDefBy(classDef)
-            methodCallSites.forEach { (method, invokeIndices) ->
-                val mutableMethod = mutableClass.findMutableMethodOf(method)
+            val temp = getFreeRegisterProvider(index, 1, *(registers + resultRegister).toIntArray()).getFreeRegister4Bit()
 
-                invokeIndices.asReversed().forEach { invokeIndex ->
-                    val invokeInstruction = mutableMethod.getInstruction(invokeIndex)
-                    val (parameterRegisters, originalInvoke) = when (invokeInstruction) {
-                        is FiveRegisterInstruction -> {
-                            val registers = listOf(
-                                invokeInstruction.registerC,
-                                invokeInstruction.registerD,
-                                invokeInstruction.registerE,
-                                invokeInstruction.registerF,
-                                invokeInstruction.registerG,
-                            ).take(invokeInstruction.registerCount)
-
-                            registers to "invoke-static {${registers.joinToString(", ") { "v$it" }}}, $nativeStatusMethod"
-                        }
-
-                        is RegisterRangeInstruction -> {
-                            val startRegister = invokeInstruction.startRegister
-                            val registers = (startRegister until startRegister + invokeInstruction.registerCount).toList()
-                            val endRegister = registers.last()
-
-                            registers to "invoke-static/range {v$startRegister .. v$endRegister}, $nativeStatusMethod"
-                        }
-
-                        else -> throw PatchException(
-                            "Unsupported Moat native status invoke instruction: ${invokeInstruction.opcode}"
-                        )
-                    }
-                    val resultRegister = (mutableMethod.getInstruction(invokeIndex + 1) as OneRegisterInstruction).registerA
-                    val tempRegister = mutableMethod.getFreeRegisterProvider(
-                        invokeIndex,
-                        1,
-                        *(parameterRegisters + resultRegister).toIntArray(),
-                    ).getFreeRegister4Bit()
-                    val originalLabel = "morphe_original_moat_native_status_$invokeIndex"
-                    val afterLabel = "morphe_after_moat_native_status_$invokeIndex"
-
-                    mutableMethod.removeInstructions(invokeIndex, 2)
-                    mutableMethod.addInstructionsWithLabels(
-                        invokeIndex,
-                        """
-                            invoke-static {}, Lapp/revanced/extension/kakaotalk/settings/Settings;->bypassMoatIntegrityCheck()Z
-                            move-result v$tempRegister
-                            if-eqz v$tempRegister, :$originalLabel
-                            const/4 v$tempRegister, 0x0
-                            new-array v$tempRegister, v$tempRegister, ${nativeStatusMethod.returnType}
-                            move-object/from16 v$resultRegister, v$tempRegister
-                            goto :$afterLabel
-                            :$originalLabel
-                            $originalInvoke
-                            move-result-object v$resultRegister
-                            :$afterLabel
-                            nop
-                        """.trimIndent()
-                    )
-                    patchedCallSites++
-                }
-            }
+            removeInstructions(index, 2)
+            addInstructionsWithLabels(
+                index,
+                """
+                    invoke-static {}, $BYPASS_MOAT
+                    move-result v$temp
+                    if-eqz v$temp, :morphe_original_status_$index
+                    const/4 v$temp, 0x0
+                    new-array v$temp, v$temp, $moatResultArrayType
+                    move-object/from16 v$resultRegister, v$temp
+                    goto :morphe_after_status_$index
+                    :morphe_original_status_$index
+                    $originalInvoke
+                    move-result-object v$resultRegister
+                    :morphe_after_status_$index
+                    nop
+                """.trimIndent(),
+            )
+            patchedStatusReads++
         }
 
-        if (patchedCallSites == 0) {
+        if (patchedStatusReads == 0) {
             throw PatchException("Could not find any Moat native status call sites.")
         }
     }
