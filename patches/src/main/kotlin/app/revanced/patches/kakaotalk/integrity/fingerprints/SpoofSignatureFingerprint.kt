@@ -21,3 +21,11 @@ internal object UtilityGetSignatureFingerprint : Fingerprint(
     ),
     custom = { _, classDef -> classDef.sourceFile == "Utility.kt" }
 )
+
+internal object PlatformSignatureFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf(),
+    returnType = "Ljava/lang/String;",
+    strings = listOf("getPackageName(...)"),
+    custom = { _, classDef -> classDef.sourceFile == "PlatformUtils.kt" },
+)
