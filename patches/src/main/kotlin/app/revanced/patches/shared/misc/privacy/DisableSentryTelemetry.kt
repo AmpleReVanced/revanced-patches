@@ -31,6 +31,8 @@ val disableSentryTelemetryPatch = resourcePatch(
             val application = document.getNode("application") as Element
             application.replaceOrCreate("meta-data", "io.sentry.enabled", "false")
             application.replaceOrCreate("meta-data", "io.sentry.dsn", "")
+            application.replaceOrCreate("meta-data", "io.sentry.ndk.enable", "false")
+            application.replaceOrCreate("meta-data", "io.sentry.ndk.scope-sync.enable", "false")
         }
     }
 }
