@@ -4,9 +4,9 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.3.0-dev.10](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.3.0-dev.10)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;108 patches total
+> **[v1.3.0-dev.11](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.3.0-dev.11)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;110 patches total
 <details open>
-<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;65 patches</summary>
+<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;67 patches</summary>
 <br>
 
 **🎯 Supported versions:**
@@ -36,6 +36,7 @@
 | [Default external browser](#default-external-browser) | Sets the default external browser for KakaoTalk to the system's default browser. |  |
 | [Disable 300+ unread limit](#disable-300-unread-limit) | Always show the real unread count instead of '300+' in chatroom list |  |
 | [Disable 99 unread limit](#disable-99-unread-limit) | Skip the 99-cap so unread count shows full value |  |
+| [Disable AdFit environment detection](#disable-adfit-environment-detection) | Stops the AdFit ad SDK from reporting a root or emulator verdict to its telemetry and ad request endpoints. |  |
 | [Disable ChatRoomAdController](#disable-chatroomadcontroller) | Disables the open-link chat room BizBoard ad controller. |  |
 | [Disable Collapse Button](#disable-collapse-button) | Disable collapse button on OpenChatList |  |
 | [Disable Community Tab](#disable-community-tab) | Disables Community Tab |  |
@@ -78,6 +79,7 @@
 | [Spoof App ID](#spoof-app-id) | Spoofs the App ID to bypass integrity checks. (to bypass biometric auth etc.) |  |
 | [Spoof apk checksums](#spoof-apk-checksums) | Spoofs the apk checksums to pass integrity checks. |  |
 | [Spoof attestation package name](#spoof-attestation-package-name) | Reports the original package name in the attestation report, which otherwise reveals a renamed install. Only the report is affected, so the app keeps using its real package name everywhere else. |  |
+| [Spoof installer package name](#spoof-installer-package-name) | Reports Google Play as the install source in the integrity report, which otherwise reveals a sideloaded install. |  |
 | [Spoof signature](#spoof-signature) | Spoofs the app signature to pass integrity checks. |  |
 | [Strip image metadata](#strip-image-metadata) | Removes EXIF metadata, including the GPS capture location, from images sent in original quality, while keeping the picture and its orientation intact. |  |
 | [Version info patch](#version-info-patch) | Patches the version info to include '(ReVanced)' in the version string. |  |

@@ -1,3 +1,16 @@
+# [1.3.0-dev.11](https://github.com/AmpleReVanced/revanced-patches/compare/v1.3.0-dev.10...v1.3.0-dev.11) (2026-08-08)
+
+
+### Bug Fixes
+
+* **kakaotalk:** spoof the platform signing-cert hash used by the attestation report ([77d5143](https://github.com/AmpleReVanced/revanced-patches/commit/77d5143f02bd77654c2fb8bd9a6eda0f10379cf3))
+
+
+### Features
+
+* **kakaotalk:** add Disable AdFit environment detection patch ([19adfdb](https://github.com/AmpleReVanced/revanced-patches/commit/19adfdb0dd35f8f050880f3f65e7f0ee0caa197b))
+* **kakaotalk:** add Spoof installer package name patch ([3d77010](https://github.com/AmpleReVanced/revanced-patches/commit/3d77010041828e2fb09d4b26ad924f4b963e29a4))
+
 # [1.3.0-dev.10](https://github.com/AmpleReVanced/revanced-patches/compare/v1.3.0-dev.9...v1.3.0-dev.10) (2026-08-07)
 
 
