@@ -83,6 +83,9 @@ public final class Settings extends BaseSettings {
     public static final BooleanSetting STRIP_IMAGE_METADATA =
             new BooleanSetting("kakaotalk_strip_image_metadata", TRUE);
 
+    public static final BooleanSetting RESTORE_KEYWORD_LOG =
+            new BooleanSetting("kakaotalk_restore_keyword_log", TRUE, true);
+
     public static final StringSetting FEATURE_FLAG_OVERRIDES =
             new StringSetting("kakaotalk_feature_flag_overrides", "");
 

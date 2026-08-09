@@ -143,4 +143,7 @@
     <string name="morphe_settings_patch_strip_image_metadata">보낸 이미지에서 메타데이터 제거</string>
     <string name="morphe_settings_patch_strip_image_metadata_summary">원본 화질로 보내는 이미지의 EXIF 메타데이터(GPS 위치 포함)를 제거합니다.</string>
     <string name="morphe_pref_strip_image_metadata_summary">원본 화질로 보내는 이미지의 EXIF 메타데이터(GPS 위치 포함)를 제거합니다.</string>
+    <string name="morphe_settings_patch_restore_keyword_log">키워드 알림 모아보기 복원</string>
+    <string name="morphe_pref_restore_keyword_log_summary">알림 키워드에 해당하는 메시지를 모아 보여주는 제거된 목록과 채팅 목록 항목을 복원합니다.</string>
+    <string name="morphe_kakaotalk_keyword_log_sort_latest">최신순</string>
 </resources>
