@@ -1,3 +1,11 @@
+# [1.4.0-dev.1](https://github.com/AmpleReVanced/revanced-patches/compare/v1.3.0...v1.4.0-dev.1) (2026-08-09)
+
+
+### Features
+
+* **kakaotalk:** add Restore keyword notification log patch ([fddd520](https://github.com/AmpleReVanced/revanced-patches/commit/fddd520afd62f29d714833543893175857c29c49))
+* **shared:** also disable the Sentry NDK integration and its scope sync ([1025cea](https://github.com/AmpleReVanced/revanced-patches/commit/1025ceaaf4147173fc7a39cb4c49face70ea5ddc))
+
 # [1.3.0](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0...v1.3.0) (2026-08-08)
 
 

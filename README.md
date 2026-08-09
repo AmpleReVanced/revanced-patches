@@ -4,9 +4,9 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.3.0](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.3.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;110 patches total
+> **[v1.4.0-dev.1](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.4.0-dev.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;111 patches total
 <details open>
-<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;67 patches</summary>
+<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;68 patches</summary>
 <br>
 
 **🎯 Supported versions:**
@@ -73,6 +73,7 @@
 | [Remove focus ad](#remove-focus-ad) | Removes the focus ad from the app. |  |
 | [Remove native ad](#remove-native-ad) | Removes the native ad from the app. |  |
 | [Remove shop tab](#remove-shop-tab) | Removes the shop tab from the bottom navigation bar. |  |
+| [Restore keyword notification log](#restore-keyword-notification-log) | Restores the removed keyword notification collection view along with its chat list entry. |  |
 | [Show chatroom channel ID](#show-chatroom-channel-id) | Shows the channel ID in chatroom settings and copies it when tapping the chat side title. |  |
 | [Show deleted, hidden, or edited messages](#show-deleted-hidden-or-edited-messages) | Allows you to see deleted, hidden, and edited message history in chat logs. | • Deleted color<br>• Hidden color |
 | [Show message read receipts](#show-message-read-receipts) | Shows the members who have or have not read each chat message. |  |
