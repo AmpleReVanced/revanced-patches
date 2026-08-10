@@ -1,3 +1,10 @@
+# [1.4.0-dev.4](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.3...v1.4.0-dev.4) (2026-08-10)
+
+
+### Features
+
+* **kakaotalk:** add Ignore forward restriction patch ([3ee7bc4](https://github.com/AmpleReVanced/revanced-patches/commit/3ee7bc45f786f2641559103bb05c359754757477))
+
 # [1.4.0-dev.3](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.2...v1.4.0-dev.3) (2026-08-10)
 
 

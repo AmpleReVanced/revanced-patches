@@ -4,9 +4,9 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START -->
-> **[v1.4.0-dev.3](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.4.0-dev.3)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;112 patches total
+> **[v1.4.0-dev.4](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.4.0-dev.4)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;113 patches total
 <details>
-<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;69 patches</summary>
+<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;70 patches</summary>
 <br>
 
 **🎯 Supported versions:**
@@ -62,6 +62,7 @@
 | [Hide More tab Game tab](#hide-more-tab-game-tab) | Hides the Game tab from the More tab. |  |
 | [Hide More tab components](#hide-more-tab-components) | Adds options to hide components from the More tab. |  |
 | [Hook Package Manager](#hook-package-manager) | Hooks the Package Manager to bypass integrity checks. |  |
+| [Ignore forward restriction](#ignore-forward-restriction) | Ignores the restrictions that stop messages such as KakaoLink from being forwarded to another chatroom. |  |
 | [Open profile from open chat feed](#open-profile-from-open-chat-feed) | Opens open chat member profiles from join and leave feed messages. |  |
 | [Override feature flag](#override-feature-flag) | Overrides the feature flag to enable the feature. | • Feature flag overrides |
 | [Register settings activity](#register-settings-activity) | Registers the Morphe settings activity in the app manifest. |  |
