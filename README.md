@@ -3,9 +3,9 @@
 &nbsp;
 ## 🩹 Patches list
 
-<!-- PATCHES_START EXPANDED -->
+<!-- PATCHES_START -->
 > **[v1.4.0-dev.1](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.4.0-dev.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;111 patches total
-<details open>
+<details>
 <summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;68 patches</summary>
 <br>
 
@@ -87,7 +87,7 @@
 
 </details>
 
-<details open>
+<details>
 <summary>📦 dcinside&nbsp;&nbsp;•&nbsp;&nbsp;24 patches</summary>
 <br>
 
@@ -125,7 +125,7 @@
 
 </details>
 
-<details open>
+<details>
 <summary>📦 Chzzk&nbsp;&nbsp;•&nbsp;&nbsp;5 patches</summary>
 <br>
 
@@ -144,7 +144,7 @@
 
 </details>
 
-<details open>
+<details>
 <summary>📦 Flexcil&nbsp;&nbsp;•&nbsp;&nbsp;2 patches</summary>
 <br>
 
@@ -160,7 +160,7 @@
 
 </details>
 
-<details open>
+<details>
 <summary>📦 SOOP&nbsp;&nbsp;•&nbsp;&nbsp;10 patches</summary>
 <br>
 
@@ -184,7 +184,7 @@
 
 </details>
 
-<details open>
+<details>
 <summary>🌐 Universal&nbsp;&nbsp;•&nbsp;&nbsp;2 patches</summary>
 <br>
 
