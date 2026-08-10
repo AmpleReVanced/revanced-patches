@@ -4,9 +4,9 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START -->
-> **[v1.4.0-dev.2](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.4.0-dev.2)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;111 patches total
+> **[v1.4.0-dev.3](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.4.0-dev.3)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;112 patches total
 <details>
-<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;68 patches</summary>
+<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;69 patches</summary>
 <br>
 
 **🎯 Supported versions:**
@@ -77,6 +77,7 @@
 | [Show chatroom channel ID](#show-chatroom-channel-id) | Shows the channel ID in chatroom settings and copies it when tapping the chat side title. |  |
 | [Show deleted, hidden, or edited messages](#show-deleted-hidden-or-edited-messages) | Allows you to see deleted, hidden, and edited message history in chat logs. | • Deleted color<br>• Hidden color |
 | [Show message read receipts](#show-message-read-receipts) | Shows the members who have or have not read each chat message. |  |
+| [Show messages restricted to mobile](#show-messages-restricted-to-mobile) | Shows the content of AlimTalk, Leverage and Universal messages that are replaced with a placeholder asking to open them on mobile while signed in on a sub device. |  |
 | [Spoof App ID](#spoof-app-id) | Spoofs the App ID to bypass integrity checks. (to bypass biometric auth etc.) |  |
 | [Spoof apk checksums](#spoof-apk-checksums) | Spoofs the apk checksums to pass integrity checks. |  |
 | [Spoof attestation package name](#spoof-attestation-package-name) | Reports the original package name in the attestation report, which otherwise reveals a renamed install. Only the report is affected, so the app keeps using its real package name everywhere else. |  |

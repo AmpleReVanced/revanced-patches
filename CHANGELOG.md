@@ -1,3 +1,10 @@
+# [1.4.0-dev.3](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.2...v1.4.0-dev.3) (2026-08-10)
+
+
+### Features
+
+* **kakaotalk:** add Show messages restricted to mobile patch ([53d2525](https://github.com/AmpleReVanced/revanced-patches/commit/53d2525815aab006e2bc8c3134fe4bc42e995508))
+
 # [1.4.0-dev.2](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.1...v1.4.0-dev.2) (2026-08-10)
 
 
