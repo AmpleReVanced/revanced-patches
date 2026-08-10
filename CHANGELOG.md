@@ -1,3 +1,10 @@
+# [1.4.0-dev.2](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.1...v1.4.0-dev.2) (2026-08-10)
+
+
+### Features
+
+* **shared:** let patches opt in to replacing existing string resources ([5d1285e](https://github.com/AmpleReVanced/revanced-patches/commit/5d1285e16b4eeeb9639f5cbc110ada449827bc67))
+
 # [1.4.0-dev.1](https://github.com/AmpleReVanced/revanced-patches/compare/v1.3.0...v1.4.0-dev.1) (2026-08-09)
 
 
