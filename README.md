@@ -4,14 +4,14 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START -->
-> **[v1.4.0-dev.4](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.4.0-dev.4)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;113 patches total
+> **[v1.4.0-dev.5](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.4.0-dev.5)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;112 patches total
 <details>
-<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;70 patches</summary>
+<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;69 patches</summary>
 <br>
 
 **🎯 Supported versions:**
 
-| 26.6.3 |
+| 26.7.1 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
@@ -54,7 +54,6 @@
 | [Disable open chat room comments](#disable-open-chat-room-comments) | Adds a setting to disable comments in open chat rooms. |  |
 | [Disable verifying signature](#disable-verifying-signature) | Disables the signature verification check that prevents the app from running. |  |
 | [Enable Markdown](#enable-markdown) | Render plain text messages with markdown-style formatting. |  |
-| [Enable reaction mention flag](#enable-reaction-mention-flag) | Enables the reaction mention flag in KakaoTalk chat logs. |  |
 | [Enable send big text](#enable-send-big-text) | Allows sending big text messages in KakaoTalk. |  |
 | [Force enable debug mode](#force-enable-debug-mode) | Enables debug mode in the app. |  |
 | [Force enable emoticon plus feature](#force-enable-emoticon-plus-feature) | Force enable emoticon plus feature (Unpurchased emoticon can be sent once per day) |  |
