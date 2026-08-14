@@ -5,6 +5,13 @@ import app.morphe.util.getReference
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 
+internal object TalkShareApiFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.ABSTRACT),
+    parameters = listOf("L"),
+    returnType = "L",
+    custom = { _, classDef -> classDef.sourceFile == "TalkShareApi.kt" },
+)
+
 internal object TalkShareLogAsyncFlagFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC),
     parameters = listOf("Lkotlin/coroutines/Continuation;"),

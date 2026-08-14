@@ -3,6 +3,7 @@ package app.revanced.patches.kakaotalk.misc.hook
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.util.getFreeRegisterProvider
 import app.revanced.patches.kakaotalk.misc.hook.fingerprints.KakaoApplicationOnCreateFingerprint
 import app.revanced.patches.kakaotalk.misc.hook.fingerprints.LocoConnectionConstructorFingerprint
 import app.revanced.patches.kakaotalk.misc.hook.fingerprints.LocoMethodClassFingerprint
@@ -11,7 +12,7 @@ import app.revanced.patches.kakaotalk.misc.hook.fingerprints.LocoReqBuilderConst
 import app.revanced.patches.kakaotalk.misc.extension.addExtensionPatch
 import app.revanced.patches.kakaotalk.misc.extension.sharedExtensionPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
-import app.revanced.util.localRegisterCount
+import app.revanced.util.parameterRegister
 import com.android.tools.smali.dexlib2.Opcode
 
 private const val PACKET_HOOK_CLASS = "Lapp/revanced/extension/kakaotalk/packet/PacketHook;"
@@ -60,23 +61,23 @@ val addPacketHandlerPatch = bytecodePatch(
         }
 
         LocoConnectionConstructorFingerprint.method.apply {
-            if (localRegisterCount < 2) {
-                throw PatchException("LocoConnection constructor has too few local registers")
-            }
-
             val returnIndex = implementation!!.instructions.indexOfLast {
                 it.opcode == Opcode.RETURN_VOID
             }
             if (returnIndex < 0) {
                 throw PatchException("Could not find LocoConnection constructor return")
             }
+            val receiverRegister = parameterRegister(0) - 1
+            val registers = getFreeRegisterProvider(returnIndex, 2, receiverRegister)
+            val methodTypeRegister = registers.getFreeRegister4Bit()
+            val builderTypeRegister = registers.getFreeRegister4Bit()
 
             addInstructions(
                 returnIndex,
                 """
-                    const-string v0, "$locoMethodClass"
-                    const-string v1, "$locoReqBuilderClass"
-                    invoke-static {v0, v1, p0}, $REMOTE_PACKET_HANDLER_CLASS->initializeLoco(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Object;)V
+                    const-string v$methodTypeRegister, "$locoMethodClass"
+                    const-string v$builderTypeRegister, "$locoReqBuilderClass"
+                    invoke-static {v$methodTypeRegister, v$builderTypeRegister, p0}, $REMOTE_PACKET_HANDLER_CLASS->initializeLoco(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Object;)V
                 """.trimIndent()
             )
         }

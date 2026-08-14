@@ -9,11 +9,7 @@ import com.android.tools.smali.dexlib2.Opcode
 internal object ReplaceToFeedFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     returnType = "V",
-    strings = listOf(
-        "chatLog",
-        "feedType",
-        "byHost",
-    ),
+    strings = listOf("byHost"),
     custom = { _, classDef -> classDef.sourceFile == "ChatLogsManager.kt" }
 )
 

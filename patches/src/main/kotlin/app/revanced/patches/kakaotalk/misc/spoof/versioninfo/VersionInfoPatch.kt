@@ -19,23 +19,24 @@ val versionInfoPatch = bytecodePatch(
     compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
+        val versionPattern = Regex("^\\d+\\.\\d+\\.\\d+")
         val runPatch: (Fingerprint, Boolean) -> Unit = { fp, inDetail ->
-            val versionInfo = fp.method.instructions
+            val versionInstruction = fp.method.instructions
                 .filterIsInstance<BuilderInstruction21c>()
-                .filter { inst ->
-                    inst.opcode == Opcode.CONST_STRING
+                .first { instruction ->
+                    instruction.opcode == Opcode.CONST_STRING &&
+                        versionPattern.containsMatchIn(
+                            (instruction.reference as? StringReference)?.string.orEmpty()
+                        )
                 }
-
-            val index = if (inDetail) 1 else 0
-
-            val versionString = (versionInfo[index].reference as StringReference).string
+            val versionString = (versionInstruction.reference as StringReference).string
 
             fp.method
                 .replaceInstruction(
-                    versionInfo[index].location.index,
+                    versionInstruction.location.index,
                     BuilderInstruction21c(
                         Opcode.CONST_STRING,
-                        versionInfo[index].registerA,
+                        versionInstruction.registerA,
                         ImmutableStringReference(
                             if (inDetail) {
                                 val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")

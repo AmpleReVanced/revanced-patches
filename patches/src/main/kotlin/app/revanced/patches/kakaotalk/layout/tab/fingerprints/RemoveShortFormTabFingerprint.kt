@@ -95,7 +95,7 @@ internal object TransitionOpenLinkOrShortformMethodFingerprint : Fingerprint(
 )
 
 internal object ChooseOpenLinkTabFingerprint : Fingerprint(
-    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.FINAL),
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC),
     returnType = "V",
     parameters = listOf("L", "Landroid/view/View;"),
     filters = listOf(
@@ -127,8 +127,6 @@ internal object ChooseNowChildTabFingerprint : Fingerprint(
         "call to 'resume' before 'invoke' with coroutine",
         "NOW_TAB",
         "binding",
-        "viewpager",
-        "hsv"
     ),
     filters = listOf(
         methodCall(

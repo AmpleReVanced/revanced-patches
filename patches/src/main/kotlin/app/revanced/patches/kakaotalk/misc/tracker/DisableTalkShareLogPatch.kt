@@ -3,10 +3,14 @@ package app.revanced.patches.kakaotalk.misc.tracker
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.util.findMutableMethodOf
-import app.revanced.util.hasMethodCall
+import app.morphe.util.getFreeRegisterProvider
+import app.morphe.util.getReference
 import app.morphe.util.returnEarly
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
+import app.revanced.patches.kakaotalk.misc.tracker.fingerprints.TalkShareApiFingerprint
 import app.revanced.patches.kakaotalk.misc.tracker.fingerprints.TalkShareLogAsyncFlagFingerprint
+import app.revanced.util.matches
+import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
 @Suppress("unused")
 val disableTalkShareLogPatch = bytecodePatch(
@@ -16,28 +20,24 @@ val disableTalkShareLogPatch = bytecodePatch(
     compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        TalkShareLogAsyncFlagFingerprint.method.addInstructions(
+        val flagMethod = TalkShareLogAsyncFlagFingerprint.method
+        val flagRegister = flagMethod.getFreeRegisterProvider(0, 1).getFreeRegister4Bit()
+        flagMethod.addInstructions(
             0,
             """
-                sget-object v0, Ljava/lang/Boolean;->FALSE:Ljava/lang/Boolean;
-                return-object v0
+                sget-object v$flagRegister, Ljava/lang/Boolean;->FALSE:Ljava/lang/Boolean;
+                return-object v$flagRegister
             """.trimIndent()
         )
 
+        val shareLogMethod = TalkShareApiFingerprint.method
         buildMap {
             classDefForEach { classDef ->
                 val talkShareMethods = classDef.methods.filter { method ->
                     method.returnType == "V" &&
-                            method.hasMethodCall(
-                                "Lcom/kakao/talk/net/retrofit/service/B;",
-                                "a",
-                                "Lretrofit2/d;"
-                            ) &&
-                            method.hasMethodCall(
-                                "Lretrofit2/d;",
-                                "g0",
-                                "V"
-                            )
+                            method.implementation?.instructions?.any { instruction ->
+                                instruction.getReference<MethodReference>()?.matches(shareLogMethod) == true
+                            } == true
                 }
 
                 if (talkShareMethods.isNotEmpty()) {

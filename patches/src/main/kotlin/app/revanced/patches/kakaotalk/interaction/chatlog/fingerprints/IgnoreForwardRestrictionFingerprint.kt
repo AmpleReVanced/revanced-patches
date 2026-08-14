@@ -41,8 +41,22 @@ internal object LinkForwardShortcutFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC),
     returnType = "Z",
     parameters = listOf(),
-    strings = listOf("com.kakao.talk.db.model.chatlog.LinkChatLog"),
-    custom = { _, classDef -> classDef.type.startsWith(CHAT_LOG_VIEW_HOLDER_TYPE) },
+    filters = listOf(
+        opcode(Opcode.CHECK_CAST),
+        methodCall(
+            definingClass = CHAT_LOG_TYPE,
+            parameters = listOf(),
+            returnType = "Z",
+            opcode = Opcode.INVOKE_VIRTUAL,
+            location = MatchAfterImmediately(),
+        ),
+        opcode(Opcode.MOVE_RESULT, location = MatchAfterImmediately()),
+        opcode(Opcode.RETURN, location = MatchAfterImmediately()),
+    ),
+    custom = { _, classDef ->
+        classDef.type.startsWith(CHAT_LOG_VIEW_HOLDER_TYPE) &&
+            classDef.sourceFile == "ChatLinkViewHolder.kt"
+    },
 )
 
 internal fun forwardShortcutFingerprint(name: String) = object : Fingerprint(

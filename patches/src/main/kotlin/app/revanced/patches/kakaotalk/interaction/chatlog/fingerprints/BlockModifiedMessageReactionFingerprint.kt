@@ -7,6 +7,5 @@ internal fun CanReactToChatLogFingerprint(chatLogType: String) = Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     parameters = listOf(chatLogType, "L"),
     returnType = "Z",
-    strings = listOf("chatLog", "chatRoom"),
     custom = { _, classDef -> classDef.sourceFile == "ReactionManager.kt" },
 )

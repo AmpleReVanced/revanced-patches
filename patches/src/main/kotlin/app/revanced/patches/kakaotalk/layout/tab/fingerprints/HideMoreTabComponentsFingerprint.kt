@@ -64,7 +64,6 @@ internal object MoreTabWeatherSectionFingerprint : Fingerprint(
 internal object WeatherViewHolderBindFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC),
     returnType = "V",
-    strings = listOf("item"),
     custom = { method, classDef ->
         classDef.sourceFile == "WeatherViewHolder.kt" &&
                 !classDef.type.contains("$") &&

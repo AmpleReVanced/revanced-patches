@@ -6,6 +6,7 @@ import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.util.findMutableMethodOf
+import app.morphe.util.getFreeRegisterProvider
 import app.morphe.util.getReference
 import app.morphe.util.indexOfFirstInstructionOrThrow
 import app.morphe.util.setExtensionIsPatchIncluded
@@ -20,7 +21,6 @@ import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction21c
 import com.android.tools.smali.dexlib2.iface.ClassDef
 import com.android.tools.smali.dexlib2.iface.Method
-import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.TwoRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
@@ -116,13 +116,19 @@ val hideMoreTabGamePatch = bytecodePatch(
                 null
             }
         } ?: throw PatchException("Could not find Game tab item register")
+        val itemsFlowFlagRegister = itemsFlowMethod.getFreeRegisterProvider(
+            newPagerItemArrayIndex,
+            1,
+            gameItemRegister,
+            gameFieldRegister,
+        ).getFreeRegister4Bit()
 
         itemsFlowMethod.addInstructionsWithLabels(
             newPagerItemArrayIndex,
             """
                 invoke-static {}, Lapp/revanced/extension/kakaotalk/settings/Settings;->hideMoreTabGame()Z
-                move-result v$gameFieldRegister
-                if-eqz v$gameFieldRegister, :morphe_keep_more_tab_game
+                move-result v$itemsFlowFlagRegister
+                if-eqz v$itemsFlowFlagRegister, :morphe_keep_more_tab_game
                 const/4 v$gameItemRegister, 0x0
                 :morphe_keep_more_tab_game
                 nop
@@ -148,7 +154,10 @@ val hideMoreTabGamePatch = bytecodePatch(
 
                                         it.opcode == Opcode.INVOKE_STATIC &&
                                                 reference?.definingClass == "Lkotlin/jvm/internal/Intrinsics;" &&
-                                                reference.name == "e" &&
+                                                reference.parameterTypes == listOf(
+                                                    "Ljava/lang/Object;",
+                                                    "Ljava/lang/Object;",
+                                                ) &&
                                                 reference.returnType == "Z"
                                     }
                         } == true
@@ -175,13 +184,12 @@ val hideMoreTabGamePatch = bytecodePatch(
 
             opcode == Opcode.INVOKE_STATIC &&
                     reference?.definingClass == "Lkotlin/jvm/internal/Intrinsics;" &&
-                    reference.name == "e" &&
                     reference.parameterTypes == listOf("Ljava/lang/Object;", "Ljava/lang/Object;") &&
                     reference.returnType == "Z"
         }
-        val scratchRegister = (schemeSelectionMethod.getInstruction(gameComparisonIndex) as? FiveRegisterInstruction)
-            ?.registerD
-            ?: throw PatchException("Could not find Game tab comparison scratch register")
+        val comparisonReference = schemeSelectionMethod.getInstruction(gameComparisonIndex)
+            .getReference<MethodReference>()
+            ?: throw PatchException("Could not resolve More tab item comparison")
         val homeSelectionField = schemeSelectionMethod.instructions.firstOrNull {
             it.opcode == Opcode.SGET_OBJECT &&
                     it.getReference<FieldReference>()?.type == homeItemClass.type
@@ -190,17 +198,22 @@ val hideMoreTabGamePatch = bytecodePatch(
         val launchSelectionIndex = schemeSelectionMethod.indexOfFirstInstructionOrThrow(gameSelectionIndex) {
             opcode == Opcode.NEW_INSTANCE
         }
+        val selectionFlagRegister = schemeSelectionMethod.getFreeRegisterProvider(
+            launchSelectionIndex,
+            1,
+            selectedTabRegister,
+        ).getFreeRegister4Bit()
 
         schemeSelectionMethod.addInstructionsWithLabels(
             launchSelectionIndex,
             """
                 invoke-static {}, Lapp/revanced/extension/kakaotalk/settings/Settings;->hideMoreTabGame()Z
-                move-result v$scratchRegister
-                if-eqz v$scratchRegister, :morphe_keep_more_tab_scheme_selection
-                sget-object v$scratchRegister, ${gameSelectionField.smaliReference}
-                invoke-static {v$selectedTabRegister, v$scratchRegister}, Lkotlin/jvm/internal/Intrinsics;->e(Ljava/lang/Object;Ljava/lang/Object;)Z
-                move-result v$scratchRegister
-                if-eqz v$scratchRegister, :morphe_keep_more_tab_scheme_selection
+                move-result v$selectionFlagRegister
+                if-eqz v$selectionFlagRegister, :morphe_keep_more_tab_scheme_selection
+                sget-object v$selectionFlagRegister, ${gameSelectionField.smaliReference}
+                invoke-static {v$selectedTabRegister, v$selectionFlagRegister}, ${comparisonReference.smaliReference}
+                move-result v$selectionFlagRegister
+                if-eqz v$selectionFlagRegister, :morphe_keep_more_tab_scheme_selection
                 sget-object v$selectedTabRegister, ${homeSelectionField.smaliReference}
                 :morphe_keep_more_tab_scheme_selection
                 nop

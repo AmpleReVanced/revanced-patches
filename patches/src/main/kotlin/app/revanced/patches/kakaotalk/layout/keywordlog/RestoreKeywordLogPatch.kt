@@ -3,6 +3,7 @@ package app.revanced.patches.kakaotalk.layout.keywordlog
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
+import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
@@ -13,14 +14,12 @@ import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMuta
 import app.morphe.patches.all.misc.resources.addResourcesPatch
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import app.morphe.util.ResourceGroup
-import app.morphe.util.addInstructionsAtControlFlowLabel
-import app.morphe.util.cloneParameters
 import app.morphe.util.copyResources
 import app.morphe.util.findFieldFromToString
-import app.morphe.util.findInstructionIndicesReversedOrThrow
 import app.morphe.util.findMethodFromToString
 import app.morphe.util.getFreeRegisterProvider
 import app.morphe.util.getReference
+import app.morphe.util.writeRegister
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatRoomListManagerGetInstanceFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.GetChatRoomByChannelIdFingerprint
@@ -31,7 +30,7 @@ import app.revanced.patches.kakaotalk.misc.settings.addSettingsTabPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.util.smaliReference
 import com.android.tools.smali.dexlib2.AccessFlags
-import com.android.tools.smali.dexlib2.Opcode
+import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
 import com.android.tools.smali.dexlib2.builder.MutableMethodImplementation
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
@@ -178,6 +177,8 @@ val restoreKeywordLogPatch = bytecodePatch(
                 invoke-static {}, $EXTENSION_CLASS->isEnabled()Z
                 move-result v12
                 if-eqz v12, :skip
+                instance-of v12, p0, $chatLogType
+                if-eqz v12, :skip
                 check-cast p0, $chatLogType
                 invoke-virtual {p0}, $chatLogType->getId()J
                 move-result-wide v0
@@ -283,11 +284,7 @@ val restoreKeywordLogPatch = bytecodePatch(
             )
         }
 
-        hookChatRoomItemClick(
-            chatRoomType,
-            chatRoomTypeField.smaliReference,
-            keywordLogListEnum.smaliReference,
-        )
+        hookChatRoomItemClick(chatRoomType)
 
         hookChatRoomProfile(chatRoomTypeEnum, keywordLogListEnum.smaliReference)
     }
@@ -311,24 +308,34 @@ private fun BytecodePatchContext.chatRoomTypeField(
 }
 
 private fun BytecodePatchContext.hookKeywordMatch() {
-    val matchMethod = KeywordMatchFingerprint.originalMethod.cloneParameters()
+    keywordMatchCallSiteFingerprint(KeywordMatchFingerprint.originalMethod)
+        .matchAll()
+        .sortedByDescending { it.instructionMatches[3].index }
+        .forEach { match ->
+            val callIndex = match.instructionMatches[0].index
+            val resultIndex = match.instructionMatches[3].index
+            val invoke = match.method.getInstruction(callIndex) as? FiveRegisterInstruction
+                ?: throw PatchException("Could not infer the chat log register of the keyword match.")
+            val chatLogRegister = invoke.registerD
+            val resultRegister =
+                match.method.getInstruction<OneRegisterInstruction>(resultIndex).registerA
 
-    matchMethod.findInstructionIndicesReversedOrThrow(Opcode.RETURN).forEach { returnIndex ->
-        val resultRegister =
-            matchMethod.getInstruction<OneRegisterInstruction>(returnIndex).registerA
-        val provider = matchMethod.getFreeRegisterProvider(returnIndex, 2)
-        val chatLogCopy = provider.getFreeRegister4Bit()
-        val resultCopy = provider.getFreeRegister4Bit()
+            if (match.method.instructions.asSequence()
+                    .drop(callIndex + 1)
+                    .take(resultIndex - callIndex)
+                    .any { it.writeRegister == chatLogRegister }
+            ) {
+                throw PatchException("The keyword match chat log does not survive its suspension.")
+            }
+            if (chatLogRegister > 15 || resultRegister > 15) {
+                throw PatchException("The keyword match result is not held in low registers.")
+            }
 
-        matchMethod.addInstructionsAtControlFlowLabel(
-            returnIndex,
-            """
-                move-object/from16 v$chatLogCopy, p1
-                move/from16 v$resultCopy, v$resultRegister
-                invoke-static {v$chatLogCopy, v$resultCopy}, $EXTENSION_CLASS->recordFromChatLog(Ljava/lang/Object;Z)V
-            """,
-        )
-    }
+            match.method.addInstructions(
+                resultIndex + 1,
+                "invoke-static {v$chatLogRegister, v$resultRegister}, $EXTENSION_CLASS->recordFromChatLog(Ljava/lang/Object;Z)V",
+            )
+        }
 }
 
 private fun BytecodePatchContext.addHelperMethod(
@@ -487,23 +494,19 @@ private fun BytecodePatchContext.hookChatRoomProfile(
 
 private fun BytecodePatchContext.hookChatRoomItemClick(
     chatRoomType: String,
-    chatRoomTypeField: String,
-    keywordLogListEnum: String,
 ) {
     val matches = ChatRoomItemClickFingerprint.instructionMatches
     val bindableGetter = matches[0].getMethodCalled()
     val itemType = matches[1].getInstruction<ReferenceInstruction>()
         .getReference<TypeReference>()!!.type
-    val chatRoomGetter = classDefBy(itemType).methods.single {
-        it.parameters.isEmpty() && it.returnType == chatRoomType
-    }
+    val chatRoomIdGetter = matches[2].getMethodCalled()
 
     addHelperMethod(
         chatRoomType,
         HANDLE_CLICK_METHOD,
         listOf("Ljava/lang/Object;", "Landroid/view/View;"),
         "Z",
-        6,
+        8,
         """
             invoke-static {}, $EXTENSION_CLASS->isEnabled()Z
             move-result v0
@@ -514,12 +517,11 @@ private fun BytecodePatchContext.hookChatRoomItemClick(
             instance-of v1, v0, $itemType
             if-eqz v1, :ignore
             check-cast v0, $itemType
-            invoke-virtual {v0}, ${chatRoomGetter.smaliReference}
-            move-result-object v0
-            if-eqz v0, :ignore
-            iget-object v0, v0, $chatRoomTypeField
-            sget-object v1, $keywordLogListEnum
-            if-ne v0, v1, :ignore
+            invoke-virtual {v0}, ${chatRoomIdGetter.smaliReference}
+            move-result-wide v2
+            const-wide v4, ${KEYWORD_LOG_CHAT_ROOM_ID}L
+            cmp-long v0, v2, v4
+            if-nez v0, :ignore
             invoke-virtual {p1}, Landroid/view/View;->getContext()Landroid/content/Context;
             move-result-object v0
             invoke-static {v0}, $EXTENSION_CLASS->openList(Landroid/content/Context;)V

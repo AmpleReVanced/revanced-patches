@@ -15,6 +15,5 @@ internal object AbuseDetectIntegrityTokenFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     parameters = listOf("Ljava/lang/String;", "Lkotlin/coroutines/Continuation;"),
     returnType = "Ljava/lang/Object;",
-    strings = listOf("requestIntegrityToken(...)"),
     custom = { _, classDef -> classDef.sourceFile == "AbuseDetectUtil.kt" }
 )

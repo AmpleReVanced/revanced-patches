@@ -2,7 +2,6 @@ package app.revanced.patches.kakaotalk.layout.subdevice
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.InstructionLocation.MatchAfterImmediately
-import app.morphe.patcher.InstructionLocation.MatchAfterWithin
 import app.morphe.patcher.fieldAccess
 import app.morphe.patcher.methodCall
 import app.morphe.patcher.opcode
@@ -48,12 +47,8 @@ internal object UniversalMobileOnlyFingerprint : Fingerprint(
             opcode = Opcode.INVOKE_VIRTUAL,
         ),
         opcode(Opcode.MOVE_RESULT, location = MatchAfterImmediately()),
-        methodCall(
-            definingClass = "this",
-            parameters = listOf(),
-            returnType = "Z",
-            location = MatchAfterWithin(2),
-        ),
+        opcode(Opcode.IF_EQZ, location = MatchAfterImmediately()),
+        opcode(Opcode.NEW_INSTANCE, location = MatchAfterImmediately()),
     ),
     custom = { _, classDef -> classDef.sourceFile == "UniversalDataValidator.kt" },
 )

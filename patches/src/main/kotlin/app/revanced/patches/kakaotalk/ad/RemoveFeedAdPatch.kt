@@ -5,9 +5,11 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLa
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
+import app.morphe.util.getFreeRegisterProvider
 import app.morphe.util.returnEarly
 import app.revanced.patches.kakaotalk.ad.fingerprints.FeedAdLayoutFingerprint
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
+import app.revanced.util.parameterRegister
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.builder.MutableMethodImplementation
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
@@ -21,24 +23,26 @@ val removeFeedAdPatch = bytecodePatch(
     compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        // We add setVisibility(View.GONE); before the constructor returns
-        FeedAdLayoutFingerprint.method.addInstructionsWithLabels(
-            FeedAdLayoutFingerprint.method.instructions.size - 1,
+        val constructor = FeedAdLayoutFingerprint.method
+        val insertionIndex = constructor.instructions.size - 1
+        val receiverRegister = constructor.parameterRegister(0) - 1
+        val registers = constructor.getFreeRegisterProvider(insertionIndex, 2, receiverRegister)
+        val valueRegister = registers.getFreeRegister4Bit()
+        val layoutParamsRegister = registers.getFreeRegister4Bit()
+
+        constructor.addInstructionsWithLabels(
+            insertionIndex,
             """
-                const/16 v0, 0x8
-                invoke-virtual {p0, v0}, ${FeedAdLayoutFingerprint.method.definingClass}->setVisibility(I)V
-                
-                # layoutParams = getLayoutParams()
-                invoke-virtual {p0}, ${FeedAdLayoutFingerprint.method.definingClass}->getLayoutParams()Landroid/view/ViewGroup${'$'}LayoutParams;
-                move-result-object v0
-                if-eqz v0, :skipSet
-        
-                const/4 v1, 0x0
-                iput v1, v0, Landroid/view/ViewGroup${"$"}LayoutParams;->height:I
-                iput v1, v0, Landroid/view/ViewGroup${"$"}LayoutParams;->width:I
-        
+                const/16 v$valueRegister, 0x8
+                invoke-virtual {p0, v$valueRegister}, ${constructor.definingClass}->setVisibility(I)V
+                invoke-virtual {p0}, ${constructor.definingClass}->getLayoutParams()Landroid/view/ViewGroup${'$'}LayoutParams;
+                move-result-object v$layoutParamsRegister
+                if-eqz v$layoutParamsRegister, :skipSet
+                const/4 v$valueRegister, 0x0
+                iput v$valueRegister, v$layoutParamsRegister, Landroid/view/ViewGroup${"$"}LayoutParams;->height:I
+                iput v$valueRegister, v$layoutParamsRegister, Landroid/view/ViewGroup${"$"}LayoutParams;->width:I
                 :skipSet
-                invoke-virtual {p0}, ${FeedAdLayoutFingerprint.method.definingClass}->requestLayout()V
+                invoke-virtual {p0}, ${constructor.definingClass}->requestLayout()V
             """.trimIndent()
         )
 

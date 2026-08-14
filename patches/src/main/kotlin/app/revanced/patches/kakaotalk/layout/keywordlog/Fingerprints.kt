@@ -1,6 +1,8 @@
 package app.revanced.patches.kakaotalk.layout.keywordlog
 
 import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.InstructionLocation.MatchAfterImmediately
+import app.morphe.patcher.checkCast
 import app.morphe.patcher.fieldAccess
 import app.morphe.patcher.methodCall
 import app.morphe.patcher.opcode
@@ -8,17 +10,34 @@ import app.morphe.patcher.string
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
+import com.android.tools.smali.dexlib2.iface.Method
 
 internal const val FRIEND_CLASS = "Lcom/kakao/talk/db/model/Friend;"
 internal const val PROFILE_VIEW_CLASS = "Lcom/kakao/talk/widget/ProfileView;"
 internal const val CHAT_ROOM_PROFILE_DATA_CLASS = "Lcom/kakao/talk/widget/ChatRoomProfileData;"
 internal const val SQUIRCLE_DRAWABLE_CLASS = "Lcom/kakao/talk/widget/SquircleBitmapDrawable;"
 
+internal fun keywordMatchCallSiteFingerprint(matchMethod: Method) = Fingerprint(
+    filters = listOf(
+        methodCall(
+            definingClass = matchMethod.definingClass,
+            name = matchMethod.name,
+            parameters = matchMethod.parameterTypes.map(CharSequence::toString),
+            returnType = matchMethod.returnType,
+        ),
+        checkCast("Ljava/lang/Boolean;"),
+        methodCall(
+            "Ljava/lang/Boolean;->booleanValue()Z",
+            location = MatchAfterImmediately(),
+        ),
+        opcode(Opcode.MOVE_RESULT, location = MatchAfterImmediately()),
+    ),
+)
+
 internal object KeywordMatchFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
-    returnType = "Z",
-    parameters = listOf("L", "Z"),
-    strings = listOf("chatLog"),
+    returnType = "Ljava/lang/Object;",
+    parameters = listOf("L", "Z", "Lkotlin/coroutines/Continuation;"),
     filters = listOf(
         methodCall(name = "getChatRoomId", parameters = listOf(), returnType = "J"),
         methodCall(name = "getUserId", parameters = listOf(), returnType = "J"),
@@ -144,6 +163,11 @@ internal object ChatRoomItemClickFingerprint : Fingerprint(
     filters = listOf(
         methodCall(parameters = listOf(), returnType = "Lcom/kakao/talk/widget/ViewBindable;"),
         opcode(Opcode.CHECK_CAST),
+        methodCall(
+            parameters = listOf(),
+            returnType = "J",
+            opcode = Opcode.INVOKE_VIRTUAL,
+        ),
     ),
     custom = { _, classDef -> classDef.sourceFile == "BaseChatRoomItemViewHolder.kt" },
 )

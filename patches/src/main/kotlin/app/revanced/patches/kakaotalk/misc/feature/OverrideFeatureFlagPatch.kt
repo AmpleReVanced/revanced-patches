@@ -4,13 +4,12 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.stringOption
-import app.morphe.util.indexOfFirstInstructionOrThrow
+import app.morphe.util.getFreeRegisterProvider
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.kakaotalk.misc.settings.PreferenceScreen
 import app.revanced.patches.kakaotalk.misc.settings.addSettingsTabPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.morphe.patches.shared.misc.settings.preference.TextPreference
-import com.android.tools.smali.dexlib2.Opcode
 
 private const val EXTENSION_CLASS =
     "Lapp/revanced/extension/kakaotalk/patches/OverrideFeatureFlagPatch;"
@@ -56,19 +55,19 @@ val overrideFeatureFlagPatch = bytecodePatch(
 
         val method = GetFeatureFlagValueFingerprint.method
         val parameterType = method.parameterTypes[0]
-        val invokeStaticIdx = method.indexOfFirstInstructionOrThrow(Opcode.INVOKE_STATIC)
+        val registerProvider = method.getFreeRegisterProvider(0, 2)
+        val keyRegister = registerProvider.getFreeRegister4Bit()
+        val interceptedRegister = registerProvider.getFreeRegister4Bit()
 
         method.addInstructionsWithLabels(
-            invokeStaticIdx,
+            0,
             """
                 invoke-virtual {p1}, ${parameterType}->getKey()Ljava/lang/String;
-                move-result-object v0
-                invoke-static {v0}, Lapp/revanced/extension/kakaotalk/feature/Flag;->canIntercept(Ljava/lang/String;)Z
-                move-result v1
-                if-eqz v1, :cond_original
-                invoke-virtual {p1}, ${parameterType}->getKey()Ljava/lang/String;
-                move-result-object v0
-                invoke-static {v0}, Lapp/revanced/extension/kakaotalk/feature/Flag;->intercept(Ljava/lang/String;)Z
+                move-result-object v$keyRegister
+                invoke-static {v$keyRegister}, Lapp/revanced/extension/kakaotalk/feature/Flag;->canIntercept(Ljava/lang/String;)Z
+                move-result v$interceptedRegister
+                if-eqz v$interceptedRegister, :cond_original
+                invoke-static {v$keyRegister}, Lapp/revanced/extension/kakaotalk/feature/Flag;->intercept(Ljava/lang/String;)Z
                 move-result p1
                 return p1
                 :cond_original

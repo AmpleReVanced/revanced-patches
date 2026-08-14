@@ -8,7 +8,6 @@ internal object ChatMessageFeedViewHolderBindFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC),
     parameters = emptyList(),
     returnType = "V",
-    strings = listOf("null cannot be cast to non-null type com.kakao.talk.db.model.chatlog.ChatLog"),
     filters = listOf(
         methodCall("Landroid/text/method/LinkMovementMethod;->getInstance()Landroid/text/method/MovementMethod;"),
         methodCall("Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V"),

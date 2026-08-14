@@ -1,9 +1,7 @@
 package app.revanced.patches.kakaotalk.ad.fingerprints
 
 import app.morphe.patcher.Fingerprint
-import app.morphe.patcher.OpcodesFilter
 import com.android.tools.smali.dexlib2.AccessFlags
-import com.android.tools.smali.dexlib2.Opcode
 
 internal object AddSectionToMoreTabUIFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.FINAL),
@@ -24,13 +22,4 @@ internal object AdBigUIModelFingerprint : Fingerprint(
     parameters = listOf(),
     returnType = "Ljava/lang/String;",
     strings = listOf("AdBig(uiModel="),
-    filters = OpcodesFilter.opcodesToFilters(
-        Opcode.IGET_OBJECT,
-        Opcode.NEW_INSTANCE,
-        Opcode.INVOKE_DIRECT,
-        Opcode.CONST_STRING,
-        Opcode.INVOKE_VIRTUAL,
-        Opcode.INVOKE_VIRTUAL,
-        Opcode.CONST_STRING,
-    )
 )

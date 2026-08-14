@@ -25,7 +25,6 @@ import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
-import com.android.tools.smali.dexlib2.iface.reference.StringReference
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethodParameter
 
@@ -88,13 +87,21 @@ private fun BytecodePatchContext.addChatSideTitleCopy() {
     val titleRenderInstruction = titleLambdaMethod.instructions[titleRenderIndex] as? FiveRegisterInstruction
         ?: throw PatchException("Could not inspect chat side title renderer registers.")
     val modifierRegister = titleRenderInstruction.registerD
+    val modifierType = (titleRenderIndex - 1 downTo 1).firstNotNullOfOrNull { index ->
+        val moveResult = titleLambdaMethod.instructions[index] as? OneRegisterInstruction
+        if (moveResult?.opcode != Opcode.MOVE_RESULT_OBJECT || moveResult.registerA != modifierRegister) {
+            return@firstNotNullOfOrNull null
+        }
+
+        titleLambdaMethod.instructions[index - 1].getReference<MethodReference>()?.returnType
+    } ?: throw PatchException("Could not infer chat side title modifier type.")
 
     titleLambdaMethod.addInstructions(
         titleRenderIndex,
         """
             invoke-static {v$modifierRegister}, $CHANNEL_ID_EXTENSION->makeCopyableTitleModifier(Ljava/lang/Object;)Ljava/lang/Object;
             move-result-object v$modifierRegister
-            check-cast v$modifierRegister, Landroidx/compose/ui/d;
+            check-cast v$modifierRegister, $modifierType
         """.trimIndent(),
     )
 }
@@ -133,15 +140,19 @@ private fun BytecodePatchContext.addChatRoomSettingsChannelId() {
         }
         ?: throw PatchException("Could not infer ChatRoom register in profile bind method.")
 
-    val rootStringIndex = bindMethod.instructions.indexOfFirst { instruction ->
-        instruction.opcode == Opcode.CONST_STRING &&
-            instruction.getReference<StringReference>()?.string == "getRoot(...)"
+    val rootGetterIndex = bindMethod.instructions.indexOfFirst { instruction ->
+        instruction.opcode == Opcode.INVOKE_VIRTUAL &&
+            instruction.getReference<MethodReference>()?.let { reference ->
+                reference.parameterTypes.isEmpty() &&
+                    reference.returnType == "Landroidx/constraintlayout/widget/ConstraintLayout;"
+            } == true
     }
-    if (rootStringIndex < 1) {
+    if (rootGetterIndex < 0) {
         throw PatchException("Could not find profile root insertion point.")
     }
 
-    val rootRegister = (bindMethod.instructions[rootStringIndex - 1] as? OneRegisterInstruction)
+    val rootInsertIndex = rootGetterIndex + 2
+    val rootRegister = (bindMethod.instructions.getOrNull(rootGetterIndex + 1) as? OneRegisterInstruction)
         ?.takeIf { it.opcode == Opcode.MOVE_RESULT_OBJECT }
         ?.registerA
         ?: throw PatchException("Could not infer profile root register.")
@@ -155,7 +166,7 @@ private fun BytecodePatchContext.addChatRoomSettingsChannelId() {
     )
 
     bindMethod.addInstructions(
-        rootStringIndex,
+        rootInsertIndex,
         """
             move-object/from16 p0, v$rootRegister
             move-object/from16 p1, v$chatRoomRegister

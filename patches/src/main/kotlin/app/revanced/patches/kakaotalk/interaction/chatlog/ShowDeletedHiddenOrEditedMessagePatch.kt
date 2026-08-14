@@ -381,6 +381,9 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
         chatLogVFieldClass.let {
             val putBooleanMethod = ChatLogVFieldPutBooleanFingerprint.method
             val putStringMethod = ChatLogVFieldPutStringFingerprint.method
+            val jsonField = it.instanceFields.singleOrNull { field ->
+                field.type == "Lorg/json/JSONObject;"
+            } ?: throw PatchException("Could not find VField JSON object")
 
             it.methods.addAll(
                 listOf(
@@ -418,7 +421,7 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
                         addInstructions(
                             0,
                             """
-                                iget-object v0, p0, ${chatLogVFieldClass.type}->a:Lorg/json/JSONObject;
+                                iget-object v0, p0, ${jsonField.smaliReference}
                                 const-string v1, "_revanced_deleted"
                                 const/4 v2, 0x0
                                 invoke-virtual {v0, v1, v2}, Lorg/json/JSONObject;->optBoolean(Ljava/lang/String;Z)Z
@@ -461,7 +464,7 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
                         addInstructions(
                             0,
                             """
-                                iget-object v0, p0, ${chatLogVFieldClass.type}->a:Lorg/json/JSONObject;
+                                iget-object v0, p0, ${jsonField.smaliReference}
                                 const-string v1, "_revanced_hidden"
                                 const/4 v2, 0x0
                                 invoke-virtual {v0, v1, v2}, Lorg/json/JSONObject;->optBoolean(Ljava/lang/String;Z)Z
@@ -508,7 +511,7 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
                         addInstructions(
                             0,
                             """
-                                iget-object v0, p0, ${chatLogVFieldClass.type}->a:Lorg/json/JSONObject;
+                                iget-object v0, p0, ${jsonField.smaliReference}
                                 const-string v1, "_revanced_modified_history"
                                 const-string v2, ""
                                 invoke-virtual {v0, v1, v2}, Lorg/json/JSONObject;->optString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
@@ -583,6 +586,16 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
             val chatRoomListManagerGetInstanceMethod = ChatRoomListManagerGetInstanceFingerprint.method
             val getChatRoomByChannelIdMethod = GetChatRoomByChannelIdFingerprint.method
             val originalSyncMethod = OriginalSyncMethodFingerprint.method
+            val channelIdResultIndex = it.indexOfFirstInstructionOrThrow {
+                getReference<MethodReference>()?.let { reference ->
+                    reference.definingClass == chatLogClass.type &&
+                            reference.parameterTypeNames.isEmpty() &&
+                            reference.returnType == "J"
+                } == true
+            }
+            val chatRoomIdGetter =
+                it.instructions[channelIdResultIndex].getReference<MethodReference>()
+                    ?: throw PatchException("Could not resolve chat room ID getter.")
             val chatRoomListManagerCompanionField = OriginalSyncMethodFingerprint.classDef.fields.first {
                 it.type == chatRoomListManagerGetInstanceMethod.definingClass
             }
@@ -613,7 +626,9 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
                     sget-object v0, ${chatRoomListManagerCompanionField.definingClass}->${chatRoomListManagerCompanionField.name}:${chatRoomListManagerCompanionField.type}
                     invoke-virtual {v0}, $chatRoomListManagerGetInstanceMethod
                     move-result-object v0
-                    invoke-virtual {v0, v3, v4}, $getChatRoomByChannelIdMethod
+                    invoke-virtual {p1}, $chatRoomIdGetter
+                    move-result-wide p2
+                    invoke-virtual {v0, p2, p3}, $getChatRoomByChannelIdMethod
                     move-result-object v0
                     if-eqz v0, :revanced_deleted_sync_end
                     const/4 v1, 0x1
@@ -650,7 +665,9 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
                     sget-object v0, ${chatRoomListManagerCompanionField.definingClass}->${chatRoomListManagerCompanionField.name}:${chatRoomListManagerCompanionField.type}
                     invoke-virtual {v0}, $chatRoomListManagerGetInstanceMethod
                     move-result-object v0
-                    invoke-virtual {v0, v3, v4}, $getChatRoomByChannelIdMethod
+                    invoke-virtual {p1}, $chatRoomIdGetter
+                    move-result-wide p2
+                    invoke-virtual {v0, p2, p3}, $getChatRoomByChannelIdMethod
                     move-result-object v0
                     if-eqz v0, :revanced_hidden_sync_end
                     const/4 v1, 0x1

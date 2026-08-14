@@ -78,10 +78,14 @@ val disableCommunityTabPatch = bytecodePatch(
                                     reference.returnType == "Z"
                         } == true
             }
-            if (getInstruction(adapterSetupConditionIndex + 1).opcode != Opcode.MOVE_RESULT ||
-                getInstruction(adapterSetupConditionIndex + 2).opcode != Opcode.IF_EQZ
-            ) {
+            val conditionResult = getInstruction(adapterSetupConditionIndex + 1)
+            if (conditionResult.opcode != Opcode.MOVE_RESULT) {
                 throw PatchException("Could not inspect OpenChat community adapter condition")
+            }
+            val conditionRegister = (conditionResult as OneRegisterInstruction).registerA
+            indexOfFirstInstructionOrThrow(adapterSetupConditionIndex + 2) {
+                opcode == Opcode.IF_EQZ &&
+                        (this as? OneRegisterInstruction)?.registerA == conditionRegister
             }
 
             val chatListAdapterType = CommonChatRoomListAdapterClassFingerprint.classDef.type

@@ -2,24 +2,17 @@ package app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.OpcodesFilter
+import app.morphe.patcher.methodCall
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
 internal object CheckIsAllowedHideFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf("L", "L"),
     returnType = "Z",
-    strings = listOf(
-        "chatRoom",
-        "chatLog",
-    ),
-    filters = OpcodesFilter.opcodesToFilters(
-        Opcode.CONST_STRING,
-        Opcode.INVOKE_STATIC,
-        Opcode.CONST_STRING,
-        Opcode.INVOKE_STATIC,
-        Opcode.INVOKE_STATIC,
-        Opcode.MOVE_RESULT,
-        Opcode.CONST_4,
+    filters = listOf(
+        methodCall(returnType = "Lcom/kakao/talk/openlink/db/model/OpenLink;"),
+        methodCall(returnType = "Lcom/kakao/talk/openlink/db/model/OpenLinkProfile;"),
     ),
     custom = { _, classDef -> classDef.sourceFile == "DeletableAction.kt" }
 )

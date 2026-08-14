@@ -13,6 +13,7 @@ import app.revanced.patches.kakaotalk.layout.tab.fingerprints.DetermineFeedOrLis
 import app.revanced.patches.kakaotalk.layout.tab.fingerprints.MainTabConfigFingerprint
 import app.revanced.util.matches
 import app.revanced.util.parameterTypeNames
+import app.revanced.util.smaliReference
 import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
@@ -24,11 +25,12 @@ val disableFriendFeedTabPatch = bytecodePatch(
     compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
+        val feedTabField = MainTabConfigFingerprint.instructionMatches[1].getFieldAccessed()
         MainTabConfigFingerprint.method.addInstructions(
             MainTabConfigFingerprint.method.instructions.size - 1,
-            """
+                """
                 const/4 p1, 0x0
-                iput-boolean p1, p0, ${MainTabConfigFingerprint.method.definingClass}->a:Z
+                iput-boolean p1, p0, ${feedTabField.smaliReference}
             """.trimIndent()
         )
 

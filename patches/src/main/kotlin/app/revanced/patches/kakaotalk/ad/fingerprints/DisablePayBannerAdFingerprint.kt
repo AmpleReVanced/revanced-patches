@@ -22,17 +22,19 @@ internal object PayBannerLoadFingerprint : Fingerprint(
 )
 
 internal object PayBannerRenderFingerprint : Fingerprint(
-    returnType = "V",
-    strings = listOf("productId"),
-    filters = OpcodesFilter.opcodesToFilters(
-        Opcode.MOVE_OBJECT_FROM16,
-        Opcode.MOVE_OBJECT_FROM16,
-        Opcode.MOVE_FROM16,
-        Opcode.CONST_STRING,
-        Opcode.INVOKE_STATIC,
-        Opcode.CONST
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.FINAL),
+    parameters = listOf(
+        "Ljava/lang/String;",
+        "Lcom/kakao/adfit/ads/media/NativeAdBinder;",
+        "L",
+        "Lkotlin/jvm/functions/Function1;",
+        "Lkotlin/jvm/functions/Function0;",
+        "Lkotlin/jvm/functions/Function1;",
+        "Lkotlin/jvm/functions/Function0;",
+        "L",
+        "I",
+        "I",
     ),
-    custom = { method, classDef ->
-        classDef.sourceFile == "PayAdPlatformAdFit.kt"
-    }
+    returnType = "V",
+    custom = { _, classDef -> classDef.sourceFile == "PayAdPlatformAdFit.kt" }
 )

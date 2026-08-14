@@ -7,10 +7,8 @@ import com.android.tools.smali.dexlib2.Opcode
 
 internal object VersionInfoFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.FINAL),
-    strings = listOf("\$this\$group", "26.6.3"),
+    strings = listOf("26.7.1"),
     filters = OpcodesFilter.opcodesToFilters(
-        Opcode.CONST_STRING,
-        Opcode.INVOKE_STATIC,
         Opcode.SGET_OBJECT,
         Opcode.INVOKE_VIRTUAL,
         Opcode.MOVE_RESULT,
@@ -29,7 +27,7 @@ internal object VersionInfoPreviewFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC),
     parameters = listOf(),
     returnType = "Ljava/lang/String;",
-    strings = listOf("26.6.3"),
+    strings = listOf("26.7.1"),
     filters = OpcodesFilter.opcodesToFilters(
         Opcode.SGET_OBJECT,
         Opcode.INVOKE_VIRTUAL,
@@ -37,11 +35,6 @@ internal object VersionInfoPreviewFingerprint : Fingerprint(
         Opcode.IF_EQZ,
         Opcode.CONST_STRING,
         Opcode.RETURN_OBJECT,
-        Opcode.IGET_OBJECT,
-        Opcode.CONST,
-        Opcode.INVOKE_VIRTUAL,
-        Opcode.MOVE_RESULT_OBJECT,
-        Opcode.INVOKE_STATIC,
     ),
     custom = { method, classDef -> classDef.sourceFile == "SettingActivity.kt" }
 )

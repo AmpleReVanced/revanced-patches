@@ -2,6 +2,7 @@ package app.revanced.patches.kakaotalk.interaction.ghost
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.util.getFreeRegisterProvider
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.kakaotalk.misc.settings.PreferenceScreen
 import app.revanced.patches.kakaotalk.misc.settings.addSettingsTabPatch
@@ -33,17 +34,20 @@ val ghostMode = bytecodePatch(
         val actionJobClass = actionJobMethodFingerprint(locoMethodClass).classDef
         val sendActionMethod = sendCurrentActionFingerprint(actionJobClass).method
         val protocolSuccessClass = ProtocolSuccessFingerprint.classDef
+        val registers = sendActionMethod.getFreeRegisterProvider(0, 2)
+        val valueRegister = registers.getFreeRegister4Bit()
+        val resultRegister = registers.getFreeRegister4Bit()
 
         sendActionMethod.addInstructionsWithLabels(
             0,
             """
                 invoke-static {}, Lapp/revanced/extension/kakaotalk/settings/Settings;->enableGhostMode()Z
-                move-result v0
-                if-eqz v0, :morphe_original
-                const/4 v0, 0x0
-                new-instance v1, ${protocolSuccessClass.type}
-                invoke-direct {v1, v0}, ${protocolSuccessClass.type}-><init>(Ljava/lang/Object;)V
-                return-object v1
+                move-result v$valueRegister
+                if-eqz v$valueRegister, :morphe_original
+                const/4 v$valueRegister, 0x0
+                new-instance v$resultRegister, ${protocolSuccessClass.type}
+                invoke-direct {v$resultRegister, v$valueRegister}, ${protocolSuccessClass.type}-><init>(Ljava/lang/Object;)V
+                return-object v$resultRegister
                 :morphe_original
                 nop
             """

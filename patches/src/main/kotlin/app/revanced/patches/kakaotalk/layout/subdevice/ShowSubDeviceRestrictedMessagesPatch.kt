@@ -4,6 +4,7 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
+import app.morphe.util.getFreeRegisterProvider
 import app.morphe.util.returnEarly
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.util.smaliReference
@@ -32,11 +33,12 @@ private fun MutableMethod.returnCoverState(coverState: Field) {
         throw PatchException("Unexpected cover state type in $definingClass->$name.")
     }
 
+    val register = getFreeRegisterProvider(0, 1).getFreeRegister4Bit()
     addInstructions(
         0,
         """
-            sget-object v0, ${coverState.smaliReference}
-            return-object v0
+            sget-object v$register, ${coverState.smaliReference}
+            return-object v$register
         """.trimIndent(),
     )
 }

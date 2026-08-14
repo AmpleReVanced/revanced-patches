@@ -1,12 +1,12 @@
 package app.revanced.patches.kakaotalk.interaction.chatlog
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.util.returnEarly
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ForwardActionTypeFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ForwardableChatLogFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.LinkForwardShortcutFingerprint
-import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.UNIVERSAL_ALIMTALK_MESSAGE_TYPE
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.forwardShortcutFingerprint
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.util.smaliReference
@@ -32,18 +32,24 @@ val ignoreForwardRestrictionPatch = bytecodePatch(
 
         ForwardActionTypeFingerprint.matchAll(2..2).forEach { match ->
             val messageType = match.instructionMatches[1].getFieldAccessed()
-            val alimtalkMessageType = classDefBy(messageType.type).staticFields
-                .single { it.name == UNIVERSAL_ALIMTALK_MESSAGE_TYPE }
+            val specializedMessageTypes = classDefBy(messageType.type).staticFields
+                .filter { it.type == messageType.type }
+                .filter { it.name != messageType.name && it.name.startsWith(messageType.name) }
+            if (specializedMessageTypes.isEmpty()) {
+                throw PatchException("Could not find any specialized ${messageType.name} message type.")
+            }
             val add = match.instructionMatches[2]
             val (setRegister, typeRegister) = add.getInstruction<FiveRegisterInstruction>()
                 .let { it.registerC to it.registerD }
 
             match.method.addInstructions(
                 add.index + 1,
-                """
-                    sget-object v$typeRegister, ${alimtalkMessageType.smaliReference}
-                    invoke-interface {v$setRegister, v$typeRegister}, Ljava/util/Set;->add(Ljava/lang/Object;)Z
-                """.trimIndent(),
+                specializedMessageTypes.joinToString("\n") { messageTypeField ->
+                    """
+                        sget-object v$typeRegister, ${messageTypeField.smaliReference}
+                        invoke-interface {v$setRegister, v$typeRegister}, Ljava/util/Set;->add(Ljava/lang/Object;)Z
+                    """.trimIndent()
+                },
             )
         }
     }

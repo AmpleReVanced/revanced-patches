@@ -19,8 +19,8 @@ internal object AddOlkChatRoomListAdFingerprint : Fingerprint(
         Opcode.IF_NE,
         Opcode.INVOKE_STATIC,
         Opcode.GOTO,
-        Opcode.NEW_INSTANCE,
         Opcode.CONST_STRING,
+        Opcode.INVOKE_STATIC,
     ),
     custom = { _, classDef -> classDef.sourceFile == "OlkChatRoomListViewModel.kt" }
 )

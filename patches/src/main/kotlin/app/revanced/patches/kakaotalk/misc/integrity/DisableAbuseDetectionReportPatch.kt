@@ -2,6 +2,7 @@ package app.revanced.patches.kakaotalk.misc.integrity
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.util.getFreeRegisterProvider
 import app.revanced.patches.kakaotalk.misc.integrity.fingerprints.AbuseDetectIntegrityTokenFingerprint
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 
@@ -21,16 +22,22 @@ val disableAbuseDetectionReportPatch = bytecodePatch(
         // Only the token requester is stubbed, returning the same (emptyToken, errorCode) Pair the
         // app's own failure branch produces. -3 is Play Integrity NETWORK_ERROR, a transient failure
         // that implies nothing about the device.
-        AbuseDetectIntegrityTokenFingerprint.method.addInstructions(
+        val method = AbuseDetectIntegrityTokenFingerprint.method
+        val registers = method.getFreeRegisterProvider(0, 3)
+        val pairRegister = registers.getFreeRegister4Bit()
+        val tokenRegister = registers.getFreeRegister4Bit()
+        val errorRegister = registers.getFreeRegister4Bit()
+
+        method.addInstructions(
             0,
             """
-                new-instance v0, Lkotlin/Pair;
-                const-string v1, ""
-                const/4 v2, -0x3
-                invoke-static {v2}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
-                move-result-object v2
-                invoke-direct {v0, v1, v2}, Lkotlin/Pair;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V
-                return-object v0
+                new-instance v$pairRegister, Lkotlin/Pair;
+                const-string v$tokenRegister, ""
+                const/4 v$errorRegister, -0x3
+                invoke-static {v$errorRegister}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+                move-result-object v$errorRegister
+                invoke-direct {v$pairRegister, v$tokenRegister, v$errorRegister}, Lkotlin/Pair;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V
+                return-object v$pairRegister
             """.trimIndent(),
         )
     }

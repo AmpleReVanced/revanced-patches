@@ -8,7 +8,6 @@ import com.android.tools.smali.dexlib2.Opcode
 internal object AddNavigationTabFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     returnType = "Ljava/util/List;",
-    strings = listOf("<get-values>(...)"),
     filters = OpcodesFilter.opcodesToFilters(
         Opcode.NEW_INSTANCE,
         Opcode.INVOKE_DIRECT,

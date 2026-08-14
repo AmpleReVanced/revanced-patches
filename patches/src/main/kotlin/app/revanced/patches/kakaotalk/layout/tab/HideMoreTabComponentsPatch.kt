@@ -9,6 +9,7 @@ import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patcher.util.smali.ExternalLabel
+import app.morphe.util.getFreeRegisterProvider
 import app.morphe.util.getReference
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.kakaotalk.misc.settings.PreferenceScreen
@@ -28,10 +29,14 @@ import app.revanced.patches.kakaotalk.layout.tab.fingerprints.moreTabGlobalServi
 import app.revanced.patches.kakaotalk.layout.tab.fingerprints.moreTabLineServiceViewHolderBindFingerprint
 import app.revanced.patches.kakaotalk.layout.tab.fingerprints.moreTabServiceGroupViewHolderBindFingerprint
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
+import app.revanced.util.localRegisterCount
+import app.revanced.util.parameterRegister
+import app.revanced.util.smaliReference
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.Instruction
 import com.android.tools.smali.dexlib2.iface.instruction.OffsetInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
+import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.reference.TypeReference
 
@@ -79,13 +84,22 @@ val hideMoreTabComponentsPatch = bytecodePatch(
 
         val bodySectionsMethod = AddMoreTabBodySectionsFingerprint.method
         val serviceSectionsMethod = AddMoreTabServiceSectionsFingerprint.method
+        val itemViewField = WeatherViewHolderBindFingerprint.classDef.methods
+            .asSequence()
+            .flatMap { it.implementation?.instructions?.asSequence() ?: emptySequence() }
+            .mapNotNull { it.getReference<FieldReference>() }
+            .firstOrNull {
+                it.type == "Landroid/view/View;" &&
+                        it.definingClass.startsWith("Landroidx/recyclerview/widget/RecyclerView${'$'}")
+            }
+            ?: throw PatchException("Could not resolve RecyclerView item view field")
 
         fun Fingerprint.hideViewHolder(settingMethod: String, labelPrefix: String) {
-            matchAll(1 .. 1).single().method.hideViewHolder(listOf(settingMethod), labelPrefix)
+            matchAll(1 .. 1).single().method.hideViewHolder(listOf(settingMethod), labelPrefix, itemViewField)
         }
 
         fun Fingerprint.hideViewHolder(settingMethods: List<String>, labelPrefix: String) {
-            matchAll(1 .. 1).single().method.hideViewHolder(settingMethods, labelPrefix)
+            matchAll(1 .. 1).single().method.hideViewHolder(settingMethods, labelPrefix, itemViewField)
         }
 
         bodySectionsMethod.hideKakaoPaySection(MoreTabKakaoPaySectionFingerprint.classDef.type)
@@ -106,7 +120,7 @@ val hideMoreTabComponentsPatch = bytecodePatch(
                 "more_tab_line_service_body",
             ),
         )
-        WeatherViewHolderBindFingerprint.method.hideWeatherViewHolder()
+        WeatherViewHolderBindFingerprint.method.hideWeatherViewHolder(itemViewField)
 
         serviceSectionsMethod.hideItemAdditions(
             SectionSpec(
@@ -155,40 +169,84 @@ val hideMoreTabComponentsPatch = bytecodePatch(
     }
 }
 
-private fun MutableMethod.hideWeatherViewHolder() {
+private fun MutableMethod.hideWeatherViewHolder(itemViewField: FieldReference) {
+    val receiverRegister = parameterRegister(0) - 1
+    val registers = getFreeRegisterProvider(0, 2, receiverRegister)
+    val flagRegister = registers.getFreeRegister4Bit()
+    val viewRegister = registers.getFreeRegister4Bit()
+
     addInstructionsWithLabels(
         0,
         """
             invoke-static {}, $SETTINGS_CLASS->hideMoreTabWeatherSection()Z
-            move-result v0
-            iget-object v1, p0, Landroidx/recyclerview/widget/RecyclerView${'$'}F;->itemView:Landroid/view/View;
-            if-eqz v0, :show_more_tab_weather_view_holder
-            const/16 v0, 0x8
-            invoke-virtual {v1, v0}, Landroid/view/View;->setVisibility(I)V
+            move-result v$flagRegister
+            iget-object v$viewRegister, p0, ${itemViewField.smaliReference}
+            if-eqz v$flagRegister, :show_more_tab_weather_view_holder
+            const/16 v$flagRegister, 0x8
+            invoke-virtual {v$viewRegister, v$flagRegister}, Landroid/view/View;->setVisibility(I)V
             return-void
             :show_more_tab_weather_view_holder
-            const/4 v0, 0x0
-            invoke-virtual {v1, v0}, Landroid/view/View;->setVisibility(I)V
+            const/4 v$flagRegister, 0x0
+            invoke-virtual {v$viewRegister, v$flagRegister}, Landroid/view/View;->setVisibility(I)V
         """.trimIndent(),
     )
 }
 
-private fun MutableMethod.hideViewHolder(settingMethods: List<String>, labelPrefix: String) {
+private fun MutableMethod.hideViewHolder(
+    settingMethods: List<String>,
+    labelPrefix: String,
+    itemViewField: FieldReference,
+) {
+    if (localRegisterCount < 2) {
+        hideViewHolderAtReturn(settingMethods, labelPrefix, itemViewField)
+        return
+    }
+
     val hideLabel = "${labelPrefix}_hide"
     val showLabel = "${labelPrefix}_show"
+    val receiverRegister = parameterRegister(0) - 1
+    val registers = getFreeRegisterProvider(0, 2, receiverRegister)
+    val flagRegister = registers.getFreeRegister4Bit()
+    val viewRegister = registers.getFreeRegister4Bit()
 
     addInstructionsWithLabels(
         0,
         """
-            ${settingMethods.hideConditionInstructions(0, hideLabel)}
+            ${settingMethods.hideConditionInstructions(flagRegister, hideLabel)}
             goto :$showLabel
             :$hideLabel
-            iget-object p1, p0, Landroidx/recyclerview/widget/RecyclerView${'$'}F;->itemView:Landroid/view/View;
-            const/16 v0, 0x8
-            invoke-virtual {p1, v0}, Landroid/view/View;->setVisibility(I)V
+            iget-object v$viewRegister, p0, ${itemViewField.smaliReference}
+            const/16 v$flagRegister, 0x8
+            invoke-virtual {v$viewRegister, v$flagRegister}, Landroid/view/View;->setVisibility(I)V
             return-void
         """.trimIndent(),
         ExternalLabel(showLabel, getInstruction(0)),
+    )
+}
+
+private fun MutableMethod.hideViewHolderAtReturn(
+    settingMethods: List<String>,
+    labelPrefix: String,
+    itemViewField: FieldReference,
+) {
+    val returnIndex = instructions.indexOfLast { it.opcode == Opcode.RETURN_VOID }
+        .takeIf { it >= 0 }
+        ?: throw PatchException("Could not find More tab ViewHolder return")
+    val hideLabel = "${labelPrefix}_hide"
+    val showLabel = "${labelPrefix}_show"
+
+    addInstructionsWithLabels(
+        returnIndex,
+        """
+            ${settingMethods.hideConditionInstructions("p1", hideLabel)}
+            goto :$showLabel
+            :$hideLabel
+            iget-object p0, p0, ${itemViewField.smaliReference}
+            const/16 p1, 0x8
+            invoke-virtual {p0, p1}, Landroid/view/View;->setVisibility(I)V
+            return-void
+        """.trimIndent(),
+        ExternalLabel(showLabel, getInstruction(returnIndex)),
     )
 }
 
@@ -311,11 +369,14 @@ private data class SectionSpec(
 }
 
 private fun List<String>.hideConditionInstructions(register: Int, label: String): String =
+    hideConditionInstructions("v$register", label)
+
+private fun List<String>.hideConditionInstructions(register: String, label: String): String =
     joinToString("\n") { method ->
         """
             invoke-static {}, $SETTINGS_CLASS->$method()Z
-            move-result v$register
-            if-nez v$register, :$label
+            move-result $register
+            if-nez $register, :$label
         """.trimIndent()
     }
 

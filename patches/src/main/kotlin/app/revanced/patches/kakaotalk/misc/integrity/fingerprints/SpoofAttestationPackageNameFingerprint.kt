@@ -5,7 +5,6 @@ import app.morphe.patcher.methodCall
 
 internal object AttestationPayloadFingerprint : Fingerprint(
     returnType = "Ljava/lang/Object;",
-    strings = listOf("getPackageName(...)"),
     filters = listOf(
         methodCall("Landroid/content/Context;->getPackageName()Ljava/lang/String;"),
     ),

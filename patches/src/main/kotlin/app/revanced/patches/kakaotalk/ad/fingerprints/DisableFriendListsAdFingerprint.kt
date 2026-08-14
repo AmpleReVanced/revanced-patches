@@ -30,24 +30,8 @@ internal object FriendListChipBizBoardBindFingerprint : Fingerprint(
 )
 
 internal object BirthdayFriendsBizBoardBindFingerprint : Fingerprint(
-    accessFlags = listOf(AccessFlags.PUBLIC),
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf("Lcom/kakao/adfit/ads/media/NativeAdBinder;"),
     returnType = "V",
-    strings = listOf("item"),
-    filters = OpcodesFilter.opcodesToFilters(
-        Opcode.CONST_STRING,
-        Opcode.INVOKE_STATIC,
-        Opcode.INVOKE_SUPER,
-        Opcode.IGET_OBJECT,
-        Opcode.INVOKE_VIRTUAL,
-        Opcode.MOVE_RESULT_OBJECT
-    ),
-    custom = { method, classDef ->
-        classDef.sourceFile == "FriendTabBirthdayFriendsBizBoardAdViewHolder.kt" &&
-                method.parameterTypes.size == 1 &&
-                method.hasMethodCall(
-                    "Lcom/kakao/adfit/ads/media/NativeAdBinder;",
-                    "bind",
-                    "V"
-                )
-    }
+    custom = { _, classDef -> classDef.sourceFile == "FriendTabBirthdayFriendsBizBoardAdViewModel.kt" }
 )

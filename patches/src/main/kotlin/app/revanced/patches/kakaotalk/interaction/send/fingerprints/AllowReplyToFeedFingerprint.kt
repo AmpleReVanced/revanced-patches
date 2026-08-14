@@ -7,8 +7,8 @@ import com.android.tools.smali.dexlib2.Opcode
 
 internal object AllowSwipeReplyToFeedFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf("L", "L"),
     returnType = "Z",
-    strings = listOf("null cannot be cast to non-null type com.kakao.talk.db.model.chatlog.LeverageChatLog"),
     filters = OpcodesFilter.opcodesToFilters(
         Opcode.INVOKE_VIRTUAL,
         Opcode.MOVE_RESULT_OBJECT,

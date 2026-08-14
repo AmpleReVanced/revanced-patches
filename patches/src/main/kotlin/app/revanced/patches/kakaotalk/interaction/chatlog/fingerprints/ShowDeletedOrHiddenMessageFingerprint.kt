@@ -1,8 +1,11 @@
 package app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints
 
 import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.InstructionLocation.MatchAfterImmediately
 import app.morphe.patcher.OpcodesFilter
+import app.morphe.patcher.fieldAccess
 import app.morphe.patcher.methodCall
+import app.morphe.patcher.opcode
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
@@ -21,16 +24,10 @@ internal object MyChatInfoViewClassFingerprint : Fingerprint(
 internal object ChatLogViewHolderSetupChatInfoViewFingerprint : Fingerprint(
     parameters = listOf(),
     returnType = "V",
-    strings = listOf("getContext(...)"),
-    filters = OpcodesFilter.opcodesToFilters(
-        Opcode.IGET_OBJECT,
-        Opcode.INVOKE_VIRTUAL,
-        Opcode.MOVE_RESULT_OBJECT,
-        Opcode.INVOKE_VIRTUAL,
-        Opcode.MOVE_RESULT,
-        Opcode.CONST_4,
-        Opcode.CONST_4,
-        Opcode.IF_NEZ
+    filters = listOf(
+        methodCall("Lcom/kakao/talk/widget/chatlog/ChatInfoView;->setChatLogId(J)V"),
+        methodCall("Lcom/kakao/talk/widget/chatlog/ChatInfoView;->setModify(Z)V"),
+        methodCall("Lcom/kakao/talk/widget/chatlog/ChatInfoView;->setModifyTextColor(I)V"),
     ),
     custom = { _, classDef -> classDef.sourceFile == "ChatLogViewHolder.kt" }
 )
@@ -82,16 +79,15 @@ internal object ChatLogItemViewHolderFingerprint : Fingerprint(
 internal object FilterChatLogItemFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     returnType = "Z",
-    filters = OpcodesFilter.opcodesToFilters(
-        Opcode.CONST_4,
-        Opcode.IF_NEZ,
-        Opcode.RETURN,
-        Opcode.INVOKE_VIRTUAL,
-        Opcode.MOVE_RESULT_OBJECT,
-        Opcode.SGET_OBJECT,
-        Opcode.IF_NE,
-        Opcode.RETURN,
-        Opcode.INSTANCE_OF
+    filters = listOf(
+        opcode(Opcode.CONST_4),
+        opcode(Opcode.IF_NEZ, location = MatchAfterImmediately()),
+        opcode(Opcode.RETURN, location = MatchAfterImmediately()),
+        opcode(Opcode.INVOKE_VIRTUAL, location = MatchAfterImmediately()),
+        opcode(Opcode.MOVE_RESULT_OBJECT, location = MatchAfterImmediately()),
+        fieldAccess(name = "DeletedAll", opcode = Opcode.SGET_OBJECT, location = MatchAfterImmediately()),
+        opcode(Opcode.IF_NE, location = MatchAfterImmediately()),
+        opcode(Opcode.RETURN, location = MatchAfterImmediately()),
     ),
     custom = { method, classDef ->
         classDef.sourceFile == "ChatLogSearchHelper.kt"
@@ -136,14 +132,9 @@ internal object GetChatRoomByChannelIdFingerprint : Fingerprint(
 
 internal object OriginalSyncMethodFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf("L", "J", "L"),
     returnType = "V",
-    strings = listOf("chatLog", "feedType"),
     filters = OpcodesFilter.opcodesToFilters(
-        Opcode.MOVE_OBJECT_FROM16,
-        Opcode.CONST_STRING,
-        Opcode.INVOKE_STATIC,
-        Opcode.CONST_STRING,
-        Opcode.INVOKE_STATIC,
         Opcode.INVOKE_VIRTUAL,
         Opcode.MOVE_RESULT_WIDE,
         Opcode.INVOKE_VIRTUAL,

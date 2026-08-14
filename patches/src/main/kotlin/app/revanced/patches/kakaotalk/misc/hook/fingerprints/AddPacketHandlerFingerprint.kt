@@ -13,7 +13,7 @@ internal object KakaoApplicationOnCreateFingerprint : Fingerprint(
 )
 
 internal object LocoProtocolResponseHookFingerprint : Fingerprint(
-    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.FINAL),
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC),
     filters = listOf(
         methodCall(
             parameters = emptyList(),
