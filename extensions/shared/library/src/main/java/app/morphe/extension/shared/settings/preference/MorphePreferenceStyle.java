@@ -273,8 +273,10 @@ public final class MorphePreferenceStyle {
     }
 
     public static void syncPreferenceScreenRow(View view) {
+        ImageView iconView = view.findViewById(android.R.id.icon);
+        boolean hasIcon = iconView != null && iconView.getDrawable() != null;
         syncIconSlot(view);
-        setTrailingVisible(view, false);
+        setTrailingVisible(view, !hasIcon && view.isEnabled());
 
         PreferenceRow row = findPreferenceRow(view);
         if (row == null) {
