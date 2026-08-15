@@ -4,7 +4,7 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START -->
-> **[v1.4.0-dev.5](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.4.0-dev.5)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;112 patches total
+> **[v1.4.0-dev.6](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.4.0-dev.6)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;114 patches total
 <details>
 <summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;69 patches</summary>
 <br>
@@ -89,7 +89,7 @@
 </details>
 
 <details>
-<summary>📦 dcinside&nbsp;&nbsp;•&nbsp;&nbsp;24 patches</summary>
+<summary>📦 dcinside&nbsp;&nbsp;•&nbsp;&nbsp;26 patches</summary>
 <br>
 
 **🎯 Supported versions:**
@@ -114,10 +114,12 @@
 | [Disable update check](#disable-update-check) | Disables the app's update check. |  |
 | [Enable OneStore feature](#enable-onestore-feature) | Enables the OneStore feature in DC Inside app. |  |
 | [Filter recently viewed posts by gallery](#filter-recently-viewed-posts-by-gallery) | Adds a gallery filter below the recently viewed posts filters, which narrows the list down to the posts of a single gallery. |  |
+| [Gallery watch mode](#gallery-watch-mode) | Keeps gallery auto-refresh active, highlights newly arrived posts, and optionally alerts with sound or vibration while the gallery is open. |  |
 | [Hide DC official notices](#hide-dc-official-notices) | Hides official DCInside operator notices from gallery notice lists. |  |
 | [Hide Main Ad](#hide-main-ad) | Hides the main ad in the app. |  |
 | [Hide home components](#hide-home-components) | Adds settings to hide selected DCInside home screen components. |  |
 | [Hide mini gallery cover image](#hide-mini-gallery-cover-image) | Adds a setting to hide the mini gallery cover image above post lists. |  |
+| [Hide post list page indicators](#hide-post-list-page-indicators) | Adds a setting to hide the Page N indicators between pages in post lists. |  |
 | [Register settings activity](#register-settings-activity) | Registers the Morphe settings activity in the app manifest. |  |
 | [Render big DCCon as normal size](#render-big-dccon-as-normal-size) | Adds a setting to render big DCCon at normal DCCon size. |  |
 | [Restore old post icons](#restore-old-post-icons) | Adds a setting to restore DCInside 4.7.x post list and read footer icons. |  |

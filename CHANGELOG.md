@@ -1,3 +1,11 @@
+# [1.4.0-dev.6](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.5...v1.4.0-dev.6) (2026-08-15)
+
+
+### Features
+
+* **dcinside:** add gallery watch mode ([77f2208](https://github.com/AmpleReVanced/revanced-patches/commit/77f2208e123774a60ee81c4c3be79feaaf708b3d))
+* **dcinside:** add Hide post list page indicators patch ([afeba91](https://github.com/AmpleReVanced/revanced-patches/commit/afeba91b2753fd3dbc5e0f887ba6f7a846dd58e7))
+
 # [1.4.0-dev.5](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.4...v1.4.0-dev.5) (2026-08-14)
 
 
