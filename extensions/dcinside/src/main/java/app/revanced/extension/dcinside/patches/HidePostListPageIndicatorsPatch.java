@@ -13,7 +13,9 @@ public final class HidePostListPageIndicatorsPatch {
         return false;
     }
 
-    public static int getPageIndicatorVisibility(int originalVisibility) {
-        return Settings.hidePostListPageIndicators() ? View.GONE : originalVisibility;
+    public static void setPageIndicatorVisibility(View view, int originalVisibility) {
+        view.setVisibility(
+                Settings.hidePostListPageIndicators() ? View.GONE : originalVisibility
+        );
     }
 }

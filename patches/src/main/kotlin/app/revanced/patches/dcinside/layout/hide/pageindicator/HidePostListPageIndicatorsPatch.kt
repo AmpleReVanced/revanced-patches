@@ -1,11 +1,11 @@
 package app.revanced.patches.dcinside.layout.hide.pageindicator
 
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
+import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patches.all.misc.resources.resourceMappingPatch
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
-import app.morphe.util.addInstructionsAtControlFlowLabel
 import app.morphe.util.getReference
 import app.morphe.util.indexOfFirstInstructionReversedOrThrow
 import app.morphe.util.setExtensionIsPatchIncluded
@@ -56,14 +56,11 @@ private fun MutableMethod.injectVisibilityOverride(resourceIndex: Int) {
                     reference.returnType == "V"
             } == true
     }
-    val visibilityRegister =
-        getInstruction<FiveRegisterInstruction>(visibilityIndex).registerD
+    val instruction = getInstruction<FiveRegisterInstruction>(visibilityIndex)
 
-    addInstructionsAtControlFlowLabel(
+    replaceInstruction(
         visibilityIndex,
-        """
-            invoke-static {v$visibilityRegister}, $EXTENSION_CLASS->getPageIndicatorVisibility(I)I
-            move-result v$visibilityRegister
-        """.trimIndent(),
+        "invoke-static {v${instruction.registerC}, v${instruction.registerD}}, " +
+            "$EXTENSION_CLASS->setPageIndicatorVisibility(Landroid/view/View;I)V",
     )
 }
