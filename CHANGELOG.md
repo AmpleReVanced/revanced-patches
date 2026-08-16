@@ -1,3 +1,10 @@
+# [1.4.0-dev.10](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.9...v1.4.0-dev.10) (2026-08-16)
+
+
+### Bug Fixes
+
+* **dcinside:** prevent crash when hiding search result page indicators ([744ae6c](https://github.com/AmpleReVanced/revanced-patches/commit/744ae6c02e20fd6ff6d729239b8f30f53e247d55))
+
 # [1.4.0-dev.9](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.8...v1.4.0-dev.9) (2026-08-16)
 
 
