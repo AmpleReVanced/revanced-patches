@@ -20,6 +20,7 @@ public final class SettingsStore {
     private static final String FEEDBACK_VIBRATION = "sip_key_feedback_vibration";
     private static final String FEEDBACK_SOUND_VOLUME = "feedback_sound_volume";
     private static final String FEEDBACK_VIBRATION_STRENGTH = "feedback_vibration_strength";
+    private static final String DISABLED_SYSTEM_INPUT_METHODS = "disabled_system_input_methods";
     @SuppressLint("StaticFieldLeak")
     private static volatile Context context;
     private static volatile SharedPreferences preferences;
@@ -157,11 +158,12 @@ public final class SettingsStore {
         if (hasLocalValue(scope, name)) return localValue(scope, name);
 
         try {
-            return switch (scope) {
+            String value = switch (scope) {
                 case SECURE -> Settings.Secure.getString(resolver, name);
                 case SYSTEM -> Settings.System.getString(resolver, name);
                 default -> Settings.Global.getString(resolver, name);
             };
+            return value != null || scope != SECURE ? value : secureStringFallback(name);
         } catch (SecurityException ignored) {
             return scope == SECURE ? secureStringFallback(name) : null;
         }
@@ -234,6 +236,10 @@ public final class SettingsStore {
             }
         } catch (SecurityException ignored) {
         }
+        if (isSystemManaged(scope, name)) {
+            clearLocalValue(scope, name);
+            return false;
+        }
         return putLocalValue(scope, resolver, name, value);
     }
 
@@ -249,6 +255,10 @@ public final class SettingsStore {
                 return true;
             }
         } catch (SecurityException ignored) {
+        }
+        if (isSystemManaged(scope, name)) {
+            clearLocalValue(scope, name);
+            return false;
         }
         return putLocalValue(scope, resolver, name, Integer.toString(value));
     }
@@ -273,7 +283,19 @@ public final class SettingsStore {
 
     private static boolean hasLocalValue(int scope, String name) {
         SharedPreferences preferences = SettingsStore.preferences;
-        return preferences != null && preferences.getBoolean(markerKey(scope, name), false);
+        boolean present = preferences != null && preferences.getBoolean(markerKey(scope, name), false);
+        if (!present || !isSystemManaged(scope, name)) return present;
+        clearLocalValue(scope, name);
+        return false;
+    }
+
+    private static boolean isSystemManaged(int scope, String name) {
+        return scope == SECURE && (
+                Settings.Secure.DEFAULT_INPUT_METHOD.equals(name) ||
+                        Settings.Secure.ENABLED_INPUT_METHODS.equals(name) ||
+                        Settings.Secure.SELECTED_INPUT_METHOD_SUBTYPE.equals(name) ||
+                        DISABLED_SYSTEM_INPUT_METHODS.equals(name)
+        );
     }
 
     private static int getPreferenceInt(String name, int defaultValue) {
