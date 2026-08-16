@@ -3,6 +3,7 @@ package app.revanced.extension.samsungkeyboard;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.graphics.Color;
 import android.inputmethodservice.InputMethodService;
 import android.os.Build;
 import android.os.IBinder;
@@ -10,11 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewManager;
 import android.view.Window;
+import android.view.WindowInsetsController;
 import android.view.WindowManager;
 
 import java.lang.ref.WeakReference;
 
 public final class WindowCompat {
+    private static final String NAVIGATION_BAR_COLOR = "honey_navigation_bar_background_color";
     private static final boolean ONE_UI = detectOneUi();
     private static volatile WeakReference<InputMethodService> inputMethodService = new WeakReference<>(null);
     private static volatile WeakReference<View> inputView = new WeakReference<>(null);
@@ -28,6 +31,7 @@ public final class WindowCompat {
 
     public static void captureInputView(View view) {
         inputView = new WeakReference<>(view);
+        if (!ONE_UI) updateNavigationBar(view);
     }
 
     @SuppressWarnings("deprecation")
@@ -102,15 +106,46 @@ public final class WindowCompat {
         IBinder token = view == null ? null : view.getWindowToken();
         if (token != null) return token;
 
-        InputMethodService service = inputMethodService.get();
-        if (service == null) return null;
-
-        Dialog dialog = service.getWindow();
-        Window window = dialog == null ? null : dialog.getWindow();
+        Window window = getInputMethodWindow();
         if (window == null) return null;
 
         View decorView = window.peekDecorView();
         return decorView == null ? null : decorView.getWindowToken();
+    }
+
+    @SuppressWarnings("deprecation")
+    private static void updateNavigationBar(View view) {
+        Window window = getInputMethodWindow();
+        if (window == null) return;
+
+        int resource = view.getResources().getIdentifier(
+                NAVIGATION_BAR_COLOR,
+                "color",
+                view.getContext().getPackageName()
+        );
+        if (resource == 0) return;
+
+        int color = view.getContext().getColor(resource);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        window.setNavigationBarColor(color);
+        window.setNavigationBarDividerColor(color);
+        window.setNavigationBarContrastEnforced(false);
+
+        int lightNavigationBar = WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS;
+        int appearance = Color.luminance(color) > 0.5 ? lightNavigationBar : 0;
+        view.post(() -> {
+            WindowInsetsController controller = view.getWindowInsetsController();
+            if (controller != null) controller.setSystemBarsAppearance(appearance, lightNavigationBar);
+        });
+    }
+
+    private static Window getInputMethodWindow() {
+        InputMethodService service = inputMethodService.get();
+        if (service == null) return null;
+
+        Dialog dialog = service.getWindow();
+        return dialog == null ? null : dialog.getWindow();
     }
 
     @SuppressLint("PrivateApi")
