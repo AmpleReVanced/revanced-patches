@@ -13,7 +13,17 @@ public final class FeedbackCompat {
     }
 
     public static float semGetSituationVolume(AudioManager manager, int situation, int device) {
-        return SettingsStore.getFeedbackSoundVolume() / 100.0f;
+        float volume = SettingsStore.getFeedbackSoundVolume() / 100.0f;
+        try {
+            float situationVolume = Float.parseFloat(manager.getParameters(
+                    "g_volume_situation_key;type=" + situation + ";device=" + device
+            ));
+            if (Float.isFinite(situationVolume) && situationVolume >= 0.0f && situationVolume <= 1.0f) {
+                return volume * situationVolume;
+            }
+        } catch (RuntimeException ignored) {
+        }
+        return volume;
     }
 
     public static int semGetSupportedVibrationType(Vibrator vibrator) {
