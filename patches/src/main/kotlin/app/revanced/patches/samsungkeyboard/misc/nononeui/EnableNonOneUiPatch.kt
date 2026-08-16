@@ -20,6 +20,7 @@ import app.morphe.util.indexOfFirstInstructionOrThrow
 import app.revanced.patches.samsungkeyboard.shared.Constants.COMPATIBILITY_SAMSUNG_KEYBOARD
 import app.revanced.util.argumentRegister
 import app.revanced.util.parameterTypeNames
+import app.revanced.util.parameterRegister
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction21c
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction35c
@@ -202,6 +203,7 @@ val enableNonOneUiPatch = bytecodePatch(
 
         StoreDownloadRequestFingerprint.method.applyStoreProfile()
         StoreUpdateCheckRequestFingerprint.method.applyStoreProfile()
+        ShowSoftInputFingerprint.method.applyShowSoftInputCompat()
 
         val initializedServiceCount = inputMethodServiceClassTypes.count { type ->
             val classDef = classDefBy(type)
@@ -231,6 +233,18 @@ val enableNonOneUiPatch = bytecodePatch(
             "invoke-static {$contextRegister}, $SETTINGS_STORE_TYPE->initialize($CONTEXT_TYPE)V",
         )
     }
+}
+
+private fun MutableMethod.applyShowSoftInputCompat() {
+    val flagsRegister = parameterRegister(0)
+    val contextRegister = parameterRegister(1)
+    addInstructions(
+        0,
+        """
+            invoke-static {v$contextRegister, v$flagsRegister}, $WINDOW_COMPAT_TYPE->showSoftInput(${CONTEXT_TYPE}I)V
+            return-void
+        """.trimIndent(),
+    )
 }
 
 private fun Instruction.requiresPlatformReplacement(

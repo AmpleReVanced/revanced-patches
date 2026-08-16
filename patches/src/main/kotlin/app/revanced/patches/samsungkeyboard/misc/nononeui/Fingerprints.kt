@@ -22,3 +22,9 @@ internal object StoreUpdateCheckRequestFingerprint : Fingerprint(
     parameters = listOf("Landroid/content/Context;", "I", "Ljava/lang/String;"),
     strings = storeRequestStrings,
 )
+
+internal object ShowSoftInputFingerprint : Fingerprint(
+    returnType = "V",
+    parameters = listOf("I", "Landroid/content/Context;"),
+    strings = listOf("showSoftInputInner flags="),
+)

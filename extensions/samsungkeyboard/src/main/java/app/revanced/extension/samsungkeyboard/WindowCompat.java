@@ -3,16 +3,22 @@ package app.revanced.extension.samsungkeyboard;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.graphics.Color;
 import android.inputmethodservice.InputMethodService;
 import android.os.Build;
 import android.os.IBinder;
+import android.text.InputType;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewManager;
 import android.view.Window;
+import android.view.WindowInsets;
 import android.view.WindowInsetsController;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import java.lang.ref.WeakReference;
 
@@ -21,6 +27,7 @@ public final class WindowCompat {
     private static final boolean ONE_UI = detectOneUi();
     private static volatile WeakReference<InputMethodService> inputMethodService = new WeakReference<>(null);
     private static volatile WeakReference<View> inputView = new WeakReference<>(null);
+    private static volatile WeakReference<EditText> settingsInput = new WeakReference<>(null);
 
     private WindowCompat() {
     }
@@ -32,6 +39,32 @@ public final class WindowCompat {
     public static void captureInputView(View view) {
         inputView = new WeakReference<>(view);
         if (!ONE_UI) updateNavigationBar(view);
+    }
+
+    public static void showSoftInput(Context context, int flags) {
+        Activity activity = findActivity(context);
+        if (activity == null) return;
+
+        EditText input = settingsInput.get();
+        if (input == null || input.getContext() != activity || !input.isAttachedToWindow()) {
+            input = new EditText(activity);
+            input.setAlpha(0f);
+            input.setCursorVisible(false);
+            input.setFocusableInTouchMode(true);
+            input.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+            input.setInputType(InputType.TYPE_CLASS_TEXT);
+            activity.addContentView(input, new ViewGroup.LayoutParams(1, 1));
+            settingsInput = new WeakReference<>(input);
+        }
+
+        EditText target = input;
+        target.requestFocus();
+        target.post(() -> {
+            InputMethodManager manager = activity.getSystemService(InputMethodManager.class);
+            if (manager != null) manager.showSoftInput(target, flags);
+            WindowInsetsController controller = target.getWindowInsetsController();
+            if (controller != null) controller.show(WindowInsets.Type.ime());
+        });
     }
 
     @SuppressWarnings("deprecation")
@@ -146,6 +179,16 @@ public final class WindowCompat {
 
         Dialog dialog = service.getWindow();
         return dialog == null ? null : dialog.getWindow();
+    }
+
+    private static Activity findActivity(Context context) {
+        while (context instanceof ContextWrapper) {
+            if (context instanceof Activity) return (Activity) context;
+            Context base = ((ContextWrapper) context).getBaseContext();
+            if (base == context) return null;
+            context = base;
+        }
+        return null;
     }
 
     @SuppressLint("PrivateApi")
