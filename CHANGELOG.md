@@ -1,3 +1,12 @@
+# [1.4.0-dev.9](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.8...v1.4.0-dev.9) (2026-08-16)
+
+
+### Bug Fixes
+
+* **samsung-keyboard:** avoid caching system-managed IME settings ([d9659ef](https://github.com/AmpleReVanced/revanced-patches/commit/d9659efbe78a078abbb5c03c265aaafb49bc3d9a))
+* **samsung-keyboard:** bundle Quram GIF encoder library ([f829bbb](https://github.com/AmpleReVanced/revanced-patches/commit/f829bbbba9a0b0b9971c21806285af501b1ff9ca))
+* **samsung-keyboard:** match navigation bar color with keyboard ([6d346fe](https://github.com/AmpleReVanced/revanced-patches/commit/6d346fe8780368592bf85f1104c6f6b633826d6d))
+
 # [1.4.0-dev.8](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.7...v1.4.0-dev.8) (2026-08-16)
 
 
