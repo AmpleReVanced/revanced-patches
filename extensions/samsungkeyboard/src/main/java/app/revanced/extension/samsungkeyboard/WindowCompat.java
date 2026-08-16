@@ -1,6 +1,7 @@
 package app.revanced.extension.samsungkeyboard;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.inputmethodservice.InputMethodService;
 import android.os.Build;
@@ -27,6 +28,11 @@ public final class WindowCompat {
 
     public static void captureInputView(View view) {
         inputView = new WeakReference<>(view);
+    }
+
+    @SuppressWarnings("deprecation")
+    public static void semOverridePendingTransition(Activity activity, int enterAnim, int exitAnim) {
+        activity.overridePendingTransition(enterAnim, exitAnim);
     }
 
     public static void setFlags(Window window, int flags, int mask) {

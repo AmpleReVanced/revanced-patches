@@ -349,6 +349,7 @@ private fun MethodReference.windowCompatReference(
     opcode: Opcode,
 ): MethodReference? {
     val supported = when {
+        matches("Landroid/app/Activity;", "semOverridePendingTransition", listOf("I", "I"), "V") -> true
         matches("Landroid/app/Dialog;", "show", emptyList(), "V") -> !opcode.isSuperInvoke
         matches(
             "Landroid/view/ViewManager;",
