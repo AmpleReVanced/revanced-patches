@@ -1,3 +1,10 @@
+# [1.4.0-dev.7](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.6...v1.4.0-dev.7) (2026-08-16)
+
+
+### Features
+
+* **samsung-keyboard:** add support for non-One UI ROMs ([45fb3e6](https://github.com/AmpleReVanced/revanced-patches/commit/45fb3e67bd7b57812d8180515cdfb86f1614bffd))
+
 # [1.4.0-dev.6](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.5...v1.4.0-dev.6) (2026-08-15)
 
 

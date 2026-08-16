@@ -4,7 +4,7 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START -->
-> **[v1.4.0-dev.6](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.4.0-dev.6)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;114 patches total
+> **[v1.4.0-dev.7](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.4.0-dev.7)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;115 patches total
 <details>
 <summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;69 patches</summary>
 <br>
@@ -184,6 +184,21 @@
 | [Remove live ads](#remove-live-ads) | Removes the live pre-roll ad by routing every ad decision into the app's own no-video path so the stream starts immediately. |  |
 | [Remove live banner ads](#remove-live-banner-ads) | Removes the banner ads shown under the live player by stopping their driver from attaching the banner fragments. |  |
 | [Remove main board ads](#remove-main-board-ads) | Removes the native "main board" banner ad shown in feeds and under the live player. |  |
+
+</details>
+
+<details>
+<summary>📦 Samsung Keyboard&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<br>
+
+**🎯 Supported versions:**
+
+| 5.9.40.48 |
+| :---: |
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Enable non-One UI ROM support](#enable-non-one-ui-rom-support) | Makes Samsung Keyboard installable and usable on non-One UI ROMs. |  |
 
 </details>
 
