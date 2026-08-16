@@ -1,3 +1,10 @@
+# [1.4.0-dev.11](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.10...v1.4.0-dev.11) (2026-08-16)
+
+
+### Bug Fixes
+
+* **samsung-keyboard:** restore keyboard preview in size settings ([dc4be94](https://github.com/AmpleReVanced/revanced-patches/commit/dc4be947ec14b306c3287636ae8b502369dd6d8b))
+
 # [1.4.0-dev.10](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.9...v1.4.0-dev.10) (2026-08-16)
 
 
