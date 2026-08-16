@@ -52,12 +52,13 @@ private const val SPR_PACKAGE = "Lcom/samsung/android/spr/"
 private const val SAMSUNG_SPR_STYLEABLE_TYPE = "Lcom/samsung/android/spr/engine/R\$styleable;"
 private const val SPR_DRAWABLE_CLASS = "com.samsung.android.spr.drawable.SprDrawable"
 private const val SPR_RESOURCE_PREFIX = "revanced_spr_"
+private const val GIF_ENCODER_PATH = "lib/arm64-v8a/libagifencoder.quram.so"
 private const val SETTINGS_PACKAGE = "Lcom/samsung/android/honeyboard/settings/"
 private const val ANDROID_NAMESPACE = "http://schemas.android.com/apk/res/android"
 private lateinit var applicationClassType: String
 private lateinit var inputMethodServiceClassTypes: List<String>
 
-private val removeOneUiManifestRequirementsPatch = resourcePatch {
+private val enableNonOneUiResourcesPatch = resourcePatch {
     compatibleWith(COMPATIBILITY_SAMSUNG_KEYBOARD)
 
     execute {
@@ -71,6 +72,7 @@ private val removeOneUiManifestRequirementsPatch = resourcePatch {
             (document.getNode("uses-sdk") as Element).setAttribute("android:targetSdkVersion", "33")
             (document.getNode("application") as Element).apply {
                 removeAttribute("android:crossProfile")
+                setAttribute("android:extractNativeLibs", "true")
                 applicationClassType = getAttribute("android:name").toClassType(packageName)
             }
             inputMethodServiceClassTypes = document.getElementsByTagName("service")
@@ -81,6 +83,16 @@ private val removeOneUiManifestRequirementsPatch = resourcePatch {
                 .toList()
         }
         replaceSprResources()
+        addGifEncoderLibrary()
+    }
+}
+
+private fun ResourcePatchContext.addGifEncoderLibrary() {
+    val destination = get(GIF_ENCODER_PATH).apply { parentFile.mkdirs() }
+    val source = ::javaClass.javaClass.classLoader.getResourceAsStream("samsungkeyboard/$GIF_ENCODER_PATH")
+        ?: throw PatchException("Could not load ${destination.name}.")
+    source.use { input ->
+        destination.outputStream().use { output -> input.copyTo(output) }
     }
 }
 
@@ -149,7 +161,7 @@ val enableNonOneUiPatch = bytecodePatch(
     dependsOn(
         addResourcesPatch,
         addFeedbackSettingsPatch,
-        removeOneUiManifestRequirementsPatch,
+        enableNonOneUiResourcesPatch,
     )
     extendWith("extensions/samsungkeyboard.mpe")
 
