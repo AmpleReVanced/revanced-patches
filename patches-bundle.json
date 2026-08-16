@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-08-16T13:44:12",
-  "description": "# [1.4.0-dev.7](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.6...v1.4.0-dev.7) (2026-08-16)\n\n\n### Features\n\n* **samsung-keyboard:** add support for non-One UI ROMs ([45fb3e6](https://github.com/AmpleReVanced/revanced-patches/commit/45fb3e67bd7b57812d8180515cdfb86f1614bffd))",
-  "download_url": "https://github.com/AmpleReVanced/revanced-patches/releases/download/v1.4.0-dev.7/patches-1.4.0-dev.7.mpp",
+  "created_at": "2026-08-16T14:16:40",
+  "description": "# [1.4.0-dev.8](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.7...v1.4.0-dev.8) (2026-08-16)\n\n\n### Bug Fixes\n\n* **samsung-keyboard:** apply situation volume to key sounds ([c883844](https://github.com/AmpleReVanced/revanced-patches/commit/c883844f857bcef032d10c085d94b0f7afbdfbcf))\n* **samsung-keyboard:** preserve activity transition animations ([2c7b5da](https://github.com/AmpleReVanced/revanced-patches/commit/2c7b5dadbe802e1a55108416ae0e388ffd82edf9))\n\n\n### Features\n\n* **samsung-keyboard:** map Samsung haptics to Android effects ([bc35095](https://github.com/AmpleReVanced/revanced-patches/commit/bc35095588fec47dc5a5ae7b8ac182d5b6446459))",
+  "download_url": "https://github.com/AmpleReVanced/revanced-patches/releases/download/v1.4.0-dev.8/patches-1.4.0-dev.8.mpp",
   "signature_download_url": "",
-  "version": "1.4.0-dev.7"
+  "version": "1.4.0-dev.8"
 }

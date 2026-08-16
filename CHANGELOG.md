@@ -1,3 +1,16 @@
+# [1.4.0-dev.8](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.7...v1.4.0-dev.8) (2026-08-16)
+
+
+### Bug Fixes
+
+* **samsung-keyboard:** apply situation volume to key sounds ([c883844](https://github.com/AmpleReVanced/revanced-patches/commit/c883844f857bcef032d10c085d94b0f7afbdfbcf))
+* **samsung-keyboard:** preserve activity transition animations ([2c7b5da](https://github.com/AmpleReVanced/revanced-patches/commit/2c7b5dadbe802e1a55108416ae0e388ffd82edf9))
+
+
+### Features
+
+* **samsung-keyboard:** map Samsung haptics to Android effects ([bc35095](https://github.com/AmpleReVanced/revanced-patches/commit/bc35095588fec47dc5a5ae7b8ac182d5b6446459))
+
 # [1.4.0-dev.7](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.6...v1.4.0-dev.7) (2026-08-16)
 
 

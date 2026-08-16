@@ -4,7 +4,7 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START -->
-> **[v1.4.0-dev.7](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.4.0-dev.7)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;115 patches total
+> **[v1.4.0-dev.8](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.4.0-dev.8)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;115 patches total
 <details>
 <summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;69 patches</summary>
 <br>
