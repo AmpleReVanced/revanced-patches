@@ -1,6 +1,5 @@
 package app.revanced.patches.kakaotalk.ad
 
-import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.util.returnEarly
 import app.revanced.patches.kakaotalk.ad.fingerprints.BirthdayFriendsBizBoardBindFingerprint
@@ -18,12 +17,6 @@ val disableFriendListsAdPatch = bytecodePatch(
     execute {
         FriendListChipBizBoardBindFingerprint.method.returnEarly()
         BirthdayFriendsBizBoardBindFingerprint.method.returnEarly()
-        FriendTabGlobalAdModelFingerprint.method.addInstructions(
-            0,
-            """
-                const/4 v0, 0x0
-                return-object v0
-            """.trimIndent()
-        )
+        FriendTabGlobalAdModelFingerprint.method.returnEarly(null)
     }
 }
