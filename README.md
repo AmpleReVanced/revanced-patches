@@ -4,7 +4,7 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START -->
-> **[v1.4.0-dev.11](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.4.0-dev.11)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;115 patches total
+> **[v1.4.0-dev.12](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.4.0-dev.12)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;115 patches total
 <details>
 <summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;69 patches</summary>
 <br>
@@ -41,7 +41,7 @@
 | [Disable Collapse Button](#disable-collapse-button) | Disable collapse button on OpenChatList |  |
 | [Disable Community Tab](#disable-community-tab) | Disables Community Tab |  |
 | [Disable Friend Feed tab](#disable-friend-feed-tab) | Disables the Friend Feed tab in KakaoTalk. |  |
-| [Disable Friend Lists ad](#disable-friend-lists-ad) | Disables the friend tab BizBoard ads in KakaoTalk. |  |
+| [Disable Friend Lists ad](#disable-friend-lists-ad) | Disables the friend tab BizBoard and global-region ads in KakaoTalk. |  |
 | [Disable OpenChat feed ad](#disable-openchat-feed-ad) | Disables the OpenChat tab feed ad load and render paths. |  |
 | [Disable Pay banner ad](#disable-pay-banner-ad) | Disables the KakaoPay banner ad load and render paths. |  |
 | [Disable S2Event](#disable-s2event) | Disables Tracker |  |
@@ -50,7 +50,7 @@
 | [Disable ShortForm ad](#disable-shortform-ad) | Disables the shortform ad load and render paths. |  |
 | [Disable Talk Share Log](#disable-talk-share-log) | Disable talk share log |  |
 | [Disable abuse detection report](#disable-abuse-detection-report) | Answers the startup and login integrity challenge with an empty token and a benign Play Integrity failure code instead of a Google-signed token that would expose the re-signed certificate. The report itself is still sent, so the client does not go conspicuously silent on the server's nonce the way suppressing it entirely would. |  |
-| [Disable chat room list ad](#disable-chat-room-list-ad) | Disable the chat room list ad. |  |
+| [Disable chat room list ad](#disable-chat-room-list-ad) | Disables native and global-region ads in the chat room list. |  |
 | [Disable open chat room comments](#disable-open-chat-room-comments) | Adds a setting to disable comments in open chat rooms. |  |
 | [Disable verifying signature](#disable-verifying-signature) | Disables the signature verification check that prevents the app from running. |  |
 | [Enable Markdown](#enable-markdown) | Render plain text messages with markdown-style formatting. |  |

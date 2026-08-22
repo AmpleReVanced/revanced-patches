@@ -1,3 +1,15 @@
+# [1.4.0-dev.12](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.11...v1.4.0-dev.12) (2026-08-22)
+
+
+### Bug Fixes
+
+* **kakaotalk:** address global-region ad review ([add04cb](https://github.com/AmpleReVanced/revanced-patches/commit/add04cb0c293d74404ebbfab31b00c515893d71a))
+
+
+### Features
+
+* **kakaotalk:** disable global-region list ads ([d891bb2](https://github.com/AmpleReVanced/revanced-patches/commit/d891bb2222ebeb8242b9e225c15046b207c5323d))
+
 # [1.4.0-dev.11](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.10...v1.4.0-dev.11) (2026-08-16)
 
 
