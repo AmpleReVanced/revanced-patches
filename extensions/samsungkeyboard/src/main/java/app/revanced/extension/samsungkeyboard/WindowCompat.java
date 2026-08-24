@@ -3,6 +3,7 @@ package app.revanced.extension.samsungkeyboard;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Color;
@@ -17,6 +18,7 @@ import android.view.Window;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
 import android.view.WindowManager;
+import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -65,6 +67,16 @@ public final class WindowCompat {
             WindowInsetsController controller = target.getWindowInsetsController();
             if (controller != null) controller.show(WindowInsets.Type.ime());
         });
+    }
+
+    public static boolean commitClipboard(ClipData data) {
+        InputMethodService service = inputMethodService.get();
+        if (service == null || data == null || data.getItemCount() == 0) return false;
+
+        InputConnection connection = service.getCurrentInputConnection();
+        if (connection == null) return false;
+        CharSequence text = data.getItemAt(0).coerceToText(service);
+        return text != null && connection.commitText(text, 1);
     }
 
     @SuppressWarnings("deprecation")

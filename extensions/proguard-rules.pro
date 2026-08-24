@@ -1,5 +1,6 @@
 -dontobfuscate
 -dontoptimize
+-dontshrink
 -keepattributes *
 -keep class app.morphe.** {
   *;

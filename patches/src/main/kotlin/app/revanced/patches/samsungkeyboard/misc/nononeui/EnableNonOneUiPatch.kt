@@ -1,10 +1,15 @@
 package app.revanced.patches.samsungkeyboard.misc.nononeui
 
+import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.getInstructionOrNull
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
+import app.morphe.patcher.anyInstruction
+import app.morphe.patcher.fieldAccess
+import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.ResourcePatchContext
 import app.morphe.patcher.patch.bytecodePatch
@@ -17,6 +22,9 @@ import app.morphe.util.findMutableMethodOf
 import app.morphe.util.getNode
 import app.morphe.util.getReference
 import app.morphe.util.indexOfFirstInstructionOrThrow
+import app.morphe.util.indexOfFirstStringInstruction
+import app.morphe.util.indexOfFirstStringInstructionOrThrow
+import app.morphe.util.registersUsed
 import app.revanced.patches.samsungkeyboard.shared.Constants.COMPATIBILITY_SAMSUNG_KEYBOARD
 import app.revanced.util.argumentRegister
 import app.revanced.util.parameterTypeNames
@@ -42,11 +50,13 @@ import org.w3c.dom.Element
 private const val CONTEXT_TYPE = "Landroid/content/Context;"
 private const val INPUT_METHOD_SERVICE_TYPE = "Landroid/inputmethodservice/InputMethodService;"
 private const val EXTENSION_PACKAGE = "Lapp/revanced/extension/samsungkeyboard/"
+private const val CLIPBOARD_COMPAT_TYPE = "${EXTENSION_PACKAGE}ClipboardCompat;"
 private const val DEVICE_COMPAT_TYPE = "${EXTENSION_PACKAGE}DeviceCompat;"
 private const val DRAWABLE_LOADER_TYPE = "${EXTENSION_PACKAGE}DrawableLoader;"
 private const val FEEDBACK_COMPAT_TYPE = "${EXTENSION_PACKAGE}FeedbackCompat;"
 private const val RESOURCE_LOADER_TYPE = "${EXTENSION_PACKAGE}ResourceLoader;"
 private const val SETTINGS_STORE_TYPE = "${EXTENSION_PACKAGE}SettingsStore;"
+private const val TOOLBAR_COMPAT_TYPE = "${EXTENSION_PACKAGE}ToolbarCompat;"
 private const val WINDOW_COMPAT_TYPE = "${EXTENSION_PACKAGE}WindowCompat;"
 private const val SPR_STYLEABLE_TYPE = "${EXTENSION_PACKAGE}SprStyleable;"
 private const val SPR_PACKAGE = "Lcom/samsung/android/spr/"
@@ -58,6 +68,12 @@ private const val SETTINGS_PACKAGE = "Lcom/samsung/android/honeyboard/settings/"
 private const val ANDROID_NAMESPACE = "http://schemas.android.com/apk/res/android"
 private lateinit var applicationClassType: String
 private lateinit var inputMethodServiceClassTypes: List<String>
+
+private data class ReplacementOptions(
+    val clipboardService: Boolean,
+    val drawableAccess: Boolean,
+    val settingsWindowFlags: Boolean,
+)
 
 private val enableNonOneUiResourcesPatch = resourcePatch {
     compatibleWith(COMPATIBILITY_SAMSUNG_KEYBOARD)
@@ -71,7 +87,8 @@ private val enableNonOneUiResourcesPatch = resourcePatch {
                 removeAttribute("coreApp")
             }
             (document.getNode("uses-sdk") as Element).setAttribute("android:targetSdkVersion", "33")
-            (document.getNode("application") as Element).apply {
+            val application = document.getNode("application") as Element
+            application.apply {
                 removeAttribute("android:crossProfile")
                 setAttribute("android:extractNativeLibs", "true")
                 applicationClassType = getAttribute("android:name").toClassType(packageName)
@@ -167,72 +184,113 @@ val enableNonOneUiPatch = bytecodePatch(
     extendWith("extensions/samsungkeyboard.mpe")
 
     execute {
-        val definedTypes = buildSet { classDefForEach { add(it.type) } }
-        val unavailableType: (String) -> Boolean = { type -> type.isUnavailableSamsungType(definedTypes) }
-
-        classDefForEach classLoop@{ classDef ->
-            if (classDef.type.startsWith(EXTENSION_PACKAGE)) return@classLoop
-
-            val replaceDrawableAccess = !classDef.type.startsWith(SPR_PACKAGE)
-            val replaceSettingsWindowFlags = classDef.type.startsWith(SETTINGS_PACKAGE)
-            val mutableClass by lazy { mutableClassDefBy(classDef) }
-
-            if (classDef.interfaces.any(unavailableType)) {
-                mutableClass.interfaces.removeAll(unavailableType)
-            }
-            classDef.methods.forEach methodLoop@{ method ->
-                if (method.implementation == null) return@methodLoop
-
-                val mutableMethod by lazy { mutableClass.findMutableMethodOf(method) }
-                method.findInstructionIndicesReversed {
-                    requiresPlatformReplacement(
-                        unavailableType,
-                        replaceDrawableAccess,
-                        replaceSettingsWindowFlags,
-                    )
-                }.forEach { index ->
-                    mutableMethod.replacePlatformDependency(
-                        index = index,
-                        unavailableType = unavailableType,
-                        replaceDrawableAccess = replaceDrawableAccess,
-                        replaceSettingsWindowFlags = replaceSettingsWindowFlags,
-                    )
-                }
-            }
-        }
+        patchPlatformDependencies()
+        patchGifVisibility()
 
         StoreDownloadRequestFingerprint.method.applyStoreProfile()
         StoreUpdateCheckRequestFingerprint.method.applyStoreProfile()
         ShowSoftInputFingerprint.method.applyShowSoftInputCompat()
-
-        val initializedServiceCount = inputMethodServiceClassTypes.count { type ->
-            val classDef = classDefBy(type)
-            val onCreate = classDef.methods.firstOrNull { method ->
-                method.name == "onCreate" && method.parameterTypeNames.isEmpty() && method.returnType == "V"
-            } ?: return@count false
-            mutableClassDefBy(classDef).findMutableMethodOf(onCreate).addInstruction(
-                0,
-                "invoke-static/range {p0 .. p0}, $WINDOW_COMPAT_TYPE->initialize($INPUT_METHOD_SERVICE_TYPE)V",
-            )
-            true
-        }
-        if (initializedServiceCount == 0) throw PatchException("Could not find an input method service initializer.")
-
-        val applicationClass = classDefBy(applicationClassType)
-        val attachBaseContext = applicationClass.methods.firstOrNull { method ->
-            method.name == "attachBaseContext" &&
-                method.parameterTypeNames == listOf(CONTEXT_TYPE) &&
-                method.returnType == "V"
-        }
-        val initializeMethod = attachBaseContext ?: applicationClass.methods.firstOrNull { method ->
-            method.name == "onCreate" && method.parameterTypeNames.isEmpty() && method.returnType == "V"
-        } ?: throw PatchException("Could not find the application initialization method.")
-        val contextRegister = if (initializeMethod === attachBaseContext) "p1" else "p0"
-        mutableClassDefBy(applicationClass).findMutableMethodOf(initializeMethod).addInstruction(
-            0,
-            "invoke-static {$contextRegister}, $SETTINGS_STORE_TYPE->initialize($CONTEXT_TYPE)V",
-        )
+        initializeInputMethodServices()
+        initializeApplication()
     }
+}
+
+private fun BytecodePatchContext.patchGifVisibility() {
+    val match = GifVisibilityFingerprint.instructionMatches.last()
+    val visibilityRegister = match.getInstruction<Instruction>().argumentRegister(0)
+    GifVisibilityFingerprint.method.addInstructions(
+        match.index,
+        """
+            invoke-static {v$visibilityRegister}, $TOOLBAR_COMPAT_TYPE->gifVisibility(I)I
+            move-result v$visibilityRegister
+        """.trimIndent(),
+    )
+}
+
+private fun BytecodePatchContext.patchPlatformDependencies() {
+    val toolbarFeatureAccess = anyInstruction(
+        ClipboardFeatureFlagFingerprint.featureFlagAccess(),
+        GifFeatureFlagFingerprint.featureFlagAccess(),
+    )
+    val definedTypes = buildSet { classDefForEach { add(it.type) } }
+    val unavailableType: (String) -> Boolean = { it.isUnavailableSamsungType(definedTypes) }
+
+    classDefForEach classLoop@{ classDef ->
+        if (classDef.type.startsWith(EXTENSION_PACKAGE)) return@classLoop
+
+        val replaceDrawableAccess = !classDef.type.startsWith(SPR_PACKAGE)
+        val replaceSettingsWindowFlags = classDef.type.startsWith(SETTINGS_PACKAGE)
+        val mutableClass by lazy { mutableClassDefBy(classDef) }
+
+        if (classDef.interfaces.any(unavailableType)) {
+            mutableClass.interfaces.removeAll(unavailableType)
+        }
+        classDef.methods.forEach methodLoop@{ method ->
+            if (method.implementation == null) return@methodLoop
+
+            val mutableMethod by lazy { mutableClass.findMutableMethodOf(method) }
+            method.findInstructionIndicesReversed(toolbarFeatureAccess).forEach { index ->
+                mutableMethod.replaceWithTrue(index)
+            }
+            val options = ReplacementOptions(
+                clipboardService = method.indexOfFirstStringInstruction("semclipboard") >= 0,
+                drawableAccess = replaceDrawableAccess,
+                settingsWindowFlags = replaceSettingsWindowFlags,
+            )
+            method.findInstructionIndicesReversed {
+                requiresPlatformReplacement(unavailableType, options)
+            }.forEach { index ->
+                mutableMethod.replacePlatformDependency(index, unavailableType, options)
+            }
+            if (method.isProviderCallerVerification()) mutableMethod.allowSelfProviderAccess()
+        }
+    }
+}
+
+context(_: BytecodePatchContext)
+private fun Fingerprint.featureFlagAccess() = fieldAccess(
+    instructionMatches.first().getInstruction<ReferenceInstruction>().reference as FieldReference,
+    Opcode.SGET_BOOLEAN,
+)
+
+private fun BytecodePatchContext.initializeInputMethodServices() {
+    val initialized = inputMethodServiceClassTypes.count { type ->
+        val classDef = classDefBy(type)
+        val onCreate = classDef.methods.firstOrNull { method ->
+            method.name == "onCreate" && method.parameterTypeNames.isEmpty() && method.returnType == "V"
+        } ?: return@count false
+        mutableClassDefBy(classDef).findMutableMethodOf(onCreate).addInstruction(
+            0,
+            "invoke-static/range {p0 .. p0}, $WINDOW_COMPAT_TYPE->initialize($INPUT_METHOD_SERVICE_TYPE)V",
+        )
+        true
+    }
+    if (initialized == 0) throw PatchException("Could not find an input method service initializer.")
+}
+
+private fun BytecodePatchContext.initializeApplication() {
+    val applicationClass = classDefBy(applicationClassType)
+    val attachBaseContext = applicationClass.methods.firstOrNull { method ->
+        method.name == "attachBaseContext" &&
+            method.parameterTypeNames == listOf(CONTEXT_TYPE) &&
+            method.returnType == "V"
+    }
+    val initializeMethod = attachBaseContext ?: applicationClass.methods.firstOrNull { method ->
+        method.name == "onCreate" && method.parameterTypeNames.isEmpty() && method.returnType == "V"
+    } ?: throw PatchException("Could not find the application initialization method.")
+    val contextRegister = if (initializeMethod === attachBaseContext) "p1" else "p0"
+    mutableClassDefBy(applicationClass).findMutableMethodOf(initializeMethod).addInstructions(
+        0,
+        """
+            invoke-static {$contextRegister}, $TOOLBAR_COMPAT_TYPE->initialize($CONTEXT_TYPE)V
+            invoke-static {$contextRegister}, $SETTINGS_STORE_TYPE->initialize($CONTEXT_TYPE)V
+        """.trimIndent(),
+    )
+}
+
+private fun MutableMethod.replaceWithTrue(index: Int) {
+    val register = getInstruction<OneRegisterInstruction>(index).registerA
+    replaceInstruction(index, "const/4 v$register, 0x1")
 }
 
 private fun MutableMethod.applyShowSoftInputCompat() {
@@ -247,15 +305,41 @@ private fun MutableMethod.applyShowSoftInputCompat() {
     )
 }
 
+private fun MutableMethod.allowSelfProviderAccess() = addInstructionsWithLabels(
+    0,
+    """
+        invoke-static {}, Landroid/os/Binder;->getCallingUid()I
+        move-result v0
+        invoke-static {}, Landroid/os/Process;->myUid()I
+        move-result v1
+        if-eq v0, v1, :allowed
+        invoke-virtual {p0}, Landroid/content/Context;->getPackageName()Ljava/lang/String;
+        move-result-object v0
+        invoke-virtual {v0, p1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+        move-result v0
+        if-eqz v0, :original
+        :allowed
+        const/4 v0, 0x1
+        return v0
+        :original
+        nop
+    """.trimIndent(),
+)
+
+private fun Method.isProviderCallerVerification() =
+    returnType == "Z" &&
+        parameterTypeNames == listOf(CONTEXT_TYPE, "Ljava/lang/String;") &&
+        indexOfFirstStringInstruction("valid signature : ") >= 0 &&
+        indexOfFirstStringInstruction("certification failed") >= 0
+
 private fun Instruction.requiresPlatformReplacement(
     unavailableType: (String) -> Boolean,
-    replaceDrawableAccess: Boolean,
-    replaceSettingsWindowFlags: Boolean,
+    options: ReplacementOptions,
 ): Boolean {
     val reference = (this as? ReferenceInstruction)?.reference ?: return false
     if (reference is MethodReference &&
         (reference.isSetInputViewReference() ||
-            reference.compatReference(replaceDrawableAccess, replaceSettingsWindowFlags, opcode) != null)
+            reference.compatReference(options, opcode) != null)
     ) return true
     if (reference is FieldReference && reference.sprStyleableReference() != null) return true
 
@@ -268,9 +352,7 @@ private fun MutableMethod.applyStoreProfile() {
 }
 
 private fun MutableMethod.replaceStoreRequestValue(key: String, extensionMethod: String) {
-    val keyIndex = indexOfFirstInstructionOrThrow {
-        getReference<StringReference>()?.string == key
-    }
+    val keyIndex = indexOfFirstStringInstructionOrThrow(key)
     val valueIndex = indexOfFirstInstructionOrThrow(keyIndex) {
         (opcode == Opcode.INVOKE_STATIC || opcode == Opcode.INVOKE_STATIC_RANGE) &&
             getReference<MethodReference>()?.let { reference ->
@@ -295,8 +377,7 @@ private fun MutableMethod.replaceStoreRequestValue(key: String, extensionMethod:
 private fun MutableMethod.replacePlatformDependency(
     index: Int,
     unavailableType: (String) -> Boolean,
-    replaceDrawableAccess: Boolean,
-    replaceSettingsWindowFlags: Boolean,
+    options: ReplacementOptions,
 ) {
     val instruction = getInstructionOrNull<Instruction>(index) ?: return
     val reference = (instruction as? ReferenceInstruction)?.reference ?: return
@@ -309,11 +390,7 @@ private fun MutableMethod.replacePlatformDependency(
             )
             return
         }
-        val replacement = reference.compatReference(
-            replaceDrawableAccess,
-            replaceSettingsWindowFlags,
-            instruction.opcode,
-        )
+        val replacement = reference.compatReference(options, instruction.opcode)
         if (replacement != null) {
             replaceInvokeReference(index, instruction, replacement)
             return
@@ -360,15 +437,22 @@ private fun MethodReference.isSetInputViewReference() =
     )
 
 private fun MethodReference.compatReference(
-    replaceDrawableAccess: Boolean,
-    replaceSettingsWindowFlags: Boolean,
+    options: ReplacementOptions,
     opcode: Opcode,
-) = windowCompatReference(replaceSettingsWindowFlags, opcode)
+) = windowCompatReference(options.settingsWindowFlags, opcode)
+    ?: clipboardCompatReference().takeIf { options.clipboardService }
     ?: deviceCompatReference()
     ?: feedbackCompatReference()
     ?: resourceLoaderReference()
-    ?: drawableLoaderReference().takeIf { replaceDrawableAccess }
+    ?: drawableLoaderReference().takeIf { options.drawableAccess }
     ?: settingsStoreReference()
+
+private fun MethodReference.clipboardCompatReference() =
+    if (matches(CONTEXT_TYPE, "getSystemService", listOf("Ljava/lang/String;"), "Ljava/lang/Object;")) {
+        toExtensionReference(CLIPBOARD_COMPAT_TYPE)
+    } else {
+        null
+    }
 
 private fun MethodReference.windowCompatReference(
     replaceSettingsWindowFlags: Boolean,
@@ -556,7 +640,8 @@ private fun MutableMethod.replaceFieldAccess(index: Int, type: String) {
         return
     }
 
-    val register = (instruction as OneRegisterInstruction).registerA
+    val register = instruction.registersUsed.firstOrNull()
+        ?: throw PatchException("Unsupported field access instruction.")
     replaceInstruction(index, defaultValue(type, register))
     if (type.isObjectType) removeKotlinNullChecks(index + 1, index + 4, register)
 }
@@ -583,14 +668,13 @@ private fun MutableMethod.replaceTypeReference(index: Int, opcode: Opcode) {
         }
         else -> {
             val instruction = getInstructionOrNull<Instruction>(index) ?: return
-            if (instruction.opcode.setsRegister()) {
-                replaceInstruction(
-                    index,
-                    defaultValue("Ljava/lang/Object;", (instruction as OneRegisterInstruction).registerA),
-                )
-            } else {
+            if (!instruction.opcode.setsRegister()) {
                 replaceInstruction(index, "nop")
+                return
             }
+            val register = instruction.registersUsed.firstOrNull()
+                ?: throw PatchException("Unsupported type instruction.")
+            replaceInstruction(index, defaultValue("Ljava/lang/Object;", register))
         }
     }
 }
