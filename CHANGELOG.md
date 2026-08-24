@@ -1,3 +1,10 @@
+# [1.4.0-dev.13](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.12...v1.4.0-dev.13) (2026-08-24)
+
+
+### Features
+
+* **samsung-keyboard:** restore clipboard and GIF on non-One UI ROMs ([41d2db3](https://github.com/AmpleReVanced/revanced-patches/commit/41d2db3ae5208c89493521d73200719672d25da9))
+
 # [1.4.0-dev.12](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.11...v1.4.0-dev.12) (2026-08-22)
 
 
