@@ -1,5 +1,5 @@
 {
-  "version": "1.4.0-dev.14",
+  "version": "1.4.0-dev.15",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -442,13 +442,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "3.10.0",
-              "isExperimental": false,
-              "minSdk": null,
-              "description": null
-            },
-            {
-              "version": "3.9.0",
+              "version": "3.11.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -615,6 +609,24 @@
           "appIconColor": "#0096FA",
           "signatures": null,
           "targets": [
+            {
+              "version": "1.5.0.8",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            },
+            {
+              "version": "1.5.0.7",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            },
+            {
+              "version": "1.4.4.14",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            },
             {
               "version": "1.4.4.12",
               "isExperimental": false,
@@ -1267,13 +1279,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "3.10.0",
-              "isExperimental": false,
-              "minSdk": null,
-              "description": null
-            },
-            {
-              "version": "3.9.0",
+              "version": "3.11.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1299,6 +1305,12 @@
           "appIconColor": "#0068FF",
           "signatures": null,
           "targets": [
+            {
+              "version": "8.29.3",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            },
             {
               "version": "8.28.5",
               "isExperimental": false,
@@ -1551,13 +1563,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "3.10.0",
-              "isExperimental": false,
-              "minSdk": null,
-              "description": null
-            },
-            {
-              "version": "3.9.0",
+              "version": "3.11.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -2053,13 +2059,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "3.10.0",
-              "isExperimental": false,
-              "minSdk": null,
-              "description": null
-            },
-            {
-              "version": "3.9.0",
+              "version": "3.11.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -2369,6 +2369,12 @@
           "signatures": null,
           "targets": [
             {
+              "version": "8.29.3",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            },
+            {
               "version": "8.28.5",
               "isExperimental": false,
               "minSdk": null,
@@ -2477,6 +2483,12 @@
           "signatures": null,
           "targets": [
             {
+              "version": "8.29.3",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            },
+            {
               "version": "8.28.5",
               "isExperimental": false,
               "minSdk": null,
@@ -2502,6 +2514,12 @@
           "signatures": null,
           "targets": [
             {
+              "version": "8.29.3",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            },
+            {
               "version": "8.28.5",
               "isExperimental": false,
               "minSdk": null,
@@ -2526,6 +2544,12 @@
           "appIconColor": "#0068FF",
           "signatures": null,
           "targets": [
+            {
+              "version": "8.29.3",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            },
             {
               "version": "8.28.5",
               "isExperimental": false,
@@ -2606,6 +2630,12 @@
           "signatures": null,
           "targets": [
             {
+              "version": "8.29.3",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            },
+            {
               "version": "8.28.5",
               "isExperimental": false,
               "minSdk": null,
@@ -2630,6 +2660,12 @@
           "appIconColor": "#0068FF",
           "signatures": null,
           "targets": [
+            {
+              "version": "8.29.3",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            },
             {
               "version": "8.28.5",
               "isExperimental": false,
@@ -2656,6 +2692,12 @@
           "signatures": null,
           "targets": [
             {
+              "version": "8.29.3",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            },
+            {
               "version": "8.28.5",
               "isExperimental": false,
               "minSdk": null,
@@ -2681,6 +2723,12 @@
           "signatures": null,
           "targets": [
             {
+              "version": "8.29.3",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            },
+            {
               "version": "8.28.5",
               "isExperimental": false,
               "minSdk": null,
@@ -2705,6 +2753,12 @@
           "appIconColor": "#0068FF",
           "signatures": null,
           "targets": [
+            {
+              "version": "8.29.3",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            },
             {
               "version": "8.28.5",
               "isExperimental": false,
@@ -3236,6 +3290,24 @@
           "signatures": null,
           "targets": [
             {
+              "version": "1.5.0.8",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            },
+            {
+              "version": "1.5.0.7",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            },
+            {
+              "version": "1.4.4.14",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            },
+            {
               "version": "1.4.4.12",
               "isExperimental": false,
               "minSdk": null,
@@ -3273,13 +3345,7 @@
           "signatures": null,
           "targets": [
             {
-              "version": "3.10.0",
-              "isExperimental": false,
-              "minSdk": null,
-              "description": null
-            },
-            {
-              "version": "3.9.0",
+              "version": "3.11.1",
               "isExperimental": false,
               "minSdk": null,
               "description": null

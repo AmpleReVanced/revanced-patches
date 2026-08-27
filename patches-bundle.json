@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-08-27T15:20:46",
-  "description": "# [1.4.0-dev.14](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.13...v1.4.0-dev.14) (2026-08-27)\n\n\n### Features\n\n* **kakaotalk:** support version `26.7.2` ([e580958](https://github.com/AmpleReVanced/revanced-patches/commit/e580958b977cc7cb0840e91354d41b74e5a539c4))",
-  "download_url": "https://github.com/AmpleReVanced/revanced-patches/releases/download/v1.4.0-dev.14/patches-1.4.0-dev.14.mpp",
+  "created_at": "2026-08-27T16:16:28",
+  "description": "# [1.4.0-dev.15](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.14...v1.4.0-dev.15) (2026-08-27)\n\n\n### Features\n\n* **chzzk:** support version `3.11.1` ([7771042](https://github.com/AmpleReVanced/revanced-patches/commit/7771042987286b523c239fe52c120003a61d956a))\n* **flexcil:** support version `1.5.0.8` ([2d74769](https://github.com/AmpleReVanced/revanced-patches/commit/2d7476938cc2adf2141b5ff1a322a4504c54081b))\n* **soop:** support version `8.29.3` ([848695f](https://github.com/AmpleReVanced/revanced-patches/commit/848695f07bc8662217992a28a7882b1ae0049df7))",
+  "download_url": "https://github.com/AmpleReVanced/revanced-patches/releases/download/v1.4.0-dev.15/patches-1.4.0-dev.15.mpp",
   "signature_download_url": "",
-  "version": "1.4.0-dev.14"
+  "version": "1.4.0-dev.15"
 }
