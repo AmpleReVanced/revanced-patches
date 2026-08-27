@@ -1,3 +1,10 @@
+# [1.4.0-dev.14](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.13...v1.4.0-dev.14) (2026-08-27)
+
+
+### Features
+
+* **kakaotalk:** support version `26.7.2` ([e580958](https://github.com/AmpleReVanced/revanced-patches/commit/e580958b977cc7cb0840e91354d41b74e5a539c4))
+
 # [1.4.0-dev.13](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.12...v1.4.0-dev.13) (2026-08-24)
 
 
