@@ -24,13 +24,12 @@ internal object AdEnterPlayerFingerprint : Fingerprint(
     definingClass = AD_ENTER_PLAYER_CLASS,
     returnType = "V",
     parameters = listOf(LIVE_PLAYER_EVENT_AD_CLASS),
-    strings = listOf("adRequest"),
 )
 
 internal object ApplyPlayerAdParamsFingerprint : Fingerprint(
     returnType = PRISM_SOURCE_CLASS,
     parameters = listOf(PRISM_SOURCE_CLASS, PLAYABLE_AD_PARAMS_CLASS),
-    strings = listOf("adParams", "nmp_aos", "calp"),
+    strings = listOf("nmp_aos", "calp"),
 )
 
 internal object MapClipAdCardFingerprint : Fingerprint(

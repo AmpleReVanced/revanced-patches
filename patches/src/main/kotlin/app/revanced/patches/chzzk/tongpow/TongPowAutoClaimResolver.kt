@@ -7,7 +7,6 @@ import app.morphe.util.getReference
 import app.revanced.util.localRegisterCount
 import app.revanced.util.matches
 import app.revanced.util.parameterTypeNames
-import app.revanced.util.requireClass
 import app.revanced.util.smaliReference
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.ClassDef
@@ -23,6 +22,7 @@ internal data class TongPowAutoClaimInsertion(
     val method: MutableMethod,
     val updatePopupInfoIndex: Int,
     val showPopupIndex: Int,
+    val showPopupReceiverRegister: Int,
     val popupViewModelField: FieldReference,
     val chatViewModelField: FieldReference,
     val manualClaim: ManualClaimReferences,
@@ -32,16 +32,19 @@ internal data class TongPowAutoClaimInsertion(
 ) {
     companion object {
         fun resolve(
-            classDefsByType: Map<String, ClassDef>,
+            popupEventCollectorClass: ClassDef,
             popupEventCollectorMethod: MutableMethod,
             manualClaimMethod: MutableMethod,
-            receiveAmountMethod: MutableMethod,
         ): TongPowAutoClaimInsertion {
             val method = popupEventCollectorMethod
             val updatePopupInfoIndex = method.findPopupInfoUpdateCallIndex()
             val updatePopupInfoReference = method.instructionMethodReference(updatePopupInfoIndex)
                 ?: throw PatchException("Could not inspect TongPow popup update call.")
-            val manualClaim = manualClaimMethod.resolveManualClaimReferences(receiveAmountMethod)
+            val showPopupIndex = method.findPopupTimerCallIndex(
+                updatePopupInfoIndex,
+                updatePopupInfoReference.definingClass,
+            )
+            val manualClaim = manualClaimMethod.resolveManualClaimReferences()
             val updateCallRegisters = method.instructionRegisters(updatePopupInfoIndex)
             val channelIdRegister = method.findMoveResultRegisterBefore(
                 updatePopupInfoIndex,
@@ -55,15 +58,14 @@ internal data class TongPowAutoClaimInsertion(
             return TongPowAutoClaimInsertion(
                 method = method,
                 updatePopupInfoIndex = updatePopupInfoIndex,
-                showPopupIndex = method.findPopupTimerCallIndex(
-                    updatePopupInfoIndex,
-                    updatePopupInfoReference.definingClass,
-                ),
+                showPopupIndex = showPopupIndex,
+                showPopupReceiverRegister = method.instructionRegisters(showPopupIndex).firstOrNull()
+                    ?: throw PatchException("Could not infer TongPow popup receiver register."),
                 popupViewModelField = method.findLastFieldReferenceBefore(
                     updatePopupInfoIndex,
                     updatePopupInfoReference.definingClass,
                 ),
-                chatViewModelField = classDefsByType.requireClass(method.definingClass).findFieldByType(
+                chatViewModelField = popupEventCollectorClass.findFieldByType(
                     manualClaim.callbackConstructor.parameterTypeNames.single(),
                 ),
                 manualClaim = manualClaim,
@@ -93,9 +95,9 @@ internal data class TemporaryRegisters(
     val scratch: Int,
 )
 
-private fun Method.resolveManualClaimReferences(receiveAmountMethod: Method): ManualClaimReferences {
+private fun Method.resolveManualClaimReferences(): ManualClaimReferences {
     val receiveAmountIndex = instructions.indexOfFirst { instruction ->
-        instruction.getReference<MethodReference>()?.matches(receiveAmountMethod) == true
+        instruction.getReference<MethodReference>()?.isReceiveAmountCall == true
     }
     if (receiveAmountIndex < 0) {
         throw PatchException("Could not find TongPow receive amount call.")
@@ -116,7 +118,7 @@ private fun Method.resolveManualClaimReferences(receiveAmountMethod: Method): Ma
         .drop(receiveAmountIndex + 1)
         .mapNotNull { it.getReference<MethodReference>() }
         .firstOrNull { reference ->
-            reference.definingClass == receiveAmountMethod.definingClass &&
+            reference.definingClass == receiveAmount.definingClass &&
                 reference.returnType == VOID_TYPE &&
                 reference.parameterTypeNames.isEmpty()
         }
