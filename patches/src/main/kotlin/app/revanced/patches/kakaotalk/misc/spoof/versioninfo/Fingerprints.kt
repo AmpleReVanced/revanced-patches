@@ -7,7 +7,7 @@ import com.android.tools.smali.dexlib2.Opcode
 
 internal object VersionInfoFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.FINAL),
-    strings = listOf("26.7.1"),
+    strings = listOf("26.7.2"),
     filters = OpcodesFilter.opcodesToFilters(
         Opcode.SGET_OBJECT,
         Opcode.INVOKE_VIRTUAL,
@@ -27,7 +27,7 @@ internal object VersionInfoPreviewFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC),
     parameters = listOf(),
     returnType = "Ljava/lang/String;",
-    strings = listOf("26.7.1"),
+    strings = listOf("26.7.2"),
     filters = OpcodesFilter.opcodesToFilters(
         Opcode.SGET_OBJECT,
         Opcode.INVOKE_VIRTUAL,
