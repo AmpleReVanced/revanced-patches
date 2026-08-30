@@ -1,3 +1,16 @@
+# [1.4.0-dev.16](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.15...v1.4.0-dev.16) (2026-08-30)
+
+
+### Bug Fixes
+
+* **kakaotalk:** show block and kick actions for open chat managers ([708520d](https://github.com/AmpleReVanced/revanced-patches/commit/708520dd8e76f9a71441b6cecce96e009521cf4e))
+
+
+### Features
+
+* **kakaotalk:** allow editing thread replies from the main chat ([b47bc80](https://github.com/AmpleReVanced/revanced-patches/commit/b47bc80eab29bf53c57635fb8c5c9062a84b77c5))
+* **kakaotalk:** allow open chat managers to block members ([213ae11](https://github.com/AmpleReVanced/revanced-patches/commit/213ae1122213510d3f0bc3f3826ccf88aaf534ca))
+
 # [1.4.0-dev.15](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.14...v1.4.0-dev.15) (2026-08-27)
 
 
