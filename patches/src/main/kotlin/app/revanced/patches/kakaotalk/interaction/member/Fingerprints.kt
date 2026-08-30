@@ -43,6 +43,38 @@ internal object KickButtonBuilderFingerprint : Fingerprint(
     custom = { _, classDef -> classDef.sourceFile == "OlkProfileFragment.kt" },
 )
 
+internal object OpenProfileFragmentBlockButtonBuilderFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf(),
+    returnType = "V",
+    filters = listOf(
+        fieldAccess(name = "profile_home_btn_openblock", opcode = Opcode.SGET),
+        fieldAccess(name = "text_for_blind", opcode = Opcode.SGET),
+    ),
+    custom = { _, classDef -> classDef.sourceFile == "OlkProfileFragment.kt" },
+)
+
+internal object OpenProfileFragmentStaffActionDispatcherFingerprint : Fingerprint(
+    classFingerprint = OpenProfileFragmentBlockButtonBuilderFingerprint,
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf("Z", "Z", "Z", "Z", "Z"),
+    returnType = "V",
+    filters = listOf(
+        methodCall(
+            definingClass = "this",
+            parameters = listOf("Z", "Z", "Z"),
+            returnType = "V",
+            opcode = Opcode.INVOKE_VIRTUAL,
+        ),
+        methodCall(
+            definingClass = "this",
+            parameters = listOf("Z", "Z", "Z"),
+            returnType = "V",
+            opcode = Opcode.INVOKE_VIRTUAL,
+        ),
+    ),
+)
+
 internal fun kickButtonEligibilityFingerprint(kickButtonBuilder: MethodReference) = Fingerprint(
     classFingerprint = KickButtonBuilderFingerprint,
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),

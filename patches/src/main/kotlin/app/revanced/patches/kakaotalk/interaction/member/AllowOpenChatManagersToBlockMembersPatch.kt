@@ -1,5 +1,6 @@
 package app.revanced.patches.kakaotalk.interaction.member
 
+import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.methodCall
@@ -7,6 +8,17 @@ import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.util.indexOfFirstInstructionOrThrow
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction35c
+
+private fun BuilderInstruction35c.copy() = BuilderInstruction35c(
+    opcode,
+    registerCount,
+    registerC,
+    registerD,
+    registerE,
+    registerF,
+    registerG,
+    reference,
+)
 
 @Suppress("unused")
 val allowOpenChatManagersToBlockMembersPatch = bytecodePatch(
@@ -27,17 +39,19 @@ val allowOpenChatManagersToBlockMembersPatch = bytecodePatch(
 
             replaceInstruction(
                 kickCallIndex,
-                BuilderInstruction35c(
-                    blindCall.opcode,
-                    blindCall.registerCount,
-                    blindCall.registerC,
-                    blindCall.registerD,
-                    blindCall.registerE,
-                    blindCall.registerF,
-                    blindCall.registerG,
-                    blindCall.reference,
-                ),
+                blindCall.copy(),
             )
+        }
+
+        OpenProfileFragmentStaffActionDispatcherFingerprint.apply {
+            method.apply {
+                val blockCall = getInstruction<BuilderInstruction35c>(instructionMatches.first().index)
+                val kickCallIndex = instructionMatches.last().index
+                val kickCall = getInstruction<BuilderInstruction35c>(kickCallIndex)
+
+                replaceInstruction(kickCallIndex, blockCall.copy())
+                addInstruction(kickCallIndex + 1, kickCall)
+            }
         }
     }
 }
