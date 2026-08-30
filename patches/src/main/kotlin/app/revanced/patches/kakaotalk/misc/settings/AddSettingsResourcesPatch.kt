@@ -28,6 +28,7 @@ val addSettingsResourcesPatch = resourcePatch(
                 "morphe_pref_icon_chat.xml",
                 "morphe_pref_icon_navigation.xml",
                 "morphe_pref_icon_features.xml",
+                "morphe_pref_icon_advanced.xml",
                 "morphe_pref_icon_support.xml",
                 "morphe_pref_icon_information.xml",
                 "morphe_pref_icon_debug.xml",

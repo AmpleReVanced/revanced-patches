@@ -17,6 +17,7 @@ private val kakaoTalkSettingsPreferenceOrder = listOf(
     "morphe_pref_category_chat",
     "morphe_pref_category_navigation",
     "morphe_pref_category_features",
+    "morphe_pref_category_advanced",
     "morphe_pref_category_support",
     "morphe_pref_category_information",
     "morphe_pref_category_debug",
@@ -141,6 +142,13 @@ internal object PreferenceScreen : BasePreferenceScreen(MORPHE_PREFERENCE_SCREEN
         titleKey = "morphe_settings_section_features",
         summaryKey = null,
         icon = "@drawable/morphe_pref_icon_features",
+        sorting = Sorting.UNSORTED,
+    )
+    val ADVANCED = Screen(
+        key = "morphe_pref_category_advanced",
+        titleKey = "morphe_settings_section_advanced",
+        summaryKey = null,
+        icon = "@drawable/morphe_pref_icon_advanced",
         sorting = Sorting.UNSORTED,
     )
     val SUPPORT = Screen(

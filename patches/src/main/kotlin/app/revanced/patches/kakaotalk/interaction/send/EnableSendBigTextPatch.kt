@@ -39,7 +39,7 @@ val enableSendBigTextPatch = bytecodePatch(
     dependsOn(addSettingsTabPatch)
 
     execute {
-        PreferenceScreen.FEATURES.addPreferences(
+        PreferenceScreen.CHAT.addPreferences(
             SwitchPreference(
                 key = "morphe_pref_enable_send_big_text",
                 titleKey = "morphe_settings_patch_send_big_text",

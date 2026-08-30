@@ -29,7 +29,7 @@ val enableMarkdownPatch = bytecodePatch(
     dependsOn(addSettingsTabPatch)
 
     execute {
-        PreferenceScreen.FEATURES.addPreferences(
+        PreferenceScreen.CHAT.addPreferences(
             SwitchPreference(
                 key = "morphe_pref_enable_markdown",
                 titleKey = "morphe_settings_patch_markdown",

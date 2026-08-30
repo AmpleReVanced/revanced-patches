@@ -44,8 +44,9 @@ Second \"item\" text"</string>
     <string name="morphe_kakaotalk_channel_id_copied">Channel ID copied</string>
     <string name="morphe_label_for_ample_settings">Morphe Settings</string>
     <string name="morphe_settings_section_chat">Chat</string>
-    <string name="morphe_settings_section_navigation">Navigation</string>
+    <string name="morphe_settings_section_navigation">Appearance &amp; navigation</string>
     <string name="morphe_settings_section_features">Features</string>
+    <string name="morphe_settings_section_advanced">Advanced</string>
     <string name="morphe_settings_section_support">Support</string>
     <string name="morphe_settings_section_information">Information</string>
     <string name="morphe_settings_app_version">App version</string>

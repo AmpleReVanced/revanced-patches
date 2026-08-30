@@ -28,8 +28,9 @@
     <string name="morphe_kakaotalk_channel_id_copied">채널 ID 복사됨</string>
     <string name="morphe_label_for_ample_settings">Morphe 설정</string>
     <string name="morphe_settings_section_chat">채팅</string>
-    <string name="morphe_settings_section_navigation">탭</string>
+    <string name="morphe_settings_section_navigation">화면 및 탐색</string>
     <string name="morphe_settings_section_features">기능</string>
+    <string name="morphe_settings_section_advanced">고급</string>
     <string name="morphe_settings_section_support">후원</string>
     <string name="morphe_settings_section_information">정보</string>
     <string name="morphe_settings_app_version">앱 버전</string>

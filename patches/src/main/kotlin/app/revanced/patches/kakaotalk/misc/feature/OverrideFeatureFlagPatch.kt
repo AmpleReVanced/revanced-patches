@@ -31,7 +31,7 @@ val overrideFeatureFlagPatch = bytecodePatch(
     )
 
     execute {
-        PreferenceScreen.CHAT.addPreferences(
+        PreferenceScreen.ADVANCED.addPreferences(
             TextPreference(
                 key = "morphe_pref_feature_flag_overrides",
                 titleKey = "morphe_settings_patch_feature_flag_overrides",

@@ -51,7 +51,7 @@ val bypassMoatCheckPatch = bytecodePatch(
     dependsOn(addSettingsTabPatch)
 
     execute {
-        PreferenceScreen.FEATURES.addPreferences(
+        PreferenceScreen.ADVANCED.addPreferences(
             SwitchPreference(
                 key = "morphe_pref_bypass_moat_integrity_check",
                 titleKey = "morphe_settings_patch_bypass_moat_check",
