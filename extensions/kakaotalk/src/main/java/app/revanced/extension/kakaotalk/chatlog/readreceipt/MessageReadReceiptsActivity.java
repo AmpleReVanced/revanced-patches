@@ -19,8 +19,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -35,6 +33,7 @@ import app.revanced.extension.kakaotalk.chatlog.readreceipt.MessageReadReceiptsE
 import app.revanced.extension.kakaotalk.chatlog.readreceipt.MessageReadReceiptsExtension.Person;
 import app.revanced.extension.kakaotalk.chatlog.readreceipt.MessageReadReceiptsExtension.Request;
 import app.revanced.extension.kakaotalk.chatlog.readreceipt.MessageReadReceiptsExtension.Snapshot;
+import app.revanced.extension.kakaotalk.helper.KakaoProfileViewBridge;
 import app.revanced.extension.kakaotalk.helper.ResourceHelper;
 import app.revanced.extension.kakaotalk.settings.MorpheSettingsIconDynamicDrawable;
 
@@ -835,7 +834,7 @@ public final class MessageReadReceiptsActivity extends Activity {
             holder.fallback.setText(initial(person.name));
 
             boolean profileLoaded = holder.profileView != null &&
-                    ProfileViewBridge.load(
+                    KakaoProfileViewBridge.load(
                             holder.profileView,
                             person.userId,
                             person.imageUrl,
@@ -897,7 +896,7 @@ public final class MessageReadReceiptsActivity extends Activity {
             fallback.setBackground(circle(darkMode ? 0xFF45454A : 0xFFE1E1E5));
             avatar.addView(fallback, new FrameLayout.LayoutParams(dp(46), dp(46)));
 
-            View profileView = ProfileViewBridge.create(MessageReadReceiptsActivity.this);
+            View profileView = KakaoProfileViewBridge.create(MessageReadReceiptsActivity.this);
             if (profileView != null) {
                 profileView.setVisibility(View.GONE);
                 avatar.addView(profileView, new FrameLayout.LayoutParams(dp(46), dp(46)));
@@ -950,50 +949,6 @@ public final class MessageReadReceiptsActivity extends Activity {
         void profileViewVisibility(boolean visible) {
             fallback.setVisibility(visible ? View.GONE : View.VISIBLE);
             if (profileView != null) profileView.setVisibility(visible ? View.VISIBLE : View.GONE);
-        }
-    }
-
-    private static final class ProfileViewBridge {
-        private static Constructor<?> constructor;
-        private static Method loadMethod;
-        private static boolean resolved;
-
-        private ProfileViewBridge() {
-        }
-
-        static View create(Context context) {
-            resolve();
-            if (constructor == null) return null;
-            try {
-                Object instance = constructor.newInstance(context);
-                return instance instanceof View ? (View) instance : null;
-            } catch (Throwable ignored) {
-                return null;
-            }
-        }
-
-        static boolean load(View profileView, long userId, String imageUrl, int imageType) {
-            resolve();
-            if (loadMethod == null || profileView == null || userId <= 0L) return false;
-            try {
-                loadMethod.invoke(profileView, userId, imageUrl, imageType);
-                return true;
-            } catch (Throwable ignored) {
-                return false;
-            }
-        }
-
-        private static synchronized void resolve() {
-            if (resolved) return;
-            resolved = true;
-            try {
-                Class<?> type = Class.forName("com.kakao.talk.widget.ProfileView");
-                constructor = type.getConstructor(Context.class);
-                loadMethod = type.getMethod("load", long.class, String.class, int.class);
-            } catch (Throwable ignored) {
-                constructor = null;
-                loadMethod = null;
-            }
         }
     }
 

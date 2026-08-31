@@ -1,0 +1,13 @@
+<resources>
+    <string name="morphe_samsung_keyboard_feedback_title">Key feedback</string>
+    <string name="morphe_samsung_keyboard_feedback_summary">Adjust keypress sound volume and vibration strength.</string>
+    <string name="morphe_samsung_keyboard_feedback_sound">Sound</string>
+    <string name="morphe_samsung_keyboard_feedback_sound_enabled">Use sound</string>
+    <string name="morphe_samsung_keyboard_feedback_sound_enabled_summary">Play a sound when a key is pressed.</string>
+    <string name="morphe_samsung_keyboard_feedback_sound_volume">Sound volume</string>
+    <string name="morphe_samsung_keyboard_feedback_vibration">Vibration</string>
+    <string name="morphe_samsung_keyboard_feedback_vibration_enabled">Use vibration</string>
+    <string name="morphe_samsung_keyboard_feedback_vibration_enabled_summary">Vibrate when a key is pressed.</string>
+    <string name="morphe_samsung_keyboard_feedback_vibration_strength">Vibration strength</string>
+    <string name="morphe_samsung_keyboard_feedback_system_haptic">Vibration also follows the system touch feedback setting.</string>
+</resources>

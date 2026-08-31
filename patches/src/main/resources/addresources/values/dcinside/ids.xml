@@ -1,4 +1,5 @@
 <resources>
     <item type="id" name="morphe_dcinside_post_list_quick_notifi"/>
     <item type="id" name="morphe_dcinside_settings"/>
+    <item type="id" name="morphe_gallery_watch_original_foreground"/>
 </resources>

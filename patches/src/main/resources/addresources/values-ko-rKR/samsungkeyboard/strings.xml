@@ -1,0 +1,13 @@
+<resources>
+    <string name="morphe_samsung_keyboard_feedback_title">키 입력 피드백</string>
+    <string name="morphe_samsung_keyboard_feedback_summary">키를 누를 때의 소리 음량과 진동 강도를 조절합니다.</string>
+    <string name="morphe_samsung_keyboard_feedback_sound">소리</string>
+    <string name="morphe_samsung_keyboard_feedback_sound_enabled">소리 사용</string>
+    <string name="morphe_samsung_keyboard_feedback_sound_enabled_summary">키를 누를 때 소리 피드백을 재생합니다.</string>
+    <string name="morphe_samsung_keyboard_feedback_sound_volume">소리 음량</string>
+    <string name="morphe_samsung_keyboard_feedback_vibration">진동</string>
+    <string name="morphe_samsung_keyboard_feedback_vibration_enabled">진동 사용</string>
+    <string name="morphe_samsung_keyboard_feedback_vibration_enabled_summary">키를 누를 때 진동 피드백을 재생합니다.</string>
+    <string name="morphe_samsung_keyboard_feedback_vibration_strength">진동 강도</string>
+    <string name="morphe_samsung_keyboard_feedback_system_haptic">진동은 시스템의 터치 피드백 설정도 따릅니다.</string>
+</resources>

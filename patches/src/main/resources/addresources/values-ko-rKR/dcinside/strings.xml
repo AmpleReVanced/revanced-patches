@@ -11,6 +11,13 @@
     <string name="morphe_settings_render_big_dccon_as_normal_summary">대왕디시콘을 일반 디시콘 크기로 표시합니다.</string>
     <string name="morphe_settings_hide_mini_gallery_cover_image">미니 갤러리 대문사진 숨기기</string>
     <string name="morphe_settings_hide_mini_gallery_cover_image_summary">글 목록 위에 표시되는 미니 갤러리 대문사진을 숨깁니다.</string>
+    <string name="morphe_settings_hide_post_list_page_indicators">글 목록 페이지 표시 숨기기</string>
+    <string name="morphe_settings_hide_post_list_page_indicators_summary">글 목록의 페이지 사이에 표시되는 Page N 형식의 구분 표시를 숨깁니다.</string>
+    <string name="morphe_gallery_watch_screen_title">갤러리 감시</string>
+    <string name="morphe_gallery_watch_screen_summary">갤러리 감시와 새 글 알림을 설정합니다.</string>
+    <string name="morphe_pref_gallery_watch_mode_title">갤러리 감시 모드 사용</string>
+    <string name="morphe_pref_gallery_watch_sound_title">새 글 알림음 재생</string>
+    <string name="morphe_pref_gallery_watch_vibration_title">새 글 진동 알림</string>
     <string name="morphe_settings_restore_legacy_post_icons">구버전 글 아이콘 사용</string>
     <string name="morphe_settings_restore_legacy_post_icons_summary">글 목록과 본문에서 DCInside 4.7.x 스타일의 사진, 동영상, 개념글 아이콘을 사용합니다.</string>
     <string name="morphe_settings_section_home_screen">홈 화면</string>
@@ -87,6 +94,10 @@
     <string name="morphe_pref_restore_legacy_post_icons_summary">글 목록과 본문에서 DCInside 4.7.x 스타일의 사진, 동영상, 개념글 아이콘을 사용합니다.</string>
     <string name="morphe_pref_hide_official_notices_summary">갤러리 공지 목록에서 디시인사이드 운영자 공지를 제거합니다.</string>
     <string name="morphe_pref_hide_mini_gallery_cover_image_summary">글 목록 위에 표시되는 미니 갤러리 대문사진을 숨깁니다.</string>
+    <string name="morphe_pref_hide_post_list_page_indicators_summary">글 목록의 페이지 사이에 표시되는 Page N 형식의 구분 표시를 숨깁니다.</string>
+    <string name="morphe_pref_gallery_watch_mode_summary">앱의 자동 새로고침을 켠 갤러리에서 시간 제한을 제거하고, 갤러리가 열려 있는 동안 새로 들어온 글을 강조 표시합니다.</string>
+    <string name="morphe_pref_gallery_watch_sound_summary">갤러리 감시 모드가 새 글을 찾으면 알림음을 재생합니다.</string>
+    <string name="morphe_pref_gallery_watch_vibration_summary">갤러리 감시 모드가 새 글을 찾으면 진동합니다.</string>
     <string name="morphe_pref_debug_summary">Morphe 패치의 추가 진단 로그를 기록합니다.</string>
     <string name="morphe_pref_debug_stacktrace_summary">오류 보고에 전체 스택 트레이스를 함께 표시합니다.</string>
     <string name="morphe_pref_debug_toast_summary">확장에서 오류를 잡았을 때 화면에 토스트를 표시합니다.</string>
@@ -101,4 +112,5 @@
     <string name="morphe_post_history_gallery_filter">갤러리</string>
     <string name="morphe_post_history_gallery_filter_title">갤러리별 보기</string>
     <string name="morphe_post_history_gallery_filter_all">전체</string>
+    <string name="morphe_gallery_watch_new_posts">새 글 %1$d개를 발견했습니다.</string>
 </resources>

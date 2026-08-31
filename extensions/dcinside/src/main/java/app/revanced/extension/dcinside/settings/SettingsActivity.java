@@ -28,7 +28,9 @@ import app.morphe.extension.shared.settings.preference.SettingsActivityLayout;
 import app.morphe.extension.shared.settings.preference.ToolbarPreferenceFragment;
 import app.revanced.extension.dcinside.helper.ResourceHelper;
 import app.revanced.extension.dcinside.patches.DisableDcconLoadingPatch;
+import app.revanced.extension.dcinside.patches.GalleryWatchModePatch;
 import app.revanced.extension.dcinside.patches.HideMiniGalleryCoverImagePatch;
+import app.revanced.extension.dcinside.patches.HidePostListPageIndicatorsPatch;
 import app.revanced.extension.dcinside.patches.HomeComponentsPatch;
 import app.revanced.extension.dcinside.patches.OfficialNoticePatch;
 import app.revanced.extension.dcinside.patches.AuthorIdentifierPatch;
@@ -42,6 +44,12 @@ public final class SettingsActivity extends Activity {
     private static final String PREF_BLOCK_REPLY_DCCON_LOADING = "morphe_pref_block_reply_dccon_loading";
     private static final String PREF_RENDER_BIG_DCCON_AS_NORMAL = "morphe_pref_render_big_dccon_as_normal";
     private static final String PREF_HIDE_MINI_GALLERY_COVER_IMAGE = "morphe_pref_hide_mini_gallery_cover_image";
+    private static final String PREF_HIDE_POST_LIST_PAGE_INDICATORS =
+            "morphe_pref_hide_post_list_page_indicators";
+    private static final String PREF_GALLERY_WATCH_MODE = "morphe_pref_gallery_watch_mode";
+    private static final String PREF_GALLERY_WATCH_SOUND = "morphe_pref_gallery_watch_sound";
+    private static final String PREF_GALLERY_WATCH_VIBRATION =
+            "morphe_pref_gallery_watch_vibration";
     private static final String PREF_RESTORE_LEGACY_POST_ICONS = "morphe_pref_restore_legacy_post_icons";
     private static final String PREF_SHOW_POST_HISTORY_AUTHOR_IDENTIFIER =
             "morphe_pref_show_post_history_author_identifier";
@@ -154,6 +162,10 @@ public final class SettingsActivity extends Activity {
             bindSwitchIfIncluded(PREF_BLOCK_REPLY_DCCON_LOADING, Settings.BLOCK_REPLY_DCCON_LOADING, DisableDcconLoadingPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_RENDER_BIG_DCCON_AS_NORMAL, Settings.RENDER_BIG_DCCON_AS_NORMAL, RenderBigDcconAsNormalPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_HIDE_MINI_GALLERY_COVER_IMAGE, Settings.HIDE_MINI_GALLERY_COVER_IMAGE, HideMiniGalleryCoverImagePatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_HIDE_POST_LIST_PAGE_INDICATORS, Settings.HIDE_POST_LIST_PAGE_INDICATORS, HidePostListPageIndicatorsPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_GALLERY_WATCH_MODE, Settings.GALLERY_WATCH_MODE, GalleryWatchModePatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_GALLERY_WATCH_SOUND, Settings.GALLERY_WATCH_SOUND, GalleryWatchModePatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_GALLERY_WATCH_VIBRATION, Settings.GALLERY_WATCH_VIBRATION, GalleryWatchModePatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_RESTORE_LEGACY_POST_ICONS, Settings.RESTORE_LEGACY_POST_ICONS, RestoreOldPostIconsPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_SHOW_POST_AUTHOR_IDENTIFIER, Settings.SHOW_POST_AUTHOR_IDENTIFIER, AuthorIdentifierPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_SHOW_COMMENT_AUTHOR_IDENTIFIER, Settings.SHOW_COMMENT_AUTHOR_IDENTIFIER, AuthorIdentifierPatch.isCommentPatchIncluded());

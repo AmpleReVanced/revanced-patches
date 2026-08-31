@@ -27,6 +27,14 @@ public final class Settings extends BaseSettings {
             new BooleanSetting("dcinside_render_big_dccon_as_normal", FALSE);
     public static final BooleanSetting HIDE_MINI_GALLERY_COVER_IMAGE =
             new BooleanSetting("dcinside_hide_mini_gallery_cover_image", FALSE);
+    public static final BooleanSetting HIDE_POST_LIST_PAGE_INDICATORS =
+            new BooleanSetting("dcinside_hide_post_list_page_indicators", TRUE);
+    public static final BooleanSetting GALLERY_WATCH_MODE =
+            new BooleanSetting("dcinside_gallery_watch_mode", TRUE);
+    public static final BooleanSetting GALLERY_WATCH_SOUND =
+            new BooleanSetting("dcinside_gallery_watch_sound", FALSE);
+    public static final BooleanSetting GALLERY_WATCH_VIBRATION =
+            new BooleanSetting("dcinside_gallery_watch_vibration", FALSE);
     public static final BooleanSetting RESTORE_LEGACY_POST_ICONS =
             new BooleanSetting("dcinside_restore_legacy_post_icons", FALSE);
     public static final BooleanSetting HIDE_HOME_SEARCH_MENU =
@@ -88,6 +96,22 @@ public final class Settings extends BaseSettings {
 
     public static boolean hideMiniGalleryCoverImage() {
         return HIDE_MINI_GALLERY_COVER_IMAGE.get();
+    }
+
+    public static boolean hidePostListPageIndicators() {
+        return HIDE_POST_LIST_PAGE_INDICATORS.get();
+    }
+
+    public static boolean galleryWatchMode() {
+        return GALLERY_WATCH_MODE.get();
+    }
+
+    public static boolean galleryWatchSound() {
+        return GALLERY_WATCH_SOUND.get();
+    }
+
+    public static boolean galleryWatchVibration() {
+        return GALLERY_WATCH_VIBRATION.get();
     }
 
     public static boolean restoreLegacyPostIcons() {

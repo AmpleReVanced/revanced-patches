@@ -34,12 +34,6 @@ private val receiveAmountParameters = listOf(
     FUNCTION0_CLASS,
 )
 
-internal object TongPowReceiveAmountFingerprint : Fingerprint(
-    returnType = VOID_TYPE,
-    parameters = receiveAmountParameters,
-    strings = listOf("channelId", "claimId", "onSuccess"),
-)
-
 internal object TongPowManualClaimFingerprint : Fingerprint(
     returnType = BOOLEAN_TYPE,
     parameters = listOf("L", STATE_CLASS, "L"),
@@ -110,6 +104,6 @@ internal fun Method.findPopupTimerCallIndexOrNull(
 internal fun Method.instructionMethodReference(index: Int): MethodReference? =
     implementation?.instructions?.toList()?.getOrNull(index)?.getReference()
 
-private val MethodReference.isReceiveAmountCall: Boolean
+internal val MethodReference.isReceiveAmountCall: Boolean
     get() = returnType == VOID_TYPE &&
         parameterTypeNames == receiveAmountParameters

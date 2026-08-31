@@ -1,3 +1,167 @@
+# [1.4.0-dev.20](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.19...v1.4.0-dev.20) (2026-08-31)
+
+
+### Bug Fixes
+
+* **kakaotalk:** keep keyword log room icon visible ([2bf3704](https://github.com/AmpleReVanced/revanced-patches/commit/2bf3704cab70b2b0c3970a9d194e0f5e6d0778a7))
+
+# [1.4.0-dev.19](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.18...v1.4.0-dev.19) (2026-08-31)
+
+
+### Bug Fixes
+
+* **kakaotalk:** refresh keyword log room on notification ([2203ed7](https://github.com/AmpleReVanced/revanced-patches/commit/2203ed742552aefe03d5dcea530e1aec3fccd928))
+
+# [1.4.0-dev.18](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.17...v1.4.0-dev.18) (2026-08-31)
+
+
+### Features
+
+* **chzzk:** support version `3.12.1` ([3623c18](https://github.com/AmpleReVanced/revanced-patches/commit/3623c18029c7df0a64769550f3b1d61bc3a28d14))
+* **flexcil:** support version `1.5.0.9` ([9ac4227](https://github.com/AmpleReVanced/revanced-patches/commit/9ac4227df8df2f47b61f105b032701697521037e))
+
+# [1.4.0-dev.17](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.16...v1.4.0-dev.17) (2026-08-31)
+
+
+### Features
+
+* **dcinside:** support version `5.3.4` ([9e32e72](https://github.com/AmpleReVanced/revanced-patches/commit/9e32e72c224950cbdcbff690c43ae5b337759ec3))
+
+# [1.4.0-dev.16](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.15...v1.4.0-dev.16) (2026-08-30)
+
+
+### Bug Fixes
+
+* **kakaotalk:** show block and kick actions for open chat managers ([708520d](https://github.com/AmpleReVanced/revanced-patches/commit/708520dd8e76f9a71441b6cecce96e009521cf4e))
+
+
+### Features
+
+* **kakaotalk:** allow editing thread replies from the main chat ([b47bc80](https://github.com/AmpleReVanced/revanced-patches/commit/b47bc80eab29bf53c57635fb8c5c9062a84b77c5))
+* **kakaotalk:** allow open chat managers to block members ([213ae11](https://github.com/AmpleReVanced/revanced-patches/commit/213ae1122213510d3f0bc3f3826ccf88aaf534ca))
+
+# [1.4.0-dev.15](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.14...v1.4.0-dev.15) (2026-08-27)
+
+
+### Features
+
+* **chzzk:** support version `3.11.1` ([7771042](https://github.com/AmpleReVanced/revanced-patches/commit/7771042987286b523c239fe52c120003a61d956a))
+* **flexcil:** support version `1.5.0.8` ([2d74769](https://github.com/AmpleReVanced/revanced-patches/commit/2d7476938cc2adf2141b5ff1a322a4504c54081b))
+* **soop:** support version `8.29.3` ([848695f](https://github.com/AmpleReVanced/revanced-patches/commit/848695f07bc8662217992a28a7882b1ae0049df7))
+
+# [1.4.0-dev.14](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.13...v1.4.0-dev.14) (2026-08-27)
+
+
+### Features
+
+* **kakaotalk:** support version `26.7.2` ([e580958](https://github.com/AmpleReVanced/revanced-patches/commit/e580958b977cc7cb0840e91354d41b74e5a539c4))
+
+# [1.4.0-dev.13](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.12...v1.4.0-dev.13) (2026-08-24)
+
+
+### Features
+
+* **samsung-keyboard:** restore clipboard and GIF on non-One UI ROMs ([41d2db3](https://github.com/AmpleReVanced/revanced-patches/commit/41d2db3ae5208c89493521d73200719672d25da9))
+
+# [1.4.0-dev.12](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.11...v1.4.0-dev.12) (2026-08-22)
+
+
+### Bug Fixes
+
+* **kakaotalk:** address global-region ad review ([add04cb](https://github.com/AmpleReVanced/revanced-patches/commit/add04cb0c293d74404ebbfab31b00c515893d71a))
+
+
+### Features
+
+* **kakaotalk:** disable global-region list ads ([d891bb2](https://github.com/AmpleReVanced/revanced-patches/commit/d891bb2222ebeb8242b9e225c15046b207c5323d))
+
+# [1.4.0-dev.11](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.10...v1.4.0-dev.11) (2026-08-16)
+
+
+### Bug Fixes
+
+* **samsung-keyboard:** restore keyboard preview in size settings ([dc4be94](https://github.com/AmpleReVanced/revanced-patches/commit/dc4be947ec14b306c3287636ae8b502369dd6d8b))
+
+# [1.4.0-dev.10](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.9...v1.4.0-dev.10) (2026-08-16)
+
+
+### Bug Fixes
+
+* **dcinside:** prevent crash when hiding search result page indicators ([744ae6c](https://github.com/AmpleReVanced/revanced-patches/commit/744ae6c02e20fd6ff6d729239b8f30f53e247d55))
+
+# [1.4.0-dev.9](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.8...v1.4.0-dev.9) (2026-08-16)
+
+
+### Bug Fixes
+
+* **samsung-keyboard:** avoid caching system-managed IME settings ([d9659ef](https://github.com/AmpleReVanced/revanced-patches/commit/d9659efbe78a078abbb5c03c265aaafb49bc3d9a))
+* **samsung-keyboard:** bundle Quram GIF encoder library ([f829bbb](https://github.com/AmpleReVanced/revanced-patches/commit/f829bbbba9a0b0b9971c21806285af501b1ff9ca))
+* **samsung-keyboard:** match navigation bar color with keyboard ([6d346fe](https://github.com/AmpleReVanced/revanced-patches/commit/6d346fe8780368592bf85f1104c6f6b633826d6d))
+
+# [1.4.0-dev.8](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.7...v1.4.0-dev.8) (2026-08-16)
+
+
+### Bug Fixes
+
+* **samsung-keyboard:** apply situation volume to key sounds ([c883844](https://github.com/AmpleReVanced/revanced-patches/commit/c883844f857bcef032d10c085d94b0f7afbdfbcf))
+* **samsung-keyboard:** preserve activity transition animations ([2c7b5da](https://github.com/AmpleReVanced/revanced-patches/commit/2c7b5dadbe802e1a55108416ae0e388ffd82edf9))
+
+
+### Features
+
+* **samsung-keyboard:** map Samsung haptics to Android effects ([bc35095](https://github.com/AmpleReVanced/revanced-patches/commit/bc35095588fec47dc5a5ae7b8ac182d5b6446459))
+
+# [1.4.0-dev.7](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.6...v1.4.0-dev.7) (2026-08-16)
+
+
+### Features
+
+* **samsung-keyboard:** add support for non-One UI ROMs ([45fb3e6](https://github.com/AmpleReVanced/revanced-patches/commit/45fb3e67bd7b57812d8180515cdfb86f1614bffd))
+
+# [1.4.0-dev.6](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.5...v1.4.0-dev.6) (2026-08-15)
+
+
+### Features
+
+* **dcinside:** add gallery watch mode ([77f2208](https://github.com/AmpleReVanced/revanced-patches/commit/77f2208e123774a60ee81c4c3be79feaaf708b3d))
+* **dcinside:** add Hide post list page indicators patch ([afeba91](https://github.com/AmpleReVanced/revanced-patches/commit/afeba91b2753fd3dbc5e0f887ba6f7a846dd58e7))
+
+# [1.4.0-dev.5](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.4...v1.4.0-dev.5) (2026-08-14)
+
+
+### Features
+
+* **kakaotalk:** support version `26.7.1` ([b4f37e7](https://github.com/AmpleReVanced/revanced-patches/commit/b4f37e702ddb647d285bf66941807091352ca3d9))
+
+# [1.4.0-dev.4](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.3...v1.4.0-dev.4) (2026-08-10)
+
+
+### Features
+
+* **kakaotalk:** add Ignore forward restriction patch ([3ee7bc4](https://github.com/AmpleReVanced/revanced-patches/commit/3ee7bc45f786f2641559103bb05c359754757477))
+
+# [1.4.0-dev.3](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.2...v1.4.0-dev.3) (2026-08-10)
+
+
+### Features
+
+* **kakaotalk:** add Show messages restricted to mobile patch ([53d2525](https://github.com/AmpleReVanced/revanced-patches/commit/53d2525815aab006e2bc8c3134fe4bc42e995508))
+
+# [1.4.0-dev.2](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.1...v1.4.0-dev.2) (2026-08-10)
+
+
+### Features
+
+* **shared:** let patches opt in to replacing existing string resources ([5d1285e](https://github.com/AmpleReVanced/revanced-patches/commit/5d1285e16b4eeeb9639f5cbc110ada449827bc67))
+
+# [1.4.0-dev.1](https://github.com/AmpleReVanced/revanced-patches/compare/v1.3.0...v1.4.0-dev.1) (2026-08-09)
+
+
+### Features
+
+* **kakaotalk:** add Restore keyword notification log patch ([fddd520](https://github.com/AmpleReVanced/revanced-patches/commit/fddd520afd62f29d714833543893175857c29c49))
+* **shared:** also disable the Sentry NDK integration and its scope sync ([1025cea](https://github.com/AmpleReVanced/revanced-patches/commit/1025ceaaf4147173fc7a39cb4c49face70ea5ddc))
+
 # [1.3.0](https://github.com/AmpleReVanced/revanced-patches/compare/v1.2.0...v1.3.0) (2026-08-08)
 
 

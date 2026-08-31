@@ -44,8 +44,9 @@ Second \"item\" text"</string>
     <string name="morphe_kakaotalk_channel_id_copied">Channel ID copied</string>
     <string name="morphe_label_for_ample_settings">Morphe Settings</string>
     <string name="morphe_settings_section_chat">Chat</string>
-    <string name="morphe_settings_section_navigation">Navigation</string>
+    <string name="morphe_settings_section_navigation">Appearance &amp; navigation</string>
     <string name="morphe_settings_section_features">Features</string>
+    <string name="morphe_settings_section_advanced">Advanced</string>
     <string name="morphe_settings_section_support">Support</string>
     <string name="morphe_settings_section_information">Information</string>
     <string name="morphe_settings_app_version">App version</string>
@@ -159,4 +160,7 @@ Second \"item\" text"</string>
     <string name="morphe_settings_patch_strip_image_metadata">Strip metadata from sent images</string>
     <string name="morphe_settings_patch_strip_image_metadata_summary">Removes EXIF metadata, including GPS location, from images sent in original quality.</string>
     <string name="morphe_pref_strip_image_metadata_summary">Removes EXIF metadata, including GPS location, from images sent in original quality.</string>
+    <string name="morphe_settings_patch_restore_keyword_log">Restore keyword notification log</string>
+    <string name="morphe_pref_restore_keyword_log_summary">Collects messages that match your notification keywords and restores the removed list, including its chat list entry.</string>
+    <string name="morphe_kakaotalk_keyword_log_sort_latest">Latest</string>
 </resources>

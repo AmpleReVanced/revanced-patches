@@ -11,6 +11,13 @@
     <string name="morphe_settings_render_big_dccon_as_normal_summary">Shows big DCCon images at the regular DCCon size.</string>
     <string name="morphe_settings_hide_mini_gallery_cover_image">Hide mini gallery cover image</string>
     <string name="morphe_settings_hide_mini_gallery_cover_image_summary">Hides the mini gallery cover image shown above the post list.</string>
+    <string name="morphe_settings_hide_post_list_page_indicators">Hide post list page indicators</string>
+    <string name="morphe_settings_hide_post_list_page_indicators_summary">Hides the Page N indicators shown between pages in post lists.</string>
+    <string name="morphe_gallery_watch_screen_title">Gallery watch</string>
+    <string name="morphe_gallery_watch_screen_summary">Configure gallery monitoring and new-post alerts.</string>
+    <string name="morphe_pref_gallery_watch_mode_title">Enable gallery watch mode</string>
+    <string name="morphe_pref_gallery_watch_sound_title">Play sound for new posts</string>
+    <string name="morphe_pref_gallery_watch_vibration_title">Vibrate for new posts</string>
     <string name="morphe_settings_restore_legacy_post_icons">Restore old post icons</string>
     <string name="morphe_settings_restore_legacy_post_icons_summary">Uses the DCInside 4.7.x photo, video, and recommended-post icons in post lists and post bodies.</string>
     <string name="morphe_settings_section_home_screen">Home screen</string>
@@ -87,6 +94,10 @@
     <string name="morphe_pref_restore_legacy_post_icons_summary">Uses the DCInside 4.7.x photo, video, and recommended-post icons in post lists and post bodies.</string>
     <string name="morphe_pref_hide_official_notices_summary">Removes DCInside operator notices from gallery notice lists.</string>
     <string name="morphe_pref_hide_mini_gallery_cover_image_summary">Hides the mini gallery cover image shown above the post list.</string>
+    <string name="morphe_pref_hide_post_list_page_indicators_summary">Hides the Page N indicators shown between pages in post lists.</string>
+    <string name="morphe_pref_gallery_watch_mode_summary">When the app\'s auto-refresh is enabled for a gallery, removes its time limit and highlights newly arrived posts while the gallery is open.</string>
+    <string name="morphe_pref_gallery_watch_sound_summary">Plays the notification sound when gallery watch mode finds new posts.</string>
+    <string name="morphe_pref_gallery_watch_vibration_summary">Vibrates when gallery watch mode finds new posts.</string>
     <string name="morphe_pref_debug_summary">Writes additional diagnostic logs for Morphe patches.</string>
     <string name="morphe_pref_debug_stacktrace_summary">Includes full stack traces in error reports.</string>
     <string name="morphe_pref_debug_toast_summary">Shows an on-screen toast when the extension catches an error.</string>
@@ -101,4 +112,5 @@
     <string name="morphe_post_history_gallery_filter">Gallery</string>
     <string name="morphe_post_history_gallery_filter_title">Filter by gallery</string>
     <string name="morphe_post_history_gallery_filter_all">All</string>
+    <string name="morphe_gallery_watch_new_posts">Found %1$d new posts.</string>
 </resources>

@@ -20,6 +20,7 @@ import app.morphe.extension.shared.settings.StringSetting;
 import app.morphe.extension.shared.settings.preference.MorphePreferenceStyle;
 import app.morphe.extension.shared.settings.preference.SettingsActivityLayout;
 import app.morphe.extension.shared.settings.preference.ToolbarPreferenceFragment;
+import app.revanced.extension.kakaotalk.keywordlog.KeywordLogPatch;
 import app.revanced.extension.kakaotalk.patches.AllowInvisibleCharactersPatch;
 import app.revanced.extension.kakaotalk.patches.AllowProfileMediaDownloadPatch;
 import app.revanced.extension.kakaotalk.patches.AllowReplyToFeedPatch;
@@ -42,6 +43,7 @@ import app.revanced.extension.kakaotalk.patches.ShowMessageReadReceiptsPatch;
 
 public final class SettingsActivity extends Activity {
     private static final String PREF_GHOST_MODE = "morphe_pref_ghost_mode";
+    private static final String PREF_RESTORE_KEYWORD_LOG = "morphe_pref_restore_keyword_log";
     private static final String PREF_SHOW_MODIFIED_MESSAGE_SENDER_PROFILE =
             "morphe_pref_show_modified_message_sender_profile";
     private static final String PREF_BLOCK_MODIFIED_MESSAGE_REACTION =
@@ -134,6 +136,7 @@ public final class SettingsActivity extends Activity {
             RESTART_SENSITIVE_PREFERENCES.add(PREF_HIDE_MORE_TAB_LINE_SERVICE_SECTION);
             RESTART_SENSITIVE_PREFERENCES.add(PREF_FORCE_DEBUG_MODE);
             RESTART_SENSITIVE_PREFERENCES.add(PREF_BYPASS_MOAT_INTEGRITY_CHECK);
+            RESTART_SENSITIVE_PREFERENCES.add(PREF_RESTORE_KEYWORD_LOG);
         }
 
         @Override
@@ -161,6 +164,7 @@ public final class SettingsActivity extends Activity {
             bindSwitchIfIncluded(PREF_BLOCK_MODIFIED_MESSAGE_REPLY, Settings.BLOCK_MODIFIED_MESSAGE_REPLY, BlockModifiedMessageReplyPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_ALLOW_REPLY_TO_FEED, Settings.ALLOW_REPLY_TO_FEED, AllowReplyToFeedPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_SHOW_MESSAGE_READ_RECEIPTS, Settings.SHOW_MESSAGE_READ_RECEIPTS, ShowMessageReadReceiptsPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_RESTORE_KEYWORD_LOG, Settings.RESTORE_KEYWORD_LOG, KeywordLogPatch.isPatchIncluded());
             bindRiskySwitchIfIncluded(PREF_BYPASS_MOAT_INTEGRITY_CHECK, Settings.BYPASS_MOAT_INTEGRITY_CHECK, BypassMoatCheckPatch.isPatchIncluded());
             bindTextIfIncluded(PREF_FEATURE_FLAG_OVERRIDES, Settings.FEATURE_FLAG_OVERRIDES, OverrideFeatureFlagPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_FORCE_DEBUG_MODE, Settings.FORCE_DEBUG_MODE, ForceEnableDebugModePatch.isPatchIncluded());

@@ -4,7 +4,6 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLa
 import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.chzzk.shared.Constants.COMPATIBILITY_CHZZK
 import app.revanced.util.smaliReference
-import com.android.tools.smali.dexlib2.iface.ClassDef
 
 @Suppress("unused")
 val autoClaimTongPowPatch = bytecodePatch(
@@ -14,16 +13,20 @@ val autoClaimTongPowPatch = bytecodePatch(
     compatibleWith(COMPATIBILITY_CHZZK)
 
     execute {
-        val classDefsByType = mutableMapOf<String, ClassDef>()
-        classDefForEach { classDef ->
-            classDefsByType[classDef.type] = classDef
-        }
-
         val insertion = TongPowAutoClaimInsertion.resolve(
-            classDefsByType = classDefsByType,
+            popupEventCollectorClass = TongPowPopupEventCollectorFingerprint.originalClassDef,
             popupEventCollectorMethod = TongPowPopupEventCollectorFingerprint.method,
             manualClaimMethod = TongPowManualClaimFingerprint.method,
-            receiveAmountMethod = TongPowReceiveAmountFingerprint.method,
+        )
+
+        insertion.method.addInstructionsWithLabels(
+            insertion.showPopupIndex + 1,
+            """
+                if-eqz v${insertion.registers.flag}, :auto_claim_tong_pow_hide_skip
+                invoke-virtual/range {v${insertion.showPopupReceiverRegister} .. v${insertion.showPopupReceiverRegister}}, ${insertion.manualClaim.hidePopup.smaliReference}
+                :auto_claim_tong_pow_hide_skip
+                nop
+            """.trimIndent(),
         )
 
         insertion.method.addInstructionsWithLabels(
@@ -39,17 +42,6 @@ val autoClaimTongPowPatch = bytecodePatch(
                 invoke-virtual {v${insertion.registers.scratch}, v${insertion.channelIdRegister}, v${insertion.claimIdRegister}, v${insertion.registers.callback}}, ${insertion.manualClaim.receiveAmount.smaliReference}
                 const/4 v${insertion.registers.flag}, 0x1
                 :auto_claim_tong_pow_skip
-                nop
-            """.trimIndent(),
-        )
-
-        insertion.method.addInstructionsWithLabels(
-            insertion.showPopupIndex + 1,
-            """
-                if-eqz v${insertion.registers.flag}, :auto_claim_tong_pow_hide_skip
-                iget-object v${insertion.registers.scratch}, v0, ${insertion.popupViewModelField.smaliReference}
-                invoke-virtual {v${insertion.registers.scratch}}, ${insertion.manualClaim.hidePopup.smaliReference}
-                :auto_claim_tong_pow_hide_skip
                 nop
             """.trimIndent(),
         )

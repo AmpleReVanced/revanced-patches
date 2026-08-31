@@ -13,7 +13,7 @@ internal object CheatKeyStatusFingerprint : Fingerprint(
 internal object StreamingChannelMyInfoFingerprint : Fingerprint(
     returnType = "Ljava/lang/String;",
     strings = listOf(
-        "StreamingChannelMyInfo(_userRole=",
+        "StreamingChannelMyInfo(",
         ", cheatKey=",
     ),
 )
