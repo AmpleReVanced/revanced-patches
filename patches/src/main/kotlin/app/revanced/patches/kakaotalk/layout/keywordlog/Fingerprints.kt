@@ -17,6 +17,9 @@ internal const val FRIEND_CLASS = "Lcom/kakao/talk/db/model/Friend;"
 internal const val PROFILE_VIEW_CLASS = "Lcom/kakao/talk/widget/ProfileView;"
 internal const val CHAT_ROOM_PROFILE_DATA_CLASS = "Lcom/kakao/talk/widget/ChatRoomProfileData;"
 internal const val SQUIRCLE_DRAWABLE_CLASS = "Lcom/kakao/talk/widget/SquircleBitmapDrawable;"
+private const val CHAT_ROOM_PROFILE_DATA_KT_CLASS = "Lcom/kakao/talk/widget/ChatRoomProfileDataKt;"
+private const val CHAT_ROOM_PROFILE_OBJECT_CLASS = "Lcom/kakao/talk/widget/ProfileObject\$ChatRoom;"
+private const val PROFILE_OBJECT_CLASS = "Lcom/kakao/talk/widget/ProfileObject;"
 
 internal fun keywordMatchCallSiteFingerprint(matchMethod: Method) = Fingerprint(
     filters = listOf(
@@ -182,6 +185,22 @@ internal object ChatRoomProfileFingerprint : Fingerprint(
     name = "loadChatRoom",
     returnType = "V",
     parameters = listOf(CHAT_ROOM_PROFILE_DATA_CLASS, "Lcom/kakao/talk/widget/ProfileView\$ImageQuality;"),
+    filters = listOf(
+        methodCall(
+            definingClass = CHAT_ROOM_PROFILE_DATA_KT_CLASS,
+            name = "toProfileObject",
+            parameters = listOf(CHAT_ROOM_PROFILE_DATA_CLASS),
+            returnType = CHAT_ROOM_PROFILE_OBJECT_CLASS,
+            opcode = Opcode.INVOKE_STATIC,
+        ),
+        opcode(Opcode.MOVE_RESULT_OBJECT, location = MatchAfterImmediately()),
+        fieldAccess(
+            definingClass = PROFILE_VIEW_CLASS,
+            type = PROFILE_OBJECT_CLASS,
+            opcode = Opcode.IPUT_OBJECT,
+            location = MatchAfterImmediately(),
+        ),
+    ),
 )
 
 internal object ChatRoomItemClickFingerprint : Fingerprint(

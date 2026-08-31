@@ -480,12 +480,15 @@ private fun MutableMethod.overrideKeywordLogTitle(
     )
 }
 
-private fun MutableMethod.returnVoidWhenHandled(helperDescriptor: String) {
-    val provider = getFreeRegisterProvider(0, 1)
+private fun MutableMethod.returnVoidWhenHandled(
+    helperDescriptor: String,
+    index: Int = 0,
+) {
+    val provider = getFreeRegisterProvider(index, 1)
     val handledRegister = provider.getFreeRegister4Bit()
 
     addInstructionsWithLabels(
-        0,
+        index,
         """
             invoke-static {p0, p1}, $helperDescriptor
             move-result v$handledRegister
@@ -526,8 +529,10 @@ private fun BytecodePatchContext.hookChatRoomProfile(
         """,
     )
 
+    val profileInitializedIndex = ChatRoomProfileFingerprint.instructionMatches[2].index + 1
     ChatRoomProfileFingerprint.method.returnVoidWhenHandled(
         "$PROFILE_VIEW_CLASS->$LOAD_PROFILE_METHOD($PROFILE_VIEW_CLASS$CHAT_ROOM_PROFILE_DATA_CLASS)Z",
+        profileInitializedIndex,
     )
 }
 
