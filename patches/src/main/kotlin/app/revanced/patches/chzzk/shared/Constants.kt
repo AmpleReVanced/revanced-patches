@@ -8,7 +8,7 @@ object Constants {
     val COMPATIBILITY_CHZZK = Compatibility(
         name = "Chzzk",
         packageName = "com.navercorp.game.android.community",
-        apkFileType = ApkFileType.XAPK,
+        apkFileType = ApkFileType.APKM,
         appIconColor = 0x00FFA3,
         targets = listOf(
             AppTarget(
