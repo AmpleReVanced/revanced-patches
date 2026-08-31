@@ -1,3 +1,10 @@
+# [1.4.0-dev.19](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.18...v1.4.0-dev.19) (2026-08-31)
+
+
+### Bug Fixes
+
+* **kakaotalk:** refresh keyword log room on notification ([2203ed7](https://github.com/AmpleReVanced/revanced-patches/commit/2203ed742552aefe03d5dcea530e1aec3fccd928))
+
 # [1.4.0-dev.18](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.17...v1.4.0-dev.18) (2026-08-31)
 
 
