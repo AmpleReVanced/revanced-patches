@@ -1,6 +1,7 @@
 package app.revanced.patches.dcinside.layout.dccon
 
 import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.string
 import app.morphe.util.getReference
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
@@ -10,10 +11,10 @@ internal object PostDcconImageHandlerFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PRIVATE, AccessFlags.STATIC, AccessFlags.FINAL),
     parameters = listOf("L", "L"),
     returnType = "V",
-    strings = listOf(
-        "dccon",
-        "dccondetail",
-        "groupIndex",
+    filters = listOf(
+        string("dccondetail"),
+        string("dccon"),
+        string("groupIndex"),
     ),
 )
 

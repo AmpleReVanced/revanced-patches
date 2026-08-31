@@ -96,15 +96,13 @@ internal fun MutableMethod.inferPostElementMethods(context: BytecodePatchContext
 internal fun MutableMethod.inferReplyDcconImageFields(holderMethods: Iterable<MutableMethod>): List<FieldReference> {
     val helperReferences = instructions.mapNotNull { instruction ->
         val reference = instruction.getReference<MethodReference>() ?: return@mapNotNull null
+        val parameterTypes = reference.parameterTypes.map { it.toString() }
         reference.takeIf {
             it.definingClass == definingClass &&
                 it.returnType == "V" &&
-                (
-                    it.parameterTypes.map { parameter -> parameter.toString() } ==
-                        listOf("Lcom/dcinside/app/dccon/b;") ||
-                        it.parameterTypes.map { parameter -> parameter.toString() } ==
-                        listOf("Lcom/dcinside/app/dccon/b;", "Z")
-                    )
+                parameterTypes.isNotEmpty() &&
+                parameterTypes.size <= 2 &&
+                parameterTypes.drop(1).all { parameter -> parameter == "Z" }
         }
     }.distinctBy { it.signatureKey }
 

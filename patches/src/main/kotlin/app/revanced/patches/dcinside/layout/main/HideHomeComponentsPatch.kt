@@ -29,7 +29,6 @@ private const val CONTEXT_TYPE = "Landroid/content/Context;"
 private const val ATTRIBUTE_SET_TYPE = "Landroid/util/AttributeSet;"
 private const val VIEW_GROUP_TYPE = "Landroid/view/ViewGroup;"
 private const val RECYCLER_VIEW_HOLDER_TYPE = "Landroidx/recyclerview/widget/RecyclerView\$ViewHolder;"
-private const val KOTLIN_DEFAULT_MARKER_TYPE = "Lkotlin/jvm/internal/w;"
 
 @Suppress("unused")
 val hideHomeComponentsPatch = bytecodePatch(
@@ -148,10 +147,20 @@ private data class BranchBlock(
 
     fun hasAnyDirectLayout(layoutIds: Set<Int>) = layoutIds.any(::hasDirectLayout)
 
-    fun hasConstructorWithParameters(vararg parameterTypes: String) =
+    fun hasSyntheticConstructorWithParameters(
+        context: BytecodePatchContext,
+        vararg parameterTypes: String,
+    ) =
         methodReferences.any { reference ->
             reference.name == "<init>" &&
-                reference.parameterTypes.map { it.toString() } == parameterTypes.toList()
+                reference.parameterTypes.size == parameterTypes.size + 1 &&
+                reference.parameterTypes.dropLast(1).map { it.toString() } == parameterTypes.toList() &&
+                context.classDefByOrNull(reference.definingClass)?.methods?.any { method ->
+                    method.name == reference.name &&
+                        method.parameterTypes.map { it.toString() } ==
+                        reference.parameterTypes.map { it.toString() } &&
+                        AccessFlags.SYNTHETIC.isSet(method.accessFlags)
+                } == true
         }
 }
 
@@ -242,12 +251,12 @@ private fun MutableMethod.inferHomeComponentTypes(
             it.hasDirectLayout(resources.recommendedGalleriesLayout)
         },
         galleryRanking = findType("gallery ranking") {
-            it.hasConstructorWithParameters(
+            it.hasSyntheticConstructorWithParameters(
+                context,
                 CONTEXT_TYPE,
                 ATTRIBUTE_SET_TYPE,
                 "I",
                 "I",
-                KOTLIN_DEFAULT_MARKER_TYPE,
             )
         },
         liveFilter = findType("live best filter") {
