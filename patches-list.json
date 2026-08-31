@@ -1,5 +1,5 @@
 {
-  "version": "1.4.0-dev.17",
+  "version": "1.4.0-dev.18",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -491,10 +491,16 @@
           "packageName": "com.navercorp.game.android.community",
           "name": "Chzzk",
           "description": null,
-          "apkFileType": "XAPK",
+          "apkFileType": "APKM",
           "appIconColor": "#00FFA3",
           "signatures": null,
           "targets": [
+            {
+              "version": "3.12.1",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            },
             {
               "version": "3.11.1",
               "isExperimental": false,
@@ -663,6 +669,12 @@
           "appIconColor": "#0096FA",
           "signatures": null,
           "targets": [
+            {
+              "version": "1.5.0.9",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            },
             {
               "version": "1.5.0.8",
               "isExperimental": false,
@@ -1328,10 +1340,16 @@
           "packageName": "com.navercorp.game.android.community",
           "name": "Chzzk",
           "description": null,
-          "apkFileType": "XAPK",
+          "apkFileType": "APKM",
           "appIconColor": "#00FFA3",
           "signatures": null,
           "targets": [
+            {
+              "version": "3.12.1",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            },
             {
               "version": "3.11.1",
               "isExperimental": false,
@@ -1612,10 +1630,16 @@
           "packageName": "com.navercorp.game.android.community",
           "name": "Chzzk",
           "description": null,
-          "apkFileType": "XAPK",
+          "apkFileType": "APKM",
           "appIconColor": "#00FFA3",
           "signatures": null,
           "targets": [
+            {
+              "version": "3.12.1",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            },
             {
               "version": "3.11.1",
               "isExperimental": false,
@@ -2108,10 +2132,16 @@
           "packageName": "com.navercorp.game.android.community",
           "name": "Chzzk",
           "description": null,
-          "apkFileType": "XAPK",
+          "apkFileType": "APKM",
           "appIconColor": "#00FFA3",
           "signatures": null,
           "targets": [
+            {
+              "version": "3.12.1",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            },
             {
               "version": "3.11.1",
               "isExperimental": false,
@@ -3344,6 +3374,12 @@
           "signatures": null,
           "targets": [
             {
+              "version": "1.5.0.9",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            },
+            {
               "version": "1.5.0.8",
               "isExperimental": false,
               "minSdk": null,
@@ -3394,10 +3430,16 @@
           "packageName": "com.navercorp.game.android.community",
           "name": "Chzzk",
           "description": null,
-          "apkFileType": "XAPK",
+          "apkFileType": "APKM",
           "appIconColor": "#00FFA3",
           "signatures": null,
           "targets": [
+            {
+              "version": "3.12.1",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            },
             {
               "version": "3.11.1",
               "isExperimental": false,

@@ -1,3 +1,11 @@
+# [1.4.0-dev.18](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.17...v1.4.0-dev.18) (2026-08-31)
+
+
+### Features
+
+* **chzzk:** support version `3.12.1` ([3623c18](https://github.com/AmpleReVanced/revanced-patches/commit/3623c18029c7df0a64769550f3b1d61bc3a28d14))
+* **flexcil:** support version `1.5.0.9` ([9ac4227](https://github.com/AmpleReVanced/revanced-patches/commit/9ac4227df8df2f47b61f105b032701697521037e))
+
 # [1.4.0-dev.17](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.16...v1.4.0-dev.17) (2026-08-31)
 
 
