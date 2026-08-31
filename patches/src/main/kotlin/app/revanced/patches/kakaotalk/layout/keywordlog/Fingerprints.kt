@@ -4,6 +4,7 @@ import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.InstructionLocation.MatchAfterImmediately
 import app.morphe.patcher.checkCast
 import app.morphe.patcher.fieldAccess
+import app.morphe.patcher.literal
 import app.morphe.patcher.methodCall
 import app.morphe.patcher.opcode
 import app.morphe.patcher.string
@@ -67,6 +68,24 @@ internal object ChatRoomToStringFingerprint : Fingerprint(
     custom = { _, classDef -> classDef.sourceFile == "ChatRoom.kt" },
 )
 
+internal fun chatRoomLastUpdatedAtInMillisFingerprint(chatRoomType: String) = Fingerprint(
+    definingClass = chatRoomType,
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    returnType = "J",
+    parameters = listOf(),
+    filters = listOf(
+        fieldAccess(
+            definingClass = chatRoomType,
+            type = "I",
+            opcode = Opcode.IGET,
+        ),
+        opcode(Opcode.INT_TO_LONG, location = MatchAfterImmediately()),
+        literal(1000L, location = MatchAfterImmediately()),
+        opcode(Opcode.MUL_LONG_2ADDR, location = MatchAfterImmediately()),
+        opcode(Opcode.RETURN_WIDE, location = MatchAfterImmediately()),
+    ),
+)
+
 internal fun keywordLogListEnumFingerprint(chatRoomTypeEnum: String) = Fingerprint(
     definingClass = chatRoomTypeEnum,
     name = "<clinit>",
@@ -98,6 +117,16 @@ internal object ChatRoomListFilterFingerprint : Fingerprint(
     returnType = "Ljava/util/List;",
     parameters = listOf("Ljava/util/List;"),
     custom = { _, classDef -> classDef.sourceFile == "ChatRoomListFilterExtension.kt" },
+)
+
+internal fun chatRoomListRefreshFingerprint(viewModelType: String) = Fingerprint(
+    definingClass = viewModelType,
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    returnType = "V",
+    parameters = listOf(),
+    filters = listOf(
+        fieldAccess(name = "SORT_CHATROOM", opcode = Opcode.SGET_OBJECT),
+    ),
 )
 
 internal fun generalChatRoomListFilterCallFingerprint(
