@@ -1,3 +1,10 @@
+# [1.4.0-dev.20](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.19...v1.4.0-dev.20) (2026-08-31)
+
+
+### Bug Fixes
+
+* **kakaotalk:** keep keyword log room icon visible ([2bf3704](https://github.com/AmpleReVanced/revanced-patches/commit/2bf3704cab70b2b0c3970a9d194e0f5e6d0778a7))
+
 # [1.4.0-dev.19](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0-dev.18...v1.4.0-dev.19) (2026-08-31)
 
 
