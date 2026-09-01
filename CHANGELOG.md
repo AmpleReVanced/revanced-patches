@@ -1,3 +1,10 @@
+# [1.5.0-dev.2](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.1...v1.5.0-dev.2) (2026-09-01)
+
+
+### Bug Fixes
+
+* **kakaotalk:** jump to the matching keyword alert message ([1cf7f53](https://github.com/AmpleReVanced/revanced-patches/commit/1cf7f533c76077d2207164f9d89f887781e44891))
+
 # [1.5.0-dev.1](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0...v1.5.0-dev.1) (2026-09-01)
 
 
