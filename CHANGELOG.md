@@ -1,3 +1,10 @@
+# [1.5.0-dev.1](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0...v1.5.0-dev.1) (2026-09-01)
+
+
+### Features
+
+* **kakaomap:** add navigation live updates ([de3b9a2](https://github.com/AmpleReVanced/revanced-patches/commit/de3b9a2f311d13c5298fe7215dfda63f0069c0f4))
+
 # [1.4.0](https://github.com/AmpleReVanced/revanced-patches/compare/v1.3.0...v1.4.0) (2026-08-31)
 
 
