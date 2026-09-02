@@ -4,7 +4,7 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START -->
-> **[v1.5.0-dev.2](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.5.0-dev.2)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;118 patches total
+> **[v1.5.0-dev.3](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.5.0-dev.3)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;122 patches total
 <details>
 <summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;71 patches</summary>
 <br>
@@ -162,6 +162,24 @@
 |----------|----------------|-----------|
 | [Bypass login](#bypass-login) | Skips the mandatory account sign-in on launch and opens the app directly. |  |
 | [Unlock Premium features](#unlock-premium-features) | Enables app features locked behind the subscription paywall. |  |
+
+</details>
+
+<details>
+<summary>📦 StarNote&nbsp;&nbsp;•&nbsp;&nbsp;4 patches</summary>
+<br>
+
+**🎯 Supported versions:**
+
+| 🧪&nbsp;1.4.3 |
+| :---: |
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Bypass login](#bypass-login) | Skips the mandatory account sign-in on launch and opens the app directly. |  |
+| [Enable local handwriting search](#enable-local-handwriting-search) | Uses the on-device ML engine to index and search handwriting. |  |
+| [Unlock Premium features](#unlock-premium-features) | Enables app features locked behind the subscription paywall. |  |
+| [Use local ML for Smart HWR](#use-local-ml-for-smart-hwr) | Uses the on-device ML engine instead of SuNia for Smart HWR. |  |
 
 </details>
 
