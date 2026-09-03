@@ -52,11 +52,15 @@ private fun localHandwritingPatch(
     }
 }
 
-private fun ResourcePatchContext.rawResource(name: String) = get("assets")
-    .parentFile
-    .resolve("res/raw/$name")
-    .takeIf { it.isFile }
-    ?: throw PatchException("Missing raw resource: $name")
+private fun ResourcePatchContext.rawResource(name: String): File {
+    val matches = get("assets").parentFile.parentFile.walkTopDown()
+        .filter { it.isFile && it.invariantSeparatorsPath.endsWith("/res/raw/$name") }
+        .toList()
+    if (matches.size != 1) {
+        throw PatchException("Expected one raw resource, found ${matches.size}: $name")
+    }
+    return matches.single()
+}
 
 private fun File.updateJson(block: (JsonObject) -> Unit) {
     val json = JsonParser.parseString(readText()).asJsonObject

@@ -85,8 +85,6 @@ static void patch(uint32_t *code) {
 static void scan_maps(const char *data, size_t size) {
     const char *position = data;
     const char *end = data + size;
-    uint32_t *match = 0;
-    size_t match_count = 0;
     while (position < end) {
         const char *line_end = position;
         while (line_end < end && *line_end != '\n') line_end++;
@@ -101,15 +99,14 @@ static void scan_maps(const char *data, size_t size) {
             uint32_t *code_end = (uint32_t *)(finish - 9 * sizeof(uint32_t));
             while (code <= code_end) {
                 if (matches(code)) {
-                    match = code;
-                    match_count++;
+                    patch(code);
+                    return;
                 }
                 code++;
             }
         }
         position = line_end < end ? line_end + 1 : end;
     }
-    if (match_count == 1) patch(match);
 }
 
 __attribute__((constructor)) static void initialize(void) {
