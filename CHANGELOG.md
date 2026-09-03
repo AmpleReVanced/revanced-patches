@@ -1,3 +1,31 @@
+# [1.5.0-dev.4](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.3...v1.5.0-dev.4) (2026-09-03)
+
+
+### Bug Fixes
+
+* **starnote:** support manager resource layout and restore integrity bypass ([5b80742](https://github.com/AmpleReVanced/revanced-patches/commit/5b80742f91599dd517fdc65f927381b576475f31))
+
+# [1.5.0-dev.3](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.2...v1.5.0-dev.3) (2026-09-02)
+
+
+### Features
+
+* **starnote:** add premium, login, and local handwriting patches ([3d697e3](https://github.com/AmpleReVanced/revanced-patches/commit/3d697e35309a0b57963ec405335ee908b5af3beb))
+
+# [1.5.0-dev.2](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.1...v1.5.0-dev.2) (2026-09-01)
+
+
+### Bug Fixes
+
+* **kakaotalk:** jump to the matching keyword alert message ([1cf7f53](https://github.com/AmpleReVanced/revanced-patches/commit/1cf7f533c76077d2207164f9d89f887781e44891))
+
+# [1.5.0-dev.1](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0...v1.5.0-dev.1) (2026-09-01)
+
+
+### Features
+
+* **kakaomap:** add navigation live updates ([de3b9a2](https://github.com/AmpleReVanced/revanced-patches/commit/de3b9a2f311d13c5298fe7215dfda63f0069c0f4))
+
 # [1.4.0](https://github.com/AmpleReVanced/revanced-patches/compare/v1.3.0...v1.4.0) (2026-08-31)
 
 

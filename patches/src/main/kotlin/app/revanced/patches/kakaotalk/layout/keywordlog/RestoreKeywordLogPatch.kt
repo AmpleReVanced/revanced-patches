@@ -216,9 +216,9 @@ val restoreKeywordLogPatch = bytecodePatch(
         addHelperMethod(
             EXTENSION_CLASS,
             "createChatRoomIntent",
-            listOf("Landroid/content/Context;", "J"),
+            listOf("Landroid/content/Context;", "J", "J"),
             "Landroid/content/Intent;",
-            10,
+            12,
             """
                 sget-object v6, ${managerCompanionField.smaliReference}
                 invoke-virtual {v6}, ${managerInstanceMethod.smaliReference}
@@ -233,6 +233,13 @@ val restoreKeywordLogPatch = bytecodePatch(
                 const/4 v5, 0x0
                 invoke-virtual/range {v0 .. v5}, ${chatRoomIntentMethod.smaliReference}
                 move-result-object v0
+                new-instance v6, Lkotlin/Pair;
+                invoke-static {p3, p4}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+                move-result-object v4
+                const/4 v5, 0x0
+                invoke-direct {v6, v4, v5}, Lkotlin/Pair;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V
+                const-string v4, "jumpTo"
+                invoke-virtual {v0, v4, v6}, Landroid/content/Intent;->putExtra(Ljava/lang/String;Ljava/io/Serializable;)Landroid/content/Intent;
                 return-object v0
                 :unknown
                 const/4 v0, 0x0

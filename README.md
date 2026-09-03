@@ -4,7 +4,7 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START -->
-> **[v1.4.0](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.4.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;117 patches total
+> **[v1.5.0-dev.4](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.5.0-dev.4)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;122 patches total
 <details>
 <summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;71 patches</summary>
 <br>
@@ -166,6 +166,24 @@
 </details>
 
 <details>
+<summary>📦 StarNote&nbsp;&nbsp;•&nbsp;&nbsp;4 patches</summary>
+<br>
+
+**🎯 Supported versions:**
+
+| 🧪&nbsp;1.4.3 |
+| :---: |
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Bypass login](#bypass-login) | Skips the mandatory account sign-in on launch and opens the app directly. |  |
+| [Enable local handwriting search](#enable-local-handwriting-search) | Uses the on-device ML engine to index and search handwriting. |  |
+| [Unlock Premium features](#unlock-premium-features) | Enables app features locked behind the subscription paywall. |  |
+| [Use local ML for Smart HWR](#use-local-ml-for-smart-hwr) | Uses the on-device ML engine instead of SuNia for Smart HWR. |  |
+
+</details>
+
+<details>
 <summary>📦 SOOP&nbsp;&nbsp;•&nbsp;&nbsp;10 patches</summary>
 <br>
 
@@ -186,6 +204,21 @@
 | [Remove live ads](#remove-live-ads) | Removes the live pre-roll ad by routing every ad decision into the app's own no-video path so the stream starts immediately. |  |
 | [Remove live banner ads](#remove-live-banner-ads) | Removes the banner ads shown under the live player by stopping their driver from attaching the banner fragments. |  |
 | [Remove main board ads](#remove-main-board-ads) | Removes the native "main board" banner ad shown in feeds and under the live player. |  |
+
+</details>
+
+<details>
+<summary>📦 KakaoMap&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<br>
+
+**🎯 Supported versions:**
+
+| 🧪&nbsp;6.28.1 |
+| :---: |
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Enable navigation live updates](#enable-navigation-live-updates) | Shows navigation progress with Android Live Updates. |  |
 
 </details>
 
