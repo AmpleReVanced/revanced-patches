@@ -1,3 +1,10 @@
+# [1.5.0-dev.4](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.3...v1.5.0-dev.4) (2026-09-03)
+
+
+### Bug Fixes
+
+* **starnote:** support manager resource layout and restore integrity bypass ([5b80742](https://github.com/AmpleReVanced/revanced-patches/commit/5b80742f91599dd517fdc65f927381b576475f31))
+
 # [1.5.0-dev.3](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.2...v1.5.0-dev.3) (2026-09-02)
 
 
