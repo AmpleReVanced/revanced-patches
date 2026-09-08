@@ -53,20 +53,18 @@ val enableNavigationLiveUpdatesPatch = bytecodePatch(
             )
         }
 
-        OngoingActivitySupportFingerprint.method.apply {
-            implementation!!.instructions.mapIndexedNotNull { index, instruction ->
-                if (instruction.opcode == Opcode.RETURN) index else null
-            }.asReversed().forEach { index ->
-                val register = getInstruction<OneRegisterInstruction>(index).registerA
-                addInstructions(
-                    index,
+        NavigationOngoingActivitySupportFingerprint(OngoingActivitySupportFingerprint.method)
+            .matchAll(4..4).forEach { match ->
+                val index = match.instructionMatches[1].index
+                val register = match.method.getInstruction<OneRegisterInstruction>(index).registerA
+                match.method.addInstructions(
+                    index + 1,
                     """
                         invoke-static/range {v$register .. v$register}, $EXTENSION_CLASS->supportsLiveUpdates(Z)Z
                         move-result v$register
                     """.trimIndent(),
                 )
             }
-        }
 
         NotificationBuildFingerprint(
             OngoingActivityExtrasFingerprint.method.parameterTypes[0].toString(),

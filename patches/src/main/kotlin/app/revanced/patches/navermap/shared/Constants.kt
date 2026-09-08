@@ -8,11 +8,11 @@ object Constants {
     val COMPATIBILITY_NAVER_MAP = Compatibility(
         name = "NAVER Map",
         packageName = "com.nhn.android.nmap",
-        apkFileType = ApkFileType.APKM,
+        apkFileType = ApkFileType.XAPK,
         appIconColor = 0x03C75A,
         targets = listOf(
             AppTarget(
-                version = "6.8.0.5",
+                version = "6.9.1.3",
                 isExperimental = true
             ),
         ),

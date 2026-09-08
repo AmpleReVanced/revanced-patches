@@ -33,7 +33,8 @@ public final class LiveUpdatePatch {
     public static Notification promote(Notification notification) {
         Context applicationContext = context;
         if (Build.VERSION.SDK_INT < 36 || applicationContext == null || notification == null ||
-                notification.extras == null || !notification.extras.containsKey(PREFIX + "style")) {
+                notification.extras == null || !notification.extras.containsKey(PREFIX + "style") ||
+                !isNavigationChannel(notification.getChannelId())) {
             return notification;
         }
         try {
@@ -42,6 +43,13 @@ public final class LiveUpdatePatch {
             Log.w("NaverMapLiveUpdates", "Could not convert navigation notification", exception);
             return notification;
         }
+    }
+
+    private static boolean isNavigationChannel(String channelId) {
+        return "400_NAVIGATION".equals(channelId)
+                || "350_WALK_NAVIGATION".equals(channelId)
+                || "301_PUBTRANS_ALARM".equals(channelId)
+                || "302_PUBTRANS_POPUP".equals(channelId);
     }
 
     @RequiresApi(36)
