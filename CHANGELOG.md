@@ -1,3 +1,10 @@
+# [1.5.0-dev.6](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.5...v1.5.0-dev.6) (2026-09-08)
+
+
+### Bug Fixes
+
+* **kakaotalk:** restore kick actions for open chat members ([ed0cf56](https://github.com/AmpleReVanced/revanced-patches/commit/ed0cf56ff96c1710e8b7ce554958f89cd4bfff47))
+
 # [1.5.0-dev.5](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.4...v1.5.0-dev.5) (2026-09-07)
 
 
