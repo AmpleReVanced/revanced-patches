@@ -1,3 +1,15 @@
+# [1.5.0-dev.7](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.6...v1.5.0-dev.7) (2026-09-08)
+
+
+### Bug Fixes
+
+* **kakaomap:** improve public transit live updates ([0f26885](https://github.com/AmpleReVanced/revanced-patches/commit/0f26885366413f260ed6c187c5b2e3e08176dcf5))
+
+
+### Features
+
+* **navermap:** add navigation live updates ([ab3d525](https://github.com/AmpleReVanced/revanced-patches/commit/ab3d525d7af9ff766df3c550acf22d05a4ee0141))
+
 # [1.5.0-dev.6](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.5...v1.5.0-dev.6) (2026-09-08)
 
 

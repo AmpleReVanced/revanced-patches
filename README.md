@@ -4,7 +4,7 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START -->
-> **[v1.5.0-dev.6](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.5.0-dev.6)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;122 patches total
+> **[v1.5.0-dev.7](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.5.0-dev.7)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;123 patches total
 <details>
 <summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;71 patches</summary>
 <br>
@@ -213,12 +213,27 @@
 
 **🎯 Supported versions:**
 
-| 🧪&nbsp;6.28.1 |
+| 🧪&nbsp;6.28.2 | 🧪&nbsp;6.28.1 |
+| :---: | :---: |
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Enable navigation live updates](#enable-navigation-live-updates) | Shows navigation progress and stop-by-stop transit guidance with Android Live Updates. |  |
+
+</details>
+
+<details>
+<summary>📦 NAVER Map&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<br>
+
+**🎯 Supported versions:**
+
+| 🧪&nbsp;6.8.0.5 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
-| [Enable navigation live updates](#enable-navigation-live-updates) | Shows navigation progress with Android Live Updates. |  |
+| [Enable navigation live updates](#enable-navigation-live-updates) | Converts Now Bar navigation notifications to Android Live Updates on Android 16 or newer. |  |
 
 </details>
 

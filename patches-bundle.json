@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-09-08T03:48:10",
-  "description": "# [1.5.0-dev.6](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.5...v1.5.0-dev.6) (2026-09-08)\n\n\n### Bug Fixes\n\n* **kakaotalk:** restore kick actions for open chat members ([ed0cf56](https://github.com/AmpleReVanced/revanced-patches/commit/ed0cf56ff96c1710e8b7ce554958f89cd4bfff47))",
-  "download_url": "https://github.com/AmpleReVanced/revanced-patches/releases/download/v1.5.0-dev.6/patches-1.5.0-dev.6.mpp",
+  "created_at": "2026-09-08T06:04:28",
+  "description": "# [1.5.0-dev.7](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.6...v1.5.0-dev.7) (2026-09-08)\n\n\n### Bug Fixes\n\n* **kakaomap:** improve public transit live updates ([0f26885](https://github.com/AmpleReVanced/revanced-patches/commit/0f26885366413f260ed6c187c5b2e3e08176dcf5))\n\n\n### Features\n\n* **navermap:** add navigation live updates ([ab3d525](https://github.com/AmpleReVanced/revanced-patches/commit/ab3d525d7af9ff766df3c550acf22d05a4ee0141))",
+  "download_url": "https://github.com/AmpleReVanced/revanced-patches/releases/download/v1.5.0-dev.7/patches-1.5.0-dev.7.mpp",
   "signature_download_url": "",
-  "version": "1.5.0-dev.6"
+  "version": "1.5.0-dev.7"
 }
