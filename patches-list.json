@@ -1,5 +1,5 @@
 {
-  "version": "1.5.0-dev.7",
+  "version": "1.5.0-dev.8",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -1915,12 +1915,12 @@
           "packageName": "com.nhn.android.nmap",
           "name": "NAVER Map",
           "description": null,
-          "apkFileType": "APKM",
+          "apkFileType": "XAPK",
           "appIconColor": "#03C75A",
           "signatures": null,
           "targets": [
             {
-              "version": "6.8.0.5",
+              "version": "6.9.1.3",
               "isExperimental": true,
               "minSdk": null,
               "description": null

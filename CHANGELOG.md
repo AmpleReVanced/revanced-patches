@@ -1,3 +1,10 @@
+# [1.5.0-dev.8](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.7...v1.5.0-dev.8) (2026-09-08)
+
+
+### Bug Fixes
+
+* **navermap:** support navigation live updates on 6.9.1.3 ([40fbd7c](https://github.com/AmpleReVanced/revanced-patches/commit/40fbd7c48e2b84ee449010095a9a1e00d68ff541))
+
 # [1.5.0-dev.7](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.6...v1.5.0-dev.7) (2026-09-08)
 
 
