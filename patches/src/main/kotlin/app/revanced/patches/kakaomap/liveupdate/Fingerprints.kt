@@ -49,6 +49,29 @@ internal object PubtransRemoteViewsSetTextFingerprint : Fingerprint(
     custom = { _, classDef -> classDef.sourceFile == "PubtransRemoteViewsWrapper.kt" },
 )
 
+internal object PubtransRemoteViewsContentIntentFingerprint : Fingerprint(
+    parameters = listOf("I", "Landroid/app/PendingIntent;"),
+    returnType = "V",
+    custom = { _, classDef -> classDef.sourceFile == "PubtransRemoteViewsWrapper.kt" },
+)
+
+internal object PubtransRemoteViewsNavigationActionsFingerprint : Fingerprint(
+    parameters = listOf(
+        "Landroid/content/Context;", "I", "I",
+        "Ljava/lang/Integer;", "Ljava/lang/Integer;", "Ljava/lang/Integer;",
+    ),
+    returnType = "V",
+    strings = listOf("NOTIFICATION_ACTION_PREV", "NOTIFICATION_ACTION_NEXT"),
+    custom = { _, classDef -> classDef.sourceFile == "PubtransRemoteViewsWrapper.kt" },
+)
+
+internal object PubtransJourneyTerminateFingerprint : Fingerprint(
+    parameters = emptyList(),
+    returnType = "V",
+    strings = listOf("[start] showTerminatingNotification()"),
+    custom = { _, classDef -> classDef.sourceFile == "PubtransGuidanceNotification.kt" },
+)
+
 internal object PubtransJourneyProgressFingerprint : Fingerprint(
     custom = { method, classDef ->
         classDef.sourceFile == "PubtransGuidanceNotification.kt" &&

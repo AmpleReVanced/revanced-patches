@@ -1,0 +1,11 @@
+<resources>
+    <string name="revanced_live_update_remaining_stops">Get off in %1$d stops</string>
+    <string name="revanced_live_update_remaining_stations">Get off in %1$d stations</string>
+    <string name="revanced_live_update_remaining_chip">%1$d left</string>
+    <string name="revanced_live_update_boarding">Boarding</string>
+    <string name="revanced_live_update_get_off">Get off</string>
+    <string name="revanced_live_update_moving">In transit</string>
+    <string name="revanced_live_update_locating">Locating</string>
+    <string name="revanced_live_update_previous">Previous</string>
+    <string name="revanced_live_update_next_stop">Next: %1$s</string>
+</resources>

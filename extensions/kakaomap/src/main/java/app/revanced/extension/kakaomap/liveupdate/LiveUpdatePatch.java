@@ -15,11 +15,13 @@ import androidx.annotation.RequiresApi;
 import app.morphe.extension.shared.Utils;
 
 import com.kakao.map.route.pubtrans.model.PubtransStep;
+import com.kakao.map.route.pubtrans.model.PubtransNode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 @SuppressWarnings({"unused", "deprecation"})
 public final class LiveUpdatePatch {
@@ -29,6 +31,7 @@ public final class LiveUpdatePatch {
     private static final int MAX_PROGRESS_SEGMENTS = 10;
     private static final int PROGRESS_MAX = 1000;
     private static final long STALE_LOCATION_THRESHOLD_MILLIS = 120_000;
+    private static final Map<Object, JourneyDetails> DETAILS_BY_WRAPPER = new WeakHashMap<>();
     private static final ThreadLocal<JourneyDetails> JOURNEY_DETAILS = new ThreadLocal<>();
     private static final ThreadLocal<JourneyProgress> NOTIFICATION_PROGRESS = new ThreadLocal<>();
     private static volatile int activeJourneyToken;
@@ -39,30 +42,99 @@ public final class LiveUpdatePatch {
     private LiveUpdatePatch() {
     }
 
-    public static void captureText(int viewId, CharSequence text) {
-        JourneyDetails details = JOURNEY_DETAILS.get();
+    public static void captureText(Object wrapper, int viewId, CharSequence text) {
+        synchronized (DETAILS_BY_WRAPPER) {
+            detailsFor(wrapper).put(viewId, text);
+        }
+    }
+
+    public static void captureContentIntent(Object wrapper, int viewId, PendingIntent intent) {
+        Context context = Utils.getContext();
+        if (context != null && viewId == context.getResources().getIdentifier(
+                "wrap_layout", "id", context.getPackageName())) {
+            synchronized (DETAILS_BY_WRAPPER) {
+                detailsFor(wrapper).contentIntent = intent;
+            }
+        }
+    }
+
+    public static void captureNavigationActions(
+            Object wrapper,
+            Context context,
+            int parentIndex,
+            int childIndex,
+            Integer state,
+            Integer previousViewId,
+            Integer nextViewId
+    ) {
+        synchronized (DETAILS_BY_WRAPPER) {
+            JourneyDetails details = detailsFor(wrapper);
+            details.previousAction = previousViewId == null ? null : navigationAction(
+                    context, "NOTIFICATION_ACTION_PREV", parentIndex, childIndex, state);
+            details.nextAction = nextViewId == null ? null : navigationAction(
+                    context, "NOTIFICATION_ACTION_NEXT", parentIndex, childIndex, state);
+        }
+    }
+
+    private static PendingIntent navigationAction(
+            Context context, String action, int parentIndex, int childIndex, Integer state
+    ) {
+        Intent intent = new Intent(action).setPackage(context.getPackageName())
+                .putExtra("CURRENT_PARENT", parentIndex)
+                .putExtra("CURRENT_CHILD", childIndex);
+        if (state != null) {
+            intent.putExtra("CURRENT_STATE", state);
+        }
+        return PendingIntent.getBroadcast(context, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+    }
+
+    private static JourneyDetails detailsFor(Object wrapper) {
+        JourneyDetails details = DETAILS_BY_WRAPPER.get(wrapper);
         if (details == null) {
             details = new JourneyDetails();
-            JOURNEY_DETAILS.set(details);
+            DETAILS_BY_WRAPPER.put(wrapper, details);
         }
-        details.put(viewId, text);
+        return details;
     }
 
     public static void beginJourney(List<?> steps) {
-        lastLocationUpdateElapsedRealtime = SystemClock.elapsedRealtime();
         sectionDistanceRatio = 0;
+        lastLocationUpdateElapsedRealtime = SystemClock.elapsedRealtime();
         activeJourneyToken = System.identityHashCode(steps);
         JourneyProgress progress = JourneyProgress.create(steps, 0, 0, 0, 0, true);
         latestJourneyProgress = progress;
         NOTIFICATION_PROGRESS.set(progress);
     }
 
+    public static void resetJourney() {
+        synchronized (LiveUpdatePatch.class) {
+            activeJourneyToken = 0;
+            latestJourneyProgress = null;
+            sectionDistanceRatio = 0;
+            lastLocationUpdateElapsedRealtime = 0;
+        }
+        synchronized (DETAILS_BY_WRAPPER) {
+            DETAILS_BY_WRAPPER.clear();
+        }
+        discardNotification();
+    }
+
+    public static void discardNotification() {
+        JOURNEY_DETAILS.remove();
+        NOTIFICATION_PROGRESS.remove();
+    }
+
     public static void captureProgress(
             List<?> steps,
             int parentIndex,
             int childIndex,
-            int state
+            int state,
+            Object wrapper
     ) {
+        synchronized (DETAILS_BY_WRAPPER) {
+            JOURNEY_DETAILS.set(detailsFor(wrapper));
+        }
         JourneyProgress progress = JourneyProgress.create(
                 steps,
                 parentIndex,
@@ -90,11 +162,6 @@ public final class LiveUpdatePatch {
                 NOTIFICATION_PROGRESS.set(previous);
                 return;
             }
-            if (previous != null && previous.journeyToken == progress.journeyToken &&
-                    !previous.starting && !previous.completed &&
-                    progress.progress < previous.progress) {
-                progress = progress.withProgress(previous.progress);
-            }
             if (previous == null || previous.parentIndex != progress.parentIndex ||
                     previous.currentChildIndex != progress.currentChildIndex ||
                     previous.eventState != progress.eventState ||
@@ -107,7 +174,7 @@ public final class LiveUpdatePatch {
     }
 
     private static boolean isTravelStep(List<?> steps, int index) {
-        if (index < 0 || index >= steps.size()) {
+        if (steps == null || index < 0 || index >= steps.size()) {
             return false;
         }
         Object value = steps.get(index);
@@ -151,7 +218,11 @@ public final class LiveUpdatePatch {
     }
 
     public static Notification promote(Notification notification) {
-        JourneyDetails details = JOURNEY_DETAILS.get();
+        JourneyDetails details;
+        synchronized (DETAILS_BY_WRAPPER) {
+            JourneyDetails captured = JOURNEY_DETAILS.get();
+            details = captured == null ? null : new JourneyDetails(captured);
+        }
         JOURNEY_DETAILS.remove();
         JourneyProgress progress = NOTIFICATION_PROGRESS.get();
         NOTIFICATION_PROGRESS.remove();
@@ -188,6 +259,7 @@ public final class LiveUpdatePatch {
         final boolean transfer;
         final String type;
         final int weight;
+        final List<String> stopNames = new ArrayList<>();
 
         StepProgress(PubtransStep step, int originalIndex, String type) {
             this.originalIndex = originalIndex;
@@ -201,6 +273,11 @@ public final class LiveUpdatePatch {
             try {
                 List<?> stops = step.getStops();
                 resolvedChildCount = stops == null ? 0 : stops.size();
+                if (stops != null) {
+                    for (Object stop : stops) {
+                        stopNames.add(stop instanceof PubtransNode ? ((PubtransNode) stop).name : null);
+                    }
+                }
             } catch (Throwable ignored) {
             }
             try {
@@ -233,29 +310,14 @@ public final class LiveUpdatePatch {
             transfer = resolvedTransfer;
         }
 
-        StepProgress(
-                String type,
-                int originalIndex,
-                int childCount,
-                int colorResource,
-                int iconResource,
-                CharSequence title,
-                boolean transfer
-        ) {
-            this.type = type;
-            this.originalIndex = originalIndex;
-            this.childCount = childCount;
-            this.colorResource = colorResource;
-            this.iconResource = iconResource;
-            this.title = title;
-            this.transfer = transfer;
-            weight = 1;
+        String stopName(int index) {
+            return index < 0 || index >= stopNames.size() ? null : stopNames.get(index);
         }
-
     }
 
     private static final class JourneyProgress {
         final boolean completed;
+        final StepProgress current;
         final int currentChildIndex;
         final int currentChildCount;
         final int currentColorResource;
@@ -283,6 +345,7 @@ public final class LiveUpdatePatch {
         ) {
             this.segments = segments;
             this.progress = progress;
+            this.current = current;
             currentType = current == null ? null : current.type;
             currentTitle = current == null ? null : current.title;
             currentColorResource = current == null ? -1 : current.colorResource;
@@ -332,7 +395,7 @@ public final class LiveUpdatePatch {
                 }
 
                 StepProgress current = travelSteps.get(0);
-                long completedWeight = 0;
+                double completedWeight = 0;
                 long totalWeight = 0;
                 for (StepProgress step : travelSteps) {
                     totalWeight += step.weight;
@@ -342,19 +405,16 @@ public final class LiveUpdatePatch {
                     if (!starting && step.originalIndex <= parentIndex) {
                         current = step;
                     }
-                    if (!starting && step.originalIndex == parentIndex) {
-                        current = step;
-                    }
                 }
 
                 if (!starting && current.originalIndex == parentIndex) {
-                    completedWeight += Math.round(current.weight * stageFraction(
+                    completedWeight += current.weight * stageFraction(
                             current.childCount,
                             childIndex,
                             state,
                             current.type,
                             distanceRatio
-                    ));
+                    );
                 }
                 int progress = starting || totalWeight <= 0
                         ? 0
@@ -425,8 +485,10 @@ public final class LiveUpdatePatch {
             if (childCount > 1) {
                 int position = Math.max(0, Math.min(childIndex, childCount - 1));
                 double withinSection = "SUBWAY".equals(type) ? 0 : distanceRatio;
-                if (state == 1) {
+                if ("WALKING".equals(type) && state == 1) {
                     withinSection = 1;
+                } else if (state == 0 && !"WALKING".equals(type)) {
+                    withinSection = 0;
                 } else if (state == 2) {
                     withinSection = Math.max(withinSection, 0.75);
                 }
@@ -455,31 +517,41 @@ public final class LiveUpdatePatch {
             );
         }
 
-        JourneyProgress withProgress(int progress) {
-            return new JourneyProgress(
-                    segments,
-                    progress,
-                    new StepProgress(
-                            currentType,
-                            parentIndex,
-                            currentChildCount,
-                            currentColorResource,
-                            currentIconResource,
-                            currentTitle,
-                            currentTransfer
-                    ),
-                    journeyToken,
-                    parentIndex,
-                    currentChildIndex,
-                    eventState,
-                    starting,
-                    completed
-            );
+        boolean isTransit() {
+            return "BUS".equals(currentType) || "SUBWAY".equals(currentType);
+        }
+
+        boolean isBoarding() {
+            return isTransit() && currentChildIndex == 0 && eventState == 0;
+        }
+
+        int remainingStops() {
+            return !isTransit() || currentChildCount < 2 ||
+                    currentChildIndex < 0 || currentChildIndex >= currentChildCount ? -1
+                    : Math.max(0, currentChildCount - 1 - currentChildIndex);
+        }
+
+        boolean isGettingOff() {
+            int remaining = remainingStops();
+            return remaining == 0 || remaining == 1 && eventState == 2;
         }
     }
 
     private static final class JourneyDetails {
         private final Map<Integer, CharSequence> textByViewId = new HashMap<>();
+        PendingIntent contentIntent;
+        PendingIntent previousAction;
+        PendingIntent nextAction;
+
+        JourneyDetails() {
+        }
+
+        JourneyDetails(JourneyDetails source) {
+            textByViewId.putAll(source.textByViewId);
+            contentIntent = source.contentIntent;
+            previousAction = source.previousAction;
+            nextAction = source.nextAction;
+        }
 
         void put(int viewId, CharSequence text) {
             String value = text == null ? null : text.toString().trim();
@@ -490,28 +562,47 @@ public final class LiveUpdatePatch {
             }
         }
 
-        ResolvedJourneyDetails resolve(Context context) {
+        ResolvedJourneyDetails resolve(Context context, JourneyProgress progress) {
             CharSequence title = join(" ", value(context, "title"), value(context, "title_type"));
-            CharSequence busTime = value(context, "bus_timeinfo");
-            CharSequence subwayArrival = value(context, "subway_arrival1");
             List<CharSequence> lines = new ArrayList<>();
-
-            addLine(lines, join(" · ", value(context, "bus_info"), busTime));
-            addLine(lines, join(
-                    " · ",
-                    value(context, "subway_info1"),
-                    subwayArrival
-            ));
-            addLine(lines, join(
-                    " · ",
-                    value(context, "subway_info2"),
-                    value(context, "subway_arrival2")
-            ));
-            addLine(lines, value(context, "etc_info"));
-            addLine(lines, value(context, "etc_info2"));
-
-            CharSequence criticalText = !TextUtils.isEmpty(busTime) ? busTime : subwayArrival;
-            return new ResolvedJourneyDetails(title, join("\n", lines), criticalText);
+            if (progress != null && !progress.starting && !progress.completed && progress.isTransit()) {
+                if (!progress.isBoarding() && !progress.isGettingOff() && progress.remainingStops() >= 0) {
+                    addLine(lines, Api36Impl.stringResource(context,
+                            "SUBWAY".equals(progress.currentType)
+                                    ? "revanced_live_update_remaining_stations"
+                                    : "revanced_live_update_remaining_stops",
+                            progress.remainingStops()));
+                }
+                if (progress.current != null && !progress.isGettingOff()) {
+                    String destination = progress.current.stopName(progress.currentChildCount - 1);
+                    if (!TextUtils.isEmpty(destination)) {
+                        addLine(lines, Api36Impl.stringResource(context,
+                                "SUBWAY".equals(progress.currentType)
+                                        ? "alarm_subway_last_station" : "alarm_bus_last_busstop",
+                                destination));
+                    }
+                    if (!progress.isBoarding() && progress.eventState == 0) {
+                        String nextStop = progress.current.stopName(progress.currentChildIndex + 1);
+                        if (!TextUtils.isEmpty(nextStop)) {
+                            addLine(lines, Api36Impl.stringResource(context,
+                                    "revanced_live_update_next_stop", nextStop));
+                        }
+                    }
+                }
+                if (progress.isBoarding()) {
+                    addLine(lines, value(context, "bus_info"));
+                    addLine(lines, value(context, "subway_info1"));
+                    addLine(lines, value(context, "subway_info2"));
+                    addLine(lines, value(context, "etc_info"));
+                } else if (progress.isGettingOff()) {
+                    addLine(lines, value(context, "etc_info"));
+                    addLine(lines, value(context, "etc_info2"));
+                }
+            } else {
+                addLine(lines, value(context, "etc_info"));
+                addLine(lines, value(context, "etc_info2"));
+            }
+            return new ResolvedJourneyDetails(title, join("\n", lines));
         }
 
         private CharSequence value(Context context, String resourceName) {
@@ -527,12 +618,9 @@ public final class LiveUpdatePatch {
     private static final class ResolvedJourneyDetails {
         final CharSequence title;
         final CharSequence text;
-        final CharSequence criticalText;
-
-        ResolvedJourneyDetails(CharSequence title, CharSequence text, CharSequence criticalText) {
+        ResolvedJourneyDetails(CharSequence title, CharSequence text) {
             this.title = title;
             this.text = text;
-            this.criticalText = criticalText;
         }
 
         boolean isEmpty() {
@@ -560,10 +648,10 @@ public final class LiveUpdatePatch {
                     || notification.headsUpContentView != null;
             ResolvedJourneyDetails details = capturedDetails == null
                     ? null
-                    : capturedDetails.resolve(context);
+                    : capturedDetails.resolve(context, capturedProgress);
             boolean hasJourneyDetails = details != null && !details.isEmpty();
             boolean locationStale = hasJourneyDetails && capturedProgress != null &&
-                    !capturedProgress.starting && !capturedProgress.completed &&
+                    !capturedProgress.starting && !capturedProgress.completed && !capturedProgress.isBoarding() &&
                     lastLocationUpdateElapsedRealtime > 0 &&
                     SystemClock.elapsedRealtime() - lastLocationUpdateElapsedRealtime >=
                             STALE_LOCATION_THRESHOLD_MILLIS;
@@ -572,9 +660,7 @@ public final class LiveUpdatePatch {
                 if (!TextUtils.isEmpty(details.title)) {
                     title = details.title;
                 }
-                if (!TextUtils.isEmpty(details.text)) {
-                    text = details.text;
-                }
+                text = details.text;
             }
             if (hasJourneyDetails && capturedProgress != null && capturedProgress.starting) {
                 CharSequence nextStep = join(
@@ -596,7 +682,8 @@ public final class LiveUpdatePatch {
                     ? stringResource(context, "alarm_tracking_title")
                     : phaseLabel(context, capturedProgress);
             if (!TextUtils.isEmpty(status)) {
-                subText = join(" · ", status, subText);
+                subText = join(" · ", capturedProgress == null ? status : capturedProgress.currentTitle,
+                        status, subText);
             }
 
             if (TextUtils.isEmpty(title)) {
@@ -606,7 +693,7 @@ public final class LiveUpdatePatch {
                 text = subText;
             }
 
-            Notification.Builder builder = Notification.Builder.recoverBuilder(context, notification)
+            Notification.Builder builder = Notification.Builder.recoverBuilder(context, notification.clone())
                     .setCustomContentView(null)
                     .setCustomBigContentView(null)
                     .setCustomHeadsUpContentView(null)
@@ -614,7 +701,8 @@ public final class LiveUpdatePatch {
                     .setColorized(false)
                     .setOngoing(true)
                     .setCategory(Notification.CATEGORY_NAVIGATION)
-                    .setContentTitle(title);
+                    .setContentTitle(title)
+                    .setContentText(text);
 
             Integer currentColor = hasJourneyDetails && capturedProgress != null
                     ? resolveColor(context, capturedProgress.currentColorResource)
@@ -630,7 +718,9 @@ public final class LiveUpdatePatch {
                         hasJourneyDetails ? capturedProgress : null
                 ));
             }
-            if (notification.contentIntent == null) {
+            if (capturedDetails != null && capturedDetails.contentIntent != null) {
+                builder.setContentIntent(capturedDetails.contentIntent);
+            } else if (notification.contentIntent == null) {
                 Intent launchIntent = context.getPackageManager()
                         .getLaunchIntentForPackage(context.getPackageName());
                 if (launchIntent != null) {
@@ -649,19 +739,15 @@ public final class LiveUpdatePatch {
                 builder.setSubText(subText);
             }
 
-            CharSequence criticalText = details == null || locationStale
-                    ? null
-                    : details.criticalText;
-            if (TextUtils.isEmpty(criticalText)) {
-                criticalText = locationStale ? null : sourceExtras.getCharSequence(
-                        Notification.EXTRA_SUB_TEXT
-                );
-            }
+            CharSequence criticalText = hasJourneyDetails
+                    ? criticalText(context, capturedProgress, locationStale)
+                    : sourceExtras.getCharSequence(Notification.EXTRA_SUB_TEXT);
             if (!TextUtils.isEmpty(criticalText) && criticalText.length() <= 7) {
                 builder.setShortCriticalText(criticalText.toString());
             }
             if (hasJourneyDetails) {
                 replaceEndGuidanceAction(context, notification, builder);
+                addNavigationActions(context, builder, capturedDetails);
             }
 
             builder.getExtras().remove(EXTRA_CONTAINS_CUSTOM_VIEW);
@@ -735,6 +821,18 @@ public final class LiveUpdatePatch {
             }
         }
 
+        private static CharSequence criticalText(Context context, JourneyProgress progress, boolean stale) {
+            if (stale || progress != null && progress.starting) {
+                return stringResource(context, "revanced_live_update_locating");
+            }
+            if (progress != null && !progress.completed && progress.isTransit() &&
+                    !progress.isBoarding() && !progress.isGettingOff() && progress.remainingStops() >= 0) {
+                String text = stringResource(context, "revanced_live_update_remaining_chip", progress.remainingStops());
+                return text != null && text.length() <= 7 ? text : Integer.toString(progress.remainingStops());
+            }
+            return phaseLabel(context, progress);
+        }
+
         private static CharSequence phaseLabel(Context context, JourneyProgress progress) {
             if (progress == null) {
                 return null;
@@ -743,29 +841,30 @@ public final class LiveUpdatePatch {
                 return stringResource(context, "arrival");
             }
             if (progress.starting) {
-                return stringResource(context, "alarm_tracking_title");
+                return stringResource(context, "revanced_live_update_locating");
             }
-            if (progress.currentTransfer) {
-                return stringResource(context, "transfer");
+            if (progress.isBoarding()) {
+                return stringResource(context, progress.currentTransfer
+                        ? "transfer" : "revanced_live_update_boarding");
             }
-
-            boolean finalStop = progress.currentChildCount > 1 &&
-                    (progress.currentChildIndex >= progress.currentChildCount - 1 ||
-                            progress.eventState == 2 &&
-                                    progress.currentChildIndex >= progress.currentChildCount - 2);
-            if ("BUS".equals(progress.currentType)) {
-                if (finalStop) {
-                    return stringResource(context, "alarm_bus_get_off");
-                }
-                CharSequence phase = progress.currentChildIndex == 0 && progress.eventState == 0
-                        ? stringResource(context, "alarm_bus_get_on")
-                        : stringResource(context, "alarm_bus_moving");
-                return TextUtils.isEmpty(phase) ? modeLabel(context, progress.currentType) : phase;
+            if (progress.isGettingOff()) {
+                return stringResource(context, "revanced_live_update_get_off");
             }
-            if ("SUBWAY".equals(progress.currentType) && finalStop) {
-                return stringResource(context, "alarm_subway_get_off");
+            if (progress.isTransit()) {
+                return stringResource(context, "revanced_live_update_moving");
             }
             return modeLabel(context, progress.currentType);
+        }
+
+        private static void addNavigationActions(Context context, Notification.Builder builder, JourneyDetails details) {
+            if (details.previousAction != null) {
+                builder.addAction(new Notification.Action.Builder((Icon) null,
+                        stringResource(context, "revanced_live_update_previous"), details.previousAction).build());
+            }
+            if (details.nextAction != null) {
+                builder.addAction(new Notification.Action.Builder((Icon) null,
+                        stringResource(context, "next"), details.nextAction).build());
+            }
         }
 
         private static CharSequence modeLabel(Context context, String type) {
@@ -843,13 +942,13 @@ public final class LiveUpdatePatch {
             }
         }
 
-        private static CharSequence stringResource(Context context, String resourceName) {
+        private static String stringResource(Context context, String resourceName, Object... arguments) {
             int identifier = context.getResources().getIdentifier(
                     resourceName,
                     "string",
                     context.getPackageName()
             );
-            return identifier == 0 ? null : context.getText(identifier);
+            return identifier == 0 ? null : context.getString(identifier, arguments);
         }
 
         private static CharSequence navigationTitle(Context context) {

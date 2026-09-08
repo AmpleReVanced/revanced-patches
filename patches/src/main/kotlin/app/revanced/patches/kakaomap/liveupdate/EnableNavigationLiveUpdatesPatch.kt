@@ -8,6 +8,10 @@ import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.resourcePatch
 import app.morphe.util.getReference
 import app.morphe.util.getNode
+import app.morphe.patches.all.misc.resources.AppLocale
+import app.morphe.patches.all.misc.resources.addAppResources
+import app.morphe.patches.all.misc.resources.addResourcesPatch
+import app.morphe.patches.all.misc.resources.setAddResourceLocale
 import app.revanced.patches.kakaomap.misc.extension.addExtensionPatch
 import app.revanced.patches.kakaomap.shared.Constants.COMPATIBILITY_KAKAO_MAP
 import app.revanced.util.parameterRegister
@@ -26,8 +30,11 @@ private const val PROMOTED_NOTIFICATIONS_PERMISSION =
 
 private val addLiveUpdatePermissionPatch = resourcePatch {
     compatibleWith(COMPATIBILITY_KAKAO_MAP)
+    dependsOn(addResourcesPatch)
 
     execute {
+        setAddResourceLocale(listOf(AppLocale("", ""), AppLocale("ko-rKR", "ko")))
+        addAppResources("kakaomap")
         document("AndroidManifest.xml").use { document ->
             val manifest = document.getNode("manifest") as Element
             val permissionExists = manifest.getElementsByTagName("uses-permission").let { permissions ->
@@ -53,7 +60,7 @@ private val addLiveUpdatePermissionPatch = resourcePatch {
 @Suppress("unused")
 val enableNavigationLiveUpdatesPatch = bytecodePatch(
     name = "Enable navigation live updates",
-    description = "Shows navigation progress with Android Live Updates.",
+    description = "Shows navigation progress and stop-by-stop transit guidance with Android Live Updates.",
 ) {
     compatibleWith(COMPATIBILITY_KAKAO_MAP)
     dependsOn(addExtensionPatch, addLiveUpdatePermissionPatch)
@@ -138,6 +145,11 @@ val enableNavigationLiveUpdatesPatch = bytecodePatch(
             "invoke-static {}, $EXTENSION_CLASS->completeJourney()V",
         )
 
+        PubtransJourneyTerminateFingerprint.method.addInstructions(
+            0,
+            "invoke-static {}, $EXTENSION_CLASS->resetJourney()V",
+        )
+
         val progressSourceMethod = PubtransJourneyProgressFingerprint.method
         val guideStepListField = progressSourceMethod.implementation!!.instructions
             .mapNotNull { instruction -> instruction.getReference<FieldReference>() }
@@ -153,6 +165,7 @@ val enableNavigationLiveUpdatesPatch = bytecodePatch(
 
         PubtransNotificationGenerationFingerprint.method.apply {
             val receiverRegister = parameterRegister(0) - 1
+            val wrapperRegister = parameterRegister(1)
             val parentIndexRegister = parameterRegister(2)
             val childIndexRegister = parameterRegister(3)
             val stateRegister = parameterRegister(4)
@@ -160,18 +173,44 @@ val enableNavigationLiveUpdatesPatch = bytecodePatch(
                 0,
                 """
                     iget-object v0, v$receiverRegister, ${guideStepListField.definingClass}->${guideStepListField.name}:${guideStepListField.type}
-                    invoke-static {v0, v$parentIndexRegister, v$childIndexRegister, v$stateRegister}, $EXTENSION_CLASS->captureProgress(Ljava/util/List;III)V
+                    invoke-static {v0, v$parentIndexRegister, v$childIndexRegister, v$stateRegister, v$wrapperRegister}, $EXTENSION_CLASS->captureProgress(Ljava/util/List;IIILjava/lang/Object;)V
                 """.trimIndent(),
             )
+            implementation!!.instructions.mapIndexedNotNull { index, instruction ->
+                if (instruction.opcode == Opcode.RETURN_VOID) index else null
+            }.asReversed().forEach { index ->
+                replaceInstruction(index, "invoke-static {}, $EXTENSION_CLASS->discardNotification()V")
+                addInstructions(index + 1, "return-void")
+            }
         }
 
         PubtransRemoteViewsSetTextFingerprint.method.apply {
-            val viewIdRegister = parameterRegister(0)
+            val receiverRegister = parameterRegister(0) - 1
             val textRegister = parameterRegister(1)
             addInstructions(
                 0,
-                "invoke-static/range {v$viewIdRegister .. v$textRegister}, " +
-                    "$EXTENSION_CLASS->captureText(ILjava/lang/CharSequence;)V",
+                "invoke-static/range {v$receiverRegister .. v$textRegister}, " +
+                    "$EXTENSION_CLASS->captureText(Ljava/lang/Object;ILjava/lang/CharSequence;)V",
+            )
+        }
+
+        PubtransRemoteViewsContentIntentFingerprint.method.apply {
+            val receiverRegister = parameterRegister(0) - 1
+            val intentRegister = parameterRegister(1)
+            addInstructions(
+                0,
+                "invoke-static/range {v$receiverRegister .. v$intentRegister}, " +
+                    "$EXTENSION_CLASS->captureContentIntent(Ljava/lang/Object;ILandroid/app/PendingIntent;)V",
+            )
+        }
+
+        PubtransRemoteViewsNavigationActionsFingerprint.method.apply {
+            val receiverRegister = parameterRegister(0) - 1
+            val nextRegister = parameterRegister(5)
+            addInstructions(
+                0,
+                "invoke-static/range {v$receiverRegister .. v$nextRegister}, " +
+                    "$EXTENSION_CLASS->captureNavigationActions(Ljava/lang/Object;Landroid/content/Context;IILjava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)V",
             )
         }
 
