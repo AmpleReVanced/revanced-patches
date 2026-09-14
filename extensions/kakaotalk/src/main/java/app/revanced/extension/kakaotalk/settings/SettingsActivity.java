@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 import app.revanced.extension.kakaotalk.helper.ResourceHelper;
+import app.revanced.extension.kakaotalk.chatlog.details.MessageDetailsExtension;
 import app.morphe.extension.shared.Utils;
 import app.morphe.extension.shared.settings.BaseSettings;
 import app.morphe.extension.shared.settings.BooleanSetting;
@@ -53,6 +54,7 @@ public final class SettingsActivity extends Activity {
     private static final String PREF_ALLOW_REPLY_TO_FEED = "morphe_pref_allow_reply_to_feed";
     private static final String PREF_SHOW_MESSAGE_READ_RECEIPTS =
             "morphe_pref_show_message_read_receipts";
+    private static final String PREF_SHOW_MESSAGE_DETAILS = "morphe_pref_show_message_details";
     private static final String PREF_REMOVE_SHORT_FORM_TAB = "morphe_pref_remove_short_form_tab";
     private static final String PREF_HIDE_MORE_TAB_GAME = "morphe_pref_hide_more_tab_game";
     private static final String PREF_HIDE_MORE_TAB_KAKAO_PAY_SECTION = "morphe_pref_hide_more_tab_kakao_pay_section";
@@ -164,6 +166,7 @@ public final class SettingsActivity extends Activity {
             bindSwitchIfIncluded(PREF_BLOCK_MODIFIED_MESSAGE_REPLY, Settings.BLOCK_MODIFIED_MESSAGE_REPLY, BlockModifiedMessageReplyPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_ALLOW_REPLY_TO_FEED, Settings.ALLOW_REPLY_TO_FEED, AllowReplyToFeedPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_SHOW_MESSAGE_READ_RECEIPTS, Settings.SHOW_MESSAGE_READ_RECEIPTS, ShowMessageReadReceiptsPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_SHOW_MESSAGE_DETAILS, Settings.SHOW_MESSAGE_DETAILS, MessageDetailsExtension.isPatchIncluded());
             bindSwitchIfIncluded(PREF_RESTORE_KEYWORD_LOG, Settings.RESTORE_KEYWORD_LOG, KeywordLogPatch.isPatchIncluded());
             bindRiskySwitchIfIncluded(PREF_BYPASS_MOAT_INTEGRITY_CHECK, Settings.BYPASS_MOAT_INTEGRITY_CHECK, BypassMoatCheckPatch.isPatchIncluded());
             bindTextIfIncluded(PREF_FEATURE_FLAG_OVERRIDES, Settings.FEATURE_FLAG_OVERRIDES, OverrideFeatureFlagPatch.isPatchIncluded());
