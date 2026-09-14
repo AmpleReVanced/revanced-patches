@@ -1,3 +1,10 @@
+# [1.5.0-dev.9](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.8...v1.5.0-dev.9) (2026-09-14)
+
+
+### Features
+
+* **kakaotalk:** add message details viewer ([962f561](https://github.com/AmpleReVanced/revanced-patches/commit/962f561ed98acbc47dc07a48e8a4b3c4789d8b3d))
+
 # [1.5.0-dev.8](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.7...v1.5.0-dev.8) (2026-09-08)
 
 

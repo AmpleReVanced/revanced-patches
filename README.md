@@ -4,9 +4,9 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START -->
-> **[v1.5.0-dev.8](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.5.0-dev.8)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;123 patches total
+> **[v1.5.0-dev.9](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.5.0-dev.9)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;124 patches total
 <details>
-<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;71 patches</summary>
+<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;72 patches</summary>
 <br>
 
 **🎯 Supported versions:**
@@ -78,6 +78,7 @@
 | [Restore keyword notification log](#restore-keyword-notification-log) | Restores the removed keyword notification collection view along with its chat list entry. |  |
 | [Show chatroom channel ID](#show-chatroom-channel-id) | Shows the channel ID in chatroom settings and copies it when tapping the chat side title. |  |
 | [Show deleted, hidden, or edited messages](#show-deleted-hidden-or-edited-messages) | Allows you to see deleted, hidden, and edited message history in chat logs. | • Deleted color<br>• Hidden color |
+| [Show message details](#show-message-details) | Adds a long-press action to inspect the complete ChatLog object, including inherited and message-specific fields, as JSON. |  |
 | [Show message read receipts](#show-message-read-receipts) | Shows the members who have or have not read each chat message. |  |
 | [Show messages restricted to mobile](#show-messages-restricted-to-mobile) | Shows the content of AlimTalk, Leverage and Universal messages that are replaced with a placeholder asking to open them on mobile while signed in on a sub device. |  |
 | [Spoof App ID](#spoof-app-id) | Spoofs the App ID to bypass integrity checks. (to bypass biometric auth etc.) |  |
