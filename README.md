@@ -4,14 +4,14 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START -->
-> **[v1.5.0-dev.9](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.5.0-dev.9)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;124 patches total
+> **[v1.5.0-dev.10](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.5.0-dev.10)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;124 patches total
 <details>
 <summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;72 patches</summary>
 <br>
 
 **🎯 Supported versions:**
 
-| 26.7.2 |
+| 26.8.0 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
@@ -30,7 +30,7 @@
 | [Always Show Kick Button](#always-show-kick-button) | Always shows the kick button in group member management. |  |
 | [Block reactions on deleted or hidden messages](#block-reactions-on-deleted-or-hidden-messages) | Stops reactions, including the double tap gesture, from being sent on messages that the server considers deleted or hidden and that are only still visible because they are kept by a patch. |  |
 | [Block replies on deleted or hidden messages](#block-replies-on-deleted-or-hidden-messages) | Stops the swipe gesture, and any reply or comment send, from targeting messages that the server considers deleted or hidden and that are only still visible because they are kept by a patch. |  |
-| [Bypass Moat check](#bypass-moat-check) | Add a setting to bypass the KakaoPay Moat integrity check. It stops the native scan from running, so the tamper/root/hook verdict is never computed or reported and KakaoPay is not force-closed. Payments on a modified build are still risky. |  |
+| [Bypass Moat check](#bypass-moat-check) | Adds a setting to prevent KakaoPay Moat initialization, policy and pattern updates, scans, detector logging, and force-off reports while returning benign integrity results. Payments on a modified build are still risky. |  |
 | [Bypass input mention limit in non-multichat](#bypass-input-mention-limit-in-non-multichat) | Bypass the limit of input mentions in non-multichat rooms |  |
 | [Change model](#change-model) | Changes the device model to supporting subdevice features |  |
 | [Change package name](#change-package-name) | Appends ".revanced" to the package name by default. For KakaoTalk only | • Package name<br>• Update permissions<br>• Update providers |
@@ -137,8 +137,8 @@
 
 **🎯 Supported versions:**
 
-| 3.12.1 | 3.11.1 |
-| :---: | :---: |
+| 3.13.0 | 3.12.1 | 3.11.1 |
+| :---: | :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
@@ -156,8 +156,8 @@
 
 **🎯 Supported versions:**
 
-| 1.5.0.9 | 1.5.0.8 | 1.5.0.7 | 1.4.4.14 | 1.4.4.12 | 1.4.4.10 | 1.4.4.9 |
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| 1.5.0.11 | 1.5.0.10 | 1.5.0.9 | 1.5.0.8 | 1.5.0.7 | 1.4.4.14 | 1.4.4.12 | 1.4.4.10 | 1.4.4.9 |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
@@ -172,7 +172,7 @@
 
 **🎯 Supported versions:**
 
-| 🧪&nbsp;1.4.3 |
+| 🧪&nbsp;1.5.2 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
@@ -190,8 +190,8 @@
 
 **🎯 Supported versions:**
 
-| 8.29.3 | 8.28.5 |
-| :---: | :---: |
+| 8.30.1 | 8.29.3 | 8.28.5 |
+| :---: | :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
@@ -214,8 +214,8 @@
 
 **🎯 Supported versions:**
 
-| 🧪&nbsp;6.28.2 | 🧪&nbsp;6.28.1 |
-| :---: | :---: |
+| 🧪&nbsp;6.28.3 | 🧪&nbsp;6.28.2 | 🧪&nbsp;6.28.1 |
+| :---: | :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
@@ -229,8 +229,8 @@
 
 **🎯 Supported versions:**
 
-| 🧪&nbsp;6.9.1.3 |
-| :---: |
+| 🧪&nbsp;6.10.0.16 | 🧪&nbsp;6.9.1.3 |
+| :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
