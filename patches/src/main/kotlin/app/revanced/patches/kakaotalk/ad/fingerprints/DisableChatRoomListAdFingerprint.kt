@@ -43,3 +43,11 @@ internal object ChatListGlobalAdEnabledFingerprint : Fingerprint(
     ),
     custom = { _, classDef -> classDef.sourceFile == "ChatListAdHelper.kt" }
 )
+
+internal object ChatListBizBoardEnabledFingerprint : Fingerprint(
+    classFingerprint = ChatListAdHelperEnabledFingerprint,
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf("L", "Z"),
+    returnType = "Z",
+    filters = listOf(methodCall(parameters = listOf(), returnType = "Z")),
+)
