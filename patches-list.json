@@ -1,5 +1,5 @@
 {
-  "version": "1.5.0-dev.11",
+  "version": "1.5.0-dev.12",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -289,6 +289,36 @@
       "default": true,
       "dependencies": [
         "BytecodePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "com.kakao.talk",
+          "name": "Kakao Talk",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#FEE500",
+          "signatures": [
+            "2b06cc3d47782d7c497c07f17cb5f859cd6bbcb66829f3e67b96b7a44820d2ce"
+          ],
+          "targets": [
+            {
+              "version": "26.8.2",
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Allow custom profile images",
+      "description": "Adds a photo picker and adjustable images to the custom profile editor.",
+      "default": true,
+      "dependencies": [
+        "BytecodePatch",
+        "ResourcePatch"
       ],
       "compatiblePackages": [
         {

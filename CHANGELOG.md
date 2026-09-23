@@ -1,3 +1,10 @@
+# [1.5.0-dev.12](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.11...v1.5.0-dev.12) (2026-09-23)
+
+
+### Features
+
+* **kakaotalk:** allow custom images in custom profiles ([2cae8e8](https://github.com/AmpleReVanced/revanced-patches/commit/2cae8e8f7035ee4a637d6b45ce51e56b0cf394fe))
+
 # [1.5.0-dev.11](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.10...v1.5.0-dev.11) (2026-09-21)
 
 

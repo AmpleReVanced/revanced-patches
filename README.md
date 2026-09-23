@@ -4,9 +4,9 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START -->
-> **[v1.5.0-dev.11](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.5.0-dev.11)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;124 patches total
+> **[v1.5.0-dev.12](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.5.0-dev.12)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;125 patches total
 <details>
-<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;72 patches</summary>
+<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;73 patches</summary>
 <br>
 
 **🎯 Supported versions:**
@@ -22,6 +22,7 @@
 | [Add settings tab](#add-settings-tab) | Adds a settings tab to the app. |  |
 | [Allow Hide on Any Chat](#allow-hide-on-any-chat) | Users with hiding privileges can hide any chat, including their own messages. |  |
 | [Allow Open Chat Managers To Block Members](#allow-open-chat-managers-to-block-members) | Allows open chat room hosts and co-hosts to block regular members from their profiles. |  |
+| [Allow custom profile images](#allow-custom-profile-images) | Adds a photo picker and adjustable images to the custom profile editor. |  |
 | [Allow direct thread reply editing](#allow-direct-thread-reply-editing) | Shows the edit action when long-pressing your own thread replies in the main chat. |  |
 | [Allow invisible characters](#allow-invisible-characters) | Stops zero width and other invisible characters from being stripped out of the chat input and out of the messages shown in a chat room. |  |
 | [Allow open chat media bundle](#allow-open-chat-media-bundle) | Removes the open chat restriction that stops webp, gif and other media from being bundled into a single multi-photo message. |  |
