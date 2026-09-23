@@ -1,5 +1,5 @@
 {
-  "version": "1.5.0-dev.13",
+  "version": "1.5.0-dev.14",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -778,12 +778,12 @@
           "packageName": "com.onyx.galaxy.global.note",
           "name": "StarNote",
           "description": null,
-          "apkFileType": "APK",
+          "apkFileType": "XAPK",
           "appIconColor": "#3D8AFF",
           "signatures": null,
           "targets": [
             {
-              "version": "1.5.2",
+              "version": "1.5.3",
               "isExperimental": true,
               "minSdk": null,
               "description": null
@@ -1920,12 +1920,12 @@
           "packageName": "com.onyx.galaxy.global.note",
           "name": "StarNote",
           "description": null,
-          "apkFileType": "APK",
+          "apkFileType": "XAPK",
           "appIconColor": "#3D8AFF",
           "signatures": null,
           "targets": [
             {
-              "version": "1.5.2",
+              "version": "1.5.3",
               "isExperimental": true,
               "minSdk": null,
               "description": null
@@ -3722,7 +3722,7 @@
     },
     {
       "name": "Unlock Premium features",
-      "description": "Enables app features locked behind the subscription paywall.",
+      "description": "Enables local premium features and raises the local note creation quota.",
       "default": true,
       "dependencies": [
         "RawResourcePatch"
@@ -3732,12 +3732,12 @@
           "packageName": "com.onyx.galaxy.global.note",
           "name": "StarNote",
           "description": null,
-          "apkFileType": "APK",
+          "apkFileType": "XAPK",
           "appIconColor": "#3D8AFF",
           "signatures": null,
           "targets": [
             {
-              "version": "1.5.2",
+              "version": "1.5.3",
               "isExperimental": true,
               "minSdk": null,
               "description": null
@@ -3796,12 +3796,12 @@
           "packageName": "com.onyx.galaxy.global.note",
           "name": "StarNote",
           "description": null,
-          "apkFileType": "APK",
+          "apkFileType": "XAPK",
           "appIconColor": "#3D8AFF",
           "signatures": null,
           "targets": [
             {
-              "version": "1.5.2",
+              "version": "1.5.3",
               "isExperimental": true,
               "minSdk": null,
               "description": null

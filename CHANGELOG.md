@@ -1,3 +1,10 @@
+# [1.5.0-dev.14](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.13...v1.5.0-dev.14) (2026-09-23)
+
+
+### Bug Fixes
+
+* **starnote:** restore premium access and local note quota on 1.5.3 ([f191f23](https://github.com/AmpleReVanced/revanced-patches/commit/f191f2304611438d82ed5563e8d82ac93723f9a8))
+
 # [1.5.0-dev.13](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.12...v1.5.0-dev.13) (2026-09-23)
 
 
