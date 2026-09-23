@@ -40,6 +40,7 @@ internal data class MethodCallFingerprint(
 
 internal class ProtectedDexFingerprint(
     private val id: String,
+    private val name: String? = null,
     private val accessFlags: List<AccessFlags> = emptyList(),
     private val parameters: List<String>? = null,
     private val returnType: String? = null,
@@ -47,20 +48,22 @@ internal class ProtectedDexFingerprint(
     private val methodCalls: List<MethodCallFingerprint> = emptyList(),
 ) {
     fun matches(method: Method): Boolean {
-        if (accessFlags.any { !it.isSet(method.accessFlags) } ||
+        if ((name != null && method.name != name) ||
+            accessFlags.any { !it.isSet(method.accessFlags) } ||
             parameters?.let { method.parameterTypes != it } == true ||
             returnType?.let { method.returnType != it } == true
         ) {
             return false
         }
 
-        val instructions = method.implementation?.instructions?.toList() ?: return false
-        val references = instructions.mapNotNull {
-            (it as? ReferenceInstruction)?.reference
-        }
-
+        val instructions = method.implementation?.instructions ?: return false
         var callIndex = 0
-        references.forEach { reference ->
+        val foundStrings = mutableSetOf<String>()
+        instructions.forEach { instruction ->
+            val reference = (instruction as? ReferenceInstruction)?.reference ?: return@forEach
+            if (reference is StringReference && reference.string in strings) {
+                foundStrings.add(reference.string)
+            }
             if (callIndex < methodCalls.size &&
                 reference is MethodReference &&
                 methodCalls[callIndex].matches(reference)
@@ -69,9 +72,7 @@ internal class ProtectedDexFingerprint(
             }
         }
 
-        return strings.all { string ->
-            references.any { it is StringReference && it.string == string }
-        } && callIndex == methodCalls.size
+        return foundStrings.containsAll(strings) && callIndex == methodCalls.size
     }
 
     override fun toString() = id
@@ -126,25 +127,39 @@ internal object ProtectedDex {
         fingerprint: ProtectedDexFingerprint,
         value: Boolean,
         definingClass: String? = null,
+    ): Match = patch(fingerprint, definingClass) { bytes, method ->
+        patchReturn(bytes, method, value)
+    }
+
+    fun returnLong(
+        fingerprint: ProtectedDexFingerprint,
+        value: Long,
+        definingClass: String? = null,
+    ): Match = patch(fingerprint, definingClass) { bytes, method ->
+        patchLongReturn(bytes, method, value)
+    }
+
+    private fun patch(
+        fingerprint: ProtectedDexFingerprint,
+        definingClass: String?,
+        edit: (ByteArray, Method) -> Unit,
     ): Match {
-        val matches = payloads.flatMap { payload ->
+        val matches = payloads.asSequence().flatMap { payload ->
             val dexFile = DexBackedDexFile(null, ByteBuffer.wrap(payload.bytes))
-            dexFile.classes.flatMap { classDef ->
-                if (definingClass != null && classDef.type != definingClass) {
-                    emptyList()
-                } else {
-                    classDef.methods.filter(fingerprint::matches).map { method ->
-                        Triple(payload, classDef, method)
-                    }
+            dexFile.classes.asSequence()
+                .filter { definingClass == null || it.type == definingClass }
+                .flatMap { classDef ->
+                    classDef.methods.asSequence()
+                        .filter(fingerprint::matches)
+                        .map { method -> Triple(payload, classDef, method) }
                 }
-            }
-        }
+        }.toList()
         if (matches.size != 1) {
             throw PatchException("Expected one $fingerprint match, found ${matches.size}")
         }
 
         val (payload, classDef, method) = matches.single()
-        patchReturn(payload.bytes, method, value)
+        edit(payload.bytes, method)
         updateHeader(payload.bytes)
         payload.modified = true
         return Match(classDef.type)
@@ -160,30 +175,51 @@ internal object ProtectedDex {
     }
 
     private fun patchReturn(bytes: ByteArray, method: Method, value: Boolean) {
+        overwriteReturn(bytes, method, byteArrayOf(0x12, (if (value) 0x10 else 0x00).toByte(), 0x0f, 0x00), 2, "Z", 1)
+    }
+
+    private fun patchLongReturn(bytes: ByteArray, method: Method, value: Long) {
+        if (value !in Int.MIN_VALUE..Int.MAX_VALUE) {
+            throw PatchException("Unsupported long return in $method")
+        }
+        val instructions = ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN)
+            .put(0x17.toByte())
+            .put(0.toByte())
+            .putInt(value.toInt())
+            .put(0x10.toByte())
+            .put(0.toByte())
+            .array()
+        overwriteReturn(bytes, method, instructions, 6, "J", 2)
+    }
+
+    private fun overwriteReturn(
+        bytes: ByteArray,
+        method: Method,
+        replacement: ByteArray,
+        coveredCodeUnits: Int,
+        returnType: String,
+        requiredRegisters: Int,
+    ) {
         val implementation = method.implementation
             ?: throw PatchException("$method has no implementation")
-        if (implementation.registerCount == 0) {
-            throw PatchException("$method has no writable register")
+        if (method.returnType != returnType || implementation.registerCount < requiredRegisters) {
+            throw PatchException("Unsupported return in $method")
         }
-
-        var replacedCodeUnits = 0
-        var firstInstruction: DexBackedInstruction? = null
-        for (instruction in implementation.instructions) {
-            val backedInstruction = instruction as? DexBackedInstruction
-                ?: throw PatchException("Unsupported instruction in $method")
-            if (firstInstruction == null) firstInstruction = backedInstruction
-            replacedCodeUnits += instruction.codeUnits
-            if (replacedCodeUnits >= 2) break
-        }
-        val offset = firstInstruction?.instructionStart
+        val instructions = implementation.instructions.iterator()
+        val first = (if (instructions.hasNext()) instructions.next() else null) as? DexBackedInstruction
             ?: throw PatchException("$method has no instructions")
-        bytes[offset] = 0x12
-        bytes[offset + 1] = if (value) 0x10 else 0x00
-        bytes[offset + 2] = 0x0f
-        bytes[offset + 3] = 0x00
-        for (index in 4 until replacedCodeUnits * Short.SIZE_BYTES) {
-            bytes[offset + index] = 0x00
+        var replacedCodeUnits = first.codeUnits
+        while (replacedCodeUnits < coveredCodeUnits && instructions.hasNext()) {
+            val instruction = instructions.next() as? DexBackedInstruction
+                ?: throw PatchException("Unsupported instruction in $method")
+            replacedCodeUnits += instruction.codeUnits
         }
+        if (replacedCodeUnits < coveredCodeUnits || replacement.size > replacedCodeUnits * Short.SIZE_BYTES) {
+            throw PatchException("$method is too short to patch")
+        }
+        val offset = first.instructionStart
+        replacement.copyInto(bytes, offset)
+        bytes.fill(0.toByte(), offset + replacement.size, offset + replacedCodeUnits * Short.SIZE_BYTES)
     }
 
     private fun updateHeader(bytes: ByteArray) {

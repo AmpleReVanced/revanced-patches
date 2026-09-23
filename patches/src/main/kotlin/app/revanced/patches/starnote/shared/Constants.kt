@@ -8,11 +8,11 @@ object Constants {
     val COMPATIBILITY_STARNOTE = Compatibility(
         name = "StarNote",
         packageName = "com.onyx.galaxy.global.note",
-        apkFileType = ApkFileType.APK,
+        apkFileType = ApkFileType.XAPK,
         appIconColor = 0x3D8AFF,
         targets = listOf(
             AppTarget(
-                version = "1.5.2",
+                version = "1.5.3",
                 isExperimental = true
             ),
         ),

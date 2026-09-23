@@ -2,12 +2,18 @@ package app.revanced.patches.starnote.shared
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.methodCall
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.rawResourcePatch
+import app.morphe.util.findFreeRegister
+import app.morphe.util.getReference
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
+import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
+import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
+import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 
@@ -58,11 +64,22 @@ internal val bypassProtectionIntegrityPatch = bytecodePatch {
 
     execute {
         ProtectionInitializerFingerprint.apply {
+            val nativeInitializationIndex = instructionMatches.last().index
+            val nativeInitialization = method.getInstruction(nativeInitializationIndex) as? FiveRegisterInstruction
+                ?: throw PatchException("Unsupported StarNote protection initializer invocation")
+            val packageNameRegister = nativeInitialization.registerD
+            val argumentLoadIndex = (0 until nativeInitializationIndex).lastOrNull { index ->
+                val instruction = method.getInstruction(index)
+                instruction.opcode == Opcode.SGET_OBJECT &&
+                    (instruction as? OneRegisterInstruction)?.registerA == packageNameRegister &&
+                    instruction.getReference<FieldReference>()?.type == "Ljava/lang/String;"
+            } ?: throw PatchException("Could not find StarNote protection initializer argument load")
+            val libraryRegister = method.findFreeRegister(argumentLoadIndex)
             method.addInstructions(
-                instructionMatches.last().index - 4,
+                argumentLoadIndex,
                 """
-                    const-string v0, "$LIBRARY_NAME"
-                    invoke-static { v0 }, Ljava/lang/System;->loadLibrary(Ljava/lang/String;)V
+                    const-string v$libraryRegister, "$LIBRARY_NAME"
+                    invoke-static {v$libraryRegister}, Ljava/lang/System;->loadLibrary(Ljava/lang/String;)V
                 """,
             )
         }

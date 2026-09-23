@@ -6,6 +6,7 @@ import com.android.tools.smali.dexlib2.AccessFlags
 
 internal val LoginRequiredFingerprint = ProtectedDexFingerprint(
     id = "login requirement",
+    name = "isLoginRequired",
     accessFlags = listOf(AccessFlags.PUBLIC),
     parameters = listOf(),
     returnType = "Z",
