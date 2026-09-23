@@ -85,18 +85,12 @@ internal object PubtransNotificationGenerationFingerprint : Fingerprint(
     custom = { method, classDef ->
         classDef.sourceFile == "PubtransGuidanceNotification.kt" &&
             method.parameterTypes.map(CharSequence::toString).let { parameters ->
-                parameters.size == 9 &&
+                parameters.size in 8..9 &&
                     parameters[0] == "Landroid/content/Context;" &&
                     parameters[1].startsWith("L") &&
-                    parameters.drop(2) == listOf(
-                        "I",
-                        "I",
-                        "I",
-                        "Z",
-                        "Ljava/lang/String;",
-                        "Z",
-                        "Z",
-                    )
+                    parameters.subList(2, 6) == listOf("I", "I", "I", "Z") &&
+                    parameters.takeLast(2) == listOf("Z", "Z") &&
+                    (parameters.size == 8 || parameters[6] == "Ljava/lang/String;")
             } &&
             method.returnType == "V" &&
             hasString(method, "[start] generateNotification()")
