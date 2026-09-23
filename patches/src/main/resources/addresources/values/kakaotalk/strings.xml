@@ -15,6 +15,15 @@ Second \"item\" text"</string>
 
 -->
 <resources>
+    <string name="morphe_kakaotalk_custom_profile_image">Photo</string>
+    <string name="morphe_kakaotalk_custom_profile_image_select">Choose photo</string>
+    <string name="morphe_kakaotalk_custom_profile_image_adjust">Adjust photo</string>
+    <string name="morphe_kakaotalk_custom_profile_image_adjust_hint">Drag to move. Pinch to zoom.</string>
+    <string name="morphe_kakaotalk_custom_profile_image_apply">Use photo</string>
+    <string name="morphe_kakaotalk_custom_profile_image_show_overlay">Show text and stickers</string>
+    <string name="morphe_kakaotalk_custom_profile_image_hide_overlay">Show photo only</string>
+    <string name="morphe_kakaotalk_custom_profile_image_remove">Remove photo</string>
+    <string name="morphe_kakaotalk_custom_profile_image_error">Could not load the photo. Please select it again.</string>
     <string name="morphe_kakaotalk_chatlog_deleted">Deleted</string>
     <string name="morphe_kakaotalk_chatlog_hidden">Hidden</string>
     <string name="morphe_kakaotalk_chatlog_modified_history_title">Edit history</string>
