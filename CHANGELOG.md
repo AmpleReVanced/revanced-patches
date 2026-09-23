@@ -1,3 +1,10 @@
+# [1.5.0-dev.13](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.12...v1.5.0-dev.13) (2026-09-23)
+
+
+### Performance Improvements
+
+* reduce redundant class and fingerprint scans ([85cd666](https://github.com/AmpleReVanced/revanced-patches/commit/85cd666c587eeba56ffaf568a3a2e41caa3455ad))
+
 # [1.5.0-dev.12](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.11...v1.5.0-dev.12) (2026-09-23)
 
 
