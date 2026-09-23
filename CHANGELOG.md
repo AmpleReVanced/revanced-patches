@@ -1,3 +1,12 @@
+# [1.5.0-dev.15](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.14...v1.5.0-dev.15) (2026-09-23)
+
+
+### Features
+
+* **chzzk:** support version `3.13.2` ([f3e679a](https://github.com/AmpleReVanced/revanced-patches/commit/f3e679a4b5c8b9f769f3610e1f02ab2d291023f7))
+* **kakaomap:** support version `6.29.0` ([45c64db](https://github.com/AmpleReVanced/revanced-patches/commit/45c64db89f978d1ec95648e0a124a9bf53537c8d))
+* **soop:** support version `8.31.3` ([d6c01b5](https://github.com/AmpleReVanced/revanced-patches/commit/d6c01b5126f1414352f6c0d3e90f1c07ca04c4ab))
+
 # [1.5.0-dev.14](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.13...v1.5.0-dev.14) (2026-09-23)
 
 
