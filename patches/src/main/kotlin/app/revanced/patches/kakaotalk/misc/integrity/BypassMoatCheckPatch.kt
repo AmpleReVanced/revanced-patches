@@ -55,6 +55,16 @@ private val NATIVE_FLAGS =
 private val NATIVE_READER_PARAMETERS =
     listOf(listOf("I"), listOf("I", "I"), listOf("I", "I", "I"))
 
+private class MoatNativeGate(
+    val target: Method,
+    val name: String,
+    val localRegisters: Int,
+    val bypassInstructions: String,
+    val purpose: String,
+) {
+    var callSites = 0
+}
+
 @Suppress("unused")
 val bypassMoatCheckPatch = bytecodePatch(
     name = "Bypass Moat check",
@@ -158,37 +168,6 @@ val bypassMoatCheckPatch = bytecodePatch(
             replaceInstruction(index, newInvoke)
         }
 
-        fun redirectCallSites(target: Method, gateMethod: String): Int {
-            val descriptor = "${target.definingClass}->$gateMethod" +
-                    "(${target.parameterTypes.joinToString("")})${target.returnType}"
-            var patchedCalls = 0
-            classDefForEach { classDef ->
-                val callSites = classDef.methods.mapNotNull { method ->
-                    if (method.name.startsWith("revanced_moat")) return@mapNotNull null
-                    val methodInstructions = method.implementation?.instructions?.toList() ?: return@mapNotNull null
-                    methodInstructions.indices.filter { index ->
-                        val instruction = methodInstructions[index]
-                        val reference = instruction.getReference<MethodReference>()
-                        (instruction.opcode == Opcode.INVOKE_STATIC ||
-                                instruction.opcode == Opcode.INVOKE_STATIC_RANGE) &&
-                                reference?.definingClass == target.definingClass &&
-                                reference.name == target.name &&
-                                reference.parameterTypes == target.parameterTypes &&
-                                reference.returnType == target.returnType
-                    }.takeIf { it.isNotEmpty() }?.let { method to it }
-                }
-
-                callSites.forEach { (method, indices) ->
-                    val mutableMethod = mutableClassDefBy(classDef).findMutableMethodOf(method)
-                    indices.asReversed().forEach { index ->
-                        mutableMethod.replaceStaticInvoke(index, descriptor)
-                        patchedCalls++
-                    }
-                }
-            }
-            return patchedCalls
-        }
-
         fun addNativeGate(target: Method, gateMethod: String, localRegisters: Int, bypassInstructions: String) {
             val parameters = target.parameterTypes
             val originalInvoke = "${target.definingClass}->${target.name}" +
@@ -230,6 +209,8 @@ val bypassMoatCheckPatch = bytecodePatch(
             )
         }
 
+        val nativeGates = mutableListOf<MoatNativeGate>()
+
         fun gateNativeCalls(
             target: Method,
             gateMethod: String,
@@ -237,25 +218,17 @@ val bypassMoatCheckPatch = bytecodePatch(
             bypassInstructions: String,
             purpose: String,
         ) {
-            addNativeGate(target, gateMethod, localRegisters, bypassInstructions)
-            if (redirectCallSites(target, gateMethod) == 0) {
-                throw PatchException("Could not find any Moat $purpose call sites.")
-            }
+            nativeGates.add(MoatNativeGate(target, gateMethod, localRegisters, bypassInstructions, purpose))
         }
 
         val moatResultArrayType = "[${MoatResultClassFingerprint.classDef.type}"
-        val moatNativeClasses = buildList {
-            classDefForEach { classDef ->
-                if (classDef.methods.any { method ->
-                        method.accessFlags and NATIVE_FLAGS == NATIVE_FLAGS &&
-                                method.returnType == moatResultArrayType
-                    }) add(classDef)
-            }
+        val moatNativeClass = MoatLibraryLoaderFingerprint.classDef
+        if (moatNativeClass.methods.none { method ->
+                method.accessFlags and NATIVE_FLAGS == NATIVE_FLAGS &&
+                        method.returnType == moatResultArrayType
+            }) {
+            throw PatchException("Moat library loader has no native status reader.")
         }
-        val moatNativeClass = moatNativeClasses.singleOrNull()
-            ?: throw PatchException(
-                "Expected one Moat native bridge class, found ${moatNativeClasses.size}.",
-            )
 
         fun ClassDef.nativeMethods(
             returnType: String,
@@ -398,5 +371,45 @@ val bypassMoatCheckPatch = bytecodePatch(
             """.trimIndent(),
             "detector logging",
         )
+
+        val gatesByReference = nativeGates.associateBy { it.target.toString() }
+        if (gatesByReference.size != nativeGates.size) {
+            throw PatchException("Moat native gate targets are not unique.")
+        }
+        val callSites = mutableListOf<Pair<Method, List<Pair<Int, MoatNativeGate>>>>()
+        classDefForEach { classDef ->
+            for (method in classDef.methods) {
+                if (method.name.startsWith("revanced_moat")) continue
+                val implementation = method.implementation ?: continue
+                val methodCallSites = mutableListOf<Pair<Int, MoatNativeGate>>()
+                for ((index, instruction) in implementation.instructions.withIndex()) {
+                    if (instruction.opcode != Opcode.INVOKE_STATIC &&
+                        instruction.opcode != Opcode.INVOKE_STATIC_RANGE
+                    ) continue
+                    val reference = instruction.getReference<MethodReference>() ?: continue
+                    if (reference.definingClass != moatNativeClass.type) continue
+                    val gate = gatesByReference[reference.toString()] ?: continue
+                    methodCallSites.add(index to gate)
+                    gate.callSites++
+                }
+                if (methodCallSites.isNotEmpty()) callSites.add(method to methodCallSites)
+            }
+        }
+        nativeGates.forEach { gate ->
+            if (gate.callSites == 0) {
+                throw PatchException("Could not find any Moat ${gate.purpose} call sites.")
+            }
+            addNativeGate(gate.target, gate.name, gate.localRegisters, gate.bypassInstructions)
+        }
+        val gateDescriptors = nativeGates.associateWith { gate ->
+            "${gate.target.definingClass}->${gate.name}" +
+                    "(${gate.target.parameterTypes.joinToString("")})${gate.target.returnType}"
+        }
+        callSites.forEach { (method, matches) ->
+            val mutableMethod = mutableClassDefBy(method.definingClass).findMutableMethodOf(method)
+            matches.asReversed().forEach { (index, gate) ->
+                mutableMethod.replaceStaticInvoke(index, gateDescriptors.getValue(gate))
+            }
+        }
     }
 }
