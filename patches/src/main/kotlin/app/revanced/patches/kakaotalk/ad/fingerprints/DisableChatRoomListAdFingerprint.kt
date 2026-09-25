@@ -51,3 +51,16 @@ internal object ChatListBizBoardEnabledFingerprint : Fingerprint(
     returnType = "Z",
     filters = listOf(methodCall(parameters = listOf(), returnType = "Z")),
 )
+
+internal object CecallFolderBizBoardEnabledFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf("Lkotlin/coroutines/Continuation;"),
+    returnType = "Ljava/lang/Object;",
+    filters = listOf(
+        methodCall(
+            definingClass = "Lcom/kakao/talk/activity/main/chatroom/ad/ChatListAdResponse;",
+            returnType = "Z",
+        ),
+    ),
+    custom = { _, classDef -> classDef.sourceFile == "CecallFolderHistoryFragment.kt" },
+)
