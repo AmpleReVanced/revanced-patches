@@ -15,6 +15,15 @@ Second \"item\" text"</string>
 
 -->
 <resources>
+    <string name="morphe_kakaotalk_custom_profile_image">Photo</string>
+    <string name="morphe_kakaotalk_custom_profile_image_select">Choose photo</string>
+    <string name="morphe_kakaotalk_custom_profile_image_adjust">Adjust photo</string>
+    <string name="morphe_kakaotalk_custom_profile_image_adjust_hint">Drag to move. Pinch to zoom.</string>
+    <string name="morphe_kakaotalk_custom_profile_image_apply">Use photo</string>
+    <string name="morphe_kakaotalk_custom_profile_image_show_overlay">Show text and stickers</string>
+    <string name="morphe_kakaotalk_custom_profile_image_hide_overlay">Show photo only</string>
+    <string name="morphe_kakaotalk_custom_profile_image_remove">Remove photo</string>
+    <string name="morphe_kakaotalk_custom_profile_image_error">Could not load the photo. Please select it again.</string>
     <string name="morphe_kakaotalk_chatlog_deleted">Deleted</string>
     <string name="morphe_kakaotalk_chatlog_hidden">Hidden</string>
     <string name="morphe_kakaotalk_chatlog_modified_history_title">Edit history</string>
@@ -163,4 +172,22 @@ Second \"item\" text"</string>
     <string name="morphe_settings_patch_restore_keyword_log">Restore keyword notification log</string>
     <string name="morphe_pref_restore_keyword_log_summary">Collects messages that match your notification keywords and restores the removed list, including its chat list entry.</string>
     <string name="morphe_kakaotalk_keyword_log_sort_latest">Latest</string>
+    <string name="morphe_settings_patch_show_message_details">Show message details</string>
+    <string name="morphe_pref_show_message_details_summary">Add a long-press action to inspect the complete ChatLog object as JSON.</string>
+    <string name="morphe_kakaotalk_message_details_title">Message details</string>
+    <string name="morphe_kakaotalk_message_details_id">Message ID: %1$s</string>
+    <string name="morphe_kakaotalk_message_details_loading">Loading message details…</string>
+    <string name="morphe_kakaotalk_message_details_error">Could not load message details. Open the message menu and try again.</string>
+    <string name="morphe_kakaotalk_message_details_copy">Copy all JSON</string>
+    <string name="morphe_kakaotalk_message_details_copied">JSON copied</string>
+    <string name="morphe_kakaotalk_message_details_copy_error">Could not copy JSON. Try selecting and copying a smaller section.</string>
+    <string name="morphe_kakaotalk_message_details_save">Save JSON</string>
+    <string name="morphe_kakaotalk_message_details_saved">JSON saved</string>
+    <string name="morphe_kakaotalk_message_details_save_error">Could not save JSON.</string>
+    <string name="morphe_kakaotalk_message_details_formatted">Formatted</string>
+    <string name="morphe_kakaotalk_message_details_original">Raw</string>
+    <string name="morphe_kakaotalk_message_details_copy_short">Copy</string>
+    <string name="morphe_kakaotalk_message_details_save_short">Save</string>
+    <string name="morphe_kakaotalk_message_details_formatted_description">Embedded JSON is expanded for readability.</string>
+    <string name="morphe_kakaotalk_message_details_original_description">Original data, including internal fields.</string>
 </resources>

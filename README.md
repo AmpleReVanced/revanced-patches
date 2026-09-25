@@ -4,14 +4,14 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START -->
-> **[v1.4.0](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.4.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;117 patches total
+> **[v1.5.0-dev.16](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.5.0-dev.16)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;126 patches total
 <details>
-<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;71 patches</summary>
+<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;74 patches</summary>
 <br>
 
 **🎯 Supported versions:**
 
-| 26.7.2 |
+| 26.8.2 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
@@ -22,6 +22,7 @@
 | [Add settings tab](#add-settings-tab) | Adds a settings tab to the app. |  |
 | [Allow Hide on Any Chat](#allow-hide-on-any-chat) | Users with hiding privileges can hide any chat, including their own messages. |  |
 | [Allow Open Chat Managers To Block Members](#allow-open-chat-managers-to-block-members) | Allows open chat room hosts and co-hosts to block regular members from their profiles. |  |
+| [Allow custom profile images](#allow-custom-profile-images) | Adds a photo picker and adjustable images to the custom profile editor. |  |
 | [Allow direct thread reply editing](#allow-direct-thread-reply-editing) | Shows the edit action when long-pressing your own thread replies in the main chat. |  |
 | [Allow invisible characters](#allow-invisible-characters) | Stops zero width and other invisible characters from being stripped out of the chat input and out of the messages shown in a chat room. |  |
 | [Allow open chat media bundle](#allow-open-chat-media-bundle) | Removes the open chat restriction that stops webp, gif and other media from being bundled into a single multi-photo message. |  |
@@ -30,7 +31,7 @@
 | [Always Show Kick Button](#always-show-kick-button) | Always shows the kick button in group member management. |  |
 | [Block reactions on deleted or hidden messages](#block-reactions-on-deleted-or-hidden-messages) | Stops reactions, including the double tap gesture, from being sent on messages that the server considers deleted or hidden and that are only still visible because they are kept by a patch. |  |
 | [Block replies on deleted or hidden messages](#block-replies-on-deleted-or-hidden-messages) | Stops the swipe gesture, and any reply or comment send, from targeting messages that the server considers deleted or hidden and that are only still visible because they are kept by a patch. |  |
-| [Bypass Moat check](#bypass-moat-check) | Add a setting to bypass the KakaoPay Moat integrity check. It stops the native scan from running, so the tamper/root/hook verdict is never computed or reported and KakaoPay is not force-closed. Payments on a modified build are still risky. |  |
+| [Bypass Moat check](#bypass-moat-check) | Adds a setting to prevent KakaoPay Moat initialization, policy and pattern updates, scans, detector logging, and force-off reports while returning benign integrity results. Payments on a modified build are still risky. |  |
 | [Bypass input mention limit in non-multichat](#bypass-input-mention-limit-in-non-multichat) | Bypass the limit of input mentions in non-multichat rooms |  |
 | [Change model](#change-model) | Changes the device model to supporting subdevice features |  |
 | [Change package name](#change-package-name) | Appends ".revanced" to the package name by default. For KakaoTalk only | • Package name<br>• Update permissions<br>• Update providers |
@@ -52,7 +53,7 @@
 | [Disable ShortForm ad](#disable-shortform-ad) | Disables the shortform ad load and render paths. |  |
 | [Disable Talk Share Log](#disable-talk-share-log) | Disable talk share log |  |
 | [Disable abuse detection report](#disable-abuse-detection-report) | Answers the startup and login integrity challenge with an empty token and a benign Play Integrity failure code instead of a Google-signed token that would expose the re-signed certificate. The report itself is still sent, so the client does not go conspicuously silent on the server's nonce the way suppressing it entirely would. |  |
-| [Disable chat room list ad](#disable-chat-room-list-ad) | Disables native and global-region ads in the chat room list. |  |
+| [Disable chat room list ad](#disable-chat-room-list-ad) | Disables ads in the chat room list and Call filter. |  |
 | [Disable open chat room comments](#disable-open-chat-room-comments) | Adds a setting to disable comments in open chat rooms. |  |
 | [Disable verifying signature](#disable-verifying-signature) | Disables the signature verification check that prevents the app from running. |  |
 | [Enable Markdown](#enable-markdown) | Render plain text messages with markdown-style formatting. |  |
@@ -75,9 +76,11 @@
 | [Remove focus ad](#remove-focus-ad) | Removes the focus ad from the app. |  |
 | [Remove native ad](#remove-native-ad) | Removes the native ad from the app. |  |
 | [Remove shop tab](#remove-shop-tab) | Removes the shop tab from the bottom navigation bar. |  |
+| [Remove tab banner ads](#remove-tab-banner-ads) | Removes main tab banners and disables AdFit talk banners. |  |
 | [Restore keyword notification log](#restore-keyword-notification-log) | Restores the removed keyword notification collection view along with its chat list entry. |  |
 | [Show chatroom channel ID](#show-chatroom-channel-id) | Shows the channel ID in chatroom settings and copies it when tapping the chat side title. |  |
 | [Show deleted, hidden, or edited messages](#show-deleted-hidden-or-edited-messages) | Allows you to see deleted, hidden, and edited message history in chat logs. | • Deleted color<br>• Hidden color |
+| [Show message details](#show-message-details) | Adds a long-press action to inspect the complete ChatLog object, including inherited and message-specific fields, as JSON. |  |
 | [Show message read receipts](#show-message-read-receipts) | Shows the members who have or have not read each chat message. |  |
 | [Show messages restricted to mobile](#show-messages-restricted-to-mobile) | Shows the content of AlimTalk, Leverage and Universal messages that are replaced with a placeholder asking to open them on mobile while signed in on a sub device. |  |
 | [Spoof App ID](#spoof-app-id) | Spoofs the App ID to bypass integrity checks. (to bypass biometric auth etc.) |  |
@@ -96,7 +99,7 @@
 
 **🎯 Supported versions:**
 
-| 5.3.4 |
+| 5.3.6 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
@@ -136,8 +139,8 @@
 
 **🎯 Supported versions:**
 
-| 3.12.1 | 3.11.1 |
-| :---: | :---: |
+| 3.13.2 |
+| :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
@@ -155,8 +158,8 @@
 
 **🎯 Supported versions:**
 
-| 1.5.0.9 | 1.5.0.8 | 1.5.0.7 | 1.4.4.14 | 1.4.4.12 | 1.4.4.10 | 1.4.4.9 |
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| 1.5.0.11 | 1.5.0.10 | 1.5.0.9 | 1.5.0.8 | 1.5.0.7 | 1.4.4.14 | 1.4.4.12 | 1.4.4.10 | 1.4.4.9 |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
@@ -166,13 +169,31 @@
 </details>
 
 <details>
+<summary>📦 StarNote&nbsp;&nbsp;•&nbsp;&nbsp;4 patches</summary>
+<br>
+
+**🎯 Supported versions:**
+
+| 🧪&nbsp;1.5.3 |
+| :---: |
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Bypass login](#bypass-login) | Skips the mandatory account sign-in on launch and opens the app directly. |  |
+| [Enable local handwriting search](#enable-local-handwriting-search) | Uses the on-device ML engine to index and search handwriting. |  |
+| [Unlock Premium features](#unlock-premium-features) | Enables local premium features and raises the local note creation quota. |  |
+| [Use local ML for Smart HWR](#use-local-ml-for-smart-hwr) | Uses the on-device ML engine instead of SuNia for Smart HWR. |  |
+
+</details>
+
+<details>
 <summary>📦 SOOP&nbsp;&nbsp;•&nbsp;&nbsp;10 patches</summary>
 <br>
 
 **🎯 Supported versions:**
 
-| 8.29.3 | 8.28.5 |
-| :---: | :---: |
+| 8.31.3 | 8.30.1 | 8.29.3 | 8.28.5 |
+| :---: | :---: | :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
@@ -186,6 +207,36 @@
 | [Remove live ads](#remove-live-ads) | Removes the live pre-roll ad by routing every ad decision into the app's own no-video path so the stream starts immediately. |  |
 | [Remove live banner ads](#remove-live-banner-ads) | Removes the banner ads shown under the live player by stopping their driver from attaching the banner fragments. |  |
 | [Remove main board ads](#remove-main-board-ads) | Removes the native "main board" banner ad shown in feeds and under the live player. |  |
+
+</details>
+
+<details>
+<summary>📦 KakaoMap&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<br>
+
+**🎯 Supported versions:**
+
+| 🧪&nbsp;6.29.0 | 🧪&nbsp;6.28.3 | 🧪&nbsp;6.28.2 | 🧪&nbsp;6.28.1 |
+| :---: | :---: | :---: | :---: |
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Enable navigation live updates](#enable-navigation-live-updates) | Shows navigation progress and stop-by-stop transit guidance with Android Live Updates. |  |
+
+</details>
+
+<details>
+<summary>📦 NAVER Map&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<br>
+
+**🎯 Supported versions:**
+
+| 🧪&nbsp;6.10.0.16 | 🧪&nbsp;6.9.1.3 |
+| :---: | :---: |
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Enable navigation live updates](#enable-navigation-live-updates) | Converts Now Bar navigation notifications to Android Live Updates on Android 16 or newer. |  |
 
 </details>
 

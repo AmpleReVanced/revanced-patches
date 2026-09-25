@@ -29,6 +29,9 @@ public final class Settings extends BaseSettings {
     public static final BooleanSetting SHOW_MESSAGE_READ_RECEIPTS =
             new BooleanSetting("kakaotalk_show_message_read_receipts", TRUE);
 
+    public static final BooleanSetting SHOW_MESSAGE_DETAILS =
+            new BooleanSetting("kakaotalk_show_message_details", TRUE);
+
     public static final BooleanSetting GHOST_MODE =
             new BooleanSetting("kakaotalk_ghost_mode", TRUE);
 

@@ -1,3 +1,128 @@
+# [1.5.0-dev.16](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.15...v1.5.0-dev.16) (2026-09-25)
+
+
+### Bug Fixes
+
+* **kakaotalk:** remove BizBoard ads from the Call filter ([9b5abd0](https://github.com/AmpleReVanced/revanced-patches/commit/9b5abd087c64c5e1fa5b3d461ae306e0cfc5cac2))
+
+# [1.5.0-dev.15](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.14...v1.5.0-dev.15) (2026-09-23)
+
+
+### Features
+
+* **chzzk:** support version `3.13.2` ([f3e679a](https://github.com/AmpleReVanced/revanced-patches/commit/f3e679a4b5c8b9f769f3610e1f02ab2d291023f7))
+* **kakaomap:** support version `6.29.0` ([45c64db](https://github.com/AmpleReVanced/revanced-patches/commit/45c64db89f978d1ec95648e0a124a9bf53537c8d))
+* **soop:** support version `8.31.3` ([d6c01b5](https://github.com/AmpleReVanced/revanced-patches/commit/d6c01b5126f1414352f6c0d3e90f1c07ca04c4ab))
+
+# [1.5.0-dev.14](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.13...v1.5.0-dev.14) (2026-09-23)
+
+
+### Bug Fixes
+
+* **starnote:** restore premium access and local note quota on 1.5.3 ([f191f23](https://github.com/AmpleReVanced/revanced-patches/commit/f191f2304611438d82ed5563e8d82ac93723f9a8))
+
+# [1.5.0-dev.13](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.12...v1.5.0-dev.13) (2026-09-23)
+
+
+### Performance Improvements
+
+* reduce redundant class and fingerprint scans ([85cd666](https://github.com/AmpleReVanced/revanced-patches/commit/85cd666c587eeba56ffaf568a3a2e41caa3455ad))
+
+# [1.5.0-dev.12](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.11...v1.5.0-dev.12) (2026-09-23)
+
+
+### Features
+
+* **kakaotalk:** allow custom images in custom profiles ([2cae8e8](https://github.com/AmpleReVanced/revanced-patches/commit/2cae8e8f7035ee4a637d6b45ce51e56b0cf394fe))
+
+# [1.5.0-dev.11](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.10...v1.5.0-dev.11) (2026-09-21)
+
+
+### Features
+
+* **kakaotalk:** support version `26.8.2` ([1046ee3](https://github.com/AmpleReVanced/revanced-patches/commit/1046ee33cd14830aa22a5dab7b5b557a88202e4d))
+
+# [1.5.0-dev.10](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.9...v1.5.0-dev.10) (2026-09-16)
+
+
+### Features
+
+* **chzzk:** support version `3.13.0` ([9cb91b1](https://github.com/AmpleReVanced/revanced-patches/commit/9cb91b1ad34050de5f5382c1e85f3650f5cd24c1))
+* **flexcil:** support version `1.5.0.11` ([6deb3e3](https://github.com/AmpleReVanced/revanced-patches/commit/6deb3e360bd88918d4e12424333f30c55477948b))
+* **kakaomap:** support version `6.28.3` ([77c0bd3](https://github.com/AmpleReVanced/revanced-patches/commit/77c0bd3e8cace5cae27eb7885f7697e3c6e23b22))
+* **kakaotalk:** support version `26.8.0` ([d3f546b](https://github.com/AmpleReVanced/revanced-patches/commit/d3f546bb2bbc8a1000377b543cdb116b34c7c9fa))
+* **navermap:** support version `6.10.0.16` ([064755c](https://github.com/AmpleReVanced/revanced-patches/commit/064755c1da125219b36cd9e34f55ff4ae5631790))
+* **soop:** support version `8.30.1` ([0c8844a](https://github.com/AmpleReVanced/revanced-patches/commit/0c8844a71258cf50bf9cf74456874d05b16db6f6))
+* **starnote:** support version `1.5.2` ([f54e92d](https://github.com/AmpleReVanced/revanced-patches/commit/f54e92dfc53e72512faee5bfd8a87d4736fea376))
+
+# [1.5.0-dev.9](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.8...v1.5.0-dev.9) (2026-09-14)
+
+
+### Features
+
+* **kakaotalk:** add message details viewer ([962f561](https://github.com/AmpleReVanced/revanced-patches/commit/962f561ed98acbc47dc07a48e8a4b3c4789d8b3d))
+
+# [1.5.0-dev.8](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.7...v1.5.0-dev.8) (2026-09-08)
+
+
+### Bug Fixes
+
+* **navermap:** support navigation live updates on 6.9.1.3 ([40fbd7c](https://github.com/AmpleReVanced/revanced-patches/commit/40fbd7c48e2b84ee449010095a9a1e00d68ff541))
+
+# [1.5.0-dev.7](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.6...v1.5.0-dev.7) (2026-09-08)
+
+
+### Bug Fixes
+
+* **kakaomap:** improve public transit live updates ([0f26885](https://github.com/AmpleReVanced/revanced-patches/commit/0f26885366413f260ed6c187c5b2e3e08176dcf5))
+
+
+### Features
+
+* **navermap:** add navigation live updates ([ab3d525](https://github.com/AmpleReVanced/revanced-patches/commit/ab3d525d7af9ff766df3c550acf22d05a4ee0141))
+
+# [1.5.0-dev.6](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.5...v1.5.0-dev.6) (2026-09-08)
+
+
+### Bug Fixes
+
+* **kakaotalk:** restore kick actions for open chat members ([ed0cf56](https://github.com/AmpleReVanced/revanced-patches/commit/ed0cf56ff96c1710e8b7ce554958f89cd4bfff47))
+
+# [1.5.0-dev.5](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.4...v1.5.0-dev.5) (2026-09-07)
+
+
+### Features
+
+* **dcinside:** support version `5.3.6` ([6651ae1](https://github.com/AmpleReVanced/revanced-patches/commit/6651ae11033a0594a7e1335718d5f152901c4983))
+
+# [1.5.0-dev.4](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.3...v1.5.0-dev.4) (2026-09-03)
+
+
+### Bug Fixes
+
+* **starnote:** support manager resource layout and restore integrity bypass ([5b80742](https://github.com/AmpleReVanced/revanced-patches/commit/5b80742f91599dd517fdc65f927381b576475f31))
+
+# [1.5.0-dev.3](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.2...v1.5.0-dev.3) (2026-09-02)
+
+
+### Features
+
+* **starnote:** add premium, login, and local handwriting patches ([3d697e3](https://github.com/AmpleReVanced/revanced-patches/commit/3d697e35309a0b57963ec405335ee908b5af3beb))
+
+# [1.5.0-dev.2](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.1...v1.5.0-dev.2) (2026-09-01)
+
+
+### Bug Fixes
+
+* **kakaotalk:** jump to the matching keyword alert message ([1cf7f53](https://github.com/AmpleReVanced/revanced-patches/commit/1cf7f533c76077d2207164f9d89f887781e44891))
+
+# [1.5.0-dev.1](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0...v1.5.0-dev.1) (2026-09-01)
+
+
+### Features
+
+* **kakaomap:** add navigation live updates ([de3b9a2](https://github.com/AmpleReVanced/revanced-patches/commit/de3b9a2f311d13c5298fe7215dfda63f0069c0f4))
+
 # [1.4.0](https://github.com/AmpleReVanced/revanced-patches/compare/v1.3.0...v1.4.0) (2026-08-31)
 
 

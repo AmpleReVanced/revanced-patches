@@ -1,4 +1,13 @@
 <resources>
+    <string name="morphe_kakaotalk_custom_profile_image">사진</string>
+    <string name="morphe_kakaotalk_custom_profile_image_select">사진 고르기</string>
+    <string name="morphe_kakaotalk_custom_profile_image_adjust">사진 위치 조정</string>
+    <string name="morphe_kakaotalk_custom_profile_image_adjust_hint">드래그하여 위치를 옮기고 두 손가락으로 확대하세요.</string>
+    <string name="morphe_kakaotalk_custom_profile_image_apply">사진 사용</string>
+    <string name="morphe_kakaotalk_custom_profile_image_show_overlay">글씨·스티커 표시</string>
+    <string name="morphe_kakaotalk_custom_profile_image_hide_overlay">사진만 표시</string>
+    <string name="morphe_kakaotalk_custom_profile_image_remove">사진 제거</string>
+    <string name="morphe_kakaotalk_custom_profile_image_error">사진을 불러오지 못했습니다. 다시 선택해 주세요.</string>
     <string name="morphe_kakaotalk_chatlog_deleted">삭제됨</string>
     <string name="morphe_kakaotalk_chatlog_hidden">가려짐</string>
     <string name="morphe_kakaotalk_chatlog_modified_history_title">수정 이력</string>
@@ -147,4 +156,22 @@
     <string name="morphe_settings_patch_restore_keyword_log">키워드 알림 모아보기 복원</string>
     <string name="morphe_pref_restore_keyword_log_summary">알림 키워드에 해당하는 메시지를 모아 보여주는 제거된 목록과 채팅 목록 항목을 복원합니다.</string>
     <string name="morphe_kakaotalk_keyword_log_sort_latest">최신순</string>
+    <string name="morphe_settings_patch_show_message_details">메시지 자세히 보기</string>
+    <string name="morphe_pref_show_message_details_summary">메시지를 길게 눌러 ChatLog 객체 전체를 JSON으로 확인합니다.</string>
+    <string name="morphe_kakaotalk_message_details_title">메시지 자세히 보기</string>
+    <string name="morphe_kakaotalk_message_details_id">메시지 ID: %1$s</string>
+    <string name="morphe_kakaotalk_message_details_loading">메시지 정보를 불러오는 중…</string>
+    <string name="morphe_kakaotalk_message_details_error">메시지 정보를 불러오지 못했습니다. 메시지 메뉴에서 다시 열어 주세요.</string>
+    <string name="morphe_kakaotalk_message_details_copy">JSON 전체 복사</string>
+    <string name="morphe_kakaotalk_message_details_copied">JSON을 복사했습니다</string>
+    <string name="morphe_kakaotalk_message_details_copy_error">JSON을 복사하지 못했습니다. 필요한 부분을 선택해 복사해 주세요.</string>
+    <string name="morphe_kakaotalk_message_details_save">JSON 저장</string>
+    <string name="morphe_kakaotalk_message_details_saved">JSON을 저장했습니다</string>
+    <string name="morphe_kakaotalk_message_details_save_error">JSON을 저장하지 못했습니다.</string>
+    <string name="morphe_kakaotalk_message_details_formatted">정리된 보기</string>
+    <string name="morphe_kakaotalk_message_details_original">원본</string>
+    <string name="morphe_kakaotalk_message_details_copy_short">복사</string>
+    <string name="morphe_kakaotalk_message_details_save_short">저장</string>
+    <string name="morphe_kakaotalk_message_details_formatted_description">첨부 정보의 JSON을 펼쳐 표시합니다.</string>
+    <string name="morphe_kakaotalk_message_details_original_description">내부 필드를 포함한 원본 데이터입니다.</string>
 </resources>

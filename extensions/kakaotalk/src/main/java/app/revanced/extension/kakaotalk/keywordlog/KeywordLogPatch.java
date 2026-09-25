@@ -30,7 +30,7 @@ public final class KeywordLogPatch {
     public static void recordFromChatLog(Object chatLog, boolean matched) {
     }
 
-    public static Intent createChatRoomIntent(Context context, long chatRoomId) {
+    public static Intent createChatRoomIntent(Context context, long chatRoomId, long chatLogId) {
         return null;
     }
 

@@ -86,24 +86,17 @@ internal object ChatLogVFieldPutStringFingerprint : Fingerprint(
     custom = { _, classDef -> classDef.sourceFile == "VField.kt" && classDef.instanceFields.count() == 1 }
 )
 
-internal object FlushToDBChatLogFingerprint : Fingerprint(
+internal fun FlushToDBChatLogFingerprint(chatLogType: String) = Fingerprint(
+    classFingerprint = ReplaceToFeedFingerprint,
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf(chatLogType),
     returnType = "Z",
-    filters = OpcodesFilter.opcodesToFilters(
-        Opcode.SGET_OBJECT,
-        Opcode.NEW_INSTANCE,
-        Opcode.INVOKE_DIRECT,
-        Opcode.INVOKE_VIRTUAL,
-        Opcode.CONST_4,
-        Opcode.RETURN,
-        Opcode.INVOKE_VIRTUAL,
-        Opcode.CONST_4,
-        Opcode.RETURN
+    filters = listOf(
+        methodCall(
+            parameters = listOf(chatLogType, "Lkotlin/jvm/functions/Function0;"),
+            returnType = "V",
+        ),
     ),
-    custom = { method, classDef ->
-        classDef.sourceFile == "ChatLogsManager.kt"
-                && method.parameterTypes.size == 1
-    }
 )
 
 internal object PutDeletedMessageCacheFingerprint : Fingerprint(
@@ -111,8 +104,9 @@ internal object PutDeletedMessageCacheFingerprint : Fingerprint(
     parameters = listOf("J", "J"),
     returnType = "V",
     filters = OpcodesFilter.opcodesToFilters(
-        Opcode.SGET_OBJECT,
+        Opcode.IGET_OBJECT,
         Opcode.MONITOR_ENTER,
+        Opcode.IGET_OBJECT,
         Opcode.INVOKE_STATIC,
         Opcode.MOVE_RESULT_OBJECT,
         Opcode.INVOKE_VIRTUAL,
@@ -134,7 +128,7 @@ internal fun getDeletedMessageCacheFingerprint(chatLogType: String) = object : F
     parameters = listOf(chatLogType),
     returnType = "Z",
     filters = OpcodesFilter.opcodesToFilters(
-        Opcode.SGET_OBJECT,
+        Opcode.IGET_OBJECT,
         Opcode.INVOKE_VIRTUAL,
         Opcode.MOVE_RESULT_WIDE,
         Opcode.INVOKE_STATIC,
