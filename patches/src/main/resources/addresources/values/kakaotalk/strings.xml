@@ -184,9 +184,6 @@ Second \"item\" text"</string>
     <string name="morphe_kakaotalk_message_details_save">Save JSON</string>
     <string name="morphe_kakaotalk_message_details_saved">JSON saved</string>
     <string name="morphe_kakaotalk_message_details_save_error">Could not save JSON.</string>
-    <string name="morphe_kakaotalk_message_details_previous">Previous</string>
-    <string name="morphe_kakaotalk_message_details_next">Next</string>
-    <string name="morphe_kakaotalk_message_details_page">%1$d / %2$d</string>
     <string name="morphe_kakaotalk_message_details_formatted">Formatted</string>
     <string name="morphe_kakaotalk_message_details_original">Raw</string>
     <string name="morphe_kakaotalk_message_details_copy_short">Copy</string>

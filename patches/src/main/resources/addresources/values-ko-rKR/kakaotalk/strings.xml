@@ -168,9 +168,6 @@
     <string name="morphe_kakaotalk_message_details_save">JSON 저장</string>
     <string name="morphe_kakaotalk_message_details_saved">JSON을 저장했습니다</string>
     <string name="morphe_kakaotalk_message_details_save_error">JSON을 저장하지 못했습니다.</string>
-    <string name="morphe_kakaotalk_message_details_previous">이전</string>
-    <string name="morphe_kakaotalk_message_details_next">다음</string>
-    <string name="morphe_kakaotalk_message_details_page">%1$d / %2$d</string>
     <string name="morphe_kakaotalk_message_details_formatted">정리된 보기</string>
     <string name="morphe_kakaotalk_message_details_original">원본</string>
     <string name="morphe_kakaotalk_message_details_copy_short">복사</string>

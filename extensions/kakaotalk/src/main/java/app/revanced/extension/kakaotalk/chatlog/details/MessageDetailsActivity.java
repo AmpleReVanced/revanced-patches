@@ -40,12 +40,9 @@ import app.revanced.extension.kakaotalk.settings.MorpheSettingsIconDynamicDrawab
 public final class MessageDetailsActivity extends Activity {
     private static final String EXTRA_TOKEN = "app.revanced.extension.kakaotalk.message.details.TOKEN";
     private static final String STATE_ORIGINAL = "message_details_original";
-    private static final String STATE_PAGES = "message_details_pages";
     private static final String STATE_SCROLLS = "message_details_scrolls";
     private static final String STATE_SAVE_ORIGINAL = "message_details_save_original";
-    private static final int PAGE_LENGTH = 30000;
     private static final int SAVE_JSON = 1;
-    private final int[] pages = new int[2];
     private final int[] scrolls = new int[2];
     private boolean darkMode;
     private boolean original;
@@ -59,10 +56,6 @@ public final class MessageDetailsActivity extends Activity {
     private Button originalTab;
     private Button copyButton;
     private Button saveButton;
-    private Button previousButton;
-    private Button nextButton;
-    private TextView pageView;
-    private LinearLayout pageBar;
     private ScrollView scrollView;
     private ProgressBar progressView;
 
@@ -80,7 +73,6 @@ public final class MessageDetailsActivity extends Activity {
         if (savedInstanceState != null) {
             original = savedInstanceState.getBoolean(STATE_ORIGINAL);
             saveOriginal = savedInstanceState.getBoolean(STATE_SAVE_ORIGINAL);
-            restorePositions(savedInstanceState, STATE_PAGES, pages);
             restorePositions(savedInstanceState, STATE_SCROLLS, scrolls);
         }
         int containerId = SettingsActivityLayout.setContentView(this, str("morphe_kakaotalk_message_details_title"));
@@ -105,7 +97,7 @@ public final class MessageDetailsActivity extends Activity {
                     progressView.setVisibility(View.GONE);
                     copyButton.setEnabled(true);
                     saveButton.setEnabled(true);
-                    showPage(true);
+                    showJson(true);
                 });
             } catch (Exception exception) {
                 runOnUiThread(() -> {
@@ -122,7 +114,6 @@ public final class MessageDetailsActivity extends Activity {
         scrolls[tabIndex()] = scrollView.getScrollY();
         state.putBoolean(STATE_ORIGINAL, original);
         state.putBoolean(STATE_SAVE_ORIGINAL, saveOriginal);
-        state.putIntArray(STATE_PAGES, pages);
         state.putIntArray(STATE_SCROLLS, scrolls);
         super.onSaveInstanceState(state);
     }
@@ -158,21 +149,6 @@ public final class MessageDetailsActivity extends Activity {
         jsonView.setHighlightColor(darkMode ? 0xFF354965 : 0xFFDCE9FF);
         jsonView.setHorizontallyScrolling(false);
         scrollView.addView(jsonView, new ScrollView.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
-
-        pageBar = new LinearLayout(this);
-        pageBar.setGravity(Gravity.CENTER_VERTICAL);
-        pageBar.setPadding(0, dp(4), 0, 0);
-        pageBar.setVisibility(View.GONE);
-        previousButton = button("morphe_kakaotalk_message_details_previous");
-        previousButton.setOnClickListener(view -> movePage(-1));
-        nextButton = button("morphe_kakaotalk_message_details_next");
-        nextButton.setOnClickListener(view -> movePage(1));
-        pageView = text("", 12, secondaryColor(), true);
-        pageView.setGravity(Gravity.CENTER);
-        pageBar.addView(previousButton, new LinearLayout.LayoutParams(WRAP_CONTENT, dp(48)));
-        pageBar.addView(pageView, new LinearLayout.LayoutParams(0, WRAP_CONTENT, 1f));
-        pageBar.addView(nextButton, new LinearLayout.LayoutParams(WRAP_CONTENT, dp(48)));
-        content.addView(pageBar, matchWrap());
         updateTabs();
         return content;
     }
@@ -233,7 +209,7 @@ public final class MessageDetailsActivity extends Activity {
         scrolls[tabIndex()] = scrollView.getScrollY();
         original = selectedOriginal;
         updateTabs();
-        showPage(true);
+        showJson(true);
     }
 
     private void updateTabs() {
@@ -250,27 +226,14 @@ public final class MessageDetailsActivity extends Activity {
         tab.setBackground(ripple(selected ? (darkMode ? 0xFF3A3A3E : Color.WHITE) : Color.TRANSPARENT, 9));
     }
 
-    private void movePage(int offset) {
-        pages[tabIndex()] += offset;
-        scrolls[tabIndex()] = 0;
-        showPage(false);
-    }
-
-    private void showPage(boolean restoreScroll) {
+    private void showJson(boolean restoreScroll) {
         if (snapshot == null) return;
         String json = snapshot.json(original);
         int tab = tabIndex();
-        int total = Math.max(1, (json.length() + PAGE_LENGTH - 1) / PAGE_LENGTH);
-        int page = pages[tab] = Math.max(0, Math.min(pages[tab], total - 1));
-        String part = json.substring(pageBoundary(json, page), pageBoundary(json, page + 1));
-        jsonView.setText(MessageDetailsSyntax.highlight(part, darkMode, jsonView.getPaint().measureText(" ")));
-        pageBar.setVisibility(total > 1 ? View.VISIBLE : View.GONE);
-        pageView.setText(str("morphe_kakaotalk_message_details_page", page + 1, total));
-        previousButton.setEnabled(page > 0);
-        nextButton.setEnabled(page + 1 < total);
+        jsonView.setText(MessageDetailsSyntax.highlight(json, darkMode, jsonView.getPaint().measureText(" ")));
         int scroll = restoreScroll ? scrolls[tab] : 0;
         scrollView.post(() -> {
-            if (tabIndex() == tab && pages[tab] == page) scrollView.scrollTo(0, scroll);
+            if (tabIndex() == tab) scrollView.scrollTo(0, scroll);
         });
     }
 
@@ -396,12 +359,6 @@ public final class MessageDetailsActivity extends Activity {
     private static void restorePositions(Bundle state, String key, int[] target) {
         int[] saved = state.getIntArray(key);
         if (saved != null && saved.length == target.length) System.arraycopy(saved, 0, target, 0, target.length);
-    }
-
-    private static int pageBoundary(String json, int index) {
-        int end = Math.min(index * PAGE_LENGTH, json.length());
-        if (end > 0 && end < json.length() && Character.isHighSurrogate(json.charAt(end - 1))) end--;
-        return end;
     }
 
     private static LinearLayout.LayoutParams matchWrap() {
