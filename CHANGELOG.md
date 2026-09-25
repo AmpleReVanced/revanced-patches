@@ -1,3 +1,10 @@
+# [1.5.0-dev.16](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.15...v1.5.0-dev.16) (2026-09-25)
+
+
+### Bug Fixes
+
+* **kakaotalk:** remove BizBoard ads from the Call filter ([9b5abd0](https://github.com/AmpleReVanced/revanced-patches/commit/9b5abd087c64c5e1fa5b3d461ae306e0cfc5cac2))
+
 # [1.5.0-dev.15](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.14...v1.5.0-dev.15) (2026-09-23)
 
 
