@@ -113,6 +113,7 @@ public final class WindowCompat {
 
     public static void show(Dialog dialog) {
         if (!ONE_UI) {
+            dialog.create();
             Window window = dialog.getWindow();
             if (window != null) {
                 WindowManager.LayoutParams attributes = window.getAttributes();
