@@ -1,3 +1,11 @@
+# [1.5.0-dev.17](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.16...v1.5.0-dev.17) (2026-09-28)
+
+
+### Bug Fixes
+
+* **samsung-keyboard:** create dialogs before converting window type ([b4b4708](https://github.com/AmpleReVanced/revanced-patches/commit/b4b470840695e11680b684af9a9a71c583f096e9)), closes [#175](https://github.com/AmpleReVanced/revanced-patches/issues/175)
+* **samsung-keyboard:** defer toolbar initialization until user unlock ([6f88b77](https://github.com/AmpleReVanced/revanced-patches/commit/6f88b773a8d2f6ba807842e00943ea9340011fd8))
+
 # [1.5.0-dev.16](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.15...v1.5.0-dev.16) (2026-09-25)
 
 
