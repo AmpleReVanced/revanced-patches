@@ -44,6 +44,9 @@ public final class Settings extends BaseSettings {
     public static final BooleanSetting REMOVE_LOCAL_CONNECT_TAB =
             new BooleanSetting("kakaotalk_remove_local_connect_tab", TRUE, true);
 
+    public static final BooleanSetting DISABLE_FRIEND_FEED_TAB =
+            new BooleanSetting("kakaotalk_disable_friend_feed_tab", TRUE, true);
+
     public static final BooleanSetting HIDE_MORE_TAB_GAME =
             new BooleanSetting("kakaotalk_hide_more_tab_game", TRUE, true);
 
@@ -135,6 +138,10 @@ public final class Settings extends BaseSettings {
 
     public static boolean removeLocalConnectTab() {
         return REMOVE_LOCAL_CONNECT_TAB.get();
+    }
+
+    public static boolean disableFriendFeedTab() {
+        return DISABLE_FRIEND_FEED_TAB.get();
     }
 
     public static boolean hideMoreTabGame() {

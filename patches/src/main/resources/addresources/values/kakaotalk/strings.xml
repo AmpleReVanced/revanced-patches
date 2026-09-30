@@ -106,6 +106,8 @@ Second \"item\" text"</string>
     <string name="morphe_settings_catalog_remove_shop_tab_summary">Hides the Shopping tab from the bottom navigation bar. Restart KakaoTalk after changing this setting.</string>
     <string name="morphe_settings_catalog_remove_local_connect_tab">Hide Local tab</string>
     <string name="morphe_settings_catalog_remove_local_connect_tab_summary">Hides the Local tab from the bottom navigation bar. Restart KakaoTalk after changing this setting.</string>
+    <string name="morphe_settings_catalog_disable_friend_feed_tab">Use classic Friends tab</string>
+    <string name="morphe_settings_catalog_disable_friend_feed_tab_summary">Replaces the Friend Feed tab with the classic Friends tab. Restart KakaoTalk after changing this setting.</string>
     <string name="morphe_settings_catalog_hide_more_tab_game">Hide Game tab</string>
     <string name="morphe_settings_catalog_hide_more_tab_game_summary">Hides the Game tab from the More tab. Restart KakaoTalk after changing this setting.</string>
     <string name="morphe_settings_catalog_hide_more_tab_kakao_pay_section">Hide KakaoPay section</string>
@@ -151,6 +153,7 @@ Second \"item\" text"</string>
     <string name="morphe_pref_remove_short_form_tab_summary">Hides the Short-form entry point from the tab pager and related navigation. Restart KakaoTalk after changing this setting.</string>
     <string name="morphe_pref_remove_shop_tab_summary">Hides the Shopping tab from the bottom navigation bar. Restart KakaoTalk after changing this setting.</string>
     <string name="morphe_pref_remove_local_connect_tab_summary">Hides the Local tab from the bottom navigation bar. Restart KakaoTalk after changing this setting.</string>
+    <string name="morphe_pref_disable_friend_feed_tab_summary">Replaces the Friend Feed tab with the classic Friends tab. Restart KakaoTalk after changing this setting.</string>
     <string name="morphe_pref_hide_more_tab_kakao_pay_section_summary">Hides the KakaoPay section from the More tab. Restart KakaoTalk after changing this setting.</string>
     <string name="morphe_pref_hide_more_tab_kakao_now_section_summary">Hides the Kakao Now section from the More tab. Restart KakaoTalk after changing this setting.</string>
     <string name="morphe_pref_hide_more_tab_weather_section_summary">Hides the Weather section from the More tab. Restart KakaoTalk after changing this setting.</string>

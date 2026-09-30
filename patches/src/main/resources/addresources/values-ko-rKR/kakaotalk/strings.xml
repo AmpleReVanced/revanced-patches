@@ -90,6 +90,8 @@
     <string name="morphe_settings_catalog_remove_shop_tab_summary">하단 탭에서 쇼핑 탭을 숨깁니다. 이 설정을 바꾼 뒤에는 카카오톡을 다시 시작해야 합니다.</string>
     <string name="morphe_settings_catalog_remove_local_connect_tab">지역소식 탭 숨기기</string>
     <string name="morphe_settings_catalog_remove_local_connect_tab_summary">하단 탭에서 지역소식 탭을 숨깁니다. 이 설정을 바꾼 뒤에는 카카오톡을 다시 시작해야 합니다.</string>
+    <string name="morphe_settings_catalog_disable_friend_feed_tab">이전 친구 탭 사용</string>
+    <string name="morphe_settings_catalog_disable_friend_feed_tab_summary">친구 피드 탭 대신 이전 친구 탭을 표시합니다. 이 설정을 바꾼 뒤에는 카카오톡을 다시 시작해야 합니다.</string>
     <string name="morphe_settings_catalog_hide_more_tab_game">게임 탭 숨기기</string>
     <string name="morphe_settings_catalog_hide_more_tab_game_summary">더보기 탭에서 게임 탭을 숨깁니다. 이 설정을 바꾼 뒤에는 카카오톡을 다시 시작해야 합니다.</string>
     <string name="morphe_settings_catalog_hide_more_tab_kakao_pay_section">카카오페이 섹션 숨기기</string>
@@ -135,6 +137,7 @@
     <string name="morphe_pref_remove_short_form_tab_summary">탭 페이저와 관련 이동 흐름에서 숏폼 진입점을 숨깁니다. 이 설정을 바꾼 뒤에는 카카오톡을 다시 시작해야 합니다.</string>
     <string name="morphe_pref_remove_shop_tab_summary">하단 탭에서 쇼핑 탭을 숨깁니다. 이 설정을 바꾼 뒤에는 카카오톡을 다시 시작해야 합니다.</string>
     <string name="morphe_pref_remove_local_connect_tab_summary">하단 탭에서 지역소식 탭을 숨깁니다. 이 설정을 바꾼 뒤에는 카카오톡을 다시 시작해야 합니다.</string>
+    <string name="morphe_pref_disable_friend_feed_tab_summary">친구 피드 탭 대신 이전 친구 탭을 표시합니다. 이 설정을 바꾼 뒤에는 카카오톡을 다시 시작해야 합니다.</string>
     <string name="morphe_pref_hide_more_tab_kakao_pay_section_summary">더보기 탭에서 카카오페이 섹션을 숨깁니다. 이 설정을 바꾼 뒤에는 카카오톡을 다시 시작해야 합니다.</string>
     <string name="morphe_pref_hide_more_tab_kakao_now_section_summary">더보기 탭에서 카카오 나우 섹션을 숨깁니다. 이 설정을 바꾼 뒤에는 카카오톡을 다시 시작해야 합니다.</string>
     <string name="morphe_pref_hide_more_tab_weather_section_summary">더보기 탭에서 날씨 섹션을 숨깁니다. 이 설정을 바꾼 뒤에는 카카오톡을 다시 시작해야 합니다.</string>
