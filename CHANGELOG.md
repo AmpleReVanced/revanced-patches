@@ -1,3 +1,13 @@
+# [1.5.0-dev.18](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.17...v1.5.0-dev.18) (2026-09-30)
+
+
+### Features
+
+* **kakaotalk:** add `Remove local connect tab` patch ([6ea248c](https://github.com/AmpleReVanced/revanced-patches/commit/6ea248c9c111bbb0c6a37eaccd7b95ab0c0d1f85))
+* **kakaotalk:** add a setting for the `Disable Friend Feed tab` patch ([9d184bb](https://github.com/AmpleReVanced/revanced-patches/commit/9d184bbbc039929b2564bf35a302b11cc6d224f7))
+* **kakaotalk:** add device profile options to `Change model` ([bdad9b5](https://github.com/AmpleReVanced/revanced-patches/commit/bdad9b57ba070a6dc6a7f3ef1285d8b0e5a8b331))
+* **kakaotalk:** add settings for the shop and local connect tab patches ([206532f](https://github.com/AmpleReVanced/revanced-patches/commit/206532f8f20447efc6adaceeb2a9f4f0331e933f))
+
 # [1.5.0-dev.17](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.16...v1.5.0-dev.17) (2026-09-28)
 
 

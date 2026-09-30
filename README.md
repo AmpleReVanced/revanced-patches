@@ -4,9 +4,9 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START -->
-> **[v1.5.0-dev.17](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.5.0-dev.17)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;126 patches total
+> **[v1.5.0-dev.18](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.5.0-dev.18)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;127 patches total
 <details>
-<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;74 patches</summary>
+<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;75 patches</summary>
 <br>
 
 **🎯 Supported versions:**
@@ -33,7 +33,7 @@
 | [Block replies on deleted or hidden messages](#block-replies-on-deleted-or-hidden-messages) | Stops the swipe gesture, and any reply or comment send, from targeting messages that the server considers deleted or hidden and that are only still visible because they are kept by a patch. |  |
 | [Bypass Moat check](#bypass-moat-check) | Adds a setting to prevent KakaoPay Moat initialization, policy and pattern updates, scans, detector logging, and force-off reports while returning benign integrity results. Payments on a modified build are still risky. |  |
 | [Bypass input mention limit in non-multichat](#bypass-input-mention-limit-in-non-multichat) | Bypass the limit of input mentions in non-multichat rooms |  |
-| [Change model](#change-model) | Changes the device model to supporting subdevice features |  |
+| [Change model](#change-model) | Changes the device model to supporting subdevice features | • Brand<br>• Manufacturer<br>• Model<br>• Device<br>• Product<br>• Board<br>• Hardware<br>• CPU ABI<br>• SoC manufacturer<br>• SoC model<br>• Fingerprint<br>• Build ID<br>• Display<br>• Build type<br>• Tags |
 | [Change package name](#change-package-name) | Appends ".revanced" to the package name by default. For KakaoTalk only | • Package name<br>• Update permissions<br>• Update providers |
 | [Custom branding](#custom-branding) | Customize app branding (name) | • Custom app name |
 | [Default external browser](#default-external-browser) | Sets the default external browser for KakaoTalk to the system's default browser. |  |
@@ -43,7 +43,7 @@
 | [Disable ChatRoomAdController](#disable-chatroomadcontroller) | Disables the open-link chat room BizBoard ad controller. |  |
 | [Disable Collapse Button](#disable-collapse-button) | Disable collapse button on OpenChatList |  |
 | [Disable Community Tab](#disable-community-tab) | Disables Community Tab |  |
-| [Disable Friend Feed tab](#disable-friend-feed-tab) | Disables the Friend Feed tab in KakaoTalk. |  |
+| [Disable Friend Feed tab](#disable-friend-feed-tab) | Adds an option to replace the Friend Feed tab with the classic Friends tab. |  |
 | [Disable Friend Lists ad](#disable-friend-lists-ad) | Disables the friend tab BizBoard and global-region ads in KakaoTalk. |  |
 | [Disable OpenChat feed ad](#disable-openchat-feed-ad) | Disables the OpenChat tab feed ad load and render paths. |  |
 | [Disable Pay banner ad](#disable-pay-banner-ad) | Disables the KakaoPay banner ad load and render paths. |  |
@@ -74,8 +74,9 @@
 | [Remove Short-form Tab](#remove-short-form-tab) | Removes the Short-form tab from the now fragment. |  |
 | [Remove feed ad](#remove-feed-ad) | Removes the feed ad from the app. |  |
 | [Remove focus ad](#remove-focus-ad) | Removes the focus ad from the app. |  |
+| [Remove local connect tab](#remove-local-connect-tab) | Adds an option to remove the local connect tab from the bottom navigation bar. |  |
 | [Remove native ad](#remove-native-ad) | Removes the native ad from the app. |  |
-| [Remove shop tab](#remove-shop-tab) | Removes the shop tab from the bottom navigation bar. |  |
+| [Remove shop tab](#remove-shop-tab) | Adds an option to remove the shop tab from the bottom navigation bar. |  |
 | [Remove tab banner ads](#remove-tab-banner-ads) | Removes main tab banners and disables AdFit talk banners. |  |
 | [Restore keyword notification log](#restore-keyword-notification-log) | Restores the removed keyword notification collection view along with its chat list entry. |  |
 | [Show chatroom channel ID](#show-chatroom-channel-id) | Shows the channel ID in chatroom settings and copies it when tapping the chat side title. |  |
