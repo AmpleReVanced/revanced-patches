@@ -96,21 +96,10 @@ internal object FilterChatLogItemFingerprint : Fingerprint(
 )
 
 internal object ChatRoomListManagerGetInstanceFingerprint : Fingerprint(
-    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
-    strings = listOf("sInstance"),
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.FINAL),
     parameters = listOf(),
-    filters = OpcodesFilter.opcodesToFilters(
-        Opcode.INVOKE_STATIC,
-        Opcode.MOVE_RESULT_OBJECT,
-        Opcode.CONST_4,
-        Opcode.CONST_4,
-        Opcode.IF_NEZ,
-        Opcode.CONST_CLASS,
-        Opcode.MONITOR_ENTER,
-        Opcode.INVOKE_STATIC,
-        Opcode.MOVE_RESULT_OBJECT
-    ),
-    custom = { _, classDef -> classDef.sourceFile == "ChatRoomListManager.kt" }
+    returnType = "L",
+    custom = { _, classDef -> classDef.sourceFile == "ChatRoomListManagerProvider.kt" }
 )
 
 internal object GetChatRoomByChannelIdFingerprint : Fingerprint(

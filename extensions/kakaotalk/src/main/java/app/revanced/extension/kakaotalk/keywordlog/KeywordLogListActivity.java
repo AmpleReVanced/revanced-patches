@@ -286,7 +286,11 @@ public final class KeywordLogListActivity extends Activity {
 
     private void openChatRoom(KeywordLogEntry entry) {
         try {
-            Intent intent = KeywordLogPatch.createChatRoomIntent(this, entry.chatRoomId);
+            Intent intent = KeywordLogPatch.createChatRoomIntent(
+                    this,
+                    entry.chatRoomId,
+                    entry.id
+            );
             if (intent == null) {
                 Utils.showToastShort(
                         KeywordLogPatch.string("label_for_keyword_log_chat_room_not_found")

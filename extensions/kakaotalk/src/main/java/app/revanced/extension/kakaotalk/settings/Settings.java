@@ -29,11 +29,23 @@ public final class Settings extends BaseSettings {
     public static final BooleanSetting SHOW_MESSAGE_READ_RECEIPTS =
             new BooleanSetting("kakaotalk_show_message_read_receipts", TRUE);
 
+    public static final BooleanSetting SHOW_MESSAGE_DETAILS =
+            new BooleanSetting("kakaotalk_show_message_details", TRUE);
+
     public static final BooleanSetting GHOST_MODE =
             new BooleanSetting("kakaotalk_ghost_mode", TRUE);
 
     public static final BooleanSetting REMOVE_SHORT_FORM_TAB =
             new BooleanSetting("kakaotalk_remove_short_form_tab", TRUE, true);
+
+    public static final BooleanSetting REMOVE_SHOP_TAB =
+            new BooleanSetting("kakaotalk_remove_shop_tab", TRUE, true);
+
+    public static final BooleanSetting REMOVE_LOCAL_CONNECT_TAB =
+            new BooleanSetting("kakaotalk_remove_local_connect_tab", TRUE, true);
+
+    public static final BooleanSetting DISABLE_FRIEND_FEED_TAB =
+            new BooleanSetting("kakaotalk_disable_friend_feed_tab", TRUE, true);
 
     public static final BooleanSetting HIDE_MORE_TAB_GAME =
             new BooleanSetting("kakaotalk_hide_more_tab_game", TRUE, true);
@@ -118,6 +130,18 @@ public final class Settings extends BaseSettings {
 
     public static boolean removeShortFormTab() {
         return REMOVE_SHORT_FORM_TAB.get();
+    }
+
+    public static boolean removeShopTab() {
+        return REMOVE_SHOP_TAB.get();
+    }
+
+    public static boolean removeLocalConnectTab() {
+        return REMOVE_LOCAL_CONNECT_TAB.get();
+    }
+
+    public static boolean disableFriendFeedTab() {
+        return DISABLE_FRIEND_FEED_TAB.get();
     }
 
     public static boolean hideMoreTabGame() {

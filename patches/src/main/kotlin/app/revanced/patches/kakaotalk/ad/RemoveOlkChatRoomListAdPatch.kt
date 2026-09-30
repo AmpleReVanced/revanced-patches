@@ -7,6 +7,7 @@ import app.morphe.util.getFreeRegisterProvider
 import app.morphe.util.returnEarly
 import app.revanced.patches.kakaotalk.ad.fingerprints.AddOlkChatRoomListAdFingerprint
 import app.revanced.patches.kakaotalk.ad.fingerprints.OpenChatTabFragmentAdEnabledFingerprint
+import app.revanced.patches.kakaotalk.ad.fingerprints.OpenChatTabBizBoardUpdateFingerprint
 import app.revanced.patches.kakaotalk.shared.fingerprints.KotlinUnitInstanceFingerprint
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.util.smaliReference
@@ -34,5 +35,6 @@ val removeOlkChatRoomListAdPatch = bytecodePatch(
         )
 
         OpenChatTabFragmentAdEnabledFingerprint.method.returnEarly(false)
+        OpenChatTabBizBoardUpdateFingerprint.instructionMatches[1].getMethodCalled().returnEarly(false)
     }
 }

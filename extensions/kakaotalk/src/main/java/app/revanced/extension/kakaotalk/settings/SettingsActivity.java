@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 import app.revanced.extension.kakaotalk.helper.ResourceHelper;
+import app.revanced.extension.kakaotalk.chatlog.details.MessageDetailsExtension;
 import app.morphe.extension.shared.Utils;
 import app.morphe.extension.shared.settings.BaseSettings;
 import app.morphe.extension.shared.settings.BooleanSetting;
@@ -28,6 +29,7 @@ import app.revanced.extension.kakaotalk.patches.BlockModifiedMessageReactionPatc
 import app.revanced.extension.kakaotalk.patches.BlockModifiedMessageReplyPatch;
 import app.revanced.extension.kakaotalk.patches.BypassMoatCheckPatch;
 import app.revanced.extension.kakaotalk.patches.DefaultExternalBrowserPatch;
+import app.revanced.extension.kakaotalk.patches.DisableFriendFeedTabPatch;
 import app.revanced.extension.kakaotalk.patches.DisableOpenChatRoomCommentPatch;
 import app.revanced.extension.kakaotalk.patches.EnableMarkdownPatch;
 import app.revanced.extension.kakaotalk.patches.EnableSendBigTextPatch;
@@ -37,6 +39,8 @@ import app.revanced.extension.kakaotalk.patches.HideMoreTabComponentsPatch;
 import app.revanced.extension.kakaotalk.patches.HideMoreTabGamePatch;
 import app.revanced.extension.kakaotalk.patches.OverrideFeatureFlagPatch;
 import app.revanced.extension.kakaotalk.patches.Remove99ClampPatch;
+import app.revanced.extension.kakaotalk.patches.RemoveLocalConnectTabPatch;
+import app.revanced.extension.kakaotalk.patches.RemoveShopTabPatch;
 import app.revanced.extension.kakaotalk.patches.RemoveShortFormTabPatch;
 import app.revanced.extension.kakaotalk.patches.ShowDeletedHiddenOrEditedMessagePatch;
 import app.revanced.extension.kakaotalk.patches.ShowMessageReadReceiptsPatch;
@@ -53,7 +57,11 @@ public final class SettingsActivity extends Activity {
     private static final String PREF_ALLOW_REPLY_TO_FEED = "morphe_pref_allow_reply_to_feed";
     private static final String PREF_SHOW_MESSAGE_READ_RECEIPTS =
             "morphe_pref_show_message_read_receipts";
+    private static final String PREF_SHOW_MESSAGE_DETAILS = "morphe_pref_show_message_details";
     private static final String PREF_REMOVE_SHORT_FORM_TAB = "morphe_pref_remove_short_form_tab";
+    private static final String PREF_REMOVE_SHOP_TAB = "morphe_pref_remove_shop_tab";
+    private static final String PREF_REMOVE_LOCAL_CONNECT_TAB = "morphe_pref_remove_local_connect_tab";
+    private static final String PREF_DISABLE_FRIEND_FEED_TAB = "morphe_pref_disable_friend_feed_tab";
     private static final String PREF_HIDE_MORE_TAB_GAME = "morphe_pref_hide_more_tab_game";
     private static final String PREF_HIDE_MORE_TAB_KAKAO_PAY_SECTION = "morphe_pref_hide_more_tab_kakao_pay_section";
     private static final String PREF_HIDE_MORE_TAB_KAKAO_NOW_SECTION = "morphe_pref_hide_more_tab_kakao_now_section";
@@ -128,6 +136,9 @@ public final class SettingsActivity extends Activity {
 
         static {
             RESTART_SENSITIVE_PREFERENCES.add(PREF_REMOVE_SHORT_FORM_TAB);
+            RESTART_SENSITIVE_PREFERENCES.add(PREF_REMOVE_SHOP_TAB);
+            RESTART_SENSITIVE_PREFERENCES.add(PREF_REMOVE_LOCAL_CONNECT_TAB);
+            RESTART_SENSITIVE_PREFERENCES.add(PREF_DISABLE_FRIEND_FEED_TAB);
             RESTART_SENSITIVE_PREFERENCES.add(PREF_HIDE_MORE_TAB_GAME);
             RESTART_SENSITIVE_PREFERENCES.add(PREF_HIDE_MORE_TAB_KAKAO_PAY_SECTION);
             RESTART_SENSITIVE_PREFERENCES.add(PREF_HIDE_MORE_TAB_KAKAO_NOW_SECTION);
@@ -146,6 +157,9 @@ public final class SettingsActivity extends Activity {
 
             bindSwitchIfIncluded(PREF_GHOST_MODE, Settings.GHOST_MODE, GhostModePatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_REMOVE_SHORT_FORM_TAB, Settings.REMOVE_SHORT_FORM_TAB, RemoveShortFormTabPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_REMOVE_SHOP_TAB, Settings.REMOVE_SHOP_TAB, RemoveShopTabPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_REMOVE_LOCAL_CONNECT_TAB, Settings.REMOVE_LOCAL_CONNECT_TAB, RemoveLocalConnectTabPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_DISABLE_FRIEND_FEED_TAB, Settings.DISABLE_FRIEND_FEED_TAB, DisableFriendFeedTabPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_HIDE_MORE_TAB_GAME, Settings.HIDE_MORE_TAB_GAME, HideMoreTabGamePatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_HIDE_MORE_TAB_KAKAO_PAY_SECTION, Settings.HIDE_MORE_TAB_KAKAO_PAY_SECTION, HideMoreTabComponentsPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_HIDE_MORE_TAB_KAKAO_NOW_SECTION, Settings.HIDE_MORE_TAB_KAKAO_NOW_SECTION, HideMoreTabComponentsPatch.isPatchIncluded());
@@ -164,6 +178,7 @@ public final class SettingsActivity extends Activity {
             bindSwitchIfIncluded(PREF_BLOCK_MODIFIED_MESSAGE_REPLY, Settings.BLOCK_MODIFIED_MESSAGE_REPLY, BlockModifiedMessageReplyPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_ALLOW_REPLY_TO_FEED, Settings.ALLOW_REPLY_TO_FEED, AllowReplyToFeedPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_SHOW_MESSAGE_READ_RECEIPTS, Settings.SHOW_MESSAGE_READ_RECEIPTS, ShowMessageReadReceiptsPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_SHOW_MESSAGE_DETAILS, Settings.SHOW_MESSAGE_DETAILS, MessageDetailsExtension.isPatchIncluded());
             bindSwitchIfIncluded(PREF_RESTORE_KEYWORD_LOG, Settings.RESTORE_KEYWORD_LOG, KeywordLogPatch.isPatchIncluded());
             bindRiskySwitchIfIncluded(PREF_BYPASS_MOAT_INTEGRITY_CHECK, Settings.BYPASS_MOAT_INTEGRITY_CHECK, BypassMoatCheckPatch.isPatchIncluded());
             bindTextIfIncluded(PREF_FEATURE_FLAG_OVERRIDES, Settings.FEATURE_FLAG_OVERRIDES, OverrideFeatureFlagPatch.isPatchIncluded());

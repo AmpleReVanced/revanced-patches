@@ -2,31 +2,22 @@ package app.revanced.patches.kakaotalk.ad.fingerprints
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.OpcodesFilter
-import app.revanced.util.hasMethodCall
+import app.morphe.patcher.methodCall
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
 internal object FriendListChipBizBoardBindFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     returnType = "V",
-    filters = OpcodesFilter.opcodesToFilters(
-        Opcode.INVOKE_VIRTUAL,
-        Opcode.MOVE_RESULT,
-        Opcode.INVOKE_VIRTUAL,
-        Opcode.MOVE_RESULT_OBJECT,
-        Opcode.IGET_OBJECT,
-        Opcode.INVOKE_VIRTUAL,
-        Opcode.MOVE_RESULT_OBJECT,
+    parameters = listOf("L", "L"),
+    filters = listOf(
+        methodCall(
+            definingClass = "Lcom/kakao/adfit/ads/talk/TalkNativeAdBinder;",
+            name = "setPrivateAdEventListener",
+            returnType = "V",
+        ),
     ),
-    custom = { method, classDef ->
-        classDef.sourceFile == "FriendListChipBizBoardAdViewHolder.kt" &&
-                method.parameterTypes.size == 2 &&
-                method.hasMethodCall(
-                    "Lcom/kakao/adfit/ads/talk/TalkNativeAdBinder;",
-                    "setPrivateAdEventListener",
-                    "V"
-                )
-    }
+    custom = { _, classDef -> classDef.sourceFile == "FriendListChipBizBoardAdViewHolder.kt" }
 )
 
 internal object BirthdayFriendsBizBoardBindFingerprint : Fingerprint(

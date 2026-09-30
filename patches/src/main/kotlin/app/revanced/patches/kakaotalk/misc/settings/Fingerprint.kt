@@ -17,18 +17,22 @@ internal object SetupSettingsItemFingerprint : Fingerprint(
     returnType = "Ljava/util/List;",
 )
 
+internal object ThemePrefClassFingerprint : Fingerprint(
+    custom = { _, classDef -> classDef.sourceFile == "ThemePref.kt" },
+)
+
 internal object ThemePrefNightModeReadFingerprint : Fingerprint(
+    classFingerprint = ThemePrefClassFingerprint,
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     parameters = listOf(),
     returnType = "I",
     strings = listOf("night_mode"),
-    custom = { _, classDef -> classDef.sourceFile == "ThemePref.kt" }
 )
 
 internal object ThemePrefNightModeWriteFingerprint : Fingerprint(
+    classFingerprint = ThemePrefClassFingerprint,
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     parameters = listOf("I"),
     returnType = "V",
     strings = listOf("night_mode"),
-    custom = { _, classDef -> classDef.sourceFile == "ThemePref.kt" }
 )

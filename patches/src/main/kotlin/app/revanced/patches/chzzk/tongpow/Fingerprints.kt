@@ -3,107 +3,44 @@ package app.revanced.patches.chzzk.tongpow
 import app.morphe.patcher.Fingerprint
 import app.morphe.util.getReference
 import app.revanced.util.parameterTypeNames
-import com.android.tools.smali.dexlib2.iface.Method
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
+import com.android.tools.smali.dexlib2.iface.reference.TypeReference
 
-internal const val BOOLEAN_TYPE = "Z"
-internal const val CONTINUATION_CLASS = "Lkotlin/coroutines/Continuation;"
-internal const val FLOW_COLLECTOR_CLASS = "Lkotlinx/coroutines/flow/FlowCollector;"
-internal const val FUNCTION0_CLASS = "Lkotlin/jvm/functions/Function0;"
-internal const val INTEGER_CLASS = "Ljava/lang/Integer;"
-internal const val LONG_CLASS = "Ljava/lang/Long;"
-internal const val OBJECT_CLASS = "Ljava/lang/Object;"
-internal const val STATE_CLASS = "Landroidx/compose/runtime/State;"
-internal const val STRING_CLASS = "Ljava/lang/String;"
-internal const val VOID_TYPE = "V"
+private const val CHAT_VIEW_MODEL_CLASS =
+    "Lcom/navercorp/game/android/community/app/ui/overlayplayerend/live/streaming/chat/StreamingChatViewModel;"
+private const val CHAT_POPUP_PACKAGE =
+    "Lcom/navercorp/game/android/community/app/ui/overlayplayerend/live/streaming/chat/popup/"
+private const val TONG_POW_EVENT_CLASS =
+    "Lcom/navercorp/game/android/community/ui/common/feature/session/SessionEvent\$TongPowEvent;"
+private const val CLAIM_EVENT_CLASS =
+    "Lcom/navercorp/game/android/community/app/ui/overlayplayerend/live/streaming/chat/popup/ChatTongPowEvent\$ShowTongPowPopupInfo;"
+private const val CLAIM_SERVICE_CLASS =
+    "Lcom/navercorp/game/android/community/data/core/service/tongpow/ApiTongPowService\$ApiService;"
 
-private val popupInfoUpdateParameters = listOf(
-    STRING_CLASS,
-    STRING_CLASS,
-    STRING_CLASS,
-    STRING_CLASS,
-    STRING_CLASS,
-    LONG_CLASS,
-    INTEGER_CLASS,
-    INTEGER_CLASS,
-)
-
-private val receiveAmountParameters = listOf(
-    STRING_CLASS,
-    STRING_CLASS,
-    FUNCTION0_CLASS,
+internal object TongPowChatEventFingerprint : Fingerprint(
+    definingClass = CHAT_VIEW_MODEL_CLASS,
+    parameters = listOf("Ljava/lang/Object;"),
+    returnType = "Lkotlin/Unit;",
+    custom = { method, _ ->
+        method.implementation?.instructions?.let { instructions ->
+            instructions.any { it.getReference<TypeReference>()?.type == TONG_POW_EVENT_CLASS } &&
+                instructions.any { it.getReference<MethodReference>()?.definingClass == CLAIM_EVENT_CLASS }
+        } == true
+    },
 )
 
 internal object TongPowManualClaimFingerprint : Fingerprint(
-    returnType = BOOLEAN_TYPE,
-    parameters = listOf("L", STATE_CLASS, "L"),
-    custom = custom@{ method, _ ->
-        val instructions = method.implementation?.instructions?.toList()
-            ?: return@custom false
-        val receiveAmountIndex = instructions.indexOfFirst { instruction ->
-            instruction.getReference<MethodReference>()?.isReceiveAmountCall == true
-        }
-
-        receiveAmountIndex >= 0 &&
-            instructions.asSequence()
-                .take(receiveAmountIndex)
-                .mapNotNull { it.getReference<MethodReference>() }
-                .any { reference ->
-                    reference.name == "<init>" &&
-                        reference.returnType == VOID_TYPE &&
-                        reference.parameterTypeNames == listOf(method.parameterTypeNames[2])
-                } &&
-            instructions.asSequence()
-                .drop(receiveAmountIndex + 1)
-                .mapNotNull { it.getReference<MethodReference>() }
-                .any { reference ->
-                    reference.returnType == VOID_TYPE &&
-                        reference.parameterTypeNames.isEmpty()
-                }
+    name = "invoke",
+    parameters = emptyList(),
+    returnType = "Ljava/lang/Object;",
+    custom = { method, classDef ->
+        classDef.type.startsWith(CHAT_POPUP_PACKAGE) &&
+            "Lkotlin/jvm/functions/Function0;" in classDef.interfaces &&
+            method.implementation?.instructions?.any { instruction ->
+                instruction.getReference<MethodReference>()?.let { reference ->
+                    reference.definingClass == CLAIM_SERVICE_CLASS &&
+                        reference.parameterTypeNames == listOf("Ljava/lang/String;", "Ljava/lang/String;")
+                } == true
+            } == true
     },
 )
-
-internal object TongPowPopupEventCollectorFingerprint : Fingerprint(
-    returnType = OBJECT_CLASS,
-    parameters = listOf("L", CONTINUATION_CLASS),
-    custom = custom@{ method, classDef ->
-        if (FLOW_COLLECTOR_CLASS !in classDef.interfaces) return@custom false
-
-        val updateIndex = method.findPopupInfoUpdateCallIndexOrNull()
-            ?: return@custom false
-        val updateReference = method.instructionMethodReference(updateIndex)
-            ?: return@custom false
-
-        method.findPopupTimerCallIndexOrNull(updateIndex, updateReference.definingClass) != null
-    },
-)
-
-internal fun Method.findPopupInfoUpdateCallIndexOrNull(): Int? =
-    implementation?.instructions?.indexOfFirst { instruction ->
-        val reference = instruction.getReference<MethodReference>() ?: return@indexOfFirst false
-        reference.returnType == VOID_TYPE &&
-            reference.parameterTypeNames == popupInfoUpdateParameters
-    }?.takeIf { it >= 0 }
-
-internal fun Method.findPopupTimerCallIndexOrNull(
-    afterIndex: Int,
-    viewModelType: String,
-): Int? {
-    val instructions = implementation?.instructions ?: return null
-    return instructions.withIndex()
-        .drop(afterIndex + 1)
-        .firstOrNull { (_, instruction) ->
-            val reference = instruction.getReference<MethodReference>() ?: return@firstOrNull false
-            reference.definingClass == viewModelType &&
-                reference.returnType == VOID_TYPE &&
-                reference.parameterTypeNames == listOf(INTEGER_CLASS)
-        }
-        ?.index
-}
-
-internal fun Method.instructionMethodReference(index: Int): MethodReference? =
-    implementation?.instructions?.toList()?.getOrNull(index)?.getReference()
-
-internal val MethodReference.isReceiveAmountCall: Boolean
-    get() = returnType == VOID_TYPE &&
-        parameterTypeNames == receiveAmountParameters

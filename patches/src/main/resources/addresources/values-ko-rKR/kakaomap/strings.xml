@@ -1,0 +1,11 @@
+<resources>
+    <string name="revanced_live_update_remaining_stops">하차까지 %1$d개 정류장</string>
+    <string name="revanced_live_update_remaining_stations">하차까지 %1$d개 역</string>
+    <string name="revanced_live_update_remaining_chip">%1$d개</string>
+    <string name="revanced_live_update_boarding">승차 대기</string>
+    <string name="revanced_live_update_get_off">하차</string>
+    <string name="revanced_live_update_moving">이동 중</string>
+    <string name="revanced_live_update_locating">위치 확인</string>
+    <string name="revanced_live_update_previous">이전</string>
+    <string name="revanced_live_update_next_stop">다음: %1$s</string>
+</resources>

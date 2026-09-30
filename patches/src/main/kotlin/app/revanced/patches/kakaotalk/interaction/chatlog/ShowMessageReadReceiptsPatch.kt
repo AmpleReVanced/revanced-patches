@@ -275,11 +275,6 @@ val showMessageReadReceiptsPatch = bytecodePatch(
         if (getManagerInstance.returnType != getChatRoom.definingClass) {
             throw PatchException("ChatRoomListManager fingerprints resolved incompatible methods.")
         }
-        val managerClass = GetChatRoomByChannelIdFingerprint.classDef
-        val managerCompanionField = managerClass.fields.singleOrNull { field ->
-            AccessFlags.STATIC.isSet(field.accessFlags) &&
-                field.type == getManagerInstance.definingClass
-        } ?: throw PatchException("Could not resolve ChatRoomListManager companion field.")
         val chatRoomType = getChatRoom.returnType
         val memberSetGetter = chatRoomMemberSetGetterFingerprint(chatRoomType, memberSetType).method
 
@@ -289,7 +284,6 @@ val showMessageReadReceiptsPatch = bytecodePatch(
                 chatLogIdField = chatLogIdField,
                 chatLogChatIdField = chatLogChatIdField,
                 chatLogSenderIdField = chatLogSenderIdField,
-                managerCompanionField = managerCompanionField,
                 getManagerInstance = getManagerInstance,
                 getChatRoom = getChatRoom,
                 memberSetGetter = memberSetGetter,
@@ -507,7 +501,6 @@ private fun chatLogBridgeMethods(
     chatLogIdField: FieldReference,
     chatLogChatIdField: FieldReference,
     chatLogSenderIdField: FieldReference,
-    managerCompanionField: Field,
     getManagerInstance: Method,
     getChatRoom: Method,
     memberSetGetter: Method,
@@ -523,8 +516,7 @@ private fun chatLogBridgeMethods(
         accessFlags = AccessFlags.PUBLIC.value or AccessFlags.STATIC.value or AccessFlags.FINAL.value,
         registerCount = 3,
         instructions = """
-            sget-object v0, ${managerCompanionField.smaliReference}
-            invoke-virtual {v0}, ${getManagerInstance.smaliReference}
+            invoke-static {}, ${getManagerInstance.smaliReference}
             move-result-object v0
             invoke-virtual {v0, p0, p1}, ${getChatRoom.smaliReference}
             move-result-object v0

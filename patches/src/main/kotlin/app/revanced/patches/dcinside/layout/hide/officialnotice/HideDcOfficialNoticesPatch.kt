@@ -39,14 +39,9 @@ val hideDcOfficialNoticesPatch = bytecodePatch(
         )
         setExtensionIsPatchIncluded(OFFICIAL_NOTICE_EXTENSION_CLASS)
 
-        val classDefsByType = mutableMapOf<String, ClassDef>()
-        classDefForEach { classDef ->
-            classDefsByType[classDef.type] = classDef
-        }
-
         val authorGetter = inferPostItemAuthorGetter(
             GalleryNoticeListHandlerFingerprint.method,
-            classDefsByType,
+            ::classDefByOrNull,
         )
 
         OfficialNoticeAuthorNameBridgeFingerprint.method.addInstructions(
@@ -109,7 +104,7 @@ private data class PostItemAuthorGetter(
 
 private fun inferPostItemAuthorGetter(
     method: Method,
-    classDefsByType: Map<String, ClassDef>,
+    classLookup: (String) -> ClassDef?,
 ): PostItemAuthorGetter {
     val instructions = method.implementation?.instructions
         ?: throw PatchException("Could not inspect gallery notice list handler")
@@ -121,7 +116,7 @@ private fun inferPostItemAuthorGetter(
 
         val type = instruction.getReference<TypeReference>()?.type
             ?: continue
-        val classDef = classDefsByType[type]
+        val classDef = classLookup(type)
             ?: continue
 
         val authorField = classDef.fields.firstOrNull { field ->

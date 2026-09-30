@@ -5,23 +5,23 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLa
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
+import app.morphe.patcher.fieldAccess
+import app.morphe.patcher.methodCall
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.resourcePatch
-import app.morphe.patcher.fieldAccess
-import app.morphe.patcher.methodCall
 import app.morphe.patcher.patch.stringOption
-import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patcher.util.proxy.mutableTypes.MutableField.Companion.toMutable
+import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
 import app.morphe.patches.all.misc.resources.addResourcesPatch
+import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import app.morphe.util.getFreeRegisterProvider
 import app.morphe.util.getReference
 import app.morphe.util.indexOfFirstInstructionOrThrow
 import app.morphe.util.indexOfFirstInstructionReversedOrThrow
 import app.morphe.util.returnEarly
 import app.morphe.util.setExtensionIsPatchIncluded
-import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatInfoViewClassFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatLogFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatLogItemViewHolderFingerprint
@@ -30,12 +30,10 @@ import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatLogVF
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatLogViewHolderBindProfileFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatLogViewHolderSetupChatInfoViewFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatRoomListManagerGetInstanceFingerprint
-import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.checkViewableChatLogFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.FilterChatLogItemFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.FlushToDBChatLogFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.GetChatRoomByChannelIdFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.GetDeletedColorFingerprint
-import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.getDeletedMessageCacheFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.GetHiddenColorFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ModifiedChatLogApplyFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ModifiedChatLogFingerprint
@@ -45,6 +43,8 @@ import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.OriginalS
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.OthersChatInfoViewClassFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.PutDeletedMessageCacheFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ReplaceToFeedFingerprint
+import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.checkViewableChatLogFingerprint
+import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.getDeletedMessageCacheFingerprint
 import app.revanced.patches.kakaotalk.misc.extension.addExtensionPatch
 import app.revanced.patches.kakaotalk.misc.extension.sharedExtensionPatch
 import app.revanced.patches.kakaotalk.misc.settings.PreferenceScreen
@@ -582,7 +582,7 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
 
         val replaceToFeedMethod = ReplaceToFeedFingerprint.method
         replaceToFeedMethod.let {
-            val flushToDBMethod = FlushToDBChatLogFingerprint.method
+            val flushToDBMethod = FlushToDBChatLogFingerprint(chatLogClass.type).method
             val chatRoomListManagerGetInstanceMethod = ChatRoomListManagerGetInstanceFingerprint.method
             val getChatRoomByChannelIdMethod = GetChatRoomByChannelIdFingerprint.method
             val originalSyncMethod = OriginalSyncMethodFingerprint.method
@@ -596,9 +596,6 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
             val chatRoomIdGetter =
                 it.instructions[channelIdResultIndex].getReference<MethodReference>()
                     ?: throw PatchException("Could not resolve chat room ID getter.")
-            val chatRoomListManagerCompanionField = OriginalSyncMethodFingerprint.classDef.fields.first {
-                it.type == chatRoomListManagerGetInstanceMethod.definingClass
-            }
 
             val invokeVirtualInst = originalSyncMethod.instructions.last { it.opcode == Opcode.INVOKE_VIRTUAL }
             val invokeStaticInst = originalSyncMethod.instructions.last { it.opcode == Opcode.INVOKE_STATIC }
@@ -623,8 +620,7 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
                     invoke-static {p2, p3, v1, v2}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->updateByChatLogId(JZZ)V
                     invoke-virtual {p0, p1}, ${it.definingClass}->${flushToDBMethod.name}(${chatLogClass.type})Z
                     
-                    sget-object v0, ${chatRoomListManagerCompanionField.definingClass}->${chatRoomListManagerCompanionField.name}:${chatRoomListManagerCompanionField.type}
-                    invoke-virtual {v0}, $chatRoomListManagerGetInstanceMethod
+                    invoke-static {}, $chatRoomListManagerGetInstanceMethod
                     move-result-object v0
                     invoke-virtual {p1}, $chatRoomIdGetter
                     move-result-wide p2
@@ -662,8 +658,7 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
                     invoke-static {p2, p3, v2, v1}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->updateByChatLogId(JZZ)V
                     invoke-virtual {p0, p1}, ${it.definingClass}->${flushToDBMethod.name}(${chatLogClass.type})Z
                     
-                    sget-object v0, ${chatRoomListManagerCompanionField.definingClass}->${chatRoomListManagerCompanionField.name}:${chatRoomListManagerCompanionField.type}
-                    invoke-virtual {v0}, $chatRoomListManagerGetInstanceMethod
+                    invoke-static {}, $chatRoomListManagerGetInstanceMethod
                     move-result-object v0
                     invoke-virtual {p1}, $chatRoomIdGetter
                     move-result-wide p2

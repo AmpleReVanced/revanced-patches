@@ -3,6 +3,7 @@ package app.revanced.patches.kakaotalk.misc.integrity.fingerprints
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.OpcodesFilter
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.methodCall
 import app.morphe.util.getReference
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
@@ -13,9 +14,36 @@ internal object MoatScanDispatcherFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     parameters = listOf("Ljava/util/ArrayList;", "L", "Ljava/lang/String;", "Ljava/lang/String;"),
     returnType = "Ljava/util/concurrent/CompletableFuture;",
+    strings = listOf("MoatSdk.setExtraValue.reportMeasureTime"),
+    filters = listOf(
+        methodCall(
+            definingClass = "Ljava/util/concurrent/CompletableFuture;",
+            name = "supplyAsync",
+            parameters = listOf("Ljava/util/function/Supplier;"),
+            returnType = "Ljava/util/concurrent/CompletableFuture;",
+        ),
+    ),
+)
+
+internal object MoatLibraryLoaderFingerprint : Fingerprint(
+    parameters = listOf("Landroid/content/Context;"),
+    returnType = "V",
+    strings = listOf("toyger"),
+    custom = { _, classDef ->
+        classDef.methods.any { method ->
+            AccessFlags.NATIVE.isSet(method.accessFlags) &&
+                    method.parameterTypes == listOf("Landroid/content/Context;") &&
+                    method.returnType == "Ljava/util/List;"
+        } && classDef.methods.any { method ->
+            AccessFlags.NATIVE.isSet(method.accessFlags) &&
+                    method.parameterTypes == listOf("Landroid/content/Context;") &&
+                    method.returnType == "Lkotlin/Pair;"
+        }
+    },
 )
 
 internal object CheckApkChecksumsFingerprint : Fingerprint(
+    classFingerprint = MoatScanDispatcherFingerprint,
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     parameters = listOf(),
     returnType = "Lkotlin/Pair;",
@@ -54,7 +82,7 @@ internal object MoatResultClassFingerprint : Fingerprint(
         Opcode.IPUT,
         Opcode.RETURN_VOID,
     ),
-    custom = { method, clazz ->
+    custom = { method, _ ->
         method.parameters.size == 5 && (method.instructions.firstOrNull { it.opcode == Opcode.CONST_16 } as Instruction21s?)?.wideLiteral?.toInt() == 5000
     }
 )
