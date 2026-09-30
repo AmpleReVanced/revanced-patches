@@ -4,13 +4,13 @@ import app.morphe.patcher.patch.bytecodePatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 
 @Suppress("unused")
-val removeShopTabPatch = bytecodePatch(
-    name = "Remove shop tab",
-    description = "Removes the shop tab from the bottom navigation bar.",
+val removeLocalConnectTabPatch = bytecodePatch(
+    name = "Remove local connect tab",
+    description = "Removes the local connect tab from the bottom navigation bar.",
 ) {
     compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        removeMainTab("SHOPPING_TAB")
+        removeMainTab("YP_TAB")
     }
 }
