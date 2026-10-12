@@ -597,6 +597,40 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
                 it.instructions[channelIdResultIndex].getReference<MethodReference>()
                     ?: throw PatchException("Could not resolve chat room ID getter.")
 
+            val lastChatLogIndex = originalSyncMethod.indexOfFirstInstructionOrThrow(
+                methodCall(
+                    parameters = listOf("J"),
+                    returnType = chatLogClass.type,
+                    opcodes = listOf(Opcode.INVOKE_INTERFACE),
+                ),
+            )
+            val lastChatLogGetter = originalSyncMethod.getInstruction(lastChatLogIndex)
+                .getReference<MethodReference>()!!
+            val chatLogDaoGetter = originalSyncMethod.instructions.take(lastChatLogIndex)
+                .last {
+                    it.opcode == Opcode.INVOKE_STATIC &&
+                            it.getReference<MethodReference>()?.let { reference ->
+                                reference.parameterTypeNames.isEmpty() &&
+                                        reference.returnType == lastChatLogGetter.definingClass
+                            } == true
+                }.getReference<MethodReference>()!!
+
+            fun latestMessageGuard(endLabel: String) = """
+                invoke-static {}, $chatLogDaoGetter
+                move-result-object v0
+                invoke-virtual {p1}, $chatRoomIdGetter
+                move-result-wide p2
+                invoke-interface {v0, p2, p3}, $lastChatLogGetter
+                move-result-object v0
+                if-eqz v0, :$endLabel
+                invoke-virtual {v0}, ${chatLogClass.type}->getId()J
+                move-result-wide v0
+                invoke-virtual {p1}, ${chatLogClass.type}->getId()J
+                move-result-wide p2
+                cmp-long v2, v0, p2
+                if-nez v2, :$endLabel
+            """.trimIndent()
+
             val invokeVirtualInst = originalSyncMethod.instructions.last { it.opcode == Opcode.INVOKE_VIRTUAL }
             val invokeStaticInst = originalSyncMethod.instructions.last { it.opcode == Opcode.INVOKE_STATIC }
 
@@ -620,6 +654,7 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
                     invoke-static {p2, p3, v1, v2}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->updateByChatLogId(JZZ)V
                     invoke-virtual {p0, p1}, ${it.definingClass}->${flushToDBMethod.name}(${chatLogClass.type})Z
                     
+                    ${latestMessageGuard("revanced_deleted_sync_end")}
                     invoke-static {}, $chatRoomListManagerGetInstanceMethod
                     move-result-object v0
                     invoke-virtual {p1}, $chatRoomIdGetter
@@ -658,6 +693,7 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
                     invoke-static {p2, p3, v2, v1}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->updateByChatLogId(JZZ)V
                     invoke-virtual {p0, p1}, ${it.definingClass}->${flushToDBMethod.name}(${chatLogClass.type})Z
                     
+                    ${latestMessageGuard("revanced_hidden_sync_end")}
                     invoke-static {}, $chatRoomListManagerGetInstanceMethod
                     move-result-object v0
                     invoke-virtual {p1}, $chatRoomIdGetter
