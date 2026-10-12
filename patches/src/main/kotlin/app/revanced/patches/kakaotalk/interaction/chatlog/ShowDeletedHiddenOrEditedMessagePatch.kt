@@ -615,54 +615,65 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
                             } == true
                 }.getReference<MethodReference>()!!
 
-            fun latestMessageGuard(endLabel: String) = """
+            fun latestMessageGuard(endLabel: String, value: Int, flag: Int) = """
                 invoke-static {}, $chatLogDaoGetter
-                move-result-object v0
+                move-result-object v$value
                 invoke-virtual {p1}, $chatRoomIdGetter
                 move-result-wide p2
-                invoke-interface {v0, p2, p3}, $lastChatLogGetter
-                move-result-object v0
-                if-eqz v0, :$endLabel
-                invoke-virtual {v0}, ${chatLogClass.type}->getId()J
-                move-result-wide v0
+                invoke-interface {v$value, p2, p3}, $lastChatLogGetter
+                move-result-object v$value
+                if-eqz v$value, :$endLabel
+                invoke-virtual {v$value}, ${chatLogClass.type}->getId()J
+                move-result-wide v$value
                 invoke-virtual {p1}, ${chatLogClass.type}->getId()J
                 move-result-wide p2
-                cmp-long v2, v0, p2
-                if-nez v2, :$endLabel
+                cmp-long v$flag, v$value, p2
+                if-nez v$flag, :$endLabel
             """.trimIndent()
 
             val invokeVirtualInst = originalSyncMethod.instructions.last { it.opcode == Opcode.INVOKE_VIRTUAL }
             val invokeStaticInst = originalSyncMethod.instructions.last { it.opcode == Opcode.INVOKE_STATIC }
 
-            fun preserveMessage(deleted: Boolean): String {
+            fun preserveMessage(index: Int, deleted: Boolean): String {
+                val chatLogRegister = it.parameterRegister(0)
+                val wideRegister = it.parameterRegister(1)
+                val provider = it.getFreeRegisterProvider(
+                    index, 3, chatLogRegister - 1, chatLogRegister, wideRegister, wideRegister + 1,
+                )
+                val registers = List(provider.availableCount()) { provider.getFreeRegister() }.filter { register -> register < 16 }.sorted()
+                val value = registers.firstOrNull { register -> register + 1 in registers }
+                    ?: throw PatchException("Could not reserve a register pair for message IDs.")
+                val valueHigh = value + 1
+                val flag = registers.firstOrNull { register -> register != value && register != valueHigh }
+                    ?: throw PatchException("Could not reserve a register for message flags.")
                 val flagSetter = if (deleted) "putDeleted" else "putHidden"
-                val deletedRegister = if (deleted) 1 else 2
-                val hiddenRegister = if (deleted) 2 else 1
+                val deletedRegister = if (deleted) valueHigh else flag
+                val hiddenRegister = if (deleted) flag else valueHigh
                 val endLabel = if (deleted) "revanced_deleted_sync_end" else "revanced_hidden_sync_end"
                 return """
-                    iget-object v0, p1, ${chatLogClass.type}->${vFieldField.name}:${vFieldField.type}
-                    const/4 v1, 0x1
-                    invoke-virtual {v0, v1}, ${chatLogVFieldClass.type}->$flagSetter(Z)V
+                    iget-object v$value, p1, ${chatLogClass.type}->${vFieldField.name}:${vFieldField.type}
+                    const/4 v$valueHigh, 0x1
+                    invoke-virtual {v$value, v$valueHigh}, ${chatLogVFieldClass.type}->$flagSetter(Z)V
                     invoke-virtual {p1}, ${chatLogClass.type}->getId()J
                     move-result-wide p2
-                    const/4 v2, 0x0
+                    const/4 v$flag, 0x0
                     invoke-static {p2, p3, v$deletedRegister, v$hiddenRegister}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->updateByChatLogId(JZZ)V
                     invoke-virtual {p0, p1}, ${it.definingClass}->${flushToDBMethod.name}(${chatLogClass.type})Z
                     
-                    ${latestMessageGuard(endLabel)}
+                    ${latestMessageGuard(endLabel, value, flag)}
                     invoke-static {}, $chatRoomListManagerGetInstanceMethod
-                    move-result-object v0
+                    move-result-object v$value
                     invoke-virtual {p1}, $chatRoomIdGetter
                     move-result-wide p2
-                    invoke-virtual {v0, p2, p3}, $getChatRoomByChannelIdMethod
-                    move-result-object v0
-                    if-eqz v0, :$endLabel
-                    const/4 v1, 0x1
-                    invoke-virtual {v0, p1, v1}, ${invokeVirtualInst.getReference<MethodReference>()}
-                    move-result-object v0
-                    const/4 v1, 0x0
-                    const/4 v2, 0x1
-                    invoke-static {v0, v1, v2, v1}, ${invokeStaticInst.getReference<MethodReference>()}
+                    invoke-virtual {v$value, p2, p3}, $getChatRoomByChannelIdMethod
+                    move-result-object v$value
+                    if-eqz v$value, :$endLabel
+                    const/4 v$valueHigh, 0x1
+                    invoke-virtual {v$value, p1, v$valueHigh}, ${invokeVirtualInst.getReference<MethodReference>()}
+                    move-result-object v$value
+                    const/4 v$valueHigh, 0x0
+                    const/4 v$flag, 0x1
+                    invoke-static {v$value, v$valueHigh, v$flag, v$valueHigh}, ${invokeStaticInst.getReference<MethodReference>()}
                     :$endLabel
                     return-void
                 """.trimIndent()
@@ -671,14 +682,14 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
             val sgetObjectDeleteToAllIndex = it.indexOfFirstInstructionOrThrow(
                 fieldAccess(name = "DELETE_TO_ALL", opcode = Opcode.SGET_OBJECT),
             )
-            it.replaceInstruction(sgetObjectDeleteToAllIndex, "nop")
-            it.addInstructionsWithLabels(sgetObjectDeleteToAllIndex + 1, preserveMessage(deleted = true))
+            it.replaceInstruction(sgetObjectDeleteToAllIndex, "return-void")
+            it.addInstructionsWithLabels(sgetObjectDeleteToAllIndex, preserveMessage(sgetObjectDeleteToAllIndex, deleted = true))
 
             val lastSgetFeedIndex = it.indexOfFirstInstructionReversedOrThrow(
                 fieldAccess(name = "Feed", opcode = Opcode.SGET_OBJECT),
             )
-            it.replaceInstruction(lastSgetFeedIndex, "nop")
-            it.addInstructionsWithLabels(lastSgetFeedIndex + 1, preserveMessage(deleted = false))
+            it.replaceInstruction(lastSgetFeedIndex, "return-void")
+            it.addInstructionsWithLabels(lastSgetFeedIndex, preserveMessage(lastSgetFeedIndex, deleted = false))
         }
 
         checkViewableChatLogFingerprint(chatLogClass.type).method.returnEarly(true)
