@@ -1,3 +1,15 @@
+# [1.5.0-dev.19](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.18...v1.5.0-dev.19) (2026-10-12)
+
+
+### Bug Fixes
+
+* **kakaotalk:** prevent older deleted or hidden messages from overwriting chat list previews ([bf2e5d2](https://github.com/AmpleReVanced/revanced-patches/commit/bf2e5d2f3abaed5429051531ae80b75e3f4320ae))
+
+
+### Features
+
+* **kakaotalk:** support version `26.8.3` ([3286c3c](https://github.com/AmpleReVanced/revanced-patches/commit/3286c3c5f846ccabd1f70be00f5bf89a2b3bb395))
+
 # [1.5.0-dev.18](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.17...v1.5.0-dev.18) (2026-09-30)
 
 
