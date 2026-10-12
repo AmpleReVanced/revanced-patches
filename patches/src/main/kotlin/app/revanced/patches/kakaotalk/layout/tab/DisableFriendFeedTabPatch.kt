@@ -1,62 +1,63 @@
 package app.revanced.patches.kakaotalk.layout.tab
 
-import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
-import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
-import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.util.getReference
-import app.morphe.util.returnEarly
-import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
+import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
+import app.morphe.util.indexOfFirstInstructionReversedOrThrow
+import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.kakaotalk.layout.tab.fingerprints.DetermineFeedOrListMethodFingerprint
 import app.revanced.patches.kakaotalk.layout.tab.fingerprints.MainTabConfigFingerprint
-import app.revanced.util.matches
-import app.revanced.util.parameterTypeNames
-import app.revanced.util.smaliReference
-import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
-import com.android.tools.smali.dexlib2.iface.reference.MethodReference
+import app.revanced.patches.kakaotalk.misc.settings.PreferenceScreen
+import app.revanced.patches.kakaotalk.misc.settings.addSettingsTabPatch
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
+import com.android.tools.smali.dexlib2.Opcode
+import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
+import com.android.tools.smali.dexlib2.iface.instruction.TwoRegisterInstruction
+
+private const val EXTENSION_CLASS =
+    "Lapp/revanced/extension/kakaotalk/patches/DisableFriendFeedTabPatch;"
 
 @Suppress("unused")
 val disableFriendFeedTabPatch = bytecodePatch(
     name = "Disable Friend Feed tab",
-    description = "Disables the Friend Feed tab in KakaoTalk.",
+    description = "Adds an option to replace the Friend Feed tab with the classic Friends tab.",
 ) {
     compatibleWith(COMPATIBILITY_KAKAO)
+    dependsOn(addSettingsTabPatch)
 
     execute {
-        val feedTabField = MainTabConfigFingerprint.instructionMatches[1].getFieldAccessed()
-        MainTabConfigFingerprint.method.addInstructions(
-            MainTabConfigFingerprint.method.instructions.size - 1,
-                """
-                const/4 p1, 0x0
-                iput-boolean p1, p0, ${feedTabField.smaliReference}
-            """.trimIndent()
+        PreferenceScreen.NAVIGATION.addPreferences(
+            SwitchPreference(
+                key = "morphe_pref_disable_friend_feed_tab",
+                titleKey = "morphe_settings_catalog_disable_friend_feed_tab",
+                summary = true,
+            ),
         )
+        setExtensionIsPatchIncluded(EXTENSION_CLASS)
 
-        val feedGateReference = DetermineFeedOrListMethodFingerprint.method.instructions
-            .mapNotNull { it.getReference<MethodReference>() }
-            .singleOrNull { reference ->
-                reference.parameterTypeNames.isEmpty() && reference.returnType == "Z"
-            }
-            ?: throw PatchException("Could not resolve the friend feed gate call.")
+        MainTabConfigFingerprint.apply {
+            val feedTabIndex = instructionMatches[1].index
+            val register = method.getInstruction<TwoRegisterInstruction>(feedTabIndex).registerA
+            method.addInstructions(
+                feedTabIndex,
+                """
+                    invoke-static {v$register}, $EXTENSION_CLASS->isFriendFeedEnabled(Z)Z
+                    move-result v$register
+                """,
+            )
+        }
 
-        mutableClassDefBy(feedGateReference.definingClass).methods
-            .singleOrNull(feedGateReference::matches)
-            ?.returnEarly(false)
-            ?: throw PatchException("Could not resolve the friend feed gate.")
-
-        DetermineFeedOrListMethodFingerprint.method.apply {
-            val stateIndex = instructions.indexOfFirst { instruction ->
-                instruction.getReference<MethodReference>()?.let { reference ->
-                    reference.name == "<init>" &&
-                        reference.parameterTypeNames == listOf("Z", "Z", "Z")
-                } == true
-            }.takeIf { it >= 0 }
-                ?: throw PatchException("Could not find the friend tab state constructor call.")
-
-            val feedRegister = (getInstruction(stateIndex) as FiveRegisterInstruction).registerE
-            addInstruction(stateIndex, "const/4 v$feedRegister, 0x0")
+        DetermineFeedOrListMethodFingerprint.instructionMatches.first().getMethodCalled().apply {
+            val returnIndex = indexOfFirstInstructionReversedOrThrow(Opcode.RETURN)
+            val register = getInstruction<OneRegisterInstruction>(returnIndex).registerA
+            addInstructions(
+                returnIndex,
+                """
+                    invoke-static {v$register}, $EXTENSION_CLASS->isFriendFeedEnabled(Z)Z
+                    move-result v$register
+                """,
+            )
         }
     }
 }

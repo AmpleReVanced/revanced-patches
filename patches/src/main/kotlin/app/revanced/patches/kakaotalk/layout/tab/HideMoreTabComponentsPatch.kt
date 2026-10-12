@@ -9,27 +9,30 @@ import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patcher.util.smali.ExternalLabel
+import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
+import app.morphe.util.cloneParameters
 import app.morphe.util.getFreeRegisterProvider
 import app.morphe.util.getReference
 import app.morphe.util.setExtensionIsPatchIncluded
-import app.revanced.patches.kakaotalk.misc.settings.PreferenceScreen
-import app.revanced.patches.kakaotalk.misc.settings.addSettingsTabPatch
-import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.patches.kakaotalk.layout.tab.fingerprints.AddMoreTabBodySectionsFingerprint
 import app.revanced.patches.kakaotalk.layout.tab.fingerprints.AddMoreTabServiceSectionsFingerprint
 import app.revanced.patches.kakaotalk.layout.tab.fingerprints.MoreTabGlobalServiceGroupSectionFingerprint
 import app.revanced.patches.kakaotalk.layout.tab.fingerprints.MoreTabKakaoNowSectionFingerprint
 import app.revanced.patches.kakaotalk.layout.tab.fingerprints.MoreTabKakaoPaySectionFingerprint
+import app.revanced.patches.kakaotalk.layout.tab.fingerprints.MoreTabLineGridServiceSectionFingerprint
 import app.revanced.patches.kakaotalk.layout.tab.fingerprints.MoreTabLineServiceSectionFingerprint
 import app.revanced.patches.kakaotalk.layout.tab.fingerprints.MoreTabServiceGroupSectionFingerprint
 import app.revanced.patches.kakaotalk.layout.tab.fingerprints.MoreTabWeatherSectionFingerprint
-import app.revanced.patches.kakaotalk.layout.tab.fingerprints.WeatherViewHolderBindFingerprint
+import app.revanced.patches.kakaotalk.layout.tab.fingerprints.moreTabWeatherViewHolderBindFingerprint
 import app.revanced.patches.kakaotalk.layout.tab.fingerprints.moreTabGlobalServiceGroupAdditionFingerprint
 import app.revanced.patches.kakaotalk.layout.tab.fingerprints.moreTabGlobalServiceGroupViewHolderBindFingerprint
+import app.revanced.patches.kakaotalk.layout.tab.fingerprints.moreTabLineGridServiceAdditionFingerprint
+import app.revanced.patches.kakaotalk.layout.tab.fingerprints.moreTabLineGridServiceViewHolderBindFingerprint
 import app.revanced.patches.kakaotalk.layout.tab.fingerprints.moreTabLineServiceViewHolderBindFingerprint
 import app.revanced.patches.kakaotalk.layout.tab.fingerprints.moreTabServiceGroupViewHolderBindFingerprint
-import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
-import app.revanced.util.localRegisterCount
+import app.revanced.patches.kakaotalk.misc.settings.PreferenceScreen
+import app.revanced.patches.kakaotalk.misc.settings.addSettingsTabPatch
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.util.parameterRegister
 import app.revanced.util.smaliReference
 import com.android.tools.smali.dexlib2.Opcode
@@ -84,7 +87,10 @@ val hideMoreTabComponentsPatch = bytecodePatch(
 
         val bodySectionsMethod = AddMoreTabBodySectionsFingerprint.method
         val serviceSectionsMethod = AddMoreTabServiceSectionsFingerprint.method
-        val itemViewField = WeatherViewHolderBindFingerprint.classDef.methods
+        val weatherViewHolderMatch = moreTabWeatherViewHolderBindFingerprint(
+            MoreTabWeatherSectionFingerprint.classDef.type,
+        ).matchAll(1 .. 1).single()
+        val itemViewField = weatherViewHolderMatch.classDef.methods
             .asSequence()
             .flatMap { it.implementation?.instructions?.asSequence() ?: emptySequence() }
             .mapNotNull { it.getReference<FieldReference>() }
@@ -95,11 +101,11 @@ val hideMoreTabComponentsPatch = bytecodePatch(
             ?: throw PatchException("Could not resolve RecyclerView item view field")
 
         fun Fingerprint.hideViewHolder(settingMethod: String, labelPrefix: String) {
-            matchAll(1 .. 1).single().method.hideViewHolder(listOf(settingMethod), labelPrefix, itemViewField)
+            matchAll(1 .. 1).single().method.cloneParameters().hideViewHolder(listOf(settingMethod), labelPrefix, itemViewField)
         }
 
         fun Fingerprint.hideViewHolder(settingMethods: List<String>, labelPrefix: String) {
-            matchAll(1 .. 1).single().method.hideViewHolder(settingMethods, labelPrefix, itemViewField)
+            matchAll(1 .. 1).single().method.cloneParameters().hideViewHolder(settingMethods, labelPrefix, itemViewField)
         }
 
         bodySectionsMethod.hideKakaoPaySection(MoreTabKakaoPaySectionFingerprint.classDef.type)
@@ -114,13 +120,12 @@ val hideMoreTabComponentsPatch = bytecodePatch(
                 "hideMoreTabWeatherSection",
                 "more_tab_weather",
             ),
-            SectionSpec(
-                MoreTabLineServiceSectionFingerprint.classDef.type,
-                listOf("hideMoreTabLineServiceSection", "hideMoreTabServiceGroupSection"),
-                "more_tab_line_service_body",
-            ),
         )
-        WeatherViewHolderBindFingerprint.method.hideWeatherViewHolder(itemViewField)
+        weatherViewHolderMatch.method.cloneParameters().hideViewHolder(
+            listOf("hideMoreTabWeatherSection"),
+            "more_tab_weather_view_holder",
+            itemViewField,
+        )
 
         serviceSectionsMethod.hideItemAdditions(
             SectionSpec(
@@ -133,6 +138,19 @@ val hideMoreTabComponentsPatch = bytecodePatch(
                 listOf("hideMoreTabLineServiceSection", "hideMoreTabServiceGroupSection"),
                 "more_tab_line_service",
             ),
+        )
+
+        val lineGridServiceType = MoreTabLineGridServiceSectionFingerprint.classDef.type
+        moreTabLineGridServiceAdditionFingerprint(lineGridServiceType).method.hideItemAdditions(
+            SectionSpec(
+                lineGridServiceType,
+                listOf("hideMoreTabLineServiceSection", "hideMoreTabServiceGroupSection"),
+                "more_tab_line_grid_service",
+            ),
+        )
+        moreTabLineGridServiceViewHolderBindFingerprint(lineGridServiceType).hideViewHolder(
+            listOf("hideMoreTabLineServiceSection", "hideMoreTabServiceGroupSection"),
+            "more_tab_line_grid_service_view_holder",
         )
 
         val globalServiceGroupType = MoreTabGlobalServiceGroupSectionFingerprint.classDef.type
@@ -169,41 +187,12 @@ val hideMoreTabComponentsPatch = bytecodePatch(
     }
 }
 
-private fun MutableMethod.hideWeatherViewHolder(itemViewField: FieldReference) {
-    val receiverRegister = parameterRegister(0) - 1
-    val registers = getFreeRegisterProvider(0, 2, receiverRegister)
-    val flagRegister = registers.getFreeRegister4Bit()
-    val viewRegister = registers.getFreeRegister4Bit()
-
-    addInstructionsWithLabels(
-        0,
-        """
-            invoke-static {}, $SETTINGS_CLASS->hideMoreTabWeatherSection()Z
-            move-result v$flagRegister
-            iget-object v$viewRegister, p0, ${itemViewField.smaliReference}
-            if-eqz v$flagRegister, :show_more_tab_weather_view_holder
-            const/16 v$flagRegister, 0x8
-            invoke-virtual {v$viewRegister, v$flagRegister}, Landroid/view/View;->setVisibility(I)V
-            return-void
-            :show_more_tab_weather_view_holder
-            const/4 v$flagRegister, 0x0
-            invoke-virtual {v$viewRegister, v$flagRegister}, Landroid/view/View;->setVisibility(I)V
-        """.trimIndent(),
-    )
-}
-
 private fun MutableMethod.hideViewHolder(
     settingMethods: List<String>,
     labelPrefix: String,
     itemViewField: FieldReference,
 ) {
-    if (localRegisterCount < 2) {
-        hideViewHolderAtReturn(settingMethods, labelPrefix, itemViewField)
-        return
-    }
-
     val hideLabel = "${labelPrefix}_hide"
-    val showLabel = "${labelPrefix}_show"
     val receiverRegister = parameterRegister(0) - 1
     val registers = getFreeRegisterProvider(0, 2, receiverRegister)
     val flagRegister = registers.getFreeRegister4Bit()
@@ -212,41 +201,19 @@ private fun MutableMethod.hideViewHolder(
     addInstructionsWithLabels(
         0,
         """
+            move-object/from16 v$viewRegister, p0
+            iget-object v$viewRegister, v$viewRegister, ${itemViewField.smaliReference}
             ${settingMethods.hideConditionInstructions(flagRegister, hideLabel)}
-            goto :$showLabel
+            const/4 v$flagRegister, 0x0
+            invoke-virtual {v$viewRegister, v$flagRegister}, Landroid/view/View;->setVisibility(I)V
+            goto :${labelPrefix}_bind
             :$hideLabel
-            iget-object v$viewRegister, p0, ${itemViewField.smaliReference}
             const/16 v$flagRegister, 0x8
             invoke-virtual {v$viewRegister, v$flagRegister}, Landroid/view/View;->setVisibility(I)V
             return-void
-        """.trimIndent(),
-        ExternalLabel(showLabel, getInstruction(0)),
-    )
-}
-
-private fun MutableMethod.hideViewHolderAtReturn(
-    settingMethods: List<String>,
-    labelPrefix: String,
-    itemViewField: FieldReference,
-) {
-    val returnIndex = instructions.indexOfLast { it.opcode == Opcode.RETURN_VOID }
-        .takeIf { it >= 0 }
-        ?: throw PatchException("Could not find More tab ViewHolder return")
-    val hideLabel = "${labelPrefix}_hide"
-    val showLabel = "${labelPrefix}_show"
-
-    addInstructionsWithLabels(
-        returnIndex,
-        """
-            ${settingMethods.hideConditionInstructions("p1", hideLabel)}
-            goto :$showLabel
-            :$hideLabel
-            iget-object p0, p0, ${itemViewField.smaliReference}
-            const/16 p1, 0x8
-            invoke-virtual {p0, p1}, Landroid/view/View;->setVisibility(I)V
-            return-void
-        """.trimIndent(),
-        ExternalLabel(showLabel, getInstruction(returnIndex)),
+            :${labelPrefix}_bind
+            nop
+        """,
     )
 }
 

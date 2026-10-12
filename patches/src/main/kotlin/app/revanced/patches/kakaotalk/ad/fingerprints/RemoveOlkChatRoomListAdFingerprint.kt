@@ -2,6 +2,8 @@ package app.revanced.patches.kakaotalk.ad.fingerprints
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.OpcodesFilter
+import app.morphe.patcher.fieldAccess
+import app.morphe.patcher.methodCall
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
@@ -40,4 +42,16 @@ internal object OpenChatTabFragmentAdEnabledFingerprint : Fingerprint(
         Opcode.SGET_OBJECT,
     ),
     custom = { _, classDef -> classDef.sourceFile == "OpenChatTabFragment.kt" }
+)
+
+internal object OpenChatTabBizBoardUpdateFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf("Ljava/util/List;"),
+    returnType = "V",
+    filters = listOf(
+        fieldAccess(name = "OPEN_CHAT_AD", opcode = Opcode.SGET_OBJECT),
+        methodCall(parameters = listOf(), returnType = "Z", opcode = Opcode.INVOKE_VIRTUAL),
+        methodCall("Ljava/util/List;->add(ILjava/lang/Object;)V"),
+    ),
+    custom = { _, classDef -> classDef.sourceFile == "OpenChatTabFragment.kt" },
 )

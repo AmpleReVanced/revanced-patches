@@ -2,239 +2,152 @@ package app.revanced.patches.chzzk.tongpow
 
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.util.getReference
-import app.revanced.util.localRegisterCount
-import app.revanced.util.matches
 import app.revanced.util.parameterTypeNames
-import app.revanced.util.smaliReference
-import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.ClassDef
 import com.android.tools.smali.dexlib2.iface.Method
 import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.Instruction
+import com.android.tools.smali.dexlib2.iface.instruction.NarrowLiteralInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.RegisterRangeInstruction
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
-internal data class TongPowAutoClaimInsertion(
-    val method: MutableMethod,
-    val updatePopupInfoIndex: Int,
-    val showPopupIndex: Int,
-    val showPopupReceiverRegister: Int,
-    val popupViewModelField: FieldReference,
-    val chatViewModelField: FieldReference,
-    val manualClaim: ManualClaimReferences,
-    val channelIdRegister: Int,
-    val claimIdRegister: Int,
-    val registers: TemporaryRegisters,
-) {
-    companion object {
-        fun resolve(
-            popupEventCollectorClass: ClassDef,
-            popupEventCollectorMethod: MutableMethod,
-            manualClaimMethod: MutableMethod,
-        ): TongPowAutoClaimInsertion {
-            val method = popupEventCollectorMethod
-            val updatePopupInfoIndex = method.findPopupInfoUpdateCallIndex()
-            val updatePopupInfoReference = method.instructionMethodReference(updatePopupInfoIndex)
-                ?: throw PatchException("Could not inspect TongPow popup update call.")
-            val showPopupIndex = method.findPopupTimerCallIndex(
-                updatePopupInfoIndex,
-                updatePopupInfoReference.definingClass,
-            )
-            val manualClaim = manualClaimMethod.resolveManualClaimReferences()
-            val updateCallRegisters = method.instructionRegisters(updatePopupInfoIndex)
-            val channelIdRegister = method.findMoveResultRegisterBefore(
-                updatePopupInfoIndex,
-                manualClaim.channelIdGetter,
-            )
-            val claimIdRegister = method.findMoveResultRegisterBefore(
-                updatePopupInfoIndex,
-                manualClaim.claimIdGetter,
-            )
-
-            return TongPowAutoClaimInsertion(
-                method = method,
-                updatePopupInfoIndex = updatePopupInfoIndex,
-                showPopupIndex = showPopupIndex,
-                showPopupReceiverRegister = method.instructionRegisters(showPopupIndex).firstOrNull()
-                    ?: throw PatchException("Could not infer TongPow popup receiver register."),
-                popupViewModelField = method.findLastFieldReferenceBefore(
-                    updatePopupInfoIndex,
-                    updatePopupInfoReference.definingClass,
-                ),
-                chatViewModelField = popupEventCollectorClass.findFieldByType(
-                    manualClaim.callbackConstructor.parameterTypeNames.single(),
-                ),
-                manualClaim = manualClaim,
-                channelIdRegister = channelIdRegister,
-                claimIdRegister = claimIdRegister,
-                registers = method.reserveTemporaryRegisters(
-                    updateCallRegisters,
-                    channelIdRegister,
-                    claimIdRegister,
-                ),
-            )
-        }
-    }
-}
-
-internal data class ManualClaimReferences(
-    val receiveAmount: MethodReference,
-    val hidePopup: MethodReference,
+internal data class TongPowClaimInsertion(
+    val dispatchIndex: Int,
+    val channelRegister: Int,
+    val claimRegister: Int,
+    val flowRegister: Int,
+    val scopeRegister: Int,
+    val callbackRegister: Int,
+    val constantRegister: Int,
+    val serviceField: FieldReference,
+    val claimCall: MethodReference,
+    val retryCall: MethodReference,
+    val scopeCall: MethodReference,
     val callbackConstructor: MethodReference,
-    val channelIdGetter: MethodReference,
-    val claimIdGetter: MethodReference,
+    val successConstructor: MethodReference,
+    val errorConstructor: MethodReference,
+    val collectCall: MethodReference,
+    val registerJobCall: MethodReference,
+    val callbackCase: Int,
+    val errorCase: Int,
 )
 
-internal data class TemporaryRegisters(
-    val flag: Int,
-    val callback: Int,
-    val scratch: Int,
-)
+private const val CLAIM_EVENT_CLASS =
+    "Lcom/navercorp/game/android/community/app/ui/overlayplayerend/live/streaming/chat/popup/ChatTongPowEvent\$ShowTongPowPopupInfo;"
+private const val TONG_POW_EVENT_CLASS =
+    "Lcom/navercorp/game/android/community/app/ui/overlayplayerend/live/streaming/chat/popup/ChatTongPowEvent;"
+private const val CLAIM_SERVICE_CLASS =
+    "Lcom/navercorp/game/android/community/data/core/service/tongpow/ApiTongPowService\$ApiService;"
+private const val API_CALL_CLASS =
+    "Lcom/navercorp/game/android/community/data/core/api/coroutine/CoroutineApiCall;"
+private const val FLOW_CLASS = "Lkotlinx/coroutines/flow/Flow;"
+private const val SCOPE_CLASS = "Lkotlinx/coroutines/CoroutineScope;"
+private const val JOB_CLASS = "Lkotlinx/coroutines/Job;"
+private const val CONTINUATION_CLASS = "Lkotlin/coroutines/Continuation;"
 
-private fun Method.resolveManualClaimReferences(): ManualClaimReferences {
-    val receiveAmountIndex = instructions.indexOfFirst { instruction ->
-        instruction.getReference<MethodReference>()?.isReceiveAmountCall == true
+internal fun resolveTongPowClaimInsertion(
+    chatViewModelClass: ClassDef,
+    eventMethod: Method,
+    manualClaimMethod: Method,
+): TongPowClaimInsertion {
+    val eventInstructions = eventMethod.instructions.toList()
+    val constructorIndex = eventInstructions.indexOfFirst {
+        it.getReference<MethodReference>()?.let { reference ->
+            reference.definingClass == CLAIM_EVENT_CLASS && reference.name == "<init>"
+        } == true
+    }.takeIf { it >= 0 } ?: throw PatchException("Could not find TongPow event constructor.")
+    val eventRegisters = eventInstructions[constructorIndex].registers
+        ?: throw PatchException("Could not inspect TongPow event constructor registers.")
+    if (eventRegisters.size != 9 || eventRegisters.take(6).any { it > 15 }) {
+        throw PatchException("Unexpected TongPow event constructor registers.")
     }
-    if (receiveAmountIndex < 0) {
-        throw PatchException("Could not find TongPow receive amount call.")
+    val dispatchIndex = eventInstructions.withIndex().drop(constructorIndex + 1).firstOrNull { (_, instruction) ->
+        instruction.getReference<MethodReference>()?.let { reference ->
+            reference.definingClass == chatViewModelClass.type &&
+                reference.parameterTypeNames == listOf(TONG_POW_EVENT_CLASS)
+        } == true
+    }?.index ?: throw PatchException("Could not find TongPow event dispatch.")
+
+    val manualInstructions = manualClaimMethod.instructions.toList()
+    val claimIndex = manualInstructions.indexOfFirst {
+        it.getReference<MethodReference>()?.let { reference ->
+            reference.definingClass == CLAIM_SERVICE_CLASS &&
+                reference.parameterTypeNames == listOf("Ljava/lang/String;", "Ljava/lang/String;") &&
+                reference.returnType == API_CALL_CLASS
+        } == true
+    }.takeIf { it >= 0 } ?: throw PatchException("Could not find TongPow claim API call.")
+    val collectIndex = manualInstructions.indexOfFirst {
+        it.getReference<MethodReference>()?.let { reference ->
+            reference.parameterTypeNames == listOf(
+                FLOW_CLASS, SCOPE_CLASS, "Lkotlin/jvm/functions/Function2;", "Lkotlin/jvm/functions/Function1;",
+            ) && reference.returnType == JOB_CLASS
+        } == true
+    }.takeIf { it > claimIndex } ?: throw PatchException("Could not find TongPow claim collection.")
+
+    fun referenceAt(index: Int) = manualInstructions[index].getReference<MethodReference>()
+        ?: throw PatchException("Could not inspect TongPow claim instruction " + index)
+    fun findReference(start: Int, end: Int, predicate: (MethodReference) -> Boolean) =
+        (start until end).firstOrNull { index ->
+            manualInstructions[index].getReference<MethodReference>()?.let(predicate) == true
+        } ?: throw PatchException("Could not resolve TongPow claim reference.")
+
+    val callbackIndex = findReference(0, collectIndex) {
+        it.name == "<init>" && it.parameterTypeNames == listOf(chatViewModelClass.type, "I")
+    }
+    val callbackConstructor = referenceAt(callbackIndex)
+    val successIndex = findReference(callbackIndex + 1, collectIndex) {
+        it.name == "<init>" && it.parameterTypeNames == listOf(callbackConstructor.definingClass, CONTINUATION_CLASS)
+    }
+    val errorIndex = findReference(successIndex + 1, collectIndex) {
+        it.name == "<init>" && it.parameterTypeNames == listOf("I")
+    }
+    fun caseBefore(index: Int): Int {
+        val register = manualInstructions[index].registers?.lastOrNull()
+            ?: throw PatchException("Could not inspect TongPow callback constructor.")
+        return manualInstructions.subList(0, index).lastOrNull { instruction ->
+            instruction is OneRegisterInstruction && instruction.registerA == register &&
+                instruction is NarrowLiteralInstruction
+        }?.let { (it as NarrowLiteralInstruction).narrowLiteral }
+            ?: throw PatchException("Could not resolve TongPow callback case.")
     }
 
-    val receiveAmount = instructions.toList()[receiveAmountIndex].getReference<MethodReference>()
-        ?: throw PatchException("Could not inspect TongPow receive amount call.")
-    val callbackConstructor = instructions.asSequence()
-        .take(receiveAmountIndex)
-        .mapNotNull { it.getReference<MethodReference>() }
-        .lastOrNull { reference ->
-            reference.name == "<init>" &&
-                reference.returnType == VOID_TYPE &&
-                reference.parameterTypeNames == listOf(parameterTypeNames[2])
-        }
-        ?: throw PatchException("Could not find TongPow success callback constructor.")
-    val hidePopup = instructions.asSequence()
-        .drop(receiveAmountIndex + 1)
-        .mapNotNull { it.getReference<MethodReference>() }
-        .firstOrNull { reference ->
-            reference.definingClass == receiveAmount.definingClass &&
-                reference.returnType == VOID_TYPE &&
-                reference.parameterTypeNames.isEmpty()
-        }
-        ?: throw PatchException("Could not find TongPow hide popup call.")
-    val stringGetters = instructions.asSequence()
-        .take(receiveAmountIndex)
-        .mapNotNull { it.getReference<MethodReference>() }
-        .filter { reference ->
-            reference.returnType == STRING_CLASS &&
-                reference.parameterTypeNames.isEmpty()
-        }
-        .toList()
-    val channelIdGetter = stringGetters.getOrNull(stringGetters.size - 2)
-        ?: throw PatchException("Could not find TongPow channel id getter.")
-    val claimIdGetter = stringGetters.lastOrNull()
-        ?: throw PatchException("Could not find TongPow claim id getter.")
+    val serviceField = chatViewModelClass.fields.singleOrNull { it.type == CLAIM_SERVICE_CLASS }
+        ?: throw PatchException("Could not find TongPow claim service field.")
 
-    if (channelIdGetter.definingClass != claimIdGetter.definingClass) {
-        throw PatchException("TongPow channel id and claim id getters belong to different classes.")
-    }
-
-    return ManualClaimReferences(
-        receiveAmount = receiveAmount,
-        hidePopup = hidePopup,
+    return TongPowClaimInsertion(
+        dispatchIndex = dispatchIndex,
+        channelRegister = eventRegisters[1],
+        claimRegister = eventRegisters[3],
+        flowRegister = eventRegisters[0],
+        scopeRegister = eventRegisters[2],
+        callbackRegister = eventRegisters[4],
+        constantRegister = eventRegisters[5],
+        serviceField = serviceField,
+        claimCall = referenceAt(claimIndex),
+        retryCall = referenceAt(findReference(claimIndex + 1, collectIndex) {
+            it.parameterTypeNames == listOf(FLOW_CLASS)
+        }),
+        scopeCall = referenceAt(findReference(claimIndex + 1, collectIndex) {
+            it.parameterTypeNames.isEmpty() && it.returnType == SCOPE_CLASS
+        }),
         callbackConstructor = callbackConstructor,
-        channelIdGetter = channelIdGetter,
-        claimIdGetter = claimIdGetter,
-    )
-}
-
-private fun Method.findPopupInfoUpdateCallIndex(): Int =
-    findPopupInfoUpdateCallIndexOrNull()
-        ?: throw PatchException("Could not find TongPow popup update call.")
-
-private fun Method.findPopupTimerCallIndex(
-    afterIndex: Int,
-    viewModelType: String,
-): Int =
-    findPopupTimerCallIndexOrNull(afterIndex, viewModelType)
-        ?: throw PatchException("Could not find TongPow popup timer call.")
-
-private fun Method.findLastFieldReferenceBefore(
-    beforeIndex: Int,
-    type: String,
-): FieldReference =
-    instructions.asSequence()
-        .take(beforeIndex)
-        .mapNotNull { it.getReference<FieldReference>() }
-        .lastOrNull { it.type == type }
-        ?: throw PatchException("Could not find field reference for $type.")
-
-private fun ClassDef.findFieldByType(type: String): FieldReference {
-    val fields = fields.filter { it.type == type }
-    if (fields.size != 1) {
-        throw PatchException("Expected one field of type $type in $this, found ${fields.size}.")
-    }
-
-    return fields.single()
-}
-
-private fun Method.findMoveResultRegisterBefore(
-    beforeIndex: Int,
-    getter: MethodReference,
-): Int {
-    val getterIndex = instructions.asSequence()
-        .take(beforeIndex)
-        .withIndex()
-        .lastOrNull { (_, instruction) ->
-            instruction.getReference<MethodReference>()?.matches(getter) == true
-        }
-        ?.index
-        ?: throw PatchException("Could not find getter ${getter.smaliReference}.")
-
-    return (instructions.toList().getOrNull(getterIndex + 1) as? OneRegisterInstruction)
-        ?.takeIf { it.opcode == Opcode.MOVE_RESULT_OBJECT }
-        ?.registerA
-        ?: throw PatchException("Could not infer result register for ${getter.smaliReference}.")
-}
-
-private fun Method.instructionRegisters(index: Int): List<Int> {
-    val instruction = instructions.toList().getOrNull(index)
-        ?: throw PatchException("Could not inspect invoke registers in $definingClass->$name.")
-
-    return instruction.registers
-        ?: throw PatchException("Could not inspect invoke registers for instruction $index in $definingClass->$name.")
-}
-
-private fun MutableMethod.reserveTemporaryRegisters(
-    updateCallRegisters: List<Int>,
-    channelIdRegister: Int,
-    claimIdRegister: Int,
-): TemporaryRegisters {
-    val candidates = updateCallRegisters
-        .drop(1)
-        .filter { register ->
-            register < localRegisterCount &&
-                register != channelIdRegister &&
-                register != claimIdRegister
-        }
-        .distinct()
-
-    if (candidates.size < 3 || candidates.take(3).any { it > 15 }) {
-        throw PatchException("Could not reserve low temporary registers for TongPow auto claim.")
-    }
-
-    return TemporaryRegisters(
-        flag = candidates[0],
-        callback = candidates[1],
-        scratch = candidates[2],
+        successConstructor = referenceAt(successIndex),
+        errorConstructor = referenceAt(errorIndex),
+        collectCall = referenceAt(collectIndex),
+        registerJobCall = referenceAt(findReference(collectIndex + 1, manualInstructions.size) {
+            it.parameterTypeNames == listOf(JOB_CLASS) && it.returnType == "V"
+        }),
+        callbackCase = caseBefore(callbackIndex),
+        errorCase = caseBefore(errorIndex),
     )
 }
 
 private val Instruction.registers: List<Int>?
     get() = when (this) {
-        is FiveRegisterInstruction -> listOf(registerC, registerD, registerE, registerF, registerG)
-            .take(registerCount)
+        is FiveRegisterInstruction -> listOf(registerC, registerD, registerE, registerF, registerG).take(registerCount)
         is RegisterRangeInstruction -> (startRegister until startRegister + registerCount).toList()
         else -> null
     }

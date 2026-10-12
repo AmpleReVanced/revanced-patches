@@ -2,6 +2,7 @@ package app.revanced.extension.samsungkeyboard;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.UserManager;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -16,6 +17,9 @@ public final class ToolbarCompat {
     }
 
     public static void initialize(Context context) {
+        UserManager userManager = context.getSystemService(UserManager.class);
+        if (userManager != null && !userManager.isUserUnlocked()) return;
+
         SharedPreferences preferences = context.getSharedPreferences("sticker_shared_prefs", Context.MODE_PRIVATE);
         toolbarItems = preferences;
         SharedPreferences settings = context.getSharedPreferences("revanced_toolbar", Context.MODE_PRIVATE);

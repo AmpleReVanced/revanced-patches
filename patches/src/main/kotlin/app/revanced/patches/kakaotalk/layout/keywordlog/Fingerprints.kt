@@ -10,8 +10,8 @@ import app.morphe.patcher.opcode
 import app.morphe.patcher.string
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
-import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.Method
+import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
 internal const val FRIEND_CLASS = "Lcom/kakao/talk/db/model/Friend;"
 internal const val PROFILE_VIEW_CLASS = "Lcom/kakao/talk/widget/ProfileView;"
@@ -115,11 +115,25 @@ internal fun chatRoomTypeFieldFingerprint(chatRoomType: String, chatRoomTypeEnum
     ),
 )
 
-internal object ChatRoomListFilterFingerprint : Fingerprint(
+internal object ChatRoomListBuildFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.SYNTHETIC),
+    returnType = "Ljava/lang/Object;",
+    parameters = listOf(
+        "L", "Ljava/util/List;", "L", "I", "L", "Z",
+        "Ljava/lang/String;", "Ljava/lang/String;", "Lkotlin/coroutines/Continuation;",
+        "I", "Ljava/lang/Object;",
+    ),
+    custom = { _, classDef -> classDef.sourceFile == "ChatRoomListHelperV2.kt" },
+)
+
+internal fun keywordLogChatRoomItemFingerprint(chatRoomType: String) = Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.FINAL),
-    returnType = "Ljava/util/List;",
-    parameters = listOf("Ljava/util/List;"),
-    custom = { _, classDef -> classDef.sourceFile == "ChatRoomListFilterExtension.kt" },
+    parameters = listOf(
+        chatRoomType, "Ljava/util/Set;", "L", "I", "Z", "Ljava/lang/String;",
+        "Z", "Ljava/lang/String;", "Z", "Z", "Z", "Z",
+    ),
+    returnType = "L",
+    custom = { _, classDef -> classDef.sourceFile == "ChatRoomItem.kt" },
 )
 
 internal fun chatRoomListRefreshFingerprint(viewModelType: String) = Fingerprint(
@@ -132,19 +146,22 @@ internal fun chatRoomListRefreshFingerprint(viewModelType: String) = Fingerprint
     ),
 )
 
-internal fun generalChatRoomListFilterCallFingerprint(
+internal fun generalChatRoomListBuildCallFingerprint(
     viewModelType: String,
-    filterMethod: MethodReference,
+    buildMethod: MethodReference,
 ) = Fingerprint(
+    name = "emit",
+    parameters = listOf("Ljava/lang/Object;", "Lkotlin/coroutines/Continuation;"),
     filters = listOf(
         methodCall(
-            definingClass = filterMethod.definingClass,
-            name = filterMethod.name,
-            parameters = listOf("Ljava/util/List;"),
-            returnType = "Ljava/util/List;",
+            definingClass = buildMethod.definingClass,
+            name = buildMethod.name,
+            parameters = buildMethod.parameterTypes.map(CharSequence::toString),
+            returnType = buildMethod.returnType,
         ),
+        checkCast("Ljava/util/List;"),
     ),
-    custom = { _, classDef -> classDef.type.startsWith(viewModelType.dropLast(1) + "$") },
+    custom = { _, classDef -> classDef.fields.any { it.type == viewModelType } },
 )
 
 internal fun chatRoomTitleUsageFingerprint(chatRoomType: String) = Fingerprint(

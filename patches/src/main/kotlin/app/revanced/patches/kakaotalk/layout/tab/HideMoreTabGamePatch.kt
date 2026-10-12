@@ -54,27 +54,45 @@ val hideMoreTabGamePatch = bytecodePatch(
             ?: throw PatchException("Could not infer MoreTabPagerItem super type")
 
         val itemsFlowMethods = mutableListOf<Pair<ClassDef, Method>>()
+        val schemeSelectionMethods = mutableListOf<Pair<ClassDef, Method>>()
         classDefForEach { classDef ->
-            classDef.methods.filter { method ->
-                val instructions = method.implementation?.instructions ?: return@filter false
-
-                instructions.any {
+            for (method in classDef.methods) {
+                val instructions = method.implementation?.instructions ?: continue
+                val loadsGameItem = instructions.any {
                     it.opcode == Opcode.SGET_OBJECT &&
                             it.getReference<FieldReference>()?.type == gameItemClass.type
-                } &&
-                        instructions.any {
-                            it.opcode == Opcode.NEW_ARRAY &&
-                                    it.getReference<TypeReference>()?.type == "[$pagerItemType"
-                        } &&
-                        instructions.any {
-                            val reference = it.getReference<MethodReference>()
-
-                            it.opcode == Opcode.INVOKE_STATIC &&
-                                    reference?.name == "listOfNotNull" &&
-                                    reference.returnType == "Ljava/util/List;"
-                        }
-            }.forEach { method ->
-                itemsFlowMethods += classDef to method
+                }
+                if (!loadsGameItem) continue
+                if (instructions.any {
+                        it.opcode == Opcode.NEW_ARRAY &&
+                                it.getReference<TypeReference>()?.type == "[$pagerItemType"
+                    } && instructions.any {
+                        val reference = it.getReference<MethodReference>()
+                        it.opcode == Opcode.INVOKE_STATIC &&
+                                reference?.name == "listOfNotNull" &&
+                                reference.returnType == "Ljava/util/List;"
+                    }
+                ) {
+                    itemsFlowMethods += classDef to method
+                }
+                if (method.parameterTypes == listOf("Ljava/lang/String;", "Landroid/net/Uri;") &&
+                    method.returnType == "V" &&
+                    instructions.any {
+                        it.opcode == Opcode.SGET_OBJECT &&
+                                it.getReference<FieldReference>()?.type == homeItemClass.type
+                    } && instructions.any {
+                        val reference = it.getReference<MethodReference>()
+                        it.opcode == Opcode.INVOKE_STATIC &&
+                                reference?.definingClass == "Lkotlin/jvm/internal/Intrinsics;" &&
+                                reference.parameterTypes == listOf(
+                                    "Ljava/lang/Object;",
+                                    "Ljava/lang/Object;",
+                                ) &&
+                                reference.returnType == "Z"
+                    }
+                ) {
+                    schemeSelectionMethods += classDef to method
+                }
             }
         }
         val (itemsFlowClassDef, itemsFlowMethodDef) = itemsFlowMethods.singleOrNull()
@@ -135,36 +153,6 @@ val hideMoreTabGamePatch = bytecodePatch(
             """.trimIndent(),
         )
 
-        val schemeSelectionMethods = mutableListOf<Pair<ClassDef, Method>>()
-        classDefForEach { classDef ->
-            classDef.methods.filter { method ->
-                method.parameterTypes == listOf("Ljava/lang/String;", "Landroid/net/Uri;") &&
-                        method.returnType == "V" &&
-                        method.implementation?.instructions?.let { instructions ->
-                            instructions.any {
-                                it.opcode == Opcode.SGET_OBJECT &&
-                                        it.getReference<FieldReference>()?.type == gameItemClass.type
-                            } &&
-                                    instructions.any {
-                                        it.opcode == Opcode.SGET_OBJECT &&
-                                                it.getReference<FieldReference>()?.type == homeItemClass.type
-                                    } &&
-                                    instructions.any {
-                                        val reference = it.getReference<MethodReference>()
-
-                                        it.opcode == Opcode.INVOKE_STATIC &&
-                                                reference?.definingClass == "Lkotlin/jvm/internal/Intrinsics;" &&
-                                                reference.parameterTypes == listOf(
-                                                    "Ljava/lang/Object;",
-                                                    "Ljava/lang/Object;",
-                                                ) &&
-                                                reference.returnType == "Z"
-                                    }
-                        } == true
-            }.forEach { method ->
-                schemeSelectionMethods += classDef to method
-            }
-        }
         val (schemeSelectionClassDef, schemeSelectionMethodDef) = schemeSelectionMethods.singleOrNull()
             ?: throw PatchException("Could not find More tab pager scheme selection method")
         val schemeSelectionMethod = mutableClassDefBy(schemeSelectionClassDef).findMutableMethodOf(schemeSelectionMethodDef)

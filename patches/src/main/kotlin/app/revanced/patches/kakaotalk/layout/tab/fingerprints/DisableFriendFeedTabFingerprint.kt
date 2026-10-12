@@ -28,6 +28,7 @@ internal object DetermineFeedOrListMethodFingerprint : Fingerprint(
     parameters = listOf("Ljava/lang/Object;"),
     returnType = "Ljava/lang/Object;",
     filters = listOf(
+        methodCall(parameters = listOf(), returnType = "Z"),
         methodCall(name = "<init>", parameters = listOf("Z", "Z", "Z"), returnType = "V"),
     ),
     custom = { _, classDef -> classDef.sourceFile == "FriendSettingsViewModel.kt" },

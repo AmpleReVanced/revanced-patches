@@ -38,7 +38,12 @@ val removeExitAdPatch = bytecodePatch(
             )
         }
 
-        ExitAdRevealFingerprint.method.hideAdAreaAfterReveal()
-        ExitAdAnimateRevealFingerprint.method.hideAdAreaAfterReveal()
+        if (ExitAdFragmentRevealFingerprint.methodOrNull != null) {
+            ExitAdFragmentRevealFingerprint.method.hideAdAreaAfterReveal()
+            ExitAdFragmentAnimateRevealFingerprint.method.hideAdAreaAfterReveal()
+        } else {
+            ExitAdRevealFingerprint.method.hideAdAreaAfterReveal()
+            ExitAdAnimateRevealFingerprint.method.hideAdAreaAfterReveal()
+        }
     }
 }

@@ -3,6 +3,7 @@ package app.revanced.patches.kakaotalk.layout.tab.fingerprints
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.methodCall
 import app.morphe.patcher.newInstance
+import app.morphe.patcher.opcode
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
@@ -14,7 +15,7 @@ private val LIST_ADD_METHOD_CALL = methodCall(
 internal object AddMoreTabBodySectionsFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.FINAL),
     returnType = "Ljava/util/List;",
-    strings = listOf("2604_vari_A_app"),
+    filters = listOf(opcode(Opcode.NEW_INSTANCE), LIST_ADD_METHOD_CALL),
     custom = { method, classDef ->
         classDef.sourceFile == "MoreTabViewModel.kt" &&
                 method.parameterTypes.size == 5
@@ -24,11 +25,8 @@ internal object AddMoreTabBodySectionsFingerprint : Fingerprint(
 internal object AddMoreTabServiceSectionsFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.FINAL),
     returnType = "V",
-    strings = listOf(
-        "2604_vari_A_app",
-        "2604_vari_B_cat",
-        "2604_vari_C_ad",
-    ),
+    parameters = listOf("Ljava/util/List;", "L", "L", "L"),
+    filters = listOf(LIST_ADD_METHOD_CALL),
     custom = { _, classDef ->
         classDef.sourceFile == "MoreTabViewModel.kt"
     }
@@ -61,18 +59,8 @@ internal object MoreTabWeatherSectionFingerprint : Fingerprint(
     }
 )
 
-internal object WeatherViewHolderBindFingerprint : Fingerprint(
-    accessFlags = listOf(AccessFlags.PUBLIC),
-    returnType = "V",
-    custom = { method, classDef ->
-        classDef.sourceFile == "WeatherViewHolder.kt" &&
-                !classDef.type.contains("$") &&
-                method.name != "<init>" &&
-                method.accessFlags and AccessFlags.BRIDGE.value == 0 &&
-                method.accessFlags and AccessFlags.SYNTHETIC.value == 0 &&
-                method.parameterTypes.size == 1
-    }
-)
+internal fun moreTabWeatherViewHolderBindFingerprint(itemType: String) =
+    moreTabItemViewHolderBindFingerprint("WeatherViewHolder.kt", itemType)
 
 internal object MoreTabServiceGroupSectionFingerprint : Fingerprint(
     returnType = "Ljava/lang/String;",
@@ -135,3 +123,20 @@ internal object MoreTabLineServiceSectionFingerprint : Fingerprint(
                 method.parameterTypes.isEmpty()
     }
 )
+
+internal object MoreTabLineGridServiceSectionFingerprint : Fingerprint(
+    name = "toString",
+    strings = listOf("LineGridService(uiModel="),
+    custom = { _, classDef -> classDef.sourceFile == "MoreTabItem.kt" },
+)
+
+internal fun moreTabLineGridServiceAdditionFingerprint(itemType: String) = Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.FINAL),
+    returnType = "V",
+    parameters = listOf("Ljava/util/List;", "L"),
+    filters = listOf(newInstance(itemType), LIST_ADD_METHOD_CALL),
+    custom = { _, classDef -> classDef.sourceFile == "MoreTabViewModel.kt" },
+)
+
+internal fun moreTabLineGridServiceViewHolderBindFingerprint(itemType: String) =
+    moreTabItemViewHolderBindFingerprint("LineGridServiceViewHolder.kt", itemType)
