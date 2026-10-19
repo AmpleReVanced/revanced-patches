@@ -1,3 +1,10 @@
+# [1.5.0-dev.20](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.19...v1.5.0-dev.20) (2026-10-19)
+
+
+### Features
+
+* **dcinside:** support version `5.3.8` ([346b6d6](https://github.com/AmpleReVanced/revanced-patches/commit/346b6d68d0c978532e8a2f7c4a208e3f5a1f061c))
+
 # [1.5.0-dev.19](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.18...v1.5.0-dev.19) (2026-10-12)
 
 
