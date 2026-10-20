@@ -6,16 +6,11 @@ import com.android.tools.smali.dexlib2.AccessFlags
 
 private fun premiumStateFingerprint(id: String, name: String) = ProtectedDexFingerprint(
     id = id,
+    definingClass = "Lcom/onyx/android/sdk/data/account/AccountDataBundle;",
     name = name,
     accessFlags = listOf(AccessFlags.PUBLIC),
     parameters = listOf(),
     returnType = "Z",
-    methodCalls = listOf(
-        MethodCallFingerprint(
-            parameters = listOf("I", "Ljava/lang/Object;", "[Ljava/lang/Object;"),
-            returnType = "Z",
-        ),
-    ),
 )
 
 internal val PermanentPremiumFingerprint = premiumStateFingerprint("permanent premium state", "isVIPPermanent")
@@ -29,4 +24,45 @@ internal val NoteCreateQuotaFingerprint = ProtectedDexFingerprint(
     parameters = listOf("Z"),
     returnType = "J",
     strings = listOf("notebook", "normalNotebook"),
+)
+
+internal val RemainingNoteQuotaFingerprint = ProtectedDexFingerprint(
+    id = "remaining local note quota",
+    definingClass = "Lcom/onyx/galaxy/note/category/viewmodel/NoteQuotaViewModel;",
+    name = "getLeftNoteQuota",
+    accessFlags = listOf(AccessFlags.PUBLIC),
+    parameters = listOf(),
+    returnType = "J",
+    methodCalls = listOf(
+        MethodCallFingerprint(
+            name = "getNoteCreateQuota\$default",
+            returnType = "J",
+        ),
+        MethodCallFingerprint(
+            name = "getConsumedNoteQuota",
+            parameters = listOf(),
+            returnType = "I",
+        ),
+    ),
+)
+
+internal val NoteRegistrationGuideFingerprint = ProtectedDexFingerprint(
+    id = "note creation registration guide",
+    definingClass = "Lcom/onyx/galaxy/note/category/viewmodel/NoteQuotaViewModel;",
+    name = "checkGuideRegister",
+    accessFlags = listOf(AccessFlags.PUBLIC),
+    parameters = listOf("Landroid/content/Context;"),
+    returnType = "Z",
+    methodCalls = listOf(
+        MethodCallFingerprint(
+            name = "isAlreadyLogin",
+            parameters = listOf(),
+            returnType = "Z",
+        ),
+        MethodCallFingerprint(
+            name = "getRegisterGuideQuota",
+            parameters = listOf(),
+            returnType = "J",
+        ),
+    ),
 )

@@ -14,6 +14,8 @@ internal val unlockPremiumStatePatch = rawResourcePatch {
         val premiumClass = ProtectedDex.returnEarly(PermanentPremiumFingerprint, true).definingClass
         ProtectedDex.returnEarly(PremiumRoleFingerprint, true, premiumClass)
         ProtectedDex.returnLong(NoteCreateQuotaFingerprint, LOCAL_NOTE_QUOTA)
+        ProtectedDex.returnLong(RemainingNoteQuotaFingerprint, LOCAL_NOTE_QUOTA)
+        ProtectedDex.returnEarly(NoteRegistrationGuideFingerprint, false)
     }
 }
 

@@ -5,15 +5,24 @@ typedef unsigned long uint64_t;
 typedef signed long int64_t;
 typedef unsigned long size_t;
 
-#define MAP_BUFFER_SIZE 524288
+#define READ_BUFFER_SIZE 4096
+#define MAP_LINE_SIZE 8192
 #define AT_FDCWD -100
 #define SYS_OPENAT 56
 #define SYS_CLOSE 57
 #define SYS_READ 63
+#define SYS_MPROTECT 226
+#define EINTR 4
+#define PROT_READ 1
+#define PROT_WRITE 2
+#define PROT_EXEC 4
 
-static char map_data[MAP_BUFFER_SIZE];
+static char read_buffer[READ_BUFFER_SIZE];
+static char map_line[MAP_LINE_SIZE];
+static int patch_count;
+static int patch_error;
 
-static int contains(const char *start, const char *end, const char *needle) {
+static int contains_path(const char *start, const char *end, const char *needle) {
     for (; start < end; start++) {
         const char *left = start;
         const char *right = needle;
@@ -21,7 +30,7 @@ static int contains(const char *start, const char *end, const char *needle) {
             left++;
             right++;
         }
-        if (!*right) return 1;
+        if (!*right && (left == end || *left == ' ' || *left == '!' || *left == '/')) return 1;
     }
     return 0;
 }
@@ -66,7 +75,13 @@ static int matches(const uint32_t *code) {
         (code[8] & 0xff00001f) == 0x54000003;
 }
 
-static void patch(uint32_t *code) {
+static void patch(uint32_t *code, uint64_t start, uint64_t finish, int protection) {
+    int needs_write = !(protection & PROT_WRITE);
+    if (needs_write && system_call(SYS_MPROTECT, start, finish - start, protection | PROT_WRITE) < 0) {
+        patch_error = -2;
+        return;
+    }
+
     uint32_t immediate = (code[4] >> 5) & 0x7ffff;
     int64_t signed_immediate = ((int64_t)(int32_t)(immediate << 13)) >> 13;
     code[4] = 0x14000000 | ((uint32_t)signed_immediate & 0x03ffffff);
@@ -80,45 +95,76 @@ static void patch(uint32_t *code) {
         : "r"(&code[4])
         : "memory"
     );
+    patch_count++;
+
+    // Use the mapping boundaries so this also works with 16 KB memory pages.
+    if (needs_write && system_call(SYS_MPROTECT, start, finish - start, protection) < 0) {
+        patch_error = -3;
+    }
 }
 
-static void scan_maps(const char *data, size_t size) {
-    const char *position = data;
-    const char *end = data + size;
-    while (position < end) {
-        const char *line_end = position;
-        while (line_end < end && *line_end != '\n') line_end++;
-        const char *cursor = position;
-        uint64_t start = parse_hex(&cursor, line_end);
-        if (cursor < line_end && *cursor == '-') cursor++;
-        uint64_t finish = parse_hex(&cursor, line_end);
-        while (cursor < line_end && *cursor == ' ') cursor++;
-        int executable = cursor + 2 < line_end && cursor[0] == 'r' && cursor[2] == 'x';
-        if (executable && contains(cursor, line_end, "/base.apk")) {
-            uint32_t *code = (uint32_t *)((start + 3) & ~3UL);
-            uint32_t *code_end = (uint32_t *)(finish - 9 * sizeof(uint32_t));
-            while (code <= code_end) {
-                if (matches(code)) {
-                    patch(code);
-                    return;
-                }
-                code++;
-            }
-        }
-        position = line_end < end ? line_end + 1 : end;
+static void scan_mapping(const char *position, const char *end) {
+    const char *cursor = position;
+    uint64_t start = parse_hex(&cursor, end);
+    if (cursor == position || cursor == end || *cursor++ != '-') return;
+    const char *finish_start = cursor;
+    uint64_t finish = parse_hex(&cursor, end);
+    if (cursor == finish_start || cursor == end || *cursor != ' ' || finish <= start) return;
+    while (cursor < end && *cursor == ' ') cursor++;
+    if (end - cursor < 4 || cursor[0] != 'r' || cursor[2] != 'x' || cursor[3] != 'p') return;
+    if (cursor[1] != 'w' && cursor[1] != '-') return;
+    if (!contains_path(cursor, end, ".apk") && !contains_path(cursor, end, "/libbaiduprotect.so")) return;
+    if (finish - start < 9 * sizeof(uint32_t)) return;
+
+    int protection = PROT_READ | PROT_EXEC | (cursor[1] == 'w' ? PROT_WRITE : 0);
+    uint32_t *code = (uint32_t *)((start + 3) & ~3UL);
+    uint32_t *code_end = (uint32_t *)(finish - 9 * sizeof(uint32_t));
+    while (code <= code_end) {
+        // More than one executable mapping can contain the integrity check.
+        if (matches(code)) patch(code, start, finish, protection);
+        code++;
     }
 }
 
 __attribute__((constructor)) static void initialize(void) {
     static const char path[] = "/proc/self/maps";
-    long descriptor = system_call(SYS_OPENAT, AT_FDCWD, (long)path, 0);
-    if (descriptor < 0) return;
-    size_t size = 0;
-    while (size < sizeof(map_data)) {
-        long count = system_call(SYS_READ, descriptor, (long)&map_data[size], sizeof(map_data) - size);
-        if (count <= 0) break;
-        size += count;
+    long descriptor;
+    do {
+        descriptor = system_call(SYS_OPENAT, AT_FDCWD, (long)path, 0);
+    } while (descriptor == -EINTR);
+    if (descriptor < 0) {
+        patch_error = -1;
+        return;
     }
+
+    size_t size = 0;
+    int truncated = 0;
+    for (;;) {
+        long count = system_call(SYS_READ, descriptor, (long)read_buffer, sizeof(read_buffer));
+        if (count == -EINTR) continue;
+        if (count < 0) patch_error = -1;
+        if (count <= 0) break;
+        for (long index = 0; index < count; index++) {
+            char current = read_buffer[index];
+            if (current == '\n') {
+                if (!truncated) scan_mapping(map_line, map_line + size);
+                size = 0;
+                truncated = 0;
+            } else if (size < sizeof(map_line)) {
+                map_line[size++] = current;
+            } else {
+                truncated = 1;
+            }
+        }
+    }
+    if (!truncated && size) scan_mapping(map_line, map_line + size);
     system_call(SYS_CLOSE, descriptor, 0, 0);
-    scan_maps(map_data, size);
+}
+
+// Positive: patched checks; zero: no match; negative: maps I/O or protection failure.
+__attribute__((visibility("default")))
+int Java_com_sagittarius_v6_StubApplication_getStarnoteIntegrityPatchStatus(void *environment, void *application) {
+    (void)environment;
+    (void)application;
+    return patch_error ? patch_error : patch_count;
 }

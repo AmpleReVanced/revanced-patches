@@ -3,9 +3,9 @@ package app.revanced.patches.starnote.shared
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.rawResourcePatch
 import com.android.tools.smali.dexlib2.AccessFlags
+import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.dexbacked.DexBackedDexFile
 import com.android.tools.smali.dexlib2.dexbacked.instruction.DexBackedInstruction
-import com.android.tools.smali.dexlib2.iface.ClassDef
 import com.android.tools.smali.dexlib2.iface.Method
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
@@ -40,6 +40,7 @@ internal data class MethodCallFingerprint(
 
 internal class ProtectedDexFingerprint(
     private val id: String,
+    private val definingClass: String? = null,
     private val name: String? = null,
     private val accessFlags: List<AccessFlags> = emptyList(),
     private val parameters: List<String>? = null,
@@ -48,7 +49,8 @@ internal class ProtectedDexFingerprint(
     private val methodCalls: List<MethodCallFingerprint> = emptyList(),
 ) {
     fun matches(method: Method): Boolean {
-        if ((name != null && method.name != name) ||
+        if ((definingClass != null && method.definingClass != definingClass) ||
+            (name != null && method.name != name) ||
             accessFlags.any { !it.isSet(method.accessFlags) } ||
             parameters?.let { method.parameterTypes != it } == true ||
             returnType?.let { method.returnType != it } == true
@@ -216,6 +218,16 @@ internal object ProtectedDex {
         }
         if (replacedCodeUnits < coveredCodeUnits || replacement.size > replacedCodeUnits * Short.SIZE_BYTES) {
             throw PatchException("$method is too short to patch")
+        }
+        // Include a result instruction if its invocation was overwritten.
+        if (instructions.hasNext()) {
+            val next = instructions.next()
+            if (next.opcode == Opcode.MOVE_RESULT ||
+                next.opcode == Opcode.MOVE_RESULT_OBJECT ||
+                next.opcode == Opcode.MOVE_RESULT_WIDE
+            ) {
+                replacedCodeUnits += next.codeUnits
+            }
         }
         val offset = first.instructionStart
         replacement.copyInto(bytes, offset)
