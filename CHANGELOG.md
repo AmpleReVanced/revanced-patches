@@ -1,3 +1,15 @@
+# [1.5.0-dev.21](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.20...v1.5.0-dev.21) (2026-10-20)
+
+
+### Bug Fixes
+
+* **starnote:** harden premium, note quota, and integrity patches ([3a3c434](https://github.com/AmpleReVanced/revanced-patches/commit/3a3c434d17c759dfbf34cf3355e1077227cab164))
+
+
+### Features
+
+* **dcinside:** support version `5.3.12` ([31d98b9](https://github.com/AmpleReVanced/revanced-patches/commit/31d98b91da07d4a0f14b692bfdafc90e117c49e2))
+
 # [1.5.0-dev.20](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.19...v1.5.0-dev.20) (2026-10-19)
 
 
