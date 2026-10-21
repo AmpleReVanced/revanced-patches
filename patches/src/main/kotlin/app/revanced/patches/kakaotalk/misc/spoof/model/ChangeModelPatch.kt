@@ -10,6 +10,7 @@ import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 val changeModelPatch = bytecodePatch(
     name = "Change model",
     description = "Changes the device model to supporting subdevice features",
+    default = false, // Starting with version 26.9.0, it's no longer necessary to enable subdevice feature
 ) {
     compatibleWith(COMPATIBILITY_KAKAO)
 

@@ -24,6 +24,7 @@ private const val EXTENSION_CLASS =
 val enableMarkdownPatch = bytecodePatch(
     name = "Enable Markdown",
     description = "Render plain text messages with markdown-style formatting.",
+    default = false, // Markdown feature is no longer supported by server
 ) {
     compatibleWith(COMPATIBILITY_KAKAO)
     dependsOn(addSettingsTabPatch)
