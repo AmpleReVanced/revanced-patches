@@ -4,14 +4,14 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START -->
-> **[v1.5.0-dev.21](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.5.0-dev.21)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;127 patches total
+> **[v1.5.0-dev.22](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.5.0-dev.22)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;127 patches total
 <details>
 <summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;75 patches</summary>
 <br>
 
 **🎯 Supported versions:**
 
-| 26.8.3 |
+| 26.9.0 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
@@ -31,7 +31,7 @@
 | [Always Show Kick Button](#always-show-kick-button) | Always shows the kick button in group member management. |  |
 | [Block reactions on deleted or hidden messages](#block-reactions-on-deleted-or-hidden-messages) | Stops reactions, including the double tap gesture, from being sent on messages that the server considers deleted or hidden and that are only still visible because they are kept by a patch. |  |
 | [Block replies on deleted or hidden messages](#block-replies-on-deleted-or-hidden-messages) | Stops the swipe gesture, and any reply or comment send, from targeting messages that the server considers deleted or hidden and that are only still visible because they are kept by a patch. |  |
-| [Bypass Moat check](#bypass-moat-check) | Adds a setting to prevent KakaoPay Moat initialization, policy and pattern updates, scans, detector logging, and force-off reports while returning benign integrity results. Payments on a modified build are still risky. |  |
+| [Bypass Moat check](#bypass-moat-check) | Adds a setting to prevent KakaoPay Moat initialization, network requests, scans, security information sharing, telemetry, and force-off reports while returning benign integrity results. Payments on a modified build are still risky. |  |
 | [Bypass input mention limit in non-multichat](#bypass-input-mention-limit-in-non-multichat) | Bypass the limit of input mentions in non-multichat rooms |  |
 | [Change model](#change-model) | Changes the device model to supporting subdevice features | • Brand<br>• Manufacturer<br>• Model<br>• Device<br>• Product<br>• Board<br>• Hardware<br>• CPU ABI<br>• SoC manufacturer<br>• SoC model<br>• Fingerprint<br>• Build ID<br>• Display<br>• Build type<br>• Tags |
 | [Change package name](#change-package-name) | Appends ".revanced" to the package name by default. For KakaoTalk only | • Package name<br>• Update permissions<br>• Update providers |
@@ -71,7 +71,7 @@
 | [Remove BizBoard ads](#remove-bizboard-ads) | Removes the BizBoard ad by forcing its dimensions to 0x0 and visibility to GONE in onMeasure. |  |
 | [Remove More tab ad](#remove-more-tab-ad) | Removes the ad from the More tab. |  |
 | [Remove OpenLink chat room list ad](#remove-openlink-chat-room-list-ad) | Removes the OpenLink chat room list ad. |  |
-| [Remove Short-form Tab](#remove-short-form-tab) | Removes the Short-form tab from the now fragment. |  |
+| [Remove Short-form Tab](#remove-short-form-tab) | Removes the Short-form tab from the now screen. |  |
 | [Remove feed ad](#remove-feed-ad) | Removes the feed ad from the app. |  |
 | [Remove focus ad](#remove-focus-ad) | Removes the focus ad from the app. |  |
 | [Remove local connect tab](#remove-local-connect-tab) | Adds an option to remove the local connect tab from the bottom navigation bar. |  |

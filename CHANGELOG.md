@@ -1,3 +1,15 @@
+# [1.5.0-dev.22](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.21...v1.5.0-dev.22) (2026-10-21)
+
+
+### Bug Fixes
+
+* **kakaotalk:** disable Markdown and model spoofing patches by default ([7bfe8b3](https://github.com/AmpleReVanced/revanced-patches/commit/7bfe8b3e21848d715986a1757e6046d988ed0823))
+
+
+### Features
+
+* **kakaotalk:** support version `26.9.0` ([3b6d0c6](https://github.com/AmpleReVanced/revanced-patches/commit/3b6d0c62098b314782efb7a205b88032b2e72289))
+
 # [1.5.0-dev.21](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.20...v1.5.0-dev.21) (2026-10-20)
 
 
