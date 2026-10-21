@@ -8,27 +8,13 @@ import app.morphe.patcher.opcode
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
-internal object ChatListAdHelperEnabledFingerprint : Fingerprint(
-    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
-    parameters = listOf("Landroid/content/Context;"),
-    returnType = "Z",
-    filters = listOf(
-        methodCall("Landroid/content/res/Resources;->getConfiguration()Landroid/content/res/Configuration;"),
-        opcode(Opcode.MOVE_RESULT_OBJECT, location = MatchAfterImmediately()),
-        fieldAccess(
-            "Landroid/content/res/Configuration;->orientation:I",
-            location = MatchAfterImmediately(),
-        ),
-        opcode(Opcode.CONST_4, location = MatchAfterImmediately()),
-        opcode(Opcode.IF_NE, location = MatchAfterImmediately()),
-        opcode(Opcode.SGET_OBJECT, location = MatchAfterImmediately()),
-        opcode(Opcode.INVOKE_VIRTUAL, location = MatchAfterImmediately()),
-    ),
+internal object ChatListAdHelperFingerprint : Fingerprint(
+    name = "<clinit>",
     custom = { _, classDef -> classDef.sourceFile == "ChatListAdHelper.kt" }
 )
 
 internal object ChatListGlobalAdEnabledFingerprint : Fingerprint(
-    classFingerprint = ChatListAdHelperEnabledFingerprint,
+    classFingerprint = ChatListAdHelperFingerprint,
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     parameters = listOf(
         "Landroid/content/Context;",
@@ -45,7 +31,7 @@ internal object ChatListGlobalAdEnabledFingerprint : Fingerprint(
 )
 
 internal object ChatListBizBoardEnabledFingerprint : Fingerprint(
-    classFingerprint = ChatListAdHelperEnabledFingerprint,
+    classFingerprint = ChatListAdHelperFingerprint,
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     parameters = listOf("L", "Z"),
     returnType = "Z",

@@ -1,7 +1,9 @@
 package app.revanced.patches.kakaotalk.misc.settings
 
 import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.fieldAccess
 import com.android.tools.smali.dexlib2.AccessFlags
+import com.android.tools.smali.dexlib2.Opcode
 
 internal object MainSettingItemTypeFingerprint : Fingerprint(
     custom = { _, classDef ->
@@ -11,10 +13,17 @@ internal object MainSettingItemTypeFingerprint : Fingerprint(
 )
 
 internal object SetupSettingsItemFingerprint : Fingerprint(
-    definingClass = "Lcom/kakao/talk/activity/setting/SettingActivity\$a;",
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     parameters = listOf("Landroid/content/Context;", "Landroid/content/Intent;"),
     returnType = "Ljava/util/List;",
+    filters = listOf(fieldAccess(name = "LABORATORY", opcode = Opcode.SGET_OBJECT)),
+    custom = { _, classDef -> classDef.sourceFile == "SettingActivity.kt" },
+)
+
+internal object SettingsDividerFingerprint : Fingerprint(
+    name = "<init>",
+    parameters = List(5) { "I" },
+    custom = { _, classDef -> classDef.sourceFile == "DividerItem.kt" },
 )
 
 internal object ThemePrefClassFingerprint : Fingerprint(

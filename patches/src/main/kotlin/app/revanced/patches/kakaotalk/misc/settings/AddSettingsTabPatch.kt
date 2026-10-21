@@ -19,7 +19,6 @@ import app.revanced.patches.kakaotalk.misc.extension.sharedExtensionPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.util.argumentRegister
 import app.revanced.util.parameterTypeNames
-import app.revanced.util.smaliReference
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.MutableMethodImplementation
@@ -315,17 +314,7 @@ val addSettingsTabPatch = bytecodePatch(
                 ?: throw PatchException("Could not resolve the settings list add reference.")
         val settingsListRegister = settingsListAddInstruction.registerC
 
-        val dividerType = setupSettingsItemMethod.instructions
-            .mapNotNull { it.getReference<MethodReference>() }
-            .filter { it.name == "<init>" }
-            .distinctBy { it.smaliReference }
-            .singleOrNull { reference ->
-                reference.parameterTypeNames.isNotEmpty() &&
-                        reference.parameterTypeNames.all { type ->
-                            type.length == 1 || type == DEFAULT_CONSTRUCTOR_MARKER
-                        }
-            }?.definingClass
-            ?: throw PatchException("Could not resolve the settings group divider type.")
+        val dividerType = SettingsDividerFingerprint.originalClassDef.type
 
         val separatorIndex =
             (settingsListAddIndex until setupSettingsItemMethod.instructions.size).firstOrNull { index ->
@@ -380,7 +369,7 @@ val addSettingsTabPatch = bytecodePatch(
                 move-object/from16 v$trackingActionArgumentRegister, v$trackingActionReceiverRegister
                 move-object/from16 v$settingsListArgumentRegister, v$settingsListRegister
                 invoke-static {v$contextArgumentRegister, v$trackingActionArgumentRegister, v$settingsListArgumentRegister}, ${setupSettingsItemMethod.definingClass}->$ADD_MORPHE_SETTINGS_ITEM_METHOD(Landroid/content/Context;${trackingActionReference.definingClass}${settingsListAddReference.definingClass})V
-                new-instance v$originalNewInstanceRegister, $dividerType # stub
+                new-instance v$originalNewInstanceRegister, $dividerType
             """.trimIndent()
         )
     }

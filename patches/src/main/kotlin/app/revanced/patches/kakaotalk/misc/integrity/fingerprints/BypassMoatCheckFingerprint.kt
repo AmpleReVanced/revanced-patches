@@ -86,3 +86,50 @@ internal object MoatResultClassFingerprint : Fingerprint(
         method.parameters.size == 5 && (method.instructions.firstOrNull { it.opcode == Opcode.CONST_16 } as Instruction21s?)?.wideLiteral?.toInt() == 5000
     }
 )
+
+internal object MoatSecurityInfoFingerprint : Fingerprint(
+    classFingerprint = MoatScanDispatcherFingerprint,
+    parameters = listOf("L"),
+    returnType = "Lkotlin/Pair;",
+    strings = listOf("Unsupported API Level", "Permission Denied"),
+)
+
+internal object MoatNetworkFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.FINAL),
+    parameters = listOf("Ljava/lang/String;", "Ljava/util/Map;", "[B", "I"),
+    returnType = "[B",
+    strings = listOf("Network.requestHttpsPostSyncWithVerifyForNative.reportApiLatency"),
+)
+
+internal object MoatConnectionFactoryFingerprint : Fingerprint(
+    parameters = listOf("Ljava/net/URL;", "L", "Ljava/util/Map;"),
+    returnType = "Ljavax/net/ssl/HttpsURLConnection;",
+    filters = listOf(
+        methodCall("Ljava/net/URL;->openConnection()Ljava/net/URLConnection;"),
+    ),
+)
+
+internal object MoatMonitorFingerprint : Fingerprint(
+    name = "<clinit>",
+    strings = listOf("%s_set_extra_value", "%s_set_x_auth", "%s_detect_async", "%s_get_session_key"),
+)
+
+internal object MoatForceOffReportFingerprint : Fingerprint(
+    parameters = listOf("Ljava/lang/String;", "L", "Lkotlin/coroutines/Continuation;"),
+    returnType = "Ljava/lang/Object;",
+    strings = listOf("[MOAT] report 제외대상, reserved: "),
+    custom = { _, classDef -> classDef.sourceFile == "PaySecurityWorker.kt" },
+)
+
+internal object MoatForceOffRepositoryFingerprint : Fingerprint(
+    parameters = listOf("Ljava/lang/String;", "Ljava/util/List;", "Lkotlin/coroutines/Continuation;"),
+    returnType = "Ljava/lang/Object;",
+    custom = { _, classDef -> classDef.sourceFile == "PaySecurityReportForceOffRepositoryImpl.kt" },
+)
+
+internal fun moatTiaraTrackerFingerprint(type: String) = Fingerprint(
+    definingClass = type,
+    name = "track",
+    parameters = listOf("L"),
+    returnType = "V",
+)

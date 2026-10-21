@@ -1,47 +1,35 @@
 package app.revanced.patches.kakaotalk.ad.fingerprints
 
 import app.morphe.patcher.Fingerprint
-import app.morphe.patcher.OpcodesFilter
 import app.morphe.patcher.fieldAccess
 import app.morphe.patcher.methodCall
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
-internal object AddOlkChatRoomListAdFingerprint : Fingerprint(
-    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
-    parameters = listOf("Ljava/lang/Object;"),
-    returnType = "Ljava/lang/Object;",
-    strings = listOf("call to \'resume\' before \'invoke\' with coroutine"),
-    filters = OpcodesFilter.opcodesToFilters(
-        Opcode.INVOKE_STATIC,
-        Opcode.MOVE_RESULT_OBJECT,
-        Opcode.IGET,
-        Opcode.CONST_4,
-        Opcode.IF_EQZ,
-        Opcode.IF_NE,
-        Opcode.INVOKE_STATIC,
-        Opcode.GOTO,
-        Opcode.CONST_STRING,
-        Opcode.INVOKE_STATIC,
-    ),
-    custom = { _, classDef -> classDef.sourceFile == "OlkChatRoomListViewModel.kt" }
+internal object OpenChatRoomListAdapterFingerprint : Fingerprint(
+    name = "<init>",
+    parameters = listOf("L"),
+    custom = { _, classDef -> classDef.sourceFile == "OpenChatRoomListAdapter.kt" },
 )
 
-internal object OpenChatTabFragmentAdEnabledFingerprint : Fingerprint(
-    accessFlags = listOf(AccessFlags.PRIVATE, AccessFlags.FINAL),
-    parameters = listOf(),
-    returnType = "Z",
-    filters = OpcodesFilter.opcodesToFilters(
-        Opcode.INVOKE_VIRTUAL,
-        Opcode.MOVE_RESULT_OBJECT,
-        Opcode.INVOKE_VIRTUAL,
-        Opcode.MOVE_RESULT_OBJECT,
-        Opcode.IGET,
-        Opcode.CONST_4,
-        Opcode.IF_NE,
-        Opcode.SGET_OBJECT,
-    ),
-    custom = { _, classDef -> classDef.sourceFile == "OpenChatTabFragment.kt" }
+internal object CommonChatRoomListSubmitFingerprint : Fingerprint(
+    parameters = listOf("Ljava/util/List;", "Lkotlin/jvm/functions/Function0;"),
+    returnType = "V",
+    custom = { _, classDef -> classDef.sourceFile == "CommonChatRoomListAdapter.kt" },
+)
+
+internal object OpenChatAdItemFingerprint : Fingerprint(
+    name = "getBindingType",
+    parameters = emptyList(),
+    returnType = "I",
+    custom = { _, classDef -> classDef.sourceFile == "OpenChatAdChatItem.kt" },
+)
+
+internal object ChatListAdItemFingerprint : Fingerprint(
+    name = "getBindingType",
+    parameters = emptyList(),
+    returnType = "I",
+    custom = { _, classDef -> classDef.sourceFile == "ChatListAdChatItem.kt" },
 )
 
 internal object OpenChatTabBizBoardUpdateFingerprint : Fingerprint(

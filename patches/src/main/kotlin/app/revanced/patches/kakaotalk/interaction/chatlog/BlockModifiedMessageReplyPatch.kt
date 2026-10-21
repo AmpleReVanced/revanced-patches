@@ -15,6 +15,7 @@ import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.SwipeRepl
 import app.revanced.patches.kakaotalk.misc.settings.PreferenceScreen
 import app.revanced.patches.kakaotalk.misc.settings.addSettingsTabPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
+import app.revanced.util.argumentRegister
 import app.revanced.util.parameterTypeNames
 import app.revanced.util.smaliReference
 import com.android.tools.smali.dexlib2.Opcode
@@ -53,8 +54,9 @@ val blockModifiedMessageReplyPatch = bytecodePatch(
         val callbackClass = SwipeReplyMovementFlagsFingerprint.classDef
 
         val canSwipeMethod = callbackClass.methods.singleOrNull { method ->
-            method.parameterTypeNames.size == 2 &&
-                    method.parameterTypeNames[1] == chatLogType &&
+            method.parameterTypeNames.size == 3 &&
+                    method.parameterTypeNames.first() == "Landroid/content/Context;" &&
+                    method.parameterTypeNames.last() == chatLogType &&
                     method.returnType == "Z"
         } ?: throw PatchException("Could not find the swipe-to-reply predicate.")
 
@@ -63,10 +65,10 @@ val blockModifiedMessageReplyPatch = bytecodePatch(
         }
 
         val invokeInstruction = movementFlagsMethod.getInstruction<Instruction35c>(invokeIndex)
-        if (invokeInstruction.registerCount != 3) {
+        if (invokeInstruction.registerCount != 4) {
             throw PatchException("Unexpected swipe predicate call shape.")
         }
-        val chatLogRegister = invokeInstruction.registerE
+        val chatLogRegister = invokeInstruction.argumentRegister(2)
 
         val resultIndex = invokeIndex + 1
         if (movementFlagsMethod.getInstruction(resultIndex).opcode != Opcode.MOVE_RESULT) {

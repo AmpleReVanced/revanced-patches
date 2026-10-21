@@ -25,6 +25,6 @@ val removeLocalConnectTabPatch = bytecodePatch(
         )
         setExtensionIsPatchIncluded("Lapp/revanced/extension/kakaotalk/patches/RemoveLocalConnectTabPatch;")
 
-        removeMainTab("YP_TAB", "removeLocalConnectTab")
+        removeMainTab("Local", "removeLocalConnectTab")
     }
 }

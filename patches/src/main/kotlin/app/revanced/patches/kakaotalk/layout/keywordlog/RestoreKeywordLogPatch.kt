@@ -159,6 +159,9 @@ val restoreKeywordLogPatch = bytecodePatch(
         }
         val intentFingerprint = chatRoomIntentFingerprint(chatRoomTypeEnum)
         val chatRoomIntentMethod = intentFingerprint.originalMethod
+        val intentLastRegister = chatRoomIntentMethod.parameterTypes.sumOf { if (it == "J") 2 else 1 }
+        val jumpIdRegister = intentLastRegister + 1
+        val intentDefaults = (7..intentLastRegister).joinToString("\n") { "const/16 v$it, 0x0" }
         val intentUtilsCompanionType = intentFingerprint.originalClassDef.type
         val intentUtilsCompanionField =
             classDefBy(intentUtilsCompanionType.substringBeforeLast('$') + ";")
@@ -212,27 +215,27 @@ val restoreKeywordLogPatch = bytecodePatch(
             "createChatRoomIntent",
             listOf("Landroid/content/Context;", "J", "J"),
             "Landroid/content/Intent;",
-            12,
+            intentLastRegister + 8,
             """
+                move-object/from16 v1, p0
+                move-wide/from16 v2, p1
+                move-wide/from16 v$jumpIdRegister, p3
                 invoke-static {}, ${managerInstanceMethod.smaliReference}
-                move-result-object v6
-                invoke-virtual {v6, p1, p2}, ${chatRoomLookupMethod.smaliReference}
-                move-result-object v6
-                if-eqz v6, :unknown
-                iget-object v4, v6, ${chatRoomTypeField.smaliReference}
-                sget-object v0, ${intentUtilsCompanionField.smaliReference}
-                move-object v1, p0
-                move-wide v2, p1
-                const/4 v5, 0x0
-                invoke-virtual/range {v0 .. v5}, ${chatRoomIntentMethod.smaliReference}
                 move-result-object v0
-                new-instance v6, Lkotlin/Pair;
-                invoke-static {p3, p4}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
-                move-result-object v4
+                invoke-virtual {v0, v2, v3}, ${chatRoomLookupMethod.smaliReference}
+                move-result-object v0
+                if-eqz v0, :unknown
+                iget-object v4, v0, ${chatRoomTypeField.smaliReference}
+                sget-object v0, ${intentUtilsCompanionField.smaliReference}
                 const/4 v5, 0x0
-                invoke-direct {v6, v4, v5}, Lkotlin/Pair;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V
-                const-string v4, "jumpTo"
-                invoke-virtual {v0, v4, v6}, Landroid/content/Intent;->putExtra(Ljava/lang/String;Ljava/io/Serializable;)Landroid/content/Intent;
+                new-instance v6, Lkotlin/Pair;
+                invoke-static/range {v$jumpIdRegister .. v${jumpIdRegister + 1}}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+                move-result-object v7
+                const/4 v8, 0x0
+                invoke-direct {v6, v7, v8}, Lkotlin/Pair;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V
+                $intentDefaults
+                invoke-virtual/range {v0 .. v$intentLastRegister}, ${chatRoomIntentMethod.smaliReference}
+                move-result-object v0
                 return-object v0
                 :unknown
                 const/4 v0, 0x0

@@ -7,7 +7,7 @@ import com.android.tools.smali.dexlib2.Opcode
 
 internal object AllowSwipeReplyToFeedFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
-    parameters = listOf("L", "L"),
+    parameters = listOf("Landroid/content/Context;", "L", "L"),
     returnType = "Z",
     filters = OpcodesFilter.opcodesToFilters(
         Opcode.INVOKE_VIRTUAL,

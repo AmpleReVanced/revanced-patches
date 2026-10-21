@@ -6,13 +6,19 @@ import app.morphe.patcher.fieldAccess
 import app.morphe.patcher.opcode
 import com.android.tools.smali.dexlib2.Opcode
 
-private const val TAB_INFO_CLASS = "Lcom/kakao/talk/activity/main/MainTabPagerAdapter\$TabInfo;"
+internal object MainTabFingerprint : Fingerprint(
+    name = "<clinit>",
+    strings = listOf("FolderChat", "GlobalMore"),
+    custom = { _, classDef ->
+        classDef.sourceFile == "MainTab.kt" && classDef.superclass == "Ljava/lang/Enum;"
+    },
+)
 
-internal fun mainTabFingerprint(tabName: String) = Fingerprint(
-    returnType = TAB_INFO_CLASS,
+internal fun mainTabFingerprint(tabType: String, tabName: String) = Fingerprint(
+    returnType = tabType,
     parameters = listOf("L"),
     filters = listOf(
-        fieldAccess(opcode = Opcode.SGET_OBJECT, definingClass = TAB_INFO_CLASS, name = tabName),
+        fieldAccess(opcode = Opcode.SGET_OBJECT, definingClass = tabType, name = tabName),
         opcode(Opcode.RETURN_OBJECT, MatchAfterImmediately()),
     ),
     custom = { _, classDef -> classDef.sourceFile == "MainTabConfig.kt" },

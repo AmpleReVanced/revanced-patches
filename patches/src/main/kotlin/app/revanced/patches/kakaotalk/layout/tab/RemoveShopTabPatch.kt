@@ -25,6 +25,6 @@ val removeShopTabPatch = bytecodePatch(
         )
         setExtensionIsPatchIncluded("Lapp/revanced/extension/kakaotalk/patches/RemoveShopTabPatch;")
 
-        removeMainTab("SHOPPING_TAB", "removeShopTab")
+        removeMainTab("Shopping", "removeShopTab")
     }
 }

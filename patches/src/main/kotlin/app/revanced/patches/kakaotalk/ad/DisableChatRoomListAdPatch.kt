@@ -4,7 +4,6 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.util.returnEarly
 import app.revanced.patches.kakaotalk.ad.fingerprints.CecallFolderBizBoardEnabledFingerprint
-import app.revanced.patches.kakaotalk.ad.fingerprints.ChatListAdHelperEnabledFingerprint
 import app.revanced.patches.kakaotalk.ad.fingerprints.ChatListBizBoardEnabledFingerprint
 import app.revanced.patches.kakaotalk.ad.fingerprints.ChatListGlobalAdEnabledFingerprint
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
@@ -18,7 +17,6 @@ val disableChatRoomListAdPatch = bytecodePatch(
 
     execute {
         ChatListBizBoardEnabledFingerprint.method.returnEarly(false)
-        ChatListAdHelperEnabledFingerprint.method.returnEarly(false)
         ChatListGlobalAdEnabledFingerprint.method.addInstructions(
             0,
             """

@@ -193,8 +193,12 @@ internal fun chatRoomDisplayNameUsageFingerprint(chatRoomType: String) = Fingerp
 internal fun chatRoomIntentFingerprint(chatRoomTypeEnum: String) = Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     returnType = "Landroid/content/Intent;",
-    parameters = listOf("Landroid/content/Context;", "J", chatRoomTypeEnum, "Z"),
-    custom = { _, classDef -> classDef.type.startsWith("Lcom/kakao/talk/util/IntentUtils$") },
+    custom = { method, classDef ->
+        classDef.sourceFile == "IntentUtils.kt" &&
+                method.parameterTypes.take(5).map(CharSequence::toString) == listOf(
+                    "Landroid/content/Context;", "J", chatRoomTypeEnum, "Z", "Lkotlin/Pair;",
+                ) && method.parameterTypes.drop(5).all { it.startsWith("L") }
+    },
 )
 
 internal object ChatRoomProfileFingerprint : Fingerprint(

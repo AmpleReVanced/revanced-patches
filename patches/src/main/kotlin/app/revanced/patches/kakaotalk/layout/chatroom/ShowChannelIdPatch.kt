@@ -47,29 +47,9 @@ val showChannelIdPatch = bytecodePatch(
 }
 
 private fun BytecodePatchContext.addChatSideTitleCopy() {
-    val initMethod = ChatRoomSideInitFingerprint.method
-    val getChatIdIndex = initMethod.instructions.indexOfFirst { instruction ->
-        val reference = instruction.getReference<MethodReference>()
-        instruction.opcode == Opcode.INVOKE_VIRTUAL &&
-            reference != null &&
-            reference.definingClass == "Landroid/content/Intent;" &&
-            reference.name == "getLongExtra" &&
-            reference.returnType == "J"
-    }
-    if (getChatIdIndex < 0) {
-        throw PatchException("Could not find chat side chatId read.")
-    }
-
-    val chatIdRegister = (initMethod.instructions.getOrNull(getChatIdIndex + 1) as? OneRegisterInstruction)
-        ?.takeIf { it.opcode == Opcode.MOVE_RESULT_WIDE }
-        ?.registerA
-        ?: throw PatchException("Could not infer chat side chatId register.")
-
-    initMethod.addInstructions(
-        getChatIdIndex + 2,
-        """
-            invoke-static {p0, v$chatIdRegister, v${chatIdRegister + 1}}, $CHANNEL_ID_EXTENSION->setCurrentChannelId(Landroid/app/Activity;J)V
-        """.trimIndent(),
+    ChatRoomSideInitFingerprint.method.addInstructions(
+        0,
+        "invoke-static/range {p1 .. p2}, $CHANNEL_ID_EXTENSION->setCurrentChannelId(J)V",
     )
 
     val titleLambdaMethod = ChatRoomSideTitleItemLambdaFingerprint.method

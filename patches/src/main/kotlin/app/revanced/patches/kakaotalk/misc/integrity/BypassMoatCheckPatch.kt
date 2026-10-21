@@ -35,9 +35,9 @@ import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethodParameter
 
-private const val EXTENSION_CLASS =
+internal const val EXTENSION_CLASS =
     "Lapp/revanced/extension/kakaotalk/patches/BypassMoatCheckPatch;"
-private const val BYPASS_MOAT =
+internal const val BYPASS_MOAT =
     "Lapp/revanced/extension/kakaotalk/settings/Settings;->bypassMoatIntegrityCheck()Z"
 private const val MOAT_STATUS_GATE_METHOD = "revanced_moatStatusGate"
 private const val MOAT_INITIALIZE_GATE_METHOD = "revanced_moatInitializeGate"
@@ -68,8 +68,8 @@ private class MoatNativeGate(
 @Suppress("unused")
 val bypassMoatCheckPatch = bytecodePatch(
     name = "Bypass Moat check",
-    description = "Adds a setting to prevent KakaoPay Moat initialization, policy and pattern " +
-            "updates, scans, detector logging, and force-off reports while returning benign " +
+    description = "Adds a setting to prevent KakaoPay Moat initialization, network requests, " +
+            "scans, security information sharing, telemetry, and force-off reports while returning benign " +
             "integrity results. Payments on a modified build are still risky.",
 ) {
     compatibleWith(COMPATIBILITY_KAKAO)
@@ -149,7 +149,7 @@ val bypassMoatCheckPatch = bytecodePatch(
             )
         }
 
-        fun MutableMethod.replaceStaticInvoke(index: Int, descriptor: String) {
+        fun MutableMethod.replaceInvoke(index: Int, descriptor: String) {
             val invoke = getInstruction(index)
             val newInvoke = when (invoke) {
                 is FiveRegisterInstruction -> {
@@ -169,11 +169,17 @@ val bypassMoatCheckPatch = bytecodePatch(
         }
 
         fun addNativeGate(target: Method, gateMethod: String, localRegisters: Int, bypassInstructions: String) {
-            val parameters = target.parameterTypes
+            val isStatic = AccessFlags.STATIC.isSet(target.accessFlags)
+            val parameters = if (isStatic) target.parameterTypes else listOf(target.definingClass) + target.parameterTypes
             val originalInvoke = "${target.definingClass}->${target.name}" +
-                    "(${parameters.joinToString("")})${target.returnType}"
-            val originalRegisters = (0 until target.numberOfParameterRegisters)
-                .joinToString(", ") { "p$it" }
+                    "(${target.parameterTypes.joinToString("")})${target.returnType}"
+            val invokeOpcode = if (isStatic) "invoke-static" else "invoke-virtual"
+            val invoke = if (target.numberOfParameterRegisters > 5) {
+                "$invokeOpcode/range {p0 .. p${target.numberOfParameterRegisters - 1}}, $originalInvoke"
+            } else {
+                val registers = (0 until target.numberOfParameterRegisters).joinToString(", ") { "p$it" }
+                "$invokeOpcode {$registers}, $originalInvoke"
+            }
             val originalReturn = when {
                 target.returnType == "V" -> "return-void"
                 target.returnType == "J" || target.returnType == "D" ->
@@ -201,7 +207,7 @@ val bypassMoatCheckPatch = bytecodePatch(
                             if-eqz v0, :morphe_original
                             $bypassInstructions
                             :morphe_original
-                            invoke-static {$originalRegisters}, $originalInvoke
+                            $invoke
                             $originalReturn
                         """.trimIndent(),
                     )
@@ -265,6 +271,26 @@ val bypassMoatCheckPatch = bytecodePatch(
                     return-object v0
                 """.trimIndent(),
                 "status reader with ${parameters.size} parameter(s)",
+            )
+        }
+
+        val detectorParameters = listOf(moatResultArrayType, STRING_TYPE, "I", MAP_TYPE)
+        val nativeDetectors = moatNativeClass.methods.filter {
+            AccessFlags.NATIVE.isSet(it.accessFlags) && it.returnType == moatResultArrayType &&
+                    it.parameterTypeNames in listOf(detectorParameters, detectorParameters + listOf(STRING_TYPE, STRING_TYPE))
+        }
+        if (nativeDetectors.size != 2) throw PatchException("Expected two Moat native detectors.")
+        nativeDetectors.forEach {
+            gateNativeCalls(
+                it,
+                MOAT_STATUS_GATE_METHOD,
+                1,
+                """
+                    const/4 v0, 0x0
+                    new-array v0, v0, $moatResultArrayType
+                    return-object v0
+                """.trimIndent(),
+                "detector and report",
             )
         }
 
@@ -384,7 +410,9 @@ val bypassMoatCheckPatch = bytecodePatch(
                 val methodCallSites = mutableListOf<Pair<Int, MoatNativeGate>>()
                 for ((index, instruction) in implementation.instructions.withIndex()) {
                     if (instruction.opcode != Opcode.INVOKE_STATIC &&
-                        instruction.opcode != Opcode.INVOKE_STATIC_RANGE
+                        instruction.opcode != Opcode.INVOKE_STATIC_RANGE &&
+                        instruction.opcode != Opcode.INVOKE_VIRTUAL &&
+                        instruction.opcode != Opcode.INVOKE_VIRTUAL_RANGE
                     ) continue
                     val reference = instruction.getReference<MethodReference>() ?: continue
                     if (reference.definingClass != moatNativeClass.type) continue
@@ -402,14 +430,20 @@ val bypassMoatCheckPatch = bytecodePatch(
             addNativeGate(gate.target, gate.name, gate.localRegisters, gate.bypassInstructions)
         }
         val gateDescriptors = nativeGates.associateWith { gate ->
+            val parameters = if (AccessFlags.STATIC.isSet(gate.target.accessFlags)) {
+                gate.target.parameterTypes
+            } else {
+                listOf(gate.target.definingClass) + gate.target.parameterTypes
+            }
             "${gate.target.definingClass}->${gate.name}" +
-                    "(${gate.target.parameterTypes.joinToString("")})${gate.target.returnType}"
+                    "(${parameters.joinToString("")})${gate.target.returnType}"
         }
         callSites.forEach { (method, matches) ->
             val mutableMethod = mutableClassDefBy(method.definingClass).findMutableMethodOf(method)
             matches.asReversed().forEach { (index, gate) ->
-                mutableMethod.replaceStaticInvoke(index, gateDescriptors.getValue(gate))
+                mutableMethod.replaceInvoke(index, gateDescriptors.getValue(gate))
             }
         }
+        blockMoatTransmission()
     }
 }

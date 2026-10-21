@@ -9,13 +9,10 @@ import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
 internal object ChatRoomSideInitFingerprint : Fingerprint(
-    accessFlags = listOf(AccessFlags.PRIVATE, AccessFlags.FINAL),
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf("J"),
     returnType = "V",
-    strings = listOf("chatId"),
-    custom = { method, classDef ->
-        classDef.sourceFile == "ChatRoomSideActivity.kt" &&
-            method.parameterTypes.isEmpty()
-    },
+    custom = { _, classDef -> classDef.sourceFile == "ChatRoomSideViewModel.kt" },
 )
 
 internal object ChatRoomSideTitleItemLambdaFingerprint : Fingerprint(
