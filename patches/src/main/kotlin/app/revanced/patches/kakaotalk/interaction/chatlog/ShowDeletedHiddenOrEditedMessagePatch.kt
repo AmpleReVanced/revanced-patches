@@ -11,16 +11,16 @@ import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.resourcePatch
 import app.morphe.patcher.patch.stringOption
+import app.morphe.patcher.util.getFreeRegisterProvider
+import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableField.Companion.toMutable
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
+import app.morphe.patcher.util.returnEarly
 import app.morphe.patches.all.misc.resources.addResourcesPatch
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
-import app.morphe.util.getFreeRegisterProvider
-import app.morphe.util.getReference
 import app.morphe.util.indexOfFirstInstructionOrThrow
 import app.morphe.util.indexOfFirstInstructionReversedOrThrow
-import app.morphe.util.returnEarly
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatInfoViewClassFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatLogFingerprint
@@ -869,6 +869,7 @@ private fun preserveModifiedHistoryMethod(
     MutableMethodImplementation(6),
 ).toMutable().apply {
     addInstructions(
+        0,
         """
             invoke-virtual {p0}, $messageGetterReference
             move-result-object v0

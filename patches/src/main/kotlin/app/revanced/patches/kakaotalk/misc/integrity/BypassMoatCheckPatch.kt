@@ -6,13 +6,13 @@ import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.util.findMutableMethodOf
+import app.morphe.patcher.util.getFreeRegisterProvider
+import app.morphe.patcher.util.getReference
+import app.morphe.patcher.util.numberOfParameterRegisters
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
-import app.morphe.util.findMutableMethodOf
-import app.morphe.util.getFreeRegisterProvider
-import app.morphe.util.getReference
-import app.morphe.util.numberOfParameterRegisters
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.kakaotalk.misc.integrity.fingerprints.CheckApkChecksumsFingerprint
 import app.revanced.patches.kakaotalk.misc.integrity.fingerprints.MoatLibraryLoaderFingerprint

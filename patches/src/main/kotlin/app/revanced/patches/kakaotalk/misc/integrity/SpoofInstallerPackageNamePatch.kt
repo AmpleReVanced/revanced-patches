@@ -1,7 +1,7 @@
 package app.revanced.patches.kakaotalk.misc.integrity
 
 import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.util.returnEarly
+import app.morphe.patcher.util.returnEarly
 import app.revanced.patches.kakaotalk.misc.integrity.fingerprints.InstallSourceFingerprint
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 

@@ -1,7 +1,7 @@
 package app.revanced.patches.kakaotalk.ad
 
 import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.util.returnEarly
+import app.morphe.patcher.util.returnEarly
 import app.revanced.patches.kakaotalk.ad.fingerprints.PayBannerLoadFingerprint
 import app.revanced.patches.kakaotalk.ad.fingerprints.PayBannerRenderFingerprint
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO

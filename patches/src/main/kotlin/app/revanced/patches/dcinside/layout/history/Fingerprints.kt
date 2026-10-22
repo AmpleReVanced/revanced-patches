@@ -23,10 +23,10 @@ internal object PostAuthorLineFingerprint : Fingerprint(
 
 // Must be an instance method, as the comment is read from the second call site register.
 internal object CommentAuthorLineFingerprint : Fingerprint(
+    isStatic = false,
     returnType = "Landroid/text/SpannableStringBuilder;",
     parameters = listOf("L", "Ljava/lang/String;", "Ljava/lang/String;", "Landroid/content/Context;"),
     filters = listOf(string("owner")),
-    custom = { method, _ -> !AccessFlags.STATIC.isSet(method.accessFlags) },
 )
 
 internal object CommentUserIdBridgeFingerprint : Fingerprint(

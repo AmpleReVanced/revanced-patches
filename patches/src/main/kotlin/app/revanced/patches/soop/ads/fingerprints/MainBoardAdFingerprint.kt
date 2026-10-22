@@ -1,13 +1,15 @@
 package app.revanced.patches.soop.ads.fingerprints
 
 import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.StringComparisonType.CONTAINS
 import app.morphe.patcher.methodCall
+import app.morphe.patcher.string
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
 internal object MainBoardAdBindFingerprint : Fingerprint(
     returnType = "V",
-    strings = listOf("bind() isAdFetched - ", "checkAdType() type - "),
+    strings = listOf(string("bind() isAdFetched - ", CONTAINS), string("checkAdType() type - ", CONTAINS)),
 )
 
 internal object MainBoardAdRequestFingerprint : Fingerprint(

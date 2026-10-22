@@ -4,9 +4,9 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLa
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.util.getReference
 import app.morphe.patches.all.misc.resources.addResourcesPatch
 import app.morphe.util.asSequence
-import app.morphe.util.getReference
 import app.revanced.patches.dcinside.misc.extension.addExtensionPatch
 import app.revanced.patches.dcinside.misc.extension.sharedExtensionPatch
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE

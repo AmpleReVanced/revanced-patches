@@ -6,10 +6,8 @@ import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
 internal object MainSettingItemTypeFingerprint : Fingerprint(
-    custom = { _, classDef ->
-        classDef.sourceFile == "MainSettingItemType.kt"
-                && classDef.superclass == "Ljava/lang/Enum;"
-    }
+    superclass = "Ljava/lang/Enum;",
+    custom = { _, classDef -> classDef.sourceFile == "MainSettingItemType.kt" },
 )
 
 internal object SetupSettingsItemFingerprint : Fingerprint(

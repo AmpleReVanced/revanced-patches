@@ -1,9 +1,9 @@
 package app.revanced.patches.kakaotalk.misc.tracker
 
 import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.util.returnEarly
-import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
+import app.morphe.patcher.util.returnEarly
 import app.revanced.patches.kakaotalk.misc.tracker.fingerprints.DisableSentryFingerprint
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.patches.shared.misc.privacy.disableSentryTelemetryPatch
 
 @Suppress("unused")

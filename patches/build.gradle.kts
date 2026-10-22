@@ -55,12 +55,6 @@ tasks {
     }
 }
 
-kotlin {
-    compilerOptions {
-        freeCompilerArgs = listOf("-Xcontext-parameters")
-    }
-}
-
 publishing {
     repositories {
         maven {

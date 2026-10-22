@@ -3,7 +3,7 @@ package app.revanced.patches.kakaotalk.interaction.chatlog
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.util.returnEarly
+import app.morphe.patcher.util.returnEarly
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ForwardActionTypeFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ForwardableChatLogFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.LinkForwardShortcutFingerprint

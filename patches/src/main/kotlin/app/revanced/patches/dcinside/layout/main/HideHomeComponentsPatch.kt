@@ -5,13 +5,14 @@ import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
-import app.morphe.util.getReference
+import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.dcinside.misc.settings.PreferenceScreen
 import app.revanced.patches.dcinside.misc.settings.addSettingsPatch
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
-import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
+import app.revanced.util.parameterRegister
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.Method
@@ -409,24 +410,6 @@ private fun List<Instruction>.instructionOffsets(): IntArray {
         }
     }
 }
-
-private fun MutableMethod.parameterRegister(parameterIndex: Int): Int {
-    val implementation = implementation
-        ?: throw PatchException("Could not inspect registers for $definingClass->$name")
-    val parameterTypes = parameterTypes.map { it.toString() }
-    if (parameterIndex !in parameterTypes.indices) {
-        throw PatchException("Parameter $parameterIndex is not available in $definingClass->$name")
-    }
-
-    val receiverWidth = if (AccessFlags.STATIC.isSet(accessFlags)) 0 else 1
-    val parameterWidth = parameterTypes.sumOf { it.registerWidth }
-    val firstParameterRegister = implementation.registerCount - receiverWidth - parameterWidth + receiverWidth
-
-    return firstParameterRegister + parameterTypes.take(parameterIndex).sumOf { it.registerWidth }
-}
-
-private val String.registerWidth: Int
-    get() = if (this == "J" || this == "D") 2 else 1
 
 private fun Instruction.narrowLiteralRegister(): Pair<Int, Int>? {
     val register = (this as? OneRegisterInstruction)?.registerA ?: return null

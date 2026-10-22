@@ -3,9 +3,9 @@ package app.revanced.patches.chzzk.ad
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.util.getReference
+import app.morphe.patcher.util.getReference
+import app.morphe.patcher.util.returnEarly
 import app.morphe.util.indexOfFirstInstructionOrThrow
-import app.morphe.util.returnEarly
 import app.revanced.patches.chzzk.shared.Constants.COMPATIBILITY_CHZZK
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.reference.StringReference

@@ -2,7 +2,7 @@ package app.revanced.patches.dcinside.layout.dccon
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.string
-import app.morphe.util.getReference
+import app.morphe.patcher.util.getReference
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 

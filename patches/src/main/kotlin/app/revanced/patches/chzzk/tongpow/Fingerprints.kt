@@ -1,7 +1,7 @@
 package app.revanced.patches.chzzk.tongpow
 
 import app.morphe.patcher.Fingerprint
-import app.morphe.util.getReference
+import app.morphe.patcher.util.getReference
 import app.revanced.util.parameterTypeNames
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.reference.TypeReference
@@ -30,17 +30,17 @@ internal object TongPowChatEventFingerprint : Fingerprint(
 )
 
 internal object TongPowManualClaimFingerprint : Fingerprint(
+    definingClass = CHAT_POPUP_PACKAGE,
+    interfaces = listOf("Lkotlin/jvm/functions/Function0;"),
     name = "invoke",
     parameters = emptyList(),
     returnType = "Ljava/lang/Object;",
-    custom = { method, classDef ->
-        classDef.type.startsWith(CHAT_POPUP_PACKAGE) &&
-            "Lkotlin/jvm/functions/Function0;" in classDef.interfaces &&
-            method.implementation?.instructions?.any { instruction ->
-                instruction.getReference<MethodReference>()?.let { reference ->
-                    reference.definingClass == CLAIM_SERVICE_CLASS &&
-                        reference.parameterTypeNames == listOf("Ljava/lang/String;", "Ljava/lang/String;")
-                } == true
+    custom = { method, _ ->
+        method.implementation?.instructions?.any { instruction ->
+            instruction.getReference<MethodReference>()?.let { reference ->
+                reference.definingClass == CLAIM_SERVICE_CLASS &&
+                    reference.parameterTypeNames == listOf("Ljava/lang/String;", "Ljava/lang/String;")
             } == true
+        } == true
     },
 )

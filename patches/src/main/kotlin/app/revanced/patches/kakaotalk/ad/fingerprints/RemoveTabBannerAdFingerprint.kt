@@ -1,12 +1,14 @@
 package app.revanced.patches.kakaotalk.ad.fingerprints
 
 import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.StringComparisonType.CONTAINS
+import app.morphe.patcher.string
 import com.android.tools.smali.dexlib2.AccessFlags
 
 internal object TailBannerRenderFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.FINAL),
     returnType = "V",
-    strings = listOf(".MainTailBannerOverlay ("),
+    strings = listOf(string(".MainTailBannerOverlay (", CONTAINS)),
     custom = { _, classDef -> classDef.sourceFile == "MainTailBannerOverlay.kt" },
 )
 

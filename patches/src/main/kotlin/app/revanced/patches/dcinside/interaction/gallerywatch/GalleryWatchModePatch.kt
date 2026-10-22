@@ -9,14 +9,13 @@ import app.morphe.patcher.methodCall
 import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.util.addInstructionsAtControlFlowLabel
+import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
-import app.morphe.patches.all.misc.resources.resourceMappingPatch
 import app.morphe.patches.shared.misc.settings.preference.MORPHE_PREFERENCE_SCREEN_LAYOUT
 import app.morphe.patches.shared.misc.settings.preference.PreferenceScreenPreference
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
-import app.morphe.util.addInstructionsAtControlFlowLabel
 import app.morphe.util.findInstructionIndicesReversedOrThrow
-import app.morphe.util.getReference
 import app.morphe.util.indexOfFirstInstructionOrThrow
 import app.morphe.util.indexOfFirstInstructionReversedOrThrow
 import app.morphe.util.setExtensionIsPatchIncluded
@@ -40,7 +39,7 @@ val galleryWatchModePatch = bytecodePatch(
         "optionally alerts with sound or vibration while the gallery is open.",
 ) {
     compatibleWith(COMPATIBILITY_DC_INSIDE)
-    dependsOn(addExtensionPatch, addSettingsPatch, resourceMappingPatch)
+    dependsOn(addExtensionPatch, addSettingsPatch)
 
     execute {
         addGalleryWatchPreferences()

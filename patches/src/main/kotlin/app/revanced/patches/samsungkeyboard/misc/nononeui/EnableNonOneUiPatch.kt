@@ -1,34 +1,34 @@
 package app.revanced.patches.samsungkeyboard.misc.nononeui
 
 import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.anyInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.getInstructionOrNull
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
-import app.morphe.patcher.anyInstruction
 import app.morphe.patcher.fieldAccess
 import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.ResourcePatchContext
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.util.findMutableMethodOf
+import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
+import app.morphe.patcher.util.registersUsed
 import app.morphe.patches.all.misc.resources.addResourcesPatch
 import app.morphe.util.asSequence
 import app.morphe.util.findInstructionIndicesReversed
-import app.morphe.util.findMutableMethodOf
 import app.morphe.util.getNode
-import app.morphe.util.getReference
 import app.morphe.util.indexOfFirstInstructionOrThrow
 import app.morphe.util.indexOfFirstStringInstruction
 import app.morphe.util.indexOfFirstStringInstructionOrThrow
-import app.morphe.util.registersUsed
 import app.revanced.patches.samsungkeyboard.shared.Constants.COMPATIBILITY_SAMSUNG_KEYBOARD
 import app.revanced.util.argumentRegister
-import app.revanced.util.parameterTypeNames
 import app.revanced.util.parameterRegister
+import app.revanced.util.parameterTypeNames
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction21c
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction35c
@@ -45,6 +45,7 @@ import com.android.tools.smali.dexlib2.iface.reference.StringReference
 import com.android.tools.smali.dexlib2.iface.reference.TypeReference
 import com.android.tools.smali.dexlib2.immutable.reference.ImmutableFieldReference
 import com.android.tools.smali.dexlib2.immutable.reference.ImmutableMethodReference
+import java.io.File
 import org.w3c.dom.Element
 
 private const val CONTEXT_TYPE = "Landroid/content/Context;"
@@ -116,13 +117,7 @@ private fun ResourcePatchContext.addGifEncoderLibrary() {
 
 private fun ResourcePatchContext.replaceSprResources() {
     val resourceDirectory = get("res")
-    val drawableFiles = resourceDirectory.listFiles()
-        ?.asSequence()
-        ?.filter { it.isDirectory && it.name.startsWith("drawable") }
-        ?.flatMap { it.listFiles()?.asSequence() ?: emptySequence() }
-        ?.filter { it.isFile }
-        ?.toList()
-        .orEmpty()
+    val drawableFiles = decode("res/drawable*").map { get(it) }.filter(File::isFile)
     val sprFiles = drawableFiles.filter { it.isSpr() }
     val resourceNames = sprFiles.mapTo(HashSet(sprFiles.size)) { it.nameWithoutExtension }
 

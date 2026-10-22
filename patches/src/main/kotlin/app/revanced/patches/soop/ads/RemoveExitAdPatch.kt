@@ -3,9 +3,9 @@ package app.revanced.patches.soop.ads
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.util.findFreeRegister
+import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
-import app.morphe.util.findFreeRegister
-import app.morphe.util.getReference
 import app.morphe.util.indexOfFirstInstructionOrThrow
 import app.revanced.patches.soop.ads.fingerprints.*
 import app.revanced.patches.soop.shared.Constants.COMPATIBILITY_SOOP

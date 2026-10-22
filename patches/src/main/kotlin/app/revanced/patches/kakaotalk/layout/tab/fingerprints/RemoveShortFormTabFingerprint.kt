@@ -5,10 +5,9 @@ import com.android.tools.smali.dexlib2.AccessFlags
 
 internal object NowChildTabFingerprint : Fingerprint(
     name = "<clinit>",
+    superclass = "Ljava/lang/Enum;",
     strings = listOf("ShortForm", "Openlink", "Brand", "None"),
-    custom = { _, classDef ->
-        classDef.sourceFile == "NowChildTab.kt" && classDef.superclass == "Ljava/lang/Enum;"
-    },
+    custom = { _, classDef -> classDef.sourceFile == "NowChildTab.kt" },
 )
 
 internal object NowChildTabFromPositionFingerprint : Fingerprint(

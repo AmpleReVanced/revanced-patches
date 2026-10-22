@@ -4,7 +4,6 @@ import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.ResourcePatchContext
 import app.morphe.patcher.patch.resourcePatch
 import app.morphe.patcher.patch.stringOption
-import app.morphe.patches.all.misc.resources.resourceMappingPatch
 import app.morphe.util.ResourceGroup
 import app.morphe.util.copyResources
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
@@ -74,6 +73,7 @@ private fun ResourcePatchContext.copyCustomIcons(customIconPath: String) {
         throw PatchException("The custom icon path must be a folder: ${iconPathFile.absolutePath}")
     }
 
+    decode("res/mipmap*/ic_launcher.*", "res/drawable*/ic_symbol.*")
     val resourceDirectory = get("res")
     var copiedLauncherIcon = false
     var copiedNotificationIcon = false
@@ -203,7 +203,6 @@ val customBrandingPatch = resourcePatch(
     default = false
 ) {
     compatibleWith(COMPATIBILITY_DC_INSIDE)
-    dependsOn(resourceMappingPatch)
 
     val customName by stringOption(
         key = "customName",

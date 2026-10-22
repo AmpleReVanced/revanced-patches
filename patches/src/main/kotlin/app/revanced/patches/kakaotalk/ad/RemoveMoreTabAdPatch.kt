@@ -5,8 +5,8 @@ import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.methodCall
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.util.getReference
 import app.morphe.util.findInstructionIndicesReversedOrThrow
-import app.morphe.util.getReference
 import app.revanced.patches.kakaotalk.ad.fingerprints.AdBigUIModelFingerprint
 import app.revanced.patches.kakaotalk.layout.tab.fingerprints.AddMoreTabServiceSectionsFingerprint
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO

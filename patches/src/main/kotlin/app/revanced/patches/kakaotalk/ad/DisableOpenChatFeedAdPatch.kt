@@ -1,11 +1,11 @@
 package app.revanced.patches.kakaotalk.ad
 
 import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.util.returnEarly
+import app.morphe.patcher.util.returnEarly
 import app.revanced.patches.kakaotalk.ad.fingerprints.OpenChatFeedAdItemFingerprint
-import app.revanced.patches.kakaotalk.ad.fingerprints.OpenChatFeedAdapterFingerprint
 import app.revanced.patches.kakaotalk.ad.fingerprints.OpenChatFeedAdLoadFingerprint
 import app.revanced.patches.kakaotalk.ad.fingerprints.OpenChatFeedAdRenderFingerprint
+import app.revanced.patches.kakaotalk.ad.fingerprints.OpenChatFeedAdapterFingerprint
 import app.revanced.patches.kakaotalk.misc.extension.sharedExtensionPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.patches.kakaotalk.shared.ListFilterGroup

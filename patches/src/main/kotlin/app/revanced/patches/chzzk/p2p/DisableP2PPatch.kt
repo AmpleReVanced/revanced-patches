@@ -2,8 +2,8 @@ package app.revanced.patches.chzzk.p2p
 
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.util.getReference
-import app.morphe.util.returnEarly
+import app.morphe.patcher.util.getReference
+import app.morphe.patcher.util.returnEarly
 import app.revanced.patches.chzzk.shared.Constants.COMPATIBILITY_CHZZK
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction

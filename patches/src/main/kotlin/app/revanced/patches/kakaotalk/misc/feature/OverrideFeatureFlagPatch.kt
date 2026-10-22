@@ -4,10 +4,10 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.stringOption
+import app.morphe.patcher.util.cloneParameters
+import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patches.shared.misc.settings.preference.TextPreference
 import app.morphe.util.cloneMutable
-import app.morphe.util.cloneParameters
-import app.morphe.util.getFreeRegisterProvider
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.kakaotalk.misc.settings.PreferenceScreen
 import app.revanced.patches.kakaotalk.misc.settings.addSettingsTabPatch

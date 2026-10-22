@@ -3,10 +3,10 @@ package app.revanced.patches.soop.p2p
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstructions
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.util.getMutableMethod
+import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
-import app.morphe.util.getMutableMethod
-import app.morphe.util.getReference
-import app.morphe.util.returnEarly
+import app.morphe.patcher.util.returnEarly
 import app.revanced.patches.shared.misc.native.nativePatch
 import app.revanced.patches.soop.shared.Constants.COMPATIBILITY_SOOP
 import app.revanced.util.argumentRegister

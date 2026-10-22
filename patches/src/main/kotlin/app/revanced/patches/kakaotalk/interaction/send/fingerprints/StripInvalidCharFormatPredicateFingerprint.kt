@@ -9,11 +9,11 @@ private const val INPUT_FILTER_TYPE = "Landroid/text/InputFilter;"
 // The input filter itself has the signature every input filter has, so it is matched through
 // the per char predicate that delegates to KakaoTalk's invalid char format check.
 internal object StripInvalidCharFormatPredicateFingerprint : Fingerprint(
+    interfaces = listOf(INPUT_FILTER_TYPE),
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     returnType = "Z",
     parameters = listOf("C"),
     filters = listOf(
         methodCall(parameters = listOf("C", "[C"), returnType = "Z"),
     ),
-    custom = { _, classDef -> INPUT_FILTER_TYPE in classDef.interfaces },
 )

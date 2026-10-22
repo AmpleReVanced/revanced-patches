@@ -8,10 +8,9 @@ import com.android.tools.smali.dexlib2.Opcode
 
 internal object MainTabFingerprint : Fingerprint(
     name = "<clinit>",
+    superclass = "Ljava/lang/Enum;",
     strings = listOf("FolderChat", "GlobalMore"),
-    custom = { _, classDef ->
-        classDef.sourceFile == "MainTab.kt" && classDef.superclass == "Ljava/lang/Enum;"
-    },
+    custom = { _, classDef -> classDef.sourceFile == "MainTab.kt" },
 )
 
 internal fun mainTabFingerprint(tabType: String, tabName: String) = Fingerprint(

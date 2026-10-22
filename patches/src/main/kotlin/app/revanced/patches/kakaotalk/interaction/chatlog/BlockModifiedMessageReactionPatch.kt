@@ -2,8 +2,8 @@ package app.revanced.patches.kakaotalk.interaction.chatlog
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
-import app.morphe.util.getFreeRegisterProvider
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.CanReactToChatLogFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatLogFingerprint

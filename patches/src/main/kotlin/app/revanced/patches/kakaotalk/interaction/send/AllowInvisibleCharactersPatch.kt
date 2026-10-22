@@ -2,9 +2,9 @@ package app.revanced.patches.kakaotalk.interaction.send
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.util.findFreeRegister
+import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
-import app.morphe.util.findFreeRegister
-import app.morphe.util.getFreeRegisterProvider
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.kakaotalk.interaction.send.fingerprints.StripInvalidCharFormatPredicateFingerprint
 import app.revanced.patches.kakaotalk.interaction.send.fingerprints.StripInvalidCharFormatSanitizerFingerprint

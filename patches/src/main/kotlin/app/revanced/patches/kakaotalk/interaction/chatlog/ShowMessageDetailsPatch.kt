@@ -6,11 +6,11 @@ import app.morphe.patcher.extensions.InstructionExtensions.removeInstructions
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.util.addInstructionsAtControlFlowLabel
+import app.morphe.patcher.util.cloneParameters
 import app.morphe.patches.all.misc.resources.addResourcesPatch
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
-import app.morphe.util.addInstructionsAtControlFlowLabel
 import app.morphe.util.cloneMutable
-import app.morphe.util.cloneParameters
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.morphe.util.transformMethods
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatContextMenuActionLabelFingerprint

@@ -1,6 +1,8 @@
 package app.revanced.patches.chzzk.ad
 
 import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.StringComparisonType.CONTAINS
+import app.morphe.patcher.string
 
 private const val AD_ENTER_PLAYER_CLASS =
     "Lcom/navercorp/game/android/community/core/feature/feature/player/ad/AdEnterPlayer;"
@@ -27,5 +29,5 @@ internal object ApplyPlayerAdParamsFingerprint : Fingerprint(
 
 internal object MapRecommendedCardsFingerprint : Fingerprint(
     returnType = "Ljava/lang/Object;",
-    strings = listOf("mapAdCardModel: onFailure "),
+    strings = listOf(string("mapAdCardModel: onFailure ", CONTAINS)),
 )

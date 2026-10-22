@@ -2,9 +2,11 @@ package app.revanced.patches.kakaotalk.layout.tab.fingerprints
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.InstructionLocation.MatchAfterImmediately
+import app.morphe.patcher.StringComparisonType.STARTS_WITH
 import app.morphe.patcher.methodCall
 import app.morphe.patcher.opcode
 import app.morphe.patcher.patch.BytecodePatchContext
+import app.morphe.patcher.string
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
@@ -74,7 +76,7 @@ internal fun chatListPaneVisibilityFingerprint() = Fingerprint(
         "Lkotlin/jvm/functions/Function2;", "Lkotlin/jvm/functions/Function3;",
         "Lkotlin/jvm/functions/Function1;", "Lkotlin/jvm/functions/Function0;", "L", "I",
     ),
-    strings = listOf("com.kakao.talk.activity.adaptive.main.tab.chat.ChatScreenScaffold ("),
+    strings = listOf(string("com.kakao.talk.activity.adaptive.main.tab.chat.ChatScreenScaffold (", STARTS_WITH)),
     filters = listOf(
         methodCall(
             definingClass = ChatPaneStateFingerprint.originalClassDef.type,
@@ -94,7 +96,7 @@ internal fun chatNavigationVisibilityFingerprint() = Fingerprint(
         "Lkotlin/jvm/functions/Function1;", "Lkotlin/jvm/functions/Function2;",
         "Lkotlin/jvm/functions/Function3;", "Lkotlin/jvm/functions/Function0;", "L", "I", "I",
     ),
-    strings = listOf("com.kakao.talk.activity.adaptive.main.tab.chat.ChatScreen ("),
+    strings = listOf(string("com.kakao.talk.activity.adaptive.main.tab.chat.ChatScreen (", STARTS_WITH)),
     filters = listOf(
         methodCall(smali = ChatNavigationProgressFingerprint.originalMethod.toString()),
         methodCall(

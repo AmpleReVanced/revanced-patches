@@ -4,11 +4,11 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLa
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
+import app.morphe.patcher.util.cloneParameters
+import app.morphe.patcher.util.findMutableMethodOf
+import app.morphe.patcher.util.getFreeRegisterProvider
+import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
-import app.morphe.util.cloneParameters
-import app.morphe.util.findMutableMethodOf
-import app.morphe.util.getFreeRegisterProvider
-import app.morphe.util.getReference
 import app.revanced.patches.kakaotalk.misc.integrity.fingerprints.MoatConnectionFactoryFingerprint
 import app.revanced.patches.kakaotalk.misc.integrity.fingerprints.MoatForceOffReportFingerprint
 import app.revanced.patches.kakaotalk.misc.integrity.fingerprints.MoatForceOffRepositoryFingerprint

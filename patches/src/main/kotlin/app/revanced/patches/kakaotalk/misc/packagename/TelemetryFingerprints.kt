@@ -2,6 +2,8 @@ package app.revanced.patches.kakaotalk.misc.packagename
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.InstructionLocation.MatchAfterImmediately
+import app.morphe.patcher.StringComparisonType.CONTAINS
+import app.morphe.patcher.StringComparisonType.STARTS_WITH
 import app.morphe.patcher.methodCall
 import app.morphe.patcher.opcode
 import app.morphe.patcher.string
@@ -42,7 +44,7 @@ internal object PlacesHttpHeadersFingerprint : Fingerprint(
 internal object AdFitMatrixInitializerFingerprint : Fingerprint(
     parameters = listOf("Landroid/content/Context;"),
     returnType = "V",
-    strings = listOf("aem-kakao-collector.onkakao.net/12221"),
+    strings = listOf(string("aem-kakao-collector.onkakao.net/12221", CONTAINS)),
 )
 
 internal object MlKitTransportConstructorFingerprint : Fingerprint(
@@ -83,7 +85,10 @@ internal object AnalyticsCollectionFingerprint : Fingerprint(
 internal object AnalyticsServiceConnectionFingerprint : Fingerprint(
     parameters = listOf(),
     returnType = "V",
-    strings = listOf("com.google.android.gms.measurement.START", "Unable to use remote or local measurement implementation."),
+    strings = listOf(
+        string("com.google.android.gms.measurement.START"),
+        string("Unable to use remote or local measurement implementation.", STARTS_WITH),
+    ),
     custom = { _, classDef -> classDef.sourceFile?.startsWith("com.google.android.gms:play-services-measurement-impl@@") == true },
 )
 

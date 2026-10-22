@@ -4,8 +4,8 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLa
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
-import app.morphe.util.getFreeRegisterProvider
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.kakaotalk.layout.tab.fingerprints.MoreTabPagerGameItemFingerprint
 import app.revanced.patches.kakaotalk.layout.tab.fingerprints.MoreTabPagerHomeItemFingerprint

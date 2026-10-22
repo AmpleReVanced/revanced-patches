@@ -1,8 +1,8 @@
 package app.revanced.patches.dcinside.layout.hide.pageindicator
 
 import app.morphe.patcher.Fingerprint
-import app.morphe.patches.all.misc.resources.ResourceType
-import app.morphe.patches.all.misc.resources.resourceLiteral
+import app.morphe.patcher.resource.ResourceType
+import app.morphe.patcher.resourceLiteral
 import com.android.tools.smali.dexlib2.AccessFlags
 
 private const val RECYCLER_VIEW_HOLDER =

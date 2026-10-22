@@ -2,7 +2,6 @@ package app.revanced.patches.kakaotalk.layout.branding
 
 import app.morphe.patcher.patch.resourcePatch
 import app.morphe.patcher.patch.stringOption
-import app.morphe.patches.all.misc.resources.resourceMappingPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.util.removeStringsElements
 import java.util.logging.Logger
@@ -15,7 +14,6 @@ val customBrandingPatch = resourcePatch(
     default = false
 ) {
     compatibleWith(COMPATIBILITY_KAKAO)
-    dependsOn(resourceMappingPatch)
 
     val customName by stringOption(
         key = "customName",

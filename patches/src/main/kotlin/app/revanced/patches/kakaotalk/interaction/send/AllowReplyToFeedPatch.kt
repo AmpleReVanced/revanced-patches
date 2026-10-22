@@ -6,9 +6,9 @@ import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.methodCall
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.util.getFreeRegisterProvider
+import app.morphe.patcher.util.getReference
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
-import app.morphe.util.getFreeRegisterProvider
-import app.morphe.util.getReference
 import app.morphe.util.indexOfFirstInstructionOrThrow
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.kakaotalk.interaction.send.fingerprints.AllowSwipeReplyToFeedFingerprint

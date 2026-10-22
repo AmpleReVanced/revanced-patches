@@ -1,14 +1,13 @@
 package app.revanced.patches.kakaotalk.misc.tracker
 
-import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.util.findMutableMethodOf
-import app.morphe.util.getFreeRegisterProvider
-import app.morphe.util.getReference
-import app.morphe.util.returnEarly
-import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
+import app.morphe.patcher.util.findMutableMethodOf
+import app.morphe.patcher.util.getReference
+import app.morphe.patcher.util.returnBoxedBooleanEarly
+import app.morphe.patcher.util.returnEarly
 import app.revanced.patches.kakaotalk.misc.tracker.fingerprints.TalkShareApiFingerprint
 import app.revanced.patches.kakaotalk.misc.tracker.fingerprints.TalkShareLogAsyncFlagFingerprint
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.util.matches
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
@@ -20,15 +19,7 @@ val disableTalkShareLogPatch = bytecodePatch(
     compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
-        val flagMethod = TalkShareLogAsyncFlagFingerprint.method
-        val flagRegister = flagMethod.getFreeRegisterProvider(0, 1).getFreeRegister4Bit()
-        flagMethod.addInstructions(
-            0,
-            """
-                sget-object v$flagRegister, Ljava/lang/Boolean;->FALSE:Ljava/lang/Boolean;
-                return-object v$flagRegister
-            """.trimIndent()
-        )
+        TalkShareLogAsyncFlagFingerprint.method.returnBoxedBooleanEarly(false)
 
         val shareLogMethod = TalkShareApiFingerprint.method
         buildMap {

@@ -3,9 +3,9 @@ package app.revanced.patches.kakaotalk.layout.subdevice
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
-import app.morphe.util.getFreeRegisterProvider
-import app.morphe.util.returnEarly
+import app.morphe.patcher.util.returnEarly
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.util.smaliReference
 import com.android.tools.smali.dexlib2.iface.Field

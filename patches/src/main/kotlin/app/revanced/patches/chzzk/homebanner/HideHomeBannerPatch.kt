@@ -3,9 +3,8 @@ package app.revanced.patches.chzzk.homebanner
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.util.getReference
+import app.morphe.patcher.util.getReference
 import app.morphe.util.indexOfFirstInstructionOrThrow
-import app.morphe.util.returnEarly
 import app.revanced.patches.chzzk.common.utils.forceBooleanGetterFalse
 import app.revanced.patches.chzzk.common.utils.forceObjectGetterNull
 import app.revanced.patches.chzzk.shared.Constants.COMPATIBILITY_CHZZK

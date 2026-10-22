@@ -2,7 +2,7 @@ package app.revanced.patches.chzzk.tongpow
 
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.PatchException
-import app.morphe.util.getReference
+import app.morphe.patcher.util.getReference
 import app.revanced.util.parameterTypeNames
 import com.android.tools.smali.dexlib2.iface.ClassDef
 import com.android.tools.smali.dexlib2.iface.Method

@@ -6,12 +6,12 @@ import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.resourcePatch
-import app.morphe.util.getReference
-import app.morphe.util.getNode
+import app.morphe.patcher.util.getReference
 import app.morphe.patches.all.misc.resources.AppLocale
 import app.morphe.patches.all.misc.resources.addAppResources
 import app.morphe.patches.all.misc.resources.addResourcesPatch
 import app.morphe.patches.all.misc.resources.setAddResourceLocale
+import app.morphe.util.getNode
 import app.revanced.patches.kakaomap.misc.extension.addExtensionPatch
 import app.revanced.patches.kakaomap.shared.Constants.COMPATIBILITY_KAKAO_MAP
 import app.revanced.util.parameterRegister

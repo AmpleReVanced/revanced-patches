@@ -3,9 +3,9 @@ package app.revanced.patches.kakaotalk.misc.packagename
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.util.returnEarly
 import app.morphe.util.asSequence
 import app.morphe.util.getNode
-import app.morphe.util.returnEarly
 import org.w3c.dom.Element
 
 private val cloneTelemetryResourcePatch = resourcePatch {

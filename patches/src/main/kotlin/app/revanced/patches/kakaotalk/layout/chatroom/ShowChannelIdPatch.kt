@@ -5,11 +5,11 @@ import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.util.cloneParameters
+import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
 import app.morphe.patches.all.misc.resources.addResourcesPatch
-import app.morphe.util.cloneParameters
-import app.morphe.util.getReference
 import app.revanced.patches.kakaotalk.layout.chatroom.fingerprints.ChatRoomProfileEditBindFingerprint
 import app.revanced.patches.kakaotalk.layout.chatroom.fingerprints.ChatRoomSetIdFingerprint
 import app.revanced.patches.kakaotalk.layout.chatroom.fingerprints.ChatRoomSideInitFingerprint

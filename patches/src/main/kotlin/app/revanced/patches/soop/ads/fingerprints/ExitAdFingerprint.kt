@@ -1,7 +1,7 @@
 package app.revanced.patches.soop.ads.fingerprints
 
 import app.morphe.patcher.Fingerprint
-import app.morphe.util.getReference
+import app.morphe.patcher.util.getReference
 import com.android.tools.smali.dexlib2.iface.Method
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 

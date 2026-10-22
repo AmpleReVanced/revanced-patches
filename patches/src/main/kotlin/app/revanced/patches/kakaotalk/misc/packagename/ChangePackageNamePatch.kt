@@ -8,8 +8,8 @@ import app.morphe.patcher.patch.Option
 import app.morphe.patcher.patch.booleanOption
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.stringOption
-import app.morphe.util.getReference
-import app.morphe.util.returnEarly
+import app.morphe.patcher.util.getReference
+import app.morphe.patcher.util.returnEarly
 import app.revanced.patches.kakaotalk.misc.integrity.hookPackageManagerPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.patches.shared.misc.packagename.baseChangePackageNamePatch
