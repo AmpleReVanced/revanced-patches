@@ -72,6 +72,14 @@ public class PackageManagerStub extends MethodInvocationProxy<MethodInvocationSt
 
         @Override
         public Object call(Object who, Method method, Object... args) throws Throwable {
+            if (Spoofer.PACKAGE_NAME.equals(args[0])) {
+                String currentPackageName = Spoofer.getCurrentPackageName();
+                if (currentPackageName != null && !currentPackageName.equals(args[0])) {
+                    args = args.clone();
+                    args[0] = currentPackageName;
+                }
+            }
+
             PackageInfo result = (PackageInfo) method.invoke(who, args);
             if (shouldSpoof(result)) {
                 if (result.signatures != null) {

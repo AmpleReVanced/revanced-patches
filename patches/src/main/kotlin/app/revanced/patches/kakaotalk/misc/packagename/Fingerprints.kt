@@ -1,7 +1,10 @@
 package app.revanced.patches.kakaotalk.misc.packagename
 
 import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.InstructionLocation.MatchAfterImmediately
+import app.morphe.patcher.fieldAccess
 import app.morphe.patcher.methodCall
+import app.morphe.patcher.opcode
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
@@ -31,4 +34,18 @@ internal object GetInstallSourceInfoFingerprint : Fingerprint(
     custom = { _, classDef ->
         classDef.sourceFile == "Initializer.kt" && classDef.type.contains("$")
     },
+)
+
+internal object EmoticonDecryptContextFingerprint : Fingerprint(
+    name = "<clinit>",
+    filters = listOf(
+        methodCall("Landroid/content/Context;->getApplicationContext()Landroid/content/Context;"),
+        opcode(Opcode.MOVE_RESULT_OBJECT, location = MatchAfterImmediately()),
+        fieldAccess(
+            type = "Landroid/content/Context;",
+            opcode = Opcode.SPUT_OBJECT,
+            location = MatchAfterImmediately(),
+        ),
+    ),
+    custom = { _, classDef -> classDef.sourceFile == "EmoticonDecrypt.kt" },
 )
