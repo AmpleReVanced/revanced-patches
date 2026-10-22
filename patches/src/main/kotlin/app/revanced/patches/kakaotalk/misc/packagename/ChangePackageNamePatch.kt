@@ -24,7 +24,6 @@ lateinit var packageNameOption: Option<String>
 
 @Suppress("unused")
 private val ignoreCheckPackageNamePatch = bytecodePatch(
-//    name = "Ignore Check Package Name",
     description = "Ignores the package name check to allow installation of modified versions.",
     default = false,
 ) {
@@ -42,7 +41,7 @@ private val ignoreCheckPackageNamePatch = bytecodePatch(
                 addInstructions(
                     index,
                     """
-                        invoke-static {v$register}, Lapp/revanced/extension/kakaotalk/patches/ChangePackageNamePatch;->wrapEmoticonContext(Landroid/content/Context;)Landroid/content/Context;
+                        invoke-static {v$register}, Lapp/revanced/extension/kakaotalk/patches/ChangePackageNamePatch;->wrapContext(Landroid/content/Context;)Landroid/content/Context;
                         move-result-object v$register
                     """.trimIndent(),
                 )
@@ -112,5 +111,6 @@ val changePackageNamePatch = bytecodePatch(
             updateProviders = { updateProviders == true },
         ),
         ignoreCheckPackageNamePatch,
+        cloneCompatibilityPatch,
     )
 }
