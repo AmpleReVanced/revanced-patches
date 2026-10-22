@@ -30,6 +30,7 @@ import app.revanced.extension.kakaotalk.patches.BlockModifiedMessageReplyPatch;
 import app.revanced.extension.kakaotalk.patches.BypassMoatCheckPatch;
 import app.revanced.extension.kakaotalk.patches.DefaultExternalBrowserPatch;
 import app.revanced.extension.kakaotalk.patches.DisableFriendFeedTabPatch;
+import app.revanced.extension.kakaotalk.patches.DisableNavigationBarAnimationPatch;
 import app.revanced.extension.kakaotalk.patches.DisableOpenChatRoomCommentPatch;
 import app.revanced.extension.kakaotalk.patches.EnableMarkdownPatch;
 import app.revanced.extension.kakaotalk.patches.EnableSendBigTextPatch;
@@ -61,6 +62,7 @@ public final class SettingsActivity extends Activity {
     private static final String PREF_REMOVE_SHORT_FORM_TAB = "morphe_pref_remove_short_form_tab";
     private static final String PREF_REMOVE_SHOP_TAB = "morphe_pref_remove_shop_tab";
     private static final String PREF_REMOVE_LOCAL_CONNECT_TAB = "morphe_pref_remove_local_connect_tab";
+    private static final String PREF_DISABLE_NAVIGATION_BAR_ANIMATION = "morphe_pref_disable_navigation_bar_animation";
     private static final String PREF_DISABLE_FRIEND_FEED_TAB = "morphe_pref_disable_friend_feed_tab";
     private static final String PREF_HIDE_MORE_TAB_GAME = "morphe_pref_hide_more_tab_game";
     private static final String PREF_HIDE_MORE_TAB_KAKAO_PAY_SECTION = "morphe_pref_hide_more_tab_kakao_pay_section";
@@ -159,6 +161,7 @@ public final class SettingsActivity extends Activity {
             bindSwitchIfIncluded(PREF_REMOVE_SHORT_FORM_TAB, Settings.REMOVE_SHORT_FORM_TAB, RemoveShortFormTabPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_REMOVE_SHOP_TAB, Settings.REMOVE_SHOP_TAB, RemoveShopTabPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_REMOVE_LOCAL_CONNECT_TAB, Settings.REMOVE_LOCAL_CONNECT_TAB, RemoveLocalConnectTabPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_DISABLE_NAVIGATION_BAR_ANIMATION, Settings.DISABLE_NAVIGATION_BAR_ANIMATION, DisableNavigationBarAnimationPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_DISABLE_FRIEND_FEED_TAB, Settings.DISABLE_FRIEND_FEED_TAB, DisableFriendFeedTabPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_HIDE_MORE_TAB_GAME, Settings.HIDE_MORE_TAB_GAME, HideMoreTabGamePatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_HIDE_MORE_TAB_KAKAO_PAY_SECTION, Settings.HIDE_MORE_TAB_KAKAO_PAY_SECTION, HideMoreTabComponentsPatch.isPatchIncluded());
