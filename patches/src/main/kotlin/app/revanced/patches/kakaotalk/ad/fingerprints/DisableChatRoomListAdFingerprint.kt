@@ -13,6 +13,20 @@ internal object ChatListAdHelperFingerprint : Fingerprint(
     custom = { _, classDef -> classDef.sourceFile == "ChatListAdHelper.kt" }
 )
 
+internal object ChatListBannerAdItemFingerprint : Fingerprint(
+    name = "getBindingType",
+    parameters = emptyList(),
+    returnType = "I",
+    custom = { _, classDef -> classDef.sourceFile == "AdChatItem.kt" },
+)
+
+internal object GlobalChatListAdItemFingerprint : Fingerprint(
+    name = "getBindingType",
+    parameters = emptyList(),
+    returnType = "I",
+    custom = { _, classDef -> classDef.sourceFile == "GlobalAdChatItem.kt" },
+)
+
 internal object ChatListGlobalAdEnabledFingerprint : Fingerprint(
     classFingerprint = ChatListAdHelperFingerprint,
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
