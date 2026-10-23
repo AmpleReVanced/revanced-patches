@@ -140,7 +140,7 @@ private fun BytecodePatchContext.injectGalleryWatchBridges() {
         returnType = postItemType,
         filters = listOf(methodCall(modelItemGetter)),
         custom = instanceMethod,
-    ).match(adapterClass).method
+    ).matchAll(adapterClass).first().method
     val postNumberGetter = Fingerprint(
         parameters = emptyList(),
         returnType = postNumberField.type,
