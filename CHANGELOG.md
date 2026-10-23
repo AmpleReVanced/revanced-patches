@@ -1,3 +1,27 @@
+# [1.5.0-dev.23](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.22...v1.5.0-dev.23) (2026-10-23)
+
+
+### Bug Fixes
+
+* **kakaotalk:** harden clone compatibility and block SDK telemetry ([61f74ad](https://github.com/AmpleReVanced/revanced-patches/commit/61f74ada80e389ffa6c68f33e81ebfb0c11a2715))
+* **kakaotalk:** remove ad placeholder rows from regular chat lists ([46721e3](https://github.com/AmpleReVanced/revanced-patches/commit/46721e3f1229186eed77531f360071ff1d507f7e))
+* **kakaotalk:** restore emoticon decryption in cloned installs ([2cfa59d](https://github.com/AmpleReVanced/revanced-patches/commit/2cfa59dfa30791a7bc50a2473d4515afe9e55383)), closes [#187](https://github.com/AmpleReVanced/revanced-patches/issues/187)
+* **samsung-keyboard:** restore clipboard support for secondary users ([43ef294](https://github.com/AmpleReVanced/revanced-patches/commit/43ef294d4130d1f976ef75b71fdb63d9aca0fc91)), closes [#192](https://github.com/AmpleReVanced/revanced-patches/issues/192)
+* **samsung-keyboard:** restore swipe gesture settings on non-One UI ROMs ([ff6e9a7](https://github.com/AmpleReVanced/revanced-patches/commit/ff6e9a726f83194078954a7d5a26e7c03911a029)), closes [#190](https://github.com/AmpleReVanced/revanced-patches/issues/190)
+
+
+### Features
+
+* **chzzk:** support version `3.15.2` ([be58073](https://github.com/AmpleReVanced/revanced-patches/commit/be58073e94a2e7338428a328fe46d15a4f446566))
+* **dcinside:** support version `5.3.14` ([1418d1c](https://github.com/AmpleReVanced/revanced-patches/commit/1418d1c0413986dc0dce9f4667354345b1acd882))
+* **dcinside:** support version `5.3.20` ([a8aab44](https://github.com/AmpleReVanced/revanced-patches/commit/a8aab447928bbd3806c5e734d03f3e86b3a4b051))
+* **flexcil:** support version `1.5.0.16` ([7122e64](https://github.com/AmpleReVanced/revanced-patches/commit/7122e64118651c41d9631b0eb31e0f41ef101b5b))
+* **kakaomap:** drop KakaoMap support ([e2c1490](https://github.com/AmpleReVanced/revanced-patches/commit/e2c149048ad6e8d7ac0604a1435932451bc62cb4))
+* **kakaotalk:** add instant chat entry and bottom bar setting ([fde74d7](https://github.com/AmpleReVanced/revanced-patches/commit/fde74d78b576d0f70f85d17b27b446598fb0f0de))
+* **navermap:** support version `6.11.2.2` ([b2cfb2f](https://github.com/AmpleReVanced/revanced-patches/commit/b2cfb2ff22ef02fddc86cf642d3713b9fb97ff4b))
+* **soop:** remove Ad Balloon overlay banners ([eebc30d](https://github.com/AmpleReVanced/revanced-patches/commit/eebc30d6c2ede96717272aed485381d4d1ed2873))
+* **soop:** support version `8.33.0` ([1a60986](https://github.com/AmpleReVanced/revanced-patches/commit/1a60986e6db1c96cf74a5f2305865977c1a12527))
+
 # [1.5.0-dev.22](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0-dev.21...v1.5.0-dev.22) (2026-10-21)
 
 

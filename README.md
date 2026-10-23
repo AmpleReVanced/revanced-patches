@@ -4,9 +4,9 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START -->
-> **[v1.5.0-dev.22](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.5.0-dev.22)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;127 patches total
+> **[v1.5.0-dev.23](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.5.0-dev.23)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;128 patches total
 <details>
-<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;75 patches</summary>
+<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;76 patches</summary>
 <br>
 
 **🎯 Supported versions:**
@@ -53,7 +53,8 @@
 | [Disable ShortForm ad](#disable-shortform-ad) | Disables the shortform ad load and render paths. |  |
 | [Disable Talk Share Log](#disable-talk-share-log) | Disable talk share log |  |
 | [Disable abuse detection report](#disable-abuse-detection-report) | Answers the startup and login integrity challenge with an empty token and a benign Play Integrity failure code instead of a Google-signed token that would expose the re-signed certificate. The report itself is still sent, so the client does not go conspicuously silent on the server's nonce the way suppressing it entirely would. |  |
-| [Disable chat room list ad](#disable-chat-room-list-ad) | Disables ads in the chat room list and Call filter. |  |
+| [Disable chat room list ad](#disable-chat-room-list-ad) | Disables chat room list and Call filter ads, including reserved ad rows. |  |
+| [Disable navigation bar animation](#disable-navigation-bar-animation) | Adds an option to enter chats without transition delays and show the bottom bar immediately on return. |  |
 | [Disable open chat room comments](#disable-open-chat-room-comments) | Adds a setting to disable comments in open chat rooms. |  |
 | [Disable verifying signature](#disable-verifying-signature) | Disables the signature verification check that prevents the app from running. |  |
 | [Enable Markdown](#enable-markdown) | Render plain text messages with markdown-style formatting. |  |
@@ -100,7 +101,7 @@
 
 **🎯 Supported versions:**
 
-| 5.3.12 |
+| 5.3.20 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
@@ -140,8 +141,8 @@
 
 **🎯 Supported versions:**
 
-| 3.13.2 |
-| :---: |
+| 3.15.2 | 3.13.2 |
+| :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
@@ -159,8 +160,8 @@
 
 **🎯 Supported versions:**
 
-| 1.5.0.11 | 1.5.0.10 | 1.5.0.9 | 1.5.0.8 | 1.5.0.7 | 1.4.4.14 | 1.4.4.12 | 1.4.4.10 | 1.4.4.9 |
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| 1.5.0.16 | 1.5.0.11 | 1.5.0.10 | 1.5.0.9 | 1.5.0.8 | 1.5.0.7 | 1.4.4.14 | 1.4.4.12 | 1.4.4.10 | 1.4.4.9 |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
@@ -188,17 +189,18 @@
 </details>
 
 <details>
-<summary>📦 SOOP&nbsp;&nbsp;•&nbsp;&nbsp;10 patches</summary>
+<summary>📦 SOOP&nbsp;&nbsp;•&nbsp;&nbsp;11 patches</summary>
 <br>
 
 **🎯 Supported versions:**
 
-| 8.31.3 | 8.30.1 | 8.29.3 | 8.28.5 |
-| :---: | :---: | :---: | :---: |
+| 8.33.0 | 8.31.3 | 8.30.1 | 8.29.3 | 8.28.5 |
+| :---: | :---: | :---: | :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
 | [Disable P2P](#disable-p2p) | Disables SOOP peer-assisted grid streaming. |  |
+| [Remove Ad Balloon banner](#remove-ad-balloon-banner) | Removes Ad Balloon banners displayed over the live player. |  |
 | [Remove Catch ads](#remove-catch-ads) | Removes the ads inserted between clips in the Catch feed by reporting no ad slots. |  |
 | [Remove VOD ads](#remove-vod-ads) | Removes VOD pre-roll ads by reporting every stream as QuickView Plus to the player's own ad-skip check. |  |
 | [Remove banner ads](#remove-banner-ads) | Removes the VOD companion and search banner ads. |  |
@@ -212,28 +214,13 @@
 </details>
 
 <details>
-<summary>📦 KakaoMap&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
-<br>
-
-**🎯 Supported versions:**
-
-| 🧪&nbsp;6.29.0 | 🧪&nbsp;6.28.3 | 🧪&nbsp;6.28.2 | 🧪&nbsp;6.28.1 |
-| :---: | :---: | :---: | :---: |
-
-| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
-|----------|----------------|-----------|
-| [Enable navigation live updates](#enable-navigation-live-updates) | Shows navigation progress and stop-by-stop transit guidance with Android Live Updates. |  |
-
-</details>
-
-<details>
 <summary>📦 NAVER Map&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
 <br>
 
 **🎯 Supported versions:**
 
-| 🧪&nbsp;6.10.0.16 | 🧪&nbsp;6.9.1.3 |
-| :---: | :---: |
+| 🧪&nbsp;6.11.2.2 | 🧪&nbsp;6.10.0.16 | 🧪&nbsp;6.9.1.3 |
+| :---: | :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
