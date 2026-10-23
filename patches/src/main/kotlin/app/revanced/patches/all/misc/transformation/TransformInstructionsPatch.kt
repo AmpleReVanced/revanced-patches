@@ -1,8 +1,8 @@
 package app.revanced.patches.all.misc.transformation
 
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.util.findMutableMethodOf
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
-import app.morphe.util.findMutableMethodOf
 import com.android.tools.smali.dexlib2.iface.ClassDef
 import com.android.tools.smali.dexlib2.iface.Method
 import com.android.tools.smali.dexlib2.iface.instruction.Instruction

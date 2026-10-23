@@ -3,16 +3,16 @@ package app.revanced.patches.kakaotalk.misc.hook
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.util.getFreeRegisterProvider
+import app.morphe.patcher.util.getFreeRegisterProvider
+import app.morphe.patcher.util.p0Register
+import app.revanced.patches.kakaotalk.misc.extension.addExtensionPatch
+import app.revanced.patches.kakaotalk.misc.extension.sharedExtensionPatch
 import app.revanced.patches.kakaotalk.misc.hook.fingerprints.KakaoApplicationOnCreateFingerprint
 import app.revanced.patches.kakaotalk.misc.hook.fingerprints.LocoConnectionConstructorFingerprint
 import app.revanced.patches.kakaotalk.misc.hook.fingerprints.LocoMethodClassFingerprint
 import app.revanced.patches.kakaotalk.misc.hook.fingerprints.LocoProtocolResponseHookFingerprint
 import app.revanced.patches.kakaotalk.misc.hook.fingerprints.LocoReqBuilderConstructorFingerprint
-import app.revanced.patches.kakaotalk.misc.extension.addExtensionPatch
-import app.revanced.patches.kakaotalk.misc.extension.sharedExtensionPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
-import app.revanced.util.parameterRegister
 import com.android.tools.smali.dexlib2.Opcode
 
 private const val PACKET_HOOK_CLASS = "Lapp/revanced/extension/kakaotalk/packet/PacketHook;"
@@ -67,7 +67,7 @@ val addPacketHandlerPatch = bytecodePatch(
             if (returnIndex < 0) {
                 throw PatchException("Could not find LocoConnection constructor return")
             }
-            val receiverRegister = parameterRegister(0) - 1
+            val receiverRegister = p0Register
             val registers = getFreeRegisterProvider(returnIndex, 2, receiverRegister)
             val methodTypeRegister = registers.getFreeRegister4Bit()
             val builderTypeRegister = registers.getFreeRegister4Bit()

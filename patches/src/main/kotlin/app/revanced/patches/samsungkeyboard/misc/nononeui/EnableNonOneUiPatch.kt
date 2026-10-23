@@ -1,34 +1,34 @@
 package app.revanced.patches.samsungkeyboard.misc.nononeui
 
 import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.anyInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.getInstructionOrNull
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
-import app.morphe.patcher.anyInstruction
 import app.morphe.patcher.fieldAccess
 import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.ResourcePatchContext
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.util.findMutableMethodOf
+import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
+import app.morphe.patcher.util.registersUsed
 import app.morphe.patches.all.misc.resources.addResourcesPatch
 import app.morphe.util.asSequence
 import app.morphe.util.findInstructionIndicesReversed
-import app.morphe.util.findMutableMethodOf
 import app.morphe.util.getNode
-import app.morphe.util.getReference
 import app.morphe.util.indexOfFirstInstructionOrThrow
 import app.morphe.util.indexOfFirstStringInstruction
 import app.morphe.util.indexOfFirstStringInstructionOrThrow
-import app.morphe.util.registersUsed
 import app.revanced.patches.samsungkeyboard.shared.Constants.COMPATIBILITY_SAMSUNG_KEYBOARD
 import app.revanced.util.argumentRegister
-import app.revanced.util.parameterTypeNames
 import app.revanced.util.parameterRegister
+import app.revanced.util.parameterTypeNames
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction21c
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction35c
@@ -45,6 +45,7 @@ import com.android.tools.smali.dexlib2.iface.reference.StringReference
 import com.android.tools.smali.dexlib2.iface.reference.TypeReference
 import com.android.tools.smali.dexlib2.immutable.reference.ImmutableFieldReference
 import com.android.tools.smali.dexlib2.immutable.reference.ImmutableMethodReference
+import java.io.File
 import org.w3c.dom.Element
 
 private const val CONTEXT_TYPE = "Landroid/content/Context;"
@@ -57,6 +58,7 @@ private const val FEEDBACK_COMPAT_TYPE = "${EXTENSION_PACKAGE}FeedbackCompat;"
 private const val RESOURCE_LOADER_TYPE = "${EXTENSION_PACKAGE}ResourceLoader;"
 private const val SETTINGS_STORE_TYPE = "${EXTENSION_PACKAGE}SettingsStore;"
 private const val TOOLBAR_COMPAT_TYPE = "${EXTENSION_PACKAGE}ToolbarCompat;"
+private const val USER_HANDLE_COMPAT_TYPE = "${EXTENSION_PACKAGE}UserHandleCompat;"
 private const val WINDOW_COMPAT_TYPE = "${EXTENSION_PACKAGE}WindowCompat;"
 private const val SPR_STYLEABLE_TYPE = "${EXTENSION_PACKAGE}SprStyleable;"
 private const val SPR_PACKAGE = "Lcom/samsung/android/spr/"
@@ -116,13 +118,7 @@ private fun ResourcePatchContext.addGifEncoderLibrary() {
 
 private fun ResourcePatchContext.replaceSprResources() {
     val resourceDirectory = get("res")
-    val drawableFiles = resourceDirectory.listFiles()
-        ?.asSequence()
-        ?.filter { it.isDirectory && it.name.startsWith("drawable") }
-        ?.flatMap { it.listFiles()?.asSequence() ?: emptySequence() }
-        ?.filter { it.isFile }
-        ?.toList()
-        .orEmpty()
+    val drawableFiles = decode("res/drawable*").map { get(it) }.filter(File::isFile)
     val sprFiles = drawableFiles.filter { it.isSpr() }
     val resourceNames = sprFiles.mapTo(HashSet(sprFiles.size)) { it.nameWithoutExtension }
 
@@ -184,7 +180,9 @@ val enableNonOneUiPatch = bytecodePatch(
     extendWith("extensions/samsungkeyboard.mpe")
 
     execute {
+        val clipboardProviderUriMethod = ClipboardProviderUriFingerprint.method
         patchPlatformDependencies()
+        clipboardProviderUriMethod.applyClipboardUriCompat()
         patchGifVisibility()
 
         StoreDownloadRequestFingerprint.method.applyStoreProfile()
@@ -194,6 +192,18 @@ val enableNonOneUiPatch = bytecodePatch(
         initializeApplication()
     }
 }
+
+private fun MutableMethod.applyClipboardUriCompat() = addInstructionsWithLabels(
+    0,
+    """
+        invoke-static {p0, p1}, $CLIPBOARD_COMPAT_TYPE->getLocalClipboardUri(Landroid/net/Uri;I)Landroid/net/Uri;
+        move-result-object v0
+        if-eqz v0, :original
+        return-object v0
+        :original
+        nop
+    """.trimIndent(),
+)
 
 private fun BytecodePatchContext.patchGifVisibility() {
     val match = GifVisibilityFingerprint.instructionMatches.last()
@@ -208,9 +218,10 @@ private fun BytecodePatchContext.patchGifVisibility() {
 }
 
 private fun BytecodePatchContext.patchPlatformDependencies() {
-    val toolbarFeatureAccess = anyInstruction(
+    val enabledFeatureAccess = anyInstruction(
         ClipboardFeatureFlagFingerprint.featureFlagAccess(),
         GifFeatureFlagFingerprint.featureFlagAccess(),
+        CursorControlFeatureFlagFingerprint.featureFlagAccess(),
     )
     val definedTypes = buildSet { classDefForEach { add(it.type) } }
     val unavailableType: (String) -> Boolean = { it.isUnavailableSamsungType(definedTypes) }
@@ -229,7 +240,7 @@ private fun BytecodePatchContext.patchPlatformDependencies() {
             if (method.implementation == null) return@methodLoop
 
             val mutableMethod by lazy { mutableClass.findMutableMethodOf(method) }
-            method.findInstructionIndicesReversed(toolbarFeatureAccess).forEach { index ->
+            method.findInstructionIndicesReversed(enabledFeatureAccess).forEach { index ->
                 mutableMethod.replaceWithTrue(index)
             }
             val options = ReplacementOptions(
@@ -249,7 +260,7 @@ private fun BytecodePatchContext.patchPlatformDependencies() {
 
 context(_: BytecodePatchContext)
 private fun Fingerprint.featureFlagAccess() = fieldAccess(
-    instructionMatches.first().getInstruction<ReferenceInstruction>().reference as FieldReference,
+    instructionMatches.firstNotNullOf { it.getInstruction<Instruction>().getReference<FieldReference>() },
     Opcode.SGET_BOOLEAN,
 )
 
@@ -442,6 +453,7 @@ private fun MethodReference.compatReference(
 ) = windowCompatReference(options.settingsWindowFlags, opcode)
     ?: clipboardCompatReference().takeIf { options.clipboardService }
     ?: deviceCompatReference()
+    ?: userHandleCompatReference()
     ?: feedbackCompatReference()
     ?: resourceLoaderReference()
     ?: drawableLoaderReference().takeIf { options.drawableAccess }
@@ -525,6 +537,18 @@ private fun MutableMethod.replaceInvokeReference(
 private fun MethodReference.deviceCompatReference(): MethodReference? {
     if (!matches("Landroid/os/Build;", "getSerial", emptyList(), "Ljava/lang/String;")) return null
     return toExtensionReference(DEVICE_COMPAT_TYPE, parameters = emptyList())
+}
+
+private fun MethodReference.userHandleCompatReference(): MethodReference? {
+    if (definingClass != "Landroid/os/UserHandle;" || returnType != "I") return null
+    val parameters = parameterTypeNames
+    val replacementParameters = when (name) {
+        "semGetMyUserId", "semGetCallingUserId" -> parameters.takeIf { it.isEmpty() }
+        "semGetUserId" -> parameters.takeIf { it == listOf("I") }
+        "semGetIdentifier" -> listOf(definingClass).takeIf { parameters.isEmpty() }
+        else -> null
+    } ?: return null
+    return toExtensionReference(USER_HANDLE_COMPAT_TYPE, parameters = replacementParameters)
 }
 
 private fun MethodReference.feedbackCompatReference(): MethodReference? {

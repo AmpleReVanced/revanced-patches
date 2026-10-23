@@ -6,13 +6,12 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLa
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.patches.all.misc.resources.ResourceType
-import app.morphe.patches.all.misc.resources.getResourceId
-import app.morphe.patches.all.misc.resources.resourceMappingPatch
+import app.morphe.patcher.resource.ResourceType
+import app.morphe.patcher.resource.resourceId
+import app.morphe.patcher.util.getFreeRegisterProvider
+import app.morphe.patcher.util.getReference
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import app.morphe.util.findInstructionIndicesReversedOrThrow
-import app.morphe.util.getFreeRegisterProvider
-import app.morphe.util.getReference
 import app.morphe.util.indexOfFirstInstructionOrThrow
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.kakaotalk.misc.settings.PreferenceScreen
@@ -32,7 +31,7 @@ val allowProfileMediaDownloadPatch = bytecodePatch(
             "background images of other people.",
 ) {
     compatibleWith(COMPATIBILITY_KAKAO)
-    dependsOn(addSettingsTabPatch, resourceMappingPatch)
+    dependsOn(addSettingsTabPatch)
 
     execute {
         PreferenceScreen.FEATURES.addPreferences(
@@ -56,7 +55,7 @@ val allowProfileMediaDownloadPatch = bytecodePatch(
             getInstruction(iconButtonIndex).getReference<MethodReference>()!!
         }
 
-        val editButtonLabelId = getResourceId(ResourceType.STRING, PROFILE_EDIT_BUTTON_LABEL)
+        val editButtonLabelId = resourceId(ResourceType.STRING, PROFILE_EDIT_BUTTON_LABEL)
 
         // Returning before the composer is touched leaves the composition of the action bar intact,
         // unlike branching the edit button out of it.

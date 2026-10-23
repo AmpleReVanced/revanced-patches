@@ -1,7 +1,7 @@
 package app.revanced.patches.soop.ads
 
 import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.util.returnEarly
+import app.morphe.patcher.util.returnEarly
 import app.revanced.patches.soop.ads.fingerprints.*
 import app.revanced.patches.soop.common.fingerprints.KotlinUnitInstanceFingerprint
 import app.revanced.patches.soop.common.utils.returnUnitEarly

@@ -1,7 +1,9 @@
 package app.revanced.patches.soop.p2p
 
 import app.morphe.patcher.Fingerprint
-import app.morphe.util.getReference
+import app.morphe.patcher.StringComparisonType.CONTAINS
+import app.morphe.patcher.string
+import app.morphe.patcher.util.getReference
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.Method
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
@@ -22,7 +24,7 @@ internal object HlsEngineV2OffFingerprint : Fingerprint(
 
 internal object ColonyConnectFingerprint : Fingerprint(
     returnType = "V",
-    strings = listOf("connect Colony in", "connect Colony out")
+    strings = listOf(string("connect Colony in", CONTAINS), string("connect Colony out", CONTAINS))
 )
 
 internal object P2PCommandDispatchFingerprint : Fingerprint(

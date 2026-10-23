@@ -1,11 +1,13 @@
 package app.revanced.patches.soop.ads.fingerprints
 
 import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.StringComparisonType.CONTAINS
+import app.morphe.patcher.string
 
 internal object LiveBannerDriverFingerprint : Fingerprint(
     parameters = listOf("Ljava/lang/Object;"),
     returnType = "Ljava/lang/Object;",
-    strings = listOf("LiveAdCoupleBannerFragment", "LiveAdBannerFragment"),
+    strings = listOf(string("LiveAdCoupleBannerFragment", CONTAINS), string("LiveAdBannerFragment", CONTAINS)),
 )
 
 internal object CompanionBannerViewCreatedFingerprint : Fingerprint(

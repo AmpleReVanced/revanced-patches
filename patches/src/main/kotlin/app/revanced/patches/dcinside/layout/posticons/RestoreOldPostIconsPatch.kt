@@ -5,18 +5,17 @@ import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.resource.ResourceType
+import app.morphe.patcher.resource.resourceId
+import app.morphe.patcher.util.findMutableMethodOf
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
-import app.morphe.patches.all.misc.resources.ResourceType
-import app.morphe.patches.all.misc.resources.getResourceId
-import app.morphe.patches.all.misc.resources.resourceMappingPatch
+import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import app.morphe.util.ResourceGroup
 import app.morphe.util.copyResources
-import app.morphe.util.findMutableMethodOf
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.dcinside.misc.settings.PreferenceScreen
 import app.revanced.patches.dcinside.misc.settings.addSettingsPatch
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
-import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import com.android.tools.smali.dexlib2.iface.Method
 import com.android.tools.smali.dexlib2.iface.instruction.Instruction
 import com.android.tools.smali.dexlib2.iface.instruction.NarrowLiteralInstruction
@@ -71,7 +70,6 @@ val restoreOldPostIconsPatch = bytecodePatch(
     dependsOn(
         addSettingsPatch,
         restoreOldPostIconsResourcesPatch,
-        resourceMappingPatch,
     )
 
     execute {
@@ -107,7 +105,7 @@ val restoreOldPostIconsPatch = bytecodePatch(
 
 private fun drawableResourceIds(names: Collection<String>): Set<Int> =
     names.map { name ->
-        getResourceId(ResourceType.DRAWABLE, name).toInt()
+        resourceId(ResourceType.DRAWABLE, name).toInt()
     }.toSet()
 
 private fun Method.hasLegacyPostIconResourceLoad(resourceIds: Set<Int>): Boolean =

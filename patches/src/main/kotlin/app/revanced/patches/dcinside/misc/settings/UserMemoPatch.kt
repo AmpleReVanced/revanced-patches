@@ -3,12 +3,12 @@ package app.revanced.patches.dcinside.misc.settings
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
-import app.morphe.util.getReference
+import app.morphe.patches.shared.misc.settings.preference.NonInteractivePreference
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.dcinside.misc.extension.addExtensionPatch
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
-import app.morphe.patches.shared.misc.settings.preference.NonInteractivePreference
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.ClassDef
@@ -20,6 +20,7 @@ import com.android.tools.smali.dexlib2.iface.reference.TypeReference
 
 private const val EXTENSION_CLASS =
     "Lapp/revanced/extension/dcinside/settings/UserMemoPatch;"
+private typealias ClassLookup = (String) -> ClassDef?
 
 internal val userMemoPatch = bytecodePatch {
     compatibleWith(COMPATIBILITY_DC_INSIDE)
@@ -47,11 +48,6 @@ internal val userMemoPatch = bytecodePatch {
         )
         setExtensionIsPatchIncluded(EXTENSION_CLASS)
 
-        val classDefsByType = mutableMapOf<String, ClassDef>()
-        classDefForEach { classDef ->
-            classDefsByType[classDef.type] = classDef
-        }
-
         val bridgeMethods = UserMemoBridgeMethods(
             openRealm = UserMemoOpenRealmFingerprint.method,
             newPairArray = UserMemoNewPairArrayFingerprint.method,
@@ -69,7 +65,7 @@ internal val userMemoPatch = bytecodePatch {
         )
 
         UserMemoBindings
-            .from(UserMemoRegisterFingerprint.method, classDefsByType)
+            .from(UserMemoRegisterFingerprint.method) { classDefByOrNull(it) }
             .inject(bridgeMethods)
     }
 }
@@ -204,7 +200,7 @@ private data class UserMemoBindings(
     companion object {
         fun from(
             registerMethod: Method,
-            classDefsByType: Map<String, ClassDef>,
+            classLookup: ClassLookup,
         ): UserMemoBindings {
             val registerInstructions = registerMethod.implementation?.instructions
                 ?: throw PatchException("Could not inspect user memo register method")
@@ -214,16 +210,16 @@ private data class UserMemoBindings(
             val realmType = registerMethod.parameterTypes[0].toString()
             val pairArrayType = registerMethod.parameterTypes[4].toString()
             val managerType = registerMethod.definingClass
-            val managerClass = classDefsByType.requireClass(managerType)
+            val managerClass = classLookup.requireClass(managerType)
             val containerType = registerMethodReferences.inferMemoContainerType(managerType, realmType)
-            val realmObjectType = classDefsByType.requireClass(containerType).superclass
+            val realmObjectType = classLookup.requireClass(containerType).superclass
                 ?: throw PatchException("Could not infer user memo Realm object base type")
 
             val countType = registerInstructions
                 .referencedTypes(Opcode.CONST_CLASS)
                 .firstOrNull { type ->
                     type != containerType &&
-                        classDefsByType[type]?.superclass == realmObjectType
+                        classLookup(type)?.superclass == realmObjectType
                 } ?: throw PatchException("Could not infer user memo count type")
 
             val entryType = registerInstructions
@@ -231,11 +227,11 @@ private data class UserMemoBindings(
                 .firstOrNull { type ->
                     type != containerType &&
                         type != countType &&
-                        classDefsByType[type]?.superclass == realmObjectType
+                        classLookup(type)?.superclass == realmObjectType
                 } ?: throw PatchException("Could not infer user memo entry type")
 
             val transactionMethods = registerMethodReferences.inferTransactionMethods(realmType)
-            val deleteMethod = classDefsByType.inferRealmObjectDeleteMethod(realmObjectType)
+            val deleteMethod = classLookup.inferRealmObjectDeleteMethod(realmObjectType)
 
             return UserMemoBindings(
                 registerMethod = registerMethod,
@@ -243,7 +239,7 @@ private data class UserMemoBindings(
                 pairArrayType = pairArrayType,
                 pairType = pairArrayType.removePrefix("["),
                 managerType = managerType,
-                defaultRealmMethod = classDefsByType.inferDefaultRealmMethod(realmType),
+                defaultRealmMethod = classLookup.inferDefaultRealmMethod(realmType),
                 containerType = containerType,
                 countType = countType,
                 entryType = entryType,
@@ -290,17 +286,17 @@ private fun Iterable<Instruction>.referencedTypes(opcode: Opcode): List<String> 
         instruction.getReference<TypeReference>()?.type
     }
 
-private fun Map<String, ClassDef>.requireClass(type: String): ClassDef =
-    this[type] ?: throw PatchException("Could not find class definition for $type")
+private fun ClassLookup.requireClass(type: String): ClassDef =
+    this(type) ?: throw PatchException("Could not find class definition for $type")
 
-private fun Map<String, ClassDef>.inferDefaultRealmMethod(realmType: String): String =
+private fun ClassLookup.inferDefaultRealmMethod(realmType: String): String =
     requireClass(realmType).methods.singleOrNull { method ->
         method.parameterTypes.isEmpty() &&
             method.returnType == realmType &&
             method.isStatic
     }?.name ?: throw PatchException("Could not find default Realm opener for $realmType")
 
-private fun Map<String, ClassDef>.inferRealmObjectDeleteMethod(realmObjectType: String): String {
+private fun ClassLookup.inferRealmObjectDeleteMethod(realmObjectType: String): String {
     val realmObjectClass = requireClass(realmObjectType)
     val deleteStaticMethod = realmObjectClass.methods.singleOrNull { method ->
         method.parameterTypes.singleOrNull()?.toString() == "Lio/realm/X0;" &&

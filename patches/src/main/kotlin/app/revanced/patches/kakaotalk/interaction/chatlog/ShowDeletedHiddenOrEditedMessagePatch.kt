@@ -5,23 +5,23 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLa
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
+import app.morphe.patcher.fieldAccess
+import app.morphe.patcher.methodCall
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.resourcePatch
-import app.morphe.patcher.fieldAccess
-import app.morphe.patcher.methodCall
 import app.morphe.patcher.patch.stringOption
-import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
+import app.morphe.patcher.util.getFreeRegisterProvider
+import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableField.Companion.toMutable
+import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
+import app.morphe.patcher.util.returnEarly
 import app.morphe.patches.all.misc.resources.addResourcesPatch
-import app.morphe.util.getFreeRegisterProvider
-import app.morphe.util.getReference
+import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import app.morphe.util.indexOfFirstInstructionOrThrow
 import app.morphe.util.indexOfFirstInstructionReversedOrThrow
-import app.morphe.util.returnEarly
 import app.morphe.util.setExtensionIsPatchIncluded
-import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatInfoViewClassFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatLogFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatLogItemViewHolderFingerprint
@@ -30,12 +30,10 @@ import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatLogVF
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatLogViewHolderBindProfileFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatLogViewHolderSetupChatInfoViewFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatRoomListManagerGetInstanceFingerprint
-import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.checkViewableChatLogFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.FilterChatLogItemFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.FlushToDBChatLogFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.GetChatRoomByChannelIdFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.GetDeletedColorFingerprint
-import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.getDeletedMessageCacheFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.GetHiddenColorFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ModifiedChatLogApplyFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ModifiedChatLogFingerprint
@@ -45,6 +43,8 @@ import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.OriginalS
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.OthersChatInfoViewClassFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.PutDeletedMessageCacheFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ReplaceToFeedFingerprint
+import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.checkViewableChatLogFingerprint
+import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.getDeletedMessageCacheFingerprint
 import app.revanced.patches.kakaotalk.misc.extension.addExtensionPatch
 import app.revanced.patches.kakaotalk.misc.extension.sharedExtensionPatch
 import app.revanced.patches.kakaotalk.misc.settings.PreferenceScreen
@@ -582,7 +582,7 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
 
         val replaceToFeedMethod = ReplaceToFeedFingerprint.method
         replaceToFeedMethod.let {
-            val flushToDBMethod = FlushToDBChatLogFingerprint.method
+            val flushToDBMethod = FlushToDBChatLogFingerprint(chatLogClass.type).method
             val chatRoomListManagerGetInstanceMethod = ChatRoomListManagerGetInstanceFingerprint.method
             val getChatRoomByChannelIdMethod = GetChatRoomByChannelIdFingerprint.method
             val originalSyncMethod = OriginalSyncMethodFingerprint.method
@@ -596,90 +596,100 @@ val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
             val chatRoomIdGetter =
                 it.instructions[channelIdResultIndex].getReference<MethodReference>()
                     ?: throw PatchException("Could not resolve chat room ID getter.")
-            val chatRoomListManagerCompanionField = OriginalSyncMethodFingerprint.classDef.fields.first {
-                it.type == chatRoomListManagerGetInstanceMethod.definingClass
-            }
+
+            val lastChatLogIndex = originalSyncMethod.indexOfFirstInstructionOrThrow(
+                methodCall(
+                    parameters = listOf("J"),
+                    returnType = chatLogClass.type,
+                    opcodes = listOf(Opcode.INVOKE_INTERFACE),
+                ),
+            )
+            val lastChatLogGetter = originalSyncMethod.getInstruction(lastChatLogIndex)
+                .getReference<MethodReference>()!!
+            val chatLogDaoGetter = originalSyncMethod.instructions.take(lastChatLogIndex)
+                .last {
+                    it.opcode == Opcode.INVOKE_STATIC &&
+                            it.getReference<MethodReference>()?.let { reference ->
+                                reference.parameterTypeNames.isEmpty() &&
+                                        reference.returnType == lastChatLogGetter.definingClass
+                            } == true
+                }.getReference<MethodReference>()!!
+
+            fun latestMessageGuard(endLabel: String, value: Int, flag: Int) = """
+                invoke-static {}, $chatLogDaoGetter
+                move-result-object v$value
+                invoke-virtual {p1}, $chatRoomIdGetter
+                move-result-wide p2
+                invoke-interface {v$value, p2, p3}, $lastChatLogGetter
+                move-result-object v$value
+                if-eqz v$value, :$endLabel
+                invoke-virtual {v$value}, ${chatLogClass.type}->getId()J
+                move-result-wide v$value
+                invoke-virtual {p1}, ${chatLogClass.type}->getId()J
+                move-result-wide p2
+                cmp-long v$flag, v$value, p2
+                if-nez v$flag, :$endLabel
+            """.trimIndent()
 
             val invokeVirtualInst = originalSyncMethod.instructions.last { it.opcode == Opcode.INVOKE_VIRTUAL }
             val invokeStaticInst = originalSyncMethod.instructions.last { it.opcode == Opcode.INVOKE_STATIC }
 
+            fun preserveMessage(index: Int, deleted: Boolean): String {
+                val chatLogRegister = it.parameterRegister(0)
+                val wideRegister = it.parameterRegister(1)
+                val provider = it.getFreeRegisterProvider(
+                    index, 3, chatLogRegister - 1, chatLogRegister, wideRegister, wideRegister + 1,
+                )
+                val registers = List(provider.availableCount()) { provider.getFreeRegister() }.filter { register -> register < 16 }.sorted()
+                val value = registers.firstOrNull { register -> register + 1 in registers }
+                    ?: throw PatchException("Could not reserve a register pair for message IDs.")
+                val valueHigh = value + 1
+                val flag = registers.firstOrNull { register -> register != value && register != valueHigh }
+                    ?: throw PatchException("Could not reserve a register for message flags.")
+                val flagSetter = if (deleted) "putDeleted" else "putHidden"
+                val deletedRegister = if (deleted) valueHigh else flag
+                val hiddenRegister = if (deleted) flag else valueHigh
+                val endLabel = if (deleted) "revanced_deleted_sync_end" else "revanced_hidden_sync_end"
+                return """
+                    iget-object v$value, p1, ${chatLogClass.type}->${vFieldField.name}:${vFieldField.type}
+                    const/4 v$valueHigh, 0x1
+                    invoke-virtual {v$value, v$valueHigh}, ${chatLogVFieldClass.type}->$flagSetter(Z)V
+                    invoke-virtual {p1}, ${chatLogClass.type}->getId()J
+                    move-result-wide p2
+                    const/4 v$flag, 0x0
+                    invoke-static {p2, p3, v$deletedRegister, v$hiddenRegister}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->updateByChatLogId(JZZ)V
+                    invoke-virtual {p0, p1}, ${it.definingClass}->${flushToDBMethod.name}(${chatLogClass.type})Z
+                    
+                    ${latestMessageGuard(endLabel, value, flag)}
+                    invoke-static {}, $chatRoomListManagerGetInstanceMethod
+                    move-result-object v$value
+                    invoke-virtual {p1}, $chatRoomIdGetter
+                    move-result-wide p2
+                    invoke-virtual {v$value, p2, p3}, $getChatRoomByChannelIdMethod
+                    move-result-object v$value
+                    if-eqz v$value, :$endLabel
+                    const/4 v$valueHigh, 0x1
+                    invoke-virtual {v$value, p1, v$valueHigh}, ${invokeVirtualInst.getReference<MethodReference>()}
+                    move-result-object v$value
+                    const/4 v$valueHigh, 0x0
+                    const/4 v$flag, 0x1
+                    invoke-static {v$value, v$valueHigh, v$flag, v$valueHigh}, ${invokeStaticInst.getReference<MethodReference>()}
+                    :$endLabel
+                    return-void
+                """.trimIndent()
+            }
+
             val sgetObjectDeleteToAllIndex = it.indexOfFirstInstructionOrThrow(
                 fieldAccess(name = "DELETE_TO_ALL", opcode = Opcode.SGET_OBJECT),
             )
-            it.replaceInstruction(
-                sgetObjectDeleteToAllIndex,
-                "nop"
-            )
-
-            it.addInstructionsWithLabels(
-                sgetObjectDeleteToAllIndex + 1,
-                """
-                    iget-object v0, p1, ${chatLogClass.type}->${vFieldField.name}:${vFieldField.type}
-                    const/4 v1, 0x1
-                    invoke-virtual {v0, v1}, ${chatLogVFieldClass.type}->putDeleted(Z)V
-                    invoke-virtual {p1}, ${chatLogClass.type}->getId()J
-                    move-result-wide p2
-                    const/4 v2, 0x0
-                    invoke-static {p2, p3, v1, v2}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->updateByChatLogId(JZZ)V
-                    invoke-virtual {p0, p1}, ${it.definingClass}->${flushToDBMethod.name}(${chatLogClass.type})Z
-                    
-                    sget-object v0, ${chatRoomListManagerCompanionField.definingClass}->${chatRoomListManagerCompanionField.name}:${chatRoomListManagerCompanionField.type}
-                    invoke-virtual {v0}, $chatRoomListManagerGetInstanceMethod
-                    move-result-object v0
-                    invoke-virtual {p1}, $chatRoomIdGetter
-                    move-result-wide p2
-                    invoke-virtual {v0, p2, p3}, $getChatRoomByChannelIdMethod
-                    move-result-object v0
-                    if-eqz v0, :revanced_deleted_sync_end
-                    const/4 v1, 0x1
-                    invoke-virtual {v0, p1, v1}, ${invokeVirtualInst.getReference<MethodReference>()}
-                    move-result-object v0
-                    const/4 v1, 0x0
-                    const/4 v2, 0x1
-                    invoke-static {v0, v1, v2, v1}, ${invokeStaticInst.getReference<MethodReference>()}
-                    :revanced_deleted_sync_end
-                    return-void
-                """.trimIndent()
-            )
+            it.replaceInstruction(sgetObjectDeleteToAllIndex, "return-void")
+            it.addInstructionsWithLabels(sgetObjectDeleteToAllIndex, preserveMessage(sgetObjectDeleteToAllIndex, deleted = true))
 
             val lastSgetFeedIndex = it.indexOfFirstInstructionReversedOrThrow(
                 fieldAccess(name = "Feed", opcode = Opcode.SGET_OBJECT),
             )
-            it.replaceInstruction(
-                lastSgetFeedIndex,
-                "nop"
-            )
-
-            it.addInstructionsWithLabels(
-                lastSgetFeedIndex + 1,
-                """
-                    iget-object v0, p1, ${chatLogClass.type}->${vFieldField.name}:${vFieldField.type}
-                    const/4 v1, 0x1
-                    invoke-virtual {v0, v1}, ${chatLogVFieldClass.type}->putHidden(Z)V
-                    invoke-virtual {p1}, ${chatLogClass.type}->getId()J
-                    move-result-wide p2
-                    const/4 v2, 0x0
-                    invoke-static {p2, p3, v2, v1}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->updateByChatLogId(JZZ)V
-                    invoke-virtual {p0, p1}, ${it.definingClass}->${flushToDBMethod.name}(${chatLogClass.type})Z
-                    
-                    sget-object v0, ${chatRoomListManagerCompanionField.definingClass}->${chatRoomListManagerCompanionField.name}:${chatRoomListManagerCompanionField.type}
-                    invoke-virtual {v0}, $chatRoomListManagerGetInstanceMethod
-                    move-result-object v0
-                    invoke-virtual {p1}, $chatRoomIdGetter
-                    move-result-wide p2
-                    invoke-virtual {v0, p2, p3}, $getChatRoomByChannelIdMethod
-                    move-result-object v0
-                    if-eqz v0, :revanced_hidden_sync_end
-                    const/4 v1, 0x1
-                    invoke-virtual {v0, p1, v1}, ${invokeVirtualInst.getReference<MethodReference>()}
-                    move-result-object v0
-                    const/4 v1, 0x0
-                    const/4 v2, 0x1
-                    invoke-static {v0, v1, v2, v1}, ${invokeStaticInst.getReference<MethodReference>()}
-                    :revanced_hidden_sync_end
-                    return-void
-                """.trimIndent()
-            )
+            it.replaceInstruction(lastSgetFeedIndex, "return-void")
+            it.addInstructionsWithLabels(lastSgetFeedIndex, preserveMessage(lastSgetFeedIndex, deleted = false))
         }
 
         checkViewableChatLogFingerprint(chatLogClass.type).method.returnEarly(true)
@@ -859,6 +869,7 @@ private fun preserveModifiedHistoryMethod(
     MutableMethodImplementation(6),
 ).toMutable().apply {
     addInstructions(
+        0,
         """
             invoke-virtual {p0}, $messageGetterReference
             move-result-object v0

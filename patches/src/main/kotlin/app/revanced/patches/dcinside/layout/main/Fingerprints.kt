@@ -5,6 +5,8 @@ import app.morphe.patcher.methodCall
 import com.android.tools.smali.dexlib2.AccessFlags
 
 internal object MainAdapterItemsUpdateFingerprint : Fingerprint(
+    superclass = "Landroidx/recyclerview/widget/RecyclerView\$Adapter;",
+    definingClass = "Lcom/dcinside/app/main/adapter/",
     accessFlags = listOf(AccessFlags.PRIVATE, AccessFlags.FINAL),
     parameters = listOf("Ljava/util/List;"),
     returnType = "V",
@@ -23,7 +25,6 @@ internal object MainAdapterItemsUpdateFingerprint : Fingerprint(
         ),
         methodCall(
             definingClass = "Landroidx/recyclerview/widget/RecyclerView\$Adapter;",
-            name = "notifyDataSetChanged",
             parameters = emptyList(),
             returnType = "V",
         ),

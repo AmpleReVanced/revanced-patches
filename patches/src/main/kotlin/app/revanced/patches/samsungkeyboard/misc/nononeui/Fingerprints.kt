@@ -5,6 +5,7 @@ import app.morphe.patcher.InstructionLocation.MatchAfterWithin
 import app.morphe.patcher.fieldAccess
 import app.morphe.patcher.methodCall
 import app.morphe.patcher.newInstance
+import app.morphe.patcher.string
 import com.android.tools.smali.dexlib2.Opcode
 
 private const val CLIPBOARD_HONEY_BEE_TYPE =
@@ -51,6 +52,28 @@ internal object ClipboardFeatureFlagFingerprint :
 
 internal object GifFeatureFlagFingerprint :
     ToolbarFeatureFlagFingerprint(GIF_HONEY_BEE_TYPE)
+
+internal object CursorControlFeatureFlagFingerprint : Fingerprint(
+    filters = listOf(
+        string("SEC_FLOATING_FEATURE_SIP_SUPPORT_CURSOR_CONTROL"),
+        fieldAccess(type = "Z", opcode = Opcode.SPUT_BOOLEAN, location = MatchAfterWithin(3)),
+    ),
+)
+
+internal object ClipboardProviderUriFingerprint : Fingerprint(
+    isStatic = true,
+    returnType = "Landroid/net/Uri;",
+    parameters = listOf("Landroid/net/Uri;", "I"),
+    strings = listOf("content", "@"),
+    filters = listOf(
+        methodCall(
+            definingClass = "Landroid/os/UserHandle;",
+            name = "semGetMyUserId",
+            parameters = emptyList(),
+            returnType = "I",
+        ),
+    ),
+)
 
 internal object GifVisibilityFingerprint : Fingerprint(
     definingClass = GIF_HONEY_BEE_TYPE,

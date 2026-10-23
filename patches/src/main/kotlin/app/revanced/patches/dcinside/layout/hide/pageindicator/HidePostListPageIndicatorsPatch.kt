@@ -3,10 +3,9 @@ package app.revanced.patches.dcinside.layout.hide.pageindicator
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
-import app.morphe.patches.all.misc.resources.resourceMappingPatch
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
-import app.morphe.util.getReference
 import app.morphe.util.indexOfFirstInstructionReversedOrThrow
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.dcinside.misc.settings.PreferenceScreen
@@ -25,7 +24,7 @@ val hidePostListPageIndicatorsPatch = bytecodePatch(
     description = "Adds a setting to hide the Page N indicators between pages in post lists.",
 ) {
     compatibleWith(COMPATIBILITY_DC_INSIDE)
-    dependsOn(addSettingsPatch, resourceMappingPatch)
+    dependsOn(addSettingsPatch)
 
     execute {
         PreferenceScreen.FEATURES.addPreferences(

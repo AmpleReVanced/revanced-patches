@@ -1,15 +1,20 @@
 package app.revanced.patches.kakaotalk.ad
 
-import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
-import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.util.getFreeRegisterProvider
-import app.morphe.util.returnEarly
-import app.revanced.patches.kakaotalk.ad.fingerprints.AddOlkChatRoomListAdFingerprint
-import app.revanced.patches.kakaotalk.ad.fingerprints.OpenChatTabFragmentAdEnabledFingerprint
-import app.revanced.patches.kakaotalk.shared.fingerprints.KotlinUnitInstanceFingerprint
+import app.morphe.patcher.util.returnEarly
+import app.revanced.patches.kakaotalk.ad.fingerprints.ChatListAdItemFingerprint
+import app.revanced.patches.kakaotalk.ad.fingerprints.CommonChatRoomListSubmitFingerprint
+import app.revanced.patches.kakaotalk.ad.fingerprints.OpenChatAdItemFingerprint
+import app.revanced.patches.kakaotalk.ad.fingerprints.OpenChatRoomListAdapterFingerprint
+import app.revanced.patches.kakaotalk.ad.fingerprints.OpenChatTabBizBoardUpdateFingerprint
+import app.revanced.patches.kakaotalk.misc.extension.sharedExtensionPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
-import app.revanced.util.smaliReference
+import app.revanced.patches.kakaotalk.shared.ListFilterGroup
+import app.revanced.patches.kakaotalk.shared.filterAdapterItems
+import app.revanced.patches.kakaotalk.shared.setListFilter
+
+private const val EXTENSION_CLASS =
+    "Lapp/revanced/extension/kakaotalk/patches/RemoveOlkChatRoomListAdPatch;"
 
 @Suppress("unused")
 val removeOlkChatRoomListAdPatch = bytecodePatch(
@@ -17,22 +22,25 @@ val removeOlkChatRoomListAdPatch = bytecodePatch(
     description = "Removes the OpenLink chat room list ad.",
 ) {
     compatibleWith(COMPATIBILITY_KAKAO)
+    dependsOn(sharedExtensionPatch)
 
     execute {
-        val unitClass = KotlinUnitInstanceFingerprint.classDef
-        val unitInstance = unitClass.staticFields.singleOrNull { it.type == unitClass.type }
-            ?: throw PatchException("Could not find Kotlin Unit instance")
-        val method = AddOlkChatRoomListAdFingerprint.method
-        val register = method.getFreeRegisterProvider(0, 1).getFreeRegister4Bit()
-
-        method.addInstructions(
-            0,
-            """
-                sget-object v$register, ${unitInstance.smaliReference}
-                return-object v$register
-            """.trimIndent()
+        OpenChatTabBizBoardUpdateFingerprint.instructionMatches[1].getMethodCalled().returnEarly(false)
+        setListFilter(
+            EXTENSION_CLASS,
+            listOf(
+                ListFilterGroup(
+                    listOf(
+                        OpenChatAdItemFingerprint.originalClassDef.type,
+                        ChatListAdItemFingerprint.originalClassDef.type,
+                    ),
+                ),
+            ),
         )
-
-        OpenChatTabFragmentAdEnabledFingerprint.method.returnEarly(false)
+        filterAdapterItems(
+            OpenChatRoomListAdapterFingerprint.classDef,
+            EXTENSION_CLASS,
+            listOf(CommonChatRoomListSubmitFingerprint.originalMethod),
+        )
     }
 }

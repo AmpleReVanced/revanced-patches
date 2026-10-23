@@ -3,13 +3,13 @@ package app.revanced.patches.dcinside.layout.hide.officialnotice
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
-import app.morphe.util.getReference
+import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.dcinside.misc.settings.PreferenceScreen
 import app.revanced.patches.dcinside.misc.settings.addSettingsPatch
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
-import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.ClassDef
 import com.android.tools.smali.dexlib2.iface.Method
@@ -39,14 +39,9 @@ val hideDcOfficialNoticesPatch = bytecodePatch(
         )
         setExtensionIsPatchIncluded(OFFICIAL_NOTICE_EXTENSION_CLASS)
 
-        val classDefsByType = mutableMapOf<String, ClassDef>()
-        classDefForEach { classDef ->
-            classDefsByType[classDef.type] = classDef
-        }
-
         val authorGetter = inferPostItemAuthorGetter(
             GalleryNoticeListHandlerFingerprint.method,
-            classDefsByType,
+            ::classDefByOrNull,
         )
 
         OfficialNoticeAuthorNameBridgeFingerprint.method.addInstructions(
@@ -109,7 +104,7 @@ private data class PostItemAuthorGetter(
 
 private fun inferPostItemAuthorGetter(
     method: Method,
-    classDefsByType: Map<String, ClassDef>,
+    classLookup: (String) -> ClassDef?,
 ): PostItemAuthorGetter {
     val instructions = method.implementation?.instructions
         ?: throw PatchException("Could not inspect gallery notice list handler")
@@ -121,7 +116,7 @@ private fun inferPostItemAuthorGetter(
 
         val type = instruction.getReference<TypeReference>()?.type
             ?: continue
-        val classDef = classDefsByType[type]
+        val classDef = classLookup(type)
             ?: continue
 
         val authorField = classDef.fields.firstOrNull { field ->

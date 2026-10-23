@@ -1,23 +1,14 @@
 package app.revanced.util
 
 import app.morphe.patcher.patch.ResourcePatchContext
-
-//
-// Ample specific code
-//
+import java.io.File
 
 fun ResourcePatchContext.removeStringsElements(
     replacements: Array<String>
 ) {
-    val resourceDirectory = get("res")
-    val languagePaths = resourceDirectory.listFiles()
-        ?.filter { it.isDirectory && it.name.startsWith("values") }
-        ?.filter { it.resolve("strings.xml").exists() }
-        ?.map { it.name }
-        ?.toTypedArray()
-        ?: emptyArray()
-
-    removeStringsElements(languagePaths, replacements)
+    decode("res/values*/strings.xml").forEach { path ->
+        get(path).removeStringsElements(replacements)
+    }
 }
 
 fun ResourcePatchContext.removeStringsElements(
@@ -25,19 +16,17 @@ fun ResourcePatchContext.removeStringsElements(
     replacements: Array<String>
 ) {
     paths.forEach { path ->
-        val resourceDirectory = get("res")
-        val targetXmlPath = resourceDirectory.resolve(path).resolve("strings.xml")
-
-        if (targetXmlPath.exists()) {
-            val targetXml = get("res/$path/strings.xml")
-            var content = targetXml.readText()
-            replacements.forEach { replacement ->
-                content = content.replace(
-                    Regex("""[ \t]*<string name="$replacement"[^>]*>.*?</string>\s*""", RegexOption.DOT_MATCHES_ALL),
-                    ""
-                )
-            }
-            targetXml.writeText(content)
-        }
+        get("res/$path/strings.xml").takeIf(File::isFile)?.removeStringsElements(replacements)
     }
+}
+
+private fun File.removeStringsElements(replacements: Array<String>) {
+    var content = readText()
+    replacements.forEach { replacement ->
+        content = content.replace(
+            Regex("""[ \t]*<string name="$replacement"[^>]*>.*?</string>\s*""", RegexOption.DOT_MATCHES_ALL),
+            "",
+        )
+    }
+    writeText(content)
 }

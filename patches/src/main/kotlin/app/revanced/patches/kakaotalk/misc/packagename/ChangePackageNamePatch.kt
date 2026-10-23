@@ -1,18 +1,22 @@
 package app.revanced.patches.kakaotalk.misc.packagename
 
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.Option
 import app.morphe.patcher.patch.booleanOption
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.stringOption
-import app.morphe.util.getReference
-import app.morphe.util.returnEarly
+import app.morphe.patcher.util.getReference
+import app.morphe.patcher.util.returnEarly
+import app.revanced.patches.kakaotalk.misc.integrity.hookPackageManagerPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.patches.shared.misc.packagename.baseChangePackageNamePatch
 import app.revanced.patches.shared.misc.packagename.resolvePackageName
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction21c
+import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.reference.StringReference
 import com.android.tools.smali.dexlib2.immutable.reference.ImmutableStringReference
 
@@ -20,14 +24,29 @@ lateinit var packageNameOption: Option<String>
 
 @Suppress("unused")
 private val ignoreCheckPackageNamePatch = bytecodePatch(
-//    name = "Ignore Check Package Name",
     description = "Ignores the package name check to allow installation of modified versions.",
     default = false,
 ) {
     compatibleWith(COMPATIBILITY_KAKAO)
+    dependsOn(hookPackageManagerPatch)
 
     execute {
         CheckPackageNameFingerprint.method.returnEarly()
+
+        EmoticonDecryptContextFingerprint.let {
+            it.method.apply {
+                val index = it.instructionMatches.last().index
+                val register = getInstruction<OneRegisterInstruction>(index).registerA
+
+                addInstructions(
+                    index,
+                    """
+                        invoke-static {v$register}, Lapp/revanced/extension/kakaotalk/patches/ChangePackageNamePatch;->wrapContext(Landroid/content/Context;)Landroid/content/Context;
+                        move-result-object v$register
+                    """.trimIndent(),
+                )
+            }
+        }
 
         GetInstallSourceInfoFingerprint.method.apply {
             val newPackageName = resolvePackageName(packageNameOption, "com.kakao.talk")
@@ -92,5 +111,6 @@ val changePackageNamePatch = bytecodePatch(
             updateProviders = { updateProviders == true },
         ),
         ignoreCheckPackageNamePatch,
+        cloneCompatibilityPatch,
     )
 }

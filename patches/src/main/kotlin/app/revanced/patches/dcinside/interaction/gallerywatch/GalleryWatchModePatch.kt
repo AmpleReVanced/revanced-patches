@@ -9,14 +9,13 @@ import app.morphe.patcher.methodCall
 import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.util.addInstructionsAtControlFlowLabel
+import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
-import app.morphe.patches.all.misc.resources.resourceMappingPatch
 import app.morphe.patches.shared.misc.settings.preference.MORPHE_PREFERENCE_SCREEN_LAYOUT
 import app.morphe.patches.shared.misc.settings.preference.PreferenceScreenPreference
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
-import app.morphe.util.addInstructionsAtControlFlowLabel
 import app.morphe.util.findInstructionIndicesReversedOrThrow
-import app.morphe.util.getReference
 import app.morphe.util.indexOfFirstInstructionOrThrow
 import app.morphe.util.indexOfFirstInstructionReversedOrThrow
 import app.morphe.util.setExtensionIsPatchIncluded
@@ -33,9 +32,6 @@ import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.value.StringEncodedValue
 
-private const val ITEM_VIEW_FIELD =
-    "$RECYCLER_VIEW_HOLDER->itemView:Landroid/view/View;"
-
 @Suppress("unused")
 val galleryWatchModePatch = bytecodePatch(
     name = "Gallery watch mode",
@@ -43,7 +39,7 @@ val galleryWatchModePatch = bytecodePatch(
         "optionally alerts with sound or vibration while the gallery is open.",
 ) {
     compatibleWith(COMPATIBILITY_DC_INSIDE)
-    dependsOn(addExtensionPatch, addSettingsPatch, resourceMappingPatch)
+    dependsOn(addExtensionPatch, addSettingsPatch)
 
     execute {
         addGalleryWatchPreferences()
@@ -117,6 +113,9 @@ private fun BytecodePatchContext.injectGalleryWatchCallbacks() {
 }
 
 private fun BytecodePatchContext.injectGalleryWatchBridges() {
+    val itemViewField = classDefBy(RECYCLER_VIEW_HOLDER).instanceFields.singleOrNull { field ->
+        field.type == "Landroid/view/View;" && AccessFlags.PUBLIC.isSet(field.accessFlags)
+    } ?: throw PatchException("Could not infer RecyclerView.ViewHolder item view field")
     val adapterClass = PostListAdapterConstructorFingerprint.classDef
     val adapterUpdate = PostListAdapterUpdateFingerprint.method
     val responseType = adapterUpdate.parameterTypes.first().toString()
@@ -141,7 +140,7 @@ private fun BytecodePatchContext.injectGalleryWatchBridges() {
         returnType = postItemType,
         filters = listOf(methodCall(modelItemGetter)),
         custom = instanceMethod,
-    ).match(adapterClass).method
+    ).matchAll(adapterClass).first().method
     val postNumberGetter = Fingerprint(
         parameters = emptyList(),
         returnType = postNumberField.type,
@@ -180,7 +179,7 @@ private fun BytecodePatchContext.injectGalleryWatchBridges() {
         0,
         """
             check-cast p0, $RECYCLER_VIEW_HOLDER
-            iget-object p0, p0, $ITEM_VIEW_FIELD
+            iget-object p0, p0, ${itemViewField.smaliReference}
             return-object p0
         """.trimIndent(),
     )

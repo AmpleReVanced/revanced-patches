@@ -30,40 +30,41 @@ internal object LocoProtocolResponseHookFingerprint : Fingerprint(
 )
 
 internal object LocoMethodClassFingerprint : Fingerprint(
+    superclass = "Ljava/lang/Enum;",
+    name = "valueOf",
+    parameters = listOf("Ljava/lang/String;"),
     custom = { method, classDef ->
         classDef.sourceFile == "LocoMethod.kt" &&
-            classDef.superclass == "Ljava/lang/Enum;" &&
-            method.name == "valueOf" &&
-            method.parameterTypes == listOf("Ljava/lang/String;") &&
             method.returnType == classDef.type
     }
 )
 
 internal object LocoReqBuilderConstructorFingerprint : Fingerprint(
+    name = "<init>",
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.CONSTRUCTOR),
+    parameters = listOf("L", "I", "S"),
     returnType = "V",
-    custom = { method, classDef ->
+    custom = { _, classDef ->
         classDef.sourceFile == "LocoReq.kt" &&
-            method.parameterTypes.size == 3 &&
-            method.parameterTypes[1].toString() == "I" &&
-            method.parameterTypes[2].toString() == "S" &&
             classDef.fields.count { it.type == "Lkotlin/Lazy;" } == 2
     }
 )
 
 internal object LocoConnectionConstructorFingerprint : Fingerprint(
+    name = "<init>",
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.CONSTRUCTOR),
     returnType = "V",
     filters = listOf(
         methodCall(
             definingClass = "Ljava/util/Map;",
             name = "put",
+            parameters = listOf("Ljava/lang/Object;", "Ljava/lang/Object;"),
+            returnType = "Ljava/lang/Object;",
             opcode = Opcode.INVOKE_INTERFACE,
         ),
     ),
-    custom = { method, classDef ->
+    custom = { _, classDef ->
         classDef.sourceFile == "LocoConnection.kt" &&
-            method.parameterTypes.size == 8 &&
             classDef.fields.any { it.type == "Ljava/util/Map;" }
     }
 )

@@ -6,9 +6,9 @@ import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.methodCall
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.util.getFreeRegisterProvider
+import app.morphe.patcher.util.getReference
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
-import app.morphe.util.getFreeRegisterProvider
-import app.morphe.util.getReference
 import app.morphe.util.indexOfFirstInstructionOrThrow
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.kakaotalk.interaction.send.fingerprints.AllowSwipeReplyToFeedFingerprint
@@ -66,16 +66,16 @@ val allowReplyToFeedPatch = bytecodePatch(
                     move-result v0
                     if-eqz v0, :morphe_feed_original
 
-                    invoke-virtual {p2}, $getChatTypeClassName->$getChatTypeMethodName()$chatType
+                    invoke-virtual {p3}, $getChatTypeClassName->$getChatTypeMethodName()$chatType
                     move-result-object v0
 
                     sget-object v2, $chatType->Leverage:$chatType
                     if-ne v0, v2, :cond_not_leverage
 
-                    instance-of v0, p2, ${isCarouselTypeMethod.definingClass}
+                    instance-of v0, p3, ${isCarouselTypeMethod.definingClass}
                     if-eqz v0, :cond_not_leverage
 
-                    move-object v0, p2
+                    move-object v0, p3
                     check-cast v0, ${isCarouselTypeMethod.definingClass}
                     invoke-virtual {v0}, ${isCarouselTypeMethod.definingClass}->${isCarouselTypeMethod.name}()Z
                     move-result v0
@@ -97,7 +97,7 @@ val allowReplyToFeedPatch = bytecodePatch(
         // Enabling comments adds a second swipe gate that rejects every feed type, so without
         // this the gesture is not registered at all and swiping does nothing.
         val (chatRoomType, chatLogType) = AllowSwipeReplyToFeedFingerprint.originalMethod
-            .parameterTypes.map { parameterType -> parameterType.toString() }
+            .parameterTypes.takeLast(2).map(CharSequence::toString)
 
         AllowSwipeReplyToFeedFingerprint.classDef.methods
             .first { method -> method.name == "getMovementFlags" }

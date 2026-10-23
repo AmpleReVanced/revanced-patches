@@ -2,7 +2,7 @@ package app.revanced.patches.kakaotalk.ad
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.util.getFreeRegisterProvider
+import app.morphe.patcher.util.getFreeRegisterProvider
 import app.revanced.patches.kakaotalk.ad.fingerprints.MeasuringBizBoardFingerprint
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.util.parameterRegister

@@ -6,6 +6,19 @@ import app.revanced.util.hasMethodCall
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
+internal object OpenChatFeedAdapterFingerprint : Fingerprint(
+    name = "getItemViewType",
+    parameters = listOf("I"),
+    returnType = "I",
+    custom = { _, classDef -> classDef.sourceFile == "OpenChatTabFeedAdapter.kt" },
+)
+
+internal object OpenChatFeedAdItemFingerprint : Fingerprint(
+    name = "toString",
+    strings = listOf("OpenChatTabFeedAdUiModel(feedOrder="),
+    custom = { _, classDef -> classDef.sourceFile == "OpenChatFeedBaseUiModel.kt" },
+)
+
 internal object OpenChatFeedAdLoadFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     returnType = "V",

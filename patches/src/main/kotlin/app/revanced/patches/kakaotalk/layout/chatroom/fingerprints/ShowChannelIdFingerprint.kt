@@ -3,23 +3,22 @@ package app.revanced.patches.kakaotalk.layout.chatroom.fingerprints
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.InstructionLocation.MatchAfterImmediately
 import app.morphe.patcher.OpcodesFilter
+import app.morphe.patcher.StringComparisonType.CONTAINS
 import app.morphe.patcher.methodCall
 import app.morphe.patcher.opcode
+import app.morphe.patcher.string
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
 internal object ChatRoomSideInitFingerprint : Fingerprint(
-    accessFlags = listOf(AccessFlags.PRIVATE, AccessFlags.FINAL),
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf("J"),
     returnType = "V",
-    strings = listOf("chatId"),
-    custom = { method, classDef ->
-        classDef.sourceFile == "ChatRoomSideActivity.kt" &&
-            method.parameterTypes.isEmpty()
-    },
+    custom = { _, classDef -> classDef.sourceFile == "ChatRoomSideViewModel.kt" },
 )
 
 internal object ChatRoomSideTitleItemLambdaFingerprint : Fingerprint(
-    strings = listOf("chatRoomSideChatTitleLayout.<anonymous>"),
+    strings = listOf(string("chatRoomSideChatTitleLayout.<anonymous>", CONTAINS)),
     filters = listOf(
         methodCall(
             definingClass = "Lkotlin/jvm/functions/Function4;",

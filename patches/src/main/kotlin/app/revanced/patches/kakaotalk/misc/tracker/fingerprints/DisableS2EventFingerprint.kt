@@ -1,8 +1,8 @@
 package app.revanced.patches.kakaotalk.misc.tracker.fingerprints
 
 import app.morphe.patcher.Fingerprint
-import app.morphe.util.getReference
 import app.morphe.patcher.OpcodesFilter
+import app.morphe.patcher.util.getReference
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference

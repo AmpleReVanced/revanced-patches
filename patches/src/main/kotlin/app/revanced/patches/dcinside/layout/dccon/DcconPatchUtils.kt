@@ -3,9 +3,9 @@ package app.revanced.patches.dcinside.layout.dccon
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
+import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
-import app.morphe.util.getReference
-import app.revanced.util.registerWidth
+import app.revanced.util.parameterRegister
 import app.revanced.util.smaliReference
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
@@ -247,20 +247,6 @@ private fun MutableMethod.matches(reference: MethodReference) =
         parameterTypes.map { it.toString() } == reference.parameterTypes.map { it.toString() } &&
         returnType == reference.returnType
 
-private fun MutableMethod.parameterRegister(parameterIndex: Int): Int {
-    val implementation = implementation
-        ?: throw PatchException("Could not inspect registers for $definingClass->$name")
-    val parameterTypes = parameterTypes.map { it.toString() }
-    if (parameterIndex !in parameterTypes.indices) {
-        throw PatchException("Parameter $parameterIndex is not available in $definingClass->$name")
-    }
-
-    val receiverWidth = if (AccessFlags.STATIC.isSet(accessFlags)) 0 else 1
-    val parameterWidth = parameterTypes.sumOf { it.registerWidth }
-    val firstParameterRegister = implementation.registerCount - receiverWidth - parameterWidth + receiverWidth
-
-    return firstParameterRegister + parameterTypes.take(parameterIndex).sumOf { it.registerWidth }
-}
 
 private fun MutableMethod.elementParameterAliasInvokeIndices(parameterIndex: Int): Set<Int> {
     val parameterRegister = parameterRegister(parameterIndex)

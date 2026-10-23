@@ -3,11 +3,11 @@ package app.revanced.patches.kakaotalk.misc.tracker
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.util.getFreeRegisterProvider
-import app.revanced.patches.kakaotalk.shared.fingerprints.KotlinUnitInstanceFingerprint
-import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
+import app.morphe.patcher.util.getFreeRegisterProvider
 import app.revanced.patches.kakaotalk.misc.tracker.fingerprints.DisableSaveS2EventFingerprint
 import app.revanced.patches.kakaotalk.misc.tracker.fingerprints.SendS2EventFingerprint
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
+import app.revanced.patches.kakaotalk.shared.fingerprints.KotlinUnitInstanceFingerprint
 import app.revanced.util.smaliReference
 
 @Suppress("unused")

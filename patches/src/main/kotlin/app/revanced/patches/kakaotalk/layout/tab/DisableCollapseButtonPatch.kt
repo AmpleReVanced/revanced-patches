@@ -2,12 +2,12 @@ package app.revanced.patches.kakaotalk.layout.tab
 
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.util.getReference
-import app.morphe.util.returnEarly
-import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
+import app.morphe.patcher.util.getReference
+import app.morphe.patcher.util.returnEarly
 import app.revanced.patches.kakaotalk.layout.tab.fingerprints.OpenChatListMoreItemFingerprint
 import app.revanced.patches.kakaotalk.layout.tab.fingerprints.SetupAdapterFingerprint
 import app.revanced.patches.kakaotalk.layout.tab.fingerprints.TrimOpenChatListForMoreButtonFingerprint
+import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.reference.TypeReference
 

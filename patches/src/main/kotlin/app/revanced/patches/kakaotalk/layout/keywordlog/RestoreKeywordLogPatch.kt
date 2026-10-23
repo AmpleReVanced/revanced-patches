@@ -8,18 +8,18 @@ import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.util.getFreeRegisterProvider
+import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableField
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
+import app.morphe.patcher.util.writeRegister
 import app.morphe.patches.all.misc.resources.addResourcesPatch
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import app.morphe.util.ResourceGroup
 import app.morphe.util.copyResources
 import app.morphe.util.findFieldFromToString
 import app.morphe.util.findMethodFromToString
-import app.morphe.util.getFreeRegisterProvider
-import app.morphe.util.getReference
-import app.morphe.util.writeRegister
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatRoomListManagerGetInstanceFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.GetChatRoomByChannelIdFingerprint
@@ -30,8 +30,8 @@ import app.revanced.patches.kakaotalk.misc.settings.addSettingsTabPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.util.smaliReference
 import com.android.tools.smali.dexlib2.AccessFlags
-import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
 import com.android.tools.smali.dexlib2.builder.MutableMethodImplementation
+import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.reference.TypeReference
@@ -157,14 +157,11 @@ val restoreKeywordLogPatch = bytecodePatch(
         if (chatRoomLookupMethod.returnType != chatRoomType) {
             throw PatchException("Resolved an unexpected chat room lookup method.")
         }
-        val managerCompanionField =
-            GetChatRoomByChannelIdFingerprint.originalClassDef.fields.single {
-                AccessFlags.STATIC.isSet(it.accessFlags) &&
-                    it.type == managerInstanceMethod.definingClass
-            }
-
         val intentFingerprint = chatRoomIntentFingerprint(chatRoomTypeEnum)
         val chatRoomIntentMethod = intentFingerprint.originalMethod
+        val intentLastRegister = chatRoomIntentMethod.parameterTypes.sumOf { if (it == "J") 2 else 1 }
+        val jumpIdRegister = intentLastRegister + 1
+        val intentDefaults = (7..intentLastRegister).joinToString("\n") { "const/16 v$it, 0x0" }
         val intentUtilsCompanionType = intentFingerprint.originalClassDef.type
         val intentUtilsCompanionField =
             classDefBy(intentUtilsCompanionType.substringBeforeLast('$') + ";")
@@ -216,22 +213,28 @@ val restoreKeywordLogPatch = bytecodePatch(
         addHelperMethod(
             EXTENSION_CLASS,
             "createChatRoomIntent",
-            listOf("Landroid/content/Context;", "J"),
+            listOf("Landroid/content/Context;", "J", "J"),
             "Landroid/content/Intent;",
-            10,
+            intentLastRegister + 8,
             """
-                sget-object v6, ${managerCompanionField.smaliReference}
-                invoke-virtual {v6}, ${managerInstanceMethod.smaliReference}
-                move-result-object v6
-                invoke-virtual {v6, p1, p2}, ${chatRoomLookupMethod.smaliReference}
-                move-result-object v6
-                if-eqz v6, :unknown
-                iget-object v4, v6, ${chatRoomTypeField.smaliReference}
+                move-object/from16 v1, p0
+                move-wide/from16 v2, p1
+                move-wide/from16 v$jumpIdRegister, p3
+                invoke-static {}, ${managerInstanceMethod.smaliReference}
+                move-result-object v0
+                invoke-virtual {v0, v2, v3}, ${chatRoomLookupMethod.smaliReference}
+                move-result-object v0
+                if-eqz v0, :unknown
+                iget-object v4, v0, ${chatRoomTypeField.smaliReference}
                 sget-object v0, ${intentUtilsCompanionField.smaliReference}
-                move-object v1, p0
-                move-wide v2, p1
                 const/4 v5, 0x0
-                invoke-virtual/range {v0 .. v5}, ${chatRoomIntentMethod.smaliReference}
+                new-instance v6, Lkotlin/Pair;
+                invoke-static/range {v$jumpIdRegister .. v${jumpIdRegister + 1}}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+                move-result-object v7
+                const/4 v8, 0x0
+                invoke-direct {v6, v7, v8}, Lkotlin/Pair;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V
+                $intentDefaults
+                invoke-virtual/range {v0 .. v$intentLastRegister}, ${chatRoomIntentMethod.smaliReference}
                 move-result-object v0
                 return-object v0
                 :unknown
@@ -247,8 +250,7 @@ val restoreKeywordLogPatch = bytecodePatch(
             "Ljava/lang/String;",
             8,
             """
-                sget-object v0, ${managerCompanionField.smaliReference}
-                invoke-virtual {v0}, ${managerInstanceMethod.smaliReference}
+                invoke-static {}, ${managerInstanceMethod.smaliReference}
                 move-result-object v0
                 invoke-virtual {v0, p0, p1}, ${chatRoomLookupMethod.smaliReference}
                 move-result-object v0
@@ -379,12 +381,13 @@ private fun BytecodePatchContext.addPseudoChatRoom(
     lastLogIdField: String,
     lastUpdatedAtField: String,
 ) {
+    val chatRoomItemFactory = keywordLogChatRoomItemFingerprint(chatRoomType).method
     addHelperMethod(
         chatRoomType,
         ADD_ROOM_METHOD,
         listOf("Ljava/util/List;"),
         "Ljava/util/List;",
-        10,
+        14,
         """
             invoke-static {}, $EXTENSION_CLASS->isEnabled()Z
             move-result v0
@@ -407,6 +410,20 @@ private fun BytecodePatchContext.addPseudoChatRoom(
             invoke-static {}, $EXTENSION_CLASS->roomLastUpdatedAt()I
             move-result v6
             iput v6, v1, $lastUpdatedAtField
+            invoke-static {}, Ljava/util/Collections;->emptySet()Ljava/util/Set;
+            move-result-object v2
+            const/4 v3, 0x0
+            const/4 v4, 0x1
+            const/4 v5, 0x0
+            const-string v6, ""
+            const/4 v7, 0x0
+            const-string v8, ""
+            const/4 v9, 0x0
+            const/4 v10, 0x0
+            const/4 v11, 0x0
+            const/4 v12, 0x0
+            invoke-static/range {v1 .. v12}, ${chatRoomItemFactory.smaliReference}
+            move-result-object v1
             const/4 v6, 0x0
             invoke-virtual {v0, v6, v1}, Ljava/util/ArrayList;->add(ILjava/lang/Object;)V
             return-object v0
@@ -415,31 +432,31 @@ private fun BytecodePatchContext.addPseudoChatRoom(
         """,
     )
 
-    val filterMethod = ChatRoomListFilterFingerprint.originalMethod
+    val buildMethod = ChatRoomListBuildFingerprint.originalMethod
     val viewModelType = classDefBy {
         it.sourceFile == "GeneralChatRoomListViewModel.kt" && !it.type.contains('$')
     }.type
 
-    val filterCall = generalChatRoomListFilterCallFingerprint(viewModelType, filterMethod)
-    val callIndex = filterCall.instructionMatches[0].index
+    val buildCall = generalChatRoomListBuildCallFingerprint(viewModelType, buildMethod)
+    val resultIndex = buildCall.instructionMatches[1].index
     val resultRegister =
-        filterCall.method.getInstruction<OneRegisterInstruction>(callIndex + 1).registerA
-    val filterCallClass = filterCall.originalClassDef
-    val viewModelField = filterCallClass.fields.singleOrNull { field ->
+        buildCall.method.getInstruction<OneRegisterInstruction>(resultIndex).registerA
+    val buildCallClass = buildCall.originalClassDef
+    val viewModelField = buildCallClass.fields.singleOrNull { field ->
         field.type == viewModelType && !AccessFlags.STATIC.isSet(field.accessFlags)
     } ?: throw PatchException("Could not infer the chat room list ViewModel field.")
     val refreshMethod = chatRoomListRefreshFingerprint(viewModelType).originalMethod
 
     addHelperMethod(
-        filterCallClass.type,
+        buildCallClass.type,
         REFRESH_ROOM_LIST_METHOD,
         listOf("Ljava/lang/Object;"),
         "V",
         2,
         """
-            instance-of v0, p0, ${filterCallClass.type}
+            instance-of v0, p0, ${buildCallClass.type}
             if-eqz v0, :done
-            check-cast p0, ${filterCallClass.type}
+            check-cast p0, ${buildCallClass.type}
             iget-object p0, p0, ${viewModelField.smaliReference}
             invoke-virtual {p0}, ${refreshMethod.smaliReference}
             :done
@@ -447,8 +464,8 @@ private fun BytecodePatchContext.addPseudoChatRoom(
         """,
     )
 
-    filterCall.method.addInstructions(
-        callIndex + 2,
+    buildCall.method.addInstructions(
+        resultIndex + 1,
         """
             invoke-static/range {v$resultRegister .. v$resultRegister}, $chatRoomType->$ADD_ROOM_METHOD(Ljava/util/List;)Ljava/util/List;
             move-result-object v$resultRegister

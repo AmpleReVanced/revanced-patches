@@ -1,8 +1,8 @@
 package app.revanced.extension.kakaotalk.chatroom;
 
 import static app.morphe.extension.shared.StringRef.str;
+import static app.morphe.extension.shared.Utils.getContext;
 
-import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -42,11 +42,9 @@ public final class ChannelIdInfoExtension {
     private ChannelIdInfoExtension() {
     }
 
-    public static void setCurrentChannelId(Activity activity, long channelId) {
+    public static void setCurrentChannelId(long channelId) {
         currentChannelId = channelId;
-        if (activity != null) {
-            contextReference = new WeakReference<Context>(activity);
-        }
+        contextReference = new WeakReference<>(getContext());
     }
 
     public static Object makeCopyableTitleModifier(Object modifier) {

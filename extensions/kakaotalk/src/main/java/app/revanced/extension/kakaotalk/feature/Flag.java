@@ -2,6 +2,7 @@ package app.revanced.extension.kakaotalk.feature;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import app.revanced.extension.kakaotalk.settings.Settings;
@@ -13,12 +14,13 @@ import app.revanced.extension.kakaotalk.settings.Settings;
  * place, which is the right answer while the overrides cannot be known yet.
  */
 public class Flag {
-    private static final String OPEN_CHAT_ROOM_COMMENT_DISABLED = "OPEN_CHAT_ROOM_COMMENT_DISABLED";
+    private static final String OPEN_CHAT_ROOM_COMMENT_DISABLED = "open_chat_room_comment_disabled";
 
     private static final Object reloadLock = new Object();
 
     private static volatile Map<String, Boolean> flags = Collections.emptyMap();
     private static volatile String loadedFeatureFlags;
+    private static volatile String openChatRoomCommentKey;
 
     private Flag() {
     }
@@ -67,6 +69,7 @@ public class Flag {
                 continue;
             }
 
+            key = hashFeatureKey(key.toLowerCase(Locale.ROOT));
             if ("true".equalsIgnoreCase(value)) {
                 parsed.put(key, true);
             } else if ("false".equalsIgnoreCase(value)) {
@@ -88,6 +91,10 @@ public class Flag {
 
     public static String getFeatureFlags() {
         return null; // Modified during patching.
+    }
+
+    public static String hashFeatureKey(String key) {
+        return String.valueOf(key).toLowerCase(Locale.ROOT);
     }
 
     public static boolean canIntercept(String key) {
@@ -122,7 +129,11 @@ public class Flag {
     }
 
     private static boolean isOpenChatRoomCommentDisabled(String key) {
-        return Settings.openChatRoomCommentDisabled()
-                && OPEN_CHAT_ROOM_COMMENT_DISABLED.equalsIgnoreCase(key);
+        if (!Settings.openChatRoomCommentDisabled()) return false;
+        String hashedKey = openChatRoomCommentKey;
+        if (hashedKey == null) {
+            openChatRoomCommentKey = hashedKey = hashFeatureKey(OPEN_CHAT_ROOM_COMMENT_DISABLED);
+        }
+        return hashedKey.equals(key);
     }
 }

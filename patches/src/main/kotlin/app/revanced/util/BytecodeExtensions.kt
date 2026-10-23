@@ -1,8 +1,9 @@
 package app.revanced.util
 
 import app.morphe.patcher.patch.PatchException
+import app.morphe.patcher.util.getReference
+import app.morphe.patcher.util.p0Register
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
-import app.morphe.util.getReference
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.ClassDef
@@ -63,13 +64,7 @@ internal fun MethodReference.matches(reference: MethodReference): Boolean =
         MethodUtil.methodSignaturesMatch(this, reference)
 
 internal val MutableMethod.localRegisterCount: Int
-    get() {
-        val implementation = implementation
-            ?: throw PatchException("Could not inspect registers for $definingClass->$name.")
-        val receiverWidth = if (AccessFlags.STATIC.isSet(accessFlags)) 0 else 1
-        val parameterWidth = parameterTypeNames.sumOf { it.registerWidth }
-        return implementation.registerCount - receiverWidth - parameterWidth
-    }
+    get() = p0Register
 
 internal fun Instruction.argumentRegister(parameterIndex: Int): Int {
     val reference = getReference<MethodReference>()
@@ -103,13 +98,10 @@ internal fun Instruction.argumentRegister(parameterIndex: Int): Int {
 }
 
 internal fun Method.parameterRegister(parameterIndex: Int): Int {
-    val implementation = implementation
-        ?: throw PatchException("Could not inspect registers for $definingClass->$name.")
     if (parameterIndex !in parameterTypeNames.indices) {
         throw PatchException("Parameter $parameterIndex is not available in $definingClass->$name.")
     }
 
-    val parameterWidth = parameterTypeNames.sumOf { it.registerWidth }
-    return implementation.registerCount - parameterWidth +
+    return p0Register + (if (AccessFlags.STATIC.isSet(accessFlags)) 0 else 1) +
         parameterTypeNames.take(parameterIndex).sumOf { it.registerWidth }
 }

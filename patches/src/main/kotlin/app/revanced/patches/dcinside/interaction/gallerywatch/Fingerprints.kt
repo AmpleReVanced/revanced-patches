@@ -2,8 +2,9 @@ package app.revanced.patches.dcinside.interaction.gallerywatch
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.InstructionFilter
-import app.morphe.patches.all.misc.resources.ResourceType
-import app.morphe.patches.all.misc.resources.resourceLiteral
+import app.morphe.patcher.methodCall
+import app.morphe.patcher.resource.ResourceType
+import app.morphe.patcher.resourceLiteral
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
@@ -62,7 +63,6 @@ internal object PostListAdapterUpdateFingerprint : Fingerprint(
 
 internal object PostListAdapterBindFingerprint : Fingerprint(
     classFingerprint = PostListAdapterConstructorFingerprint,
-    name = "onBindViewHolder",
     accessFlags = listOf(AccessFlags.PUBLIC),
     parameters = listOf(RECYCLER_VIEW_HOLDER, "I"),
     returnType = "V",
@@ -70,10 +70,20 @@ internal object PostListAdapterBindFingerprint : Fingerprint(
 
 internal object PostListItemTypeFingerprint : Fingerprint(
     classFingerprint = PostListAdapterConstructorFingerprint,
-    name = "getItemViewType",
     accessFlags = listOf(AccessFlags.PUBLIC),
     parameters = listOf("I"),
     returnType = "I",
+    filters = listOf(
+        methodCall(
+            parameters = listOf("I"),
+            returnType = "Lcom/dcinside/app/response/PostItem;",
+        ),
+        methodCall(
+            definingClass = "Lcom/dcinside/app/response/PostItem;",
+            parameters = emptyList(),
+            returnType = "I",
+        ),
+    ),
 )
 
 internal object GetPostsBridgeFingerprint : Fingerprint(

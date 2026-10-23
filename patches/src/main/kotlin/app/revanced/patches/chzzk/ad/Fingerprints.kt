@@ -1,6 +1,8 @@
 package app.revanced.patches.chzzk.ad
 
 import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.StringComparisonType.CONTAINS
+import app.morphe.patcher.string
 
 private const val AD_ENTER_PLAYER_CLASS =
     "Lcom/navercorp/game/android/community/core/feature/feature/player/ad/AdEnterPlayer;"
@@ -12,13 +14,6 @@ private const val PRISM_SOURCE_CLASS = "Lcom/naver/prismplayer/Source;"
 
 private const val PLAYABLE_AD_PARAMS_CLASS =
     "Lcom/navercorp/game/android/community/data/core/entity/player/PlayableAdParams;"
-
-private const val CREATOR_HUB_CARD_CLASS = "Lcom/navercorp/shortform/sdk/data/dto/CreatorHubCard;"
-
-private const val FEED_AD_DATA_CLASS = "Lcom/navercorp/shortform/sdk/data/dto/FeedAdData;"
-
-private const val SHORT_FORM_AD_CARD_MODEL_CLASS =
-    "Lcom/navercorp/shortform/sdk/data/model/ShortFormAdCardModel;"
 
 internal object AdEnterPlayerFingerprint : Fingerprint(
     definingClass = AD_ENTER_PLAYER_CLASS,
@@ -32,8 +27,7 @@ internal object ApplyPlayerAdParamsFingerprint : Fingerprint(
     strings = listOf("nmp_aos", "calp"),
 )
 
-internal object MapClipAdCardFingerprint : Fingerprint(
-    returnType = SHORT_FORM_AD_CARD_MODEL_CLASS,
-    parameters = listOf(CREATOR_HUB_CARD_CLASS, "J", "Ljava/lang/String;", FEED_AD_DATA_CLASS),
-    strings = listOf("mapAdCardModel: onFailure "),
+internal object MapRecommendedCardsFingerprint : Fingerprint(
+    returnType = "Ljava/lang/Object;",
+    strings = listOf(string("mapAdCardModel: onFailure ", CONTAINS)),
 )

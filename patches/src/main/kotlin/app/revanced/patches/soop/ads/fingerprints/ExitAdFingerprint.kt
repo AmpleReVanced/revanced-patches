@@ -1,15 +1,30 @@
 package app.revanced.patches.soop.ads.fingerprints
 
 import app.morphe.patcher.Fingerprint
-import app.morphe.util.getReference
+import app.morphe.patcher.util.getReference
 import com.android.tools.smali.dexlib2.iface.Method
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
 private const val EXIT_AD_DIALOG =
     "Lkr/co/nowcom/mobile/afreeca/advertisement/a1/home/presenter/ExitAdDialog;"
+private const val EXIT_AD_FRAGMENT = "Lcom/afreecatv/advertisement/exit/ExitAdFragment;"
 
 private fun Method.callsMethod(name: String) =
     implementation?.instructions?.any { it.getReference<MethodReference>()?.name == name } == true
+
+internal object ExitAdFragmentRevealFingerprint : Fingerprint(
+    definingClass = EXIT_AD_FRAGMENT,
+    parameters = listOf(),
+    returnType = "V",
+    custom = { method, _ -> method.callsMethod("setLayoutParams") },
+)
+
+internal object ExitAdFragmentAnimateRevealFingerprint : Fingerprint(
+    definingClass = EXIT_AD_FRAGMENT,
+    parameters = listOf(),
+    returnType = "V",
+    custom = { method, _ -> method.callsMethod("startAnimation") },
+)
 
 internal object ExitAdRevealFingerprint : Fingerprint(
     parameters = listOf(),

@@ -2,8 +2,8 @@ package app.revanced.patches.shared.misc.string
 
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.util.getReference
 import app.revanced.patches.all.misc.transformation.transformInstructionsPatch
-import app.morphe.util.getReference
 import com.android.tools.smali.dexlib2.ReferenceType
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.reference.StringReference

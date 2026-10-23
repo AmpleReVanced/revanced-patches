@@ -25,30 +25,12 @@ package app.morphe.patches.all.misc.resources
 
 import app.morphe.patcher.patch.resourcePatch
 import app.morphe.patches.util.resource.StringResourceSanitizer.sanitizeAndroidResourceString
-import app.morphe.util.forEachChildElement
-import app.morphe.util.getNode
+import app.morphe.patches.util.resource.forEachRawResourceElement
 import app.morphe.util.inputStreamFromBundledResource
-import org.w3c.dom.Element
-import org.w3c.dom.Node
 import java.io.File
 import java.util.Locale
 import java.util.logging.Logger
 import kotlin.collections.listOf
-
-/**
- * If any added string resources replace existing strings in the target app.
- * If this is not enabled then ARSCLib still replaces the existing strings without any issues,
- * but it's not clear if the behavior is intentional or coincidentally works even though the
- * modified XML is not valid. Apktool crashes if duplicates are present and this must be enabled.
- */
-private var patchStringsReplaceExisting = false
-
-/**
- * Set patchStringsReplaceExisting
- */
-fun setPatchStringsReplaceExisting(replaceExisting: Boolean) {
-    patchStringsReplaceExisting = replaceExisting
-}
 
 internal val localesYouTube = listOf(
     AppLocale("", ""), // Default English locale. Must be first.
@@ -294,150 +276,96 @@ internal fun addAppResources(appId: String) {
     appsToInclude.add(appId)
 }
 
-internal fun createResourceDestinationDirectoryIfNeeded(
-    locale: AppLocale,
-    logger: Logger,
-    destSubPath: String,
-    destFile: File
-) {
-    if (!destFile.exists()) {
-        if (locale.isBuiltInLanguage) {
-            // Either the user provided a bad APKM that doesn't have all languages,
-            // or something changed and YouTube removed a language from the universal APK releases.
-            logger.warning {
-                "!!! Provided app does not contain all region localizations. " +
-                        "Locale: $locale does not exist in provided app file: $destSubPath"
-            }
-        }
-
-        destFile.parentFile?.mkdirs()
-        if (!destFile.createNewFile()) throw IllegalStateException()
-        destFile.writeText(
-            "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<resources>\n</resources>"
-        )
-    }
+private class DestinationFile(val file: File, val text: String) {
+    val added = linkedMapOf<Pair<String, String>, String>()
 }
+
+private const val EMPTY_RESOURCES_FILE = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<resources>\n</resources>"
 
 internal val addResourcesPatch = resourcePatch(
     description = "Add resources such as strings or arrays to the app."
 ) {
-
-    val defaultResourcesAdded = mutableSetOf<String>()
-
     finalize {
         val logger = Logger.getLogger(AppLocale.Companion::class.java.name)
+        val appStringsFiles = listDecodableFiles("res/values*/strings.xml").toHashSet()
+        val defaultResources = mutableMapOf<String, MutableSet<String>>()
 
-        fun addResourcesFromFile(
-            appId: String,
-            locale: AppLocale,
-            resourceType: BundledResourceType
-        ) {
-            val isDefaultLocale = locale.isDefaultLocale()
-            val srcFolderName = locale.getSrcLocaleFolderName()
-            val srcSubPath = "$srcFolderName/$appId/$resourceType.xml"
-            val destSubPath = "res/${locale.getDestLocaleFolderName()}/$resourceType.xml"
-
-            val srcStream = inputStreamFromBundledResource(
-                "addresources", srcSubPath
-            )
-
-            if (srcStream == null) {
-                // String files are expected but other resource types are optional.
-                if (resourceType == BundledResourceType.STRINGS) {
-                    throw IllegalArgumentException("Could not find: $srcSubPath")
+        locales.sortedBy { !it.isDefaultLocale() }.forEach { locale ->
+            val stringsPath = "res/${locale.getDestLocaleFolderName()}/strings.xml"
+            if (locale.isBuiltInLanguage && stringsPath !in appStringsFiles) {
+                logger.warning {
+                    "!!! Provided app does not contain all region localizations. " +
+                        "Locale: $locale does not exist in provided app file: $stringsPath"
                 }
-                return
             }
 
-            srcStream.use {
-                val destFile = this@finalize[destSubPath]
-                createResourceDestinationDirectoryIfNeeded(locale, logger, destSubPath, destFile)
-
-                document(destSubPath).use { destDoc ->
-                    val destResourceNode = destDoc.getNode("resources")
-
-                    val existingNodes = if (patchStringsReplaceExisting) {
-                        val children = destResourceNode.childNodes
-
-                        // Build lookup table once per destination file.
-                        HashMap<Pair<String, String>, Node>(
-                            2 * children.length, 0.5f
-                        ).also {
-                            for (i in 0 until children.length) {
-                                val node = children.item(i)
-                                if (node.nodeType == Node.ELEMENT_NODE) {
-                                    val el = node as Element
-                                    val key = el.tagName to el.getAttribute("name")
-                                    it[key] = el
-                                }
-                            }
-                        }
-                    } else {
-                        emptyMap()
+            val destinations = mutableMapOf<String, DestinationFile>()
+            appsToInclude.forEach { app ->
+                val appDefaults = defaultResources.getOrPut(app) { mutableSetOf() }
+                BundledResourceType.entries.forEach resourceType@{ type ->
+                    val srcFolder = locale.getSrcLocaleFolderName()
+                    val srcPath = "$srcFolder/$app/$type.xml"
+                    val stream = inputStreamFromBundledResource("addresources", srcPath)
+                    if (stream == null) {
+                        require(type != BundledResourceType.STRINGS) { "Could not find: $srcPath" }
+                        return@resourceType
                     }
 
-                    document(srcStream).use { srcDoc ->
-                        val localeStringsAdded = mutableSetOf<String>()
+                    val source = stream.bufferedReader().use { it.readText() }
+                    val destPath = "res/${locale.getDestLocaleFolderName()}/$type.xml"
+                    val destination = destinations.getOrPut(destPath) {
+                        val file = get(destPath, copy = false)
+                        file.parentFile?.mkdirs()
+                        DestinationFile(file, if (file.exists()) file.readText() else EMPTY_RESOURCES_FILE)
+                    }
+                    val namesAdded = mutableSetOf<String>()
+                    forEachRawResourceElement(source) { element ->
+                        val name = element.name
+                        if (!namesAdded.add(name)) {
+                            logger.warning("Duplicate string resource is declared: $srcFolder resource: $name")
+                            return@forEachRawResourceElement
+                        }
+                        if (locale.isDefaultLocale()) {
+                            appDefaults.add(name)
+                        } else if (name !in appDefaults) {
+                            return@forEachRawResourceElement
+                        }
 
-                        srcDoc.getElementsByTagName(
-                            "resources"
-                        ).item(0)?.forEachChildElement { srcNode ->
-                            val resourceName = srcNode.getAttributeNode("name").value
-                            if (resourceType == BundledResourceType.STRINGS) {
-                                // Check for bad text strings that will fail resource compilation.
-                                val textContent = srcNode.textContent
-                                val sanitized = sanitizeAndroidResourceString(
-                                    resourceName, textContent, destSubPath
-                                )
-                                if (textContent != sanitized) {
-                                    srcNode.textContent = sanitized
-                                }
-                            }
-
-                            if (!localeStringsAdded.add(resourceName)) {
-                                logger.warning(
-                                    "Duplicate string resource is declared: $srcFolderName " +
-                                            "resource: $resourceName"
-                                )
-                                return@forEachChildElement
-                            }
-
-                            if (isDefaultLocale) {
-                                // Duplicate check already handled above.
-                                defaultResourcesAdded.add(resourceName)
-                            } else if (!defaultResourcesAdded.contains(resourceName)) {
-                                logger.fine {
-                                    "Ignoring removed default resource for locale " +
-                                            "(Issue will be fixed after next Crowdin sync): " +
-                                            "$srcFolderName resource: $resourceName"
-                                }
-                                return@forEachChildElement
-                            }
-
-                            // Remove existing resources with the same name.
-                            // ARSCLib doesn't check for duplicates and uses the last added,
-                            // but Apktool crashes if duplicates exist.
-                            if (patchStringsReplaceExisting) {
-                                val key = srcNode.tagName to resourceName
-                                existingNodes[key]?.let { existing ->
-                                    destResourceNode.removeChild(existing)
-                                }
-                            }
-
-                            // Import and append.
-                            val imported = destDoc.importNode(srcNode, true)
-                            destResourceNode.appendChild(imported)
+                        val inner = element.inner
+                        val value = if (type == BundledResourceType.STRINGS && inner != null) {
+                            sanitizeAndroidResourceString(name, inner, destPath)
+                        } else {
+                            inner
+                        }
+                        destination.added[element.tag to name] = if (value == null) {
+                            element.openTag
+                        } else {
+                            "${element.openTag}$value</${element.tag}>"
                         }
                     }
                 }
             }
-        }
 
-        appsToInclude.forEach { app ->
-            locales.forEach { locale ->
-                BundledResourceType.entries.forEach { type ->
-                    addResourcesFromFile(app, locale, type)
-                }
+            destinations.forEach { (path, destination) ->
+                if (destination.added.isEmpty()) return@forEach
+                val original = destination.text
+                val text = buildString {
+                    var copied = 0
+                    forEachRawResourceElement(original) { element ->
+                        if (element.tag to element.name in destination.added) {
+                            append(original, copied, element.start)
+                            copied = element.end
+                        }
+                    }
+                    append(original, copied, original.length)
+                }.replace(Regex("<resources\\s*/>"), "<resources></resources>")
+                val closing = text.lastIndexOf("</resources>")
+                check(closing >= 0) { "$path has no closing resources tag" }
+                destination.file.writeText(buildString {
+                    append(text.substring(0, closing).trimEnd()).append('\n')
+                    destination.added.values.forEach { append("    ").append(it).append('\n') }
+                    append(text.substring(closing))
+                })
             }
         }
     }
