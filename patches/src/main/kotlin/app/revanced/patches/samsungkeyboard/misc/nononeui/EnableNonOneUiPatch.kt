@@ -203,9 +203,10 @@ private fun BytecodePatchContext.patchGifVisibility() {
 }
 
 private fun BytecodePatchContext.patchPlatformDependencies() {
-    val toolbarFeatureAccess = anyInstruction(
+    val enabledFeatureAccess = anyInstruction(
         ClipboardFeatureFlagFingerprint.featureFlagAccess(),
         GifFeatureFlagFingerprint.featureFlagAccess(),
+        CursorControlFeatureFlagFingerprint.featureFlagAccess(),
     )
     val definedTypes = buildSet { classDefForEach { add(it.type) } }
     val unavailableType: (String) -> Boolean = { it.isUnavailableSamsungType(definedTypes) }
@@ -224,7 +225,7 @@ private fun BytecodePatchContext.patchPlatformDependencies() {
             if (method.implementation == null) return@methodLoop
 
             val mutableMethod by lazy { mutableClass.findMutableMethodOf(method) }
-            method.findInstructionIndicesReversed(toolbarFeatureAccess).forEach { index ->
+            method.findInstructionIndicesReversed(enabledFeatureAccess).forEach { index ->
                 mutableMethod.replaceWithTrue(index)
             }
             val options = ReplacementOptions(
@@ -244,7 +245,7 @@ private fun BytecodePatchContext.patchPlatformDependencies() {
 
 context(_: BytecodePatchContext)
 private fun Fingerprint.featureFlagAccess() = fieldAccess(
-    instructionMatches.first().getInstruction<ReferenceInstruction>().reference as FieldReference,
+    instructionMatches.firstNotNullOf { it.getInstruction<Instruction>().getReference<FieldReference>() },
     Opcode.SGET_BOOLEAN,
 )
 
