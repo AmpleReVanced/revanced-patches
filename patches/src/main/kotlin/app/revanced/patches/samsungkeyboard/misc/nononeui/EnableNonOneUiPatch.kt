@@ -58,6 +58,7 @@ private const val FEEDBACK_COMPAT_TYPE = "${EXTENSION_PACKAGE}FeedbackCompat;"
 private const val RESOURCE_LOADER_TYPE = "${EXTENSION_PACKAGE}ResourceLoader;"
 private const val SETTINGS_STORE_TYPE = "${EXTENSION_PACKAGE}SettingsStore;"
 private const val TOOLBAR_COMPAT_TYPE = "${EXTENSION_PACKAGE}ToolbarCompat;"
+private const val USER_HANDLE_COMPAT_TYPE = "${EXTENSION_PACKAGE}UserHandleCompat;"
 private const val WINDOW_COMPAT_TYPE = "${EXTENSION_PACKAGE}WindowCompat;"
 private const val SPR_STYLEABLE_TYPE = "${EXTENSION_PACKAGE}SprStyleable;"
 private const val SPR_PACKAGE = "Lcom/samsung/android/spr/"
@@ -179,7 +180,9 @@ val enableNonOneUiPatch = bytecodePatch(
     extendWith("extensions/samsungkeyboard.mpe")
 
     execute {
+        val clipboardProviderUriMethod = ClipboardProviderUriFingerprint.method
         patchPlatformDependencies()
+        clipboardProviderUriMethod.applyClipboardUriCompat()
         patchGifVisibility()
 
         StoreDownloadRequestFingerprint.method.applyStoreProfile()
@@ -189,6 +192,18 @@ val enableNonOneUiPatch = bytecodePatch(
         initializeApplication()
     }
 }
+
+private fun MutableMethod.applyClipboardUriCompat() = addInstructionsWithLabels(
+    0,
+    """
+        invoke-static {p0, p1}, $CLIPBOARD_COMPAT_TYPE->getLocalClipboardUri(Landroid/net/Uri;I)Landroid/net/Uri;
+        move-result-object v0
+        if-eqz v0, :original
+        return-object v0
+        :original
+        nop
+    """.trimIndent(),
+)
 
 private fun BytecodePatchContext.patchGifVisibility() {
     val match = GifVisibilityFingerprint.instructionMatches.last()
@@ -438,6 +453,7 @@ private fun MethodReference.compatReference(
 ) = windowCompatReference(options.settingsWindowFlags, opcode)
     ?: clipboardCompatReference().takeIf { options.clipboardService }
     ?: deviceCompatReference()
+    ?: userHandleCompatReference()
     ?: feedbackCompatReference()
     ?: resourceLoaderReference()
     ?: drawableLoaderReference().takeIf { options.drawableAccess }
@@ -521,6 +537,18 @@ private fun MutableMethod.replaceInvokeReference(
 private fun MethodReference.deviceCompatReference(): MethodReference? {
     if (!matches("Landroid/os/Build;", "getSerial", emptyList(), "Ljava/lang/String;")) return null
     return toExtensionReference(DEVICE_COMPAT_TYPE, parameters = emptyList())
+}
+
+private fun MethodReference.userHandleCompatReference(): MethodReference? {
+    if (definingClass != "Landroid/os/UserHandle;" || returnType != "I") return null
+    val parameters = parameterTypeNames
+    val replacementParameters = when (name) {
+        "semGetMyUserId", "semGetCallingUserId" -> parameters.takeIf { it.isEmpty() }
+        "semGetUserId" -> parameters.takeIf { it == listOf("I") }
+        "semGetIdentifier" -> listOf(definingClass).takeIf { parameters.isEmpty() }
+        else -> null
+    } ?: return null
+    return toExtensionReference(USER_HANDLE_COMPAT_TYPE, parameters = replacementParameters)
 }
 
 private fun MethodReference.feedbackCompatReference(): MethodReference? {

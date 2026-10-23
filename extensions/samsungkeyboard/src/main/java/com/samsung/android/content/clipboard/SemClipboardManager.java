@@ -20,6 +20,7 @@ import com.samsung.android.content.clipboard.data.SemTextClipData;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import app.revanced.extension.samsungkeyboard.UserHandleCompat;
 import app.revanced.extension.samsungkeyboard.WindowCompat;
 
 public final class SemClipboardManager {
@@ -130,7 +131,7 @@ public final class SemClipboardManager {
         ContentValues values = new ContentValues();
         values.put("time_stamp", System.currentTimeMillis());
         values.put("caller_app_uid", Process.myUid());
-        values.put("user_id", Process.myUid() / 100000);
+        values.put("user_id", UserHandleCompat.semGetMyUserId());
         values.put("locked", false);
         CharSequence label = description.getLabel();
         values.put("clip_label", label == null ? "" : label.toString());

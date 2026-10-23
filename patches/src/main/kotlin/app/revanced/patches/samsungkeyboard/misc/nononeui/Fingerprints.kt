@@ -60,6 +60,21 @@ internal object CursorControlFeatureFlagFingerprint : Fingerprint(
     ),
 )
 
+internal object ClipboardProviderUriFingerprint : Fingerprint(
+    isStatic = true,
+    returnType = "Landroid/net/Uri;",
+    parameters = listOf("Landroid/net/Uri;", "I"),
+    strings = listOf("content", "@"),
+    filters = listOf(
+        methodCall(
+            definingClass = "Landroid/os/UserHandle;",
+            name = "semGetMyUserId",
+            parameters = emptyList(),
+            returnType = "I",
+        ),
+    ),
+)
+
 internal object GifVisibilityFingerprint : Fingerprint(
     definingClass = GIF_HONEY_BEE_TYPE,
     name = "updateBeeVisibility",
