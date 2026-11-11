@@ -9,7 +9,7 @@ The list reflects current `main` sources, including changes after the `v1.5.0` b
 ## 🩹 Patches list
 
 <!-- PATCHES_START -->
-> **[v1.5.0](https://github.com/mchany/revanced-patches/releases/tag/v1.5.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;134 patches total
+> **[v1.5.0](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.5.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;134 patches total
 <details>
 <summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;76 patches</summary>
 <br>
@@ -332,9 +332,9 @@ patches to Morphe (update the links below after creating your new patches repo):
 
 #### How to use these patches
 
-Click here to add these patches to Morphe: https://morphe.software/add-source?github=mchany/revanced-patches
+Click here to add these patches to Morphe: https://morphe.software/add-source?github=AmpleReVanced/revanced-patches
 
-Or manually add this repository url as a patch source in Morphe: https://github.com/mchany/revanced-patches
+Or manually add this repository url as a patch source in Morphe: https://github.com/AmpleReVanced/revanced-patches
 
 ### 🛠️ Building
 
