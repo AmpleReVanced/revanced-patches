@@ -4,10 +4,12 @@
 
 Riro School 7.5.6 privacy patches and compatibility notes: [documentation](docs/riroschool.md).
 
+The list reflects current `main` sources, including changes after the `v1.5.0` baseline. Riro School patches are pending the next published bundle.
+
 ## 🩹 Patches list
 
 <!-- PATCHES_START -->
-> **[v1.5.0](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.5.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;128 patches total
+> **[v1.5.0](https://github.com/mchany/revanced-patches/releases/tag/v1.5.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;134 patches total
 <details>
 <summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;76 patches</summary>
 <br>
@@ -192,6 +194,26 @@ Riro School 7.5.6 privacy patches and compatibility notes: [documentation](docs/
 </details>
 
 <details>
+<summary>📦 Riro School&nbsp;&nbsp;•&nbsp;&nbsp;6 patches</summary>
+<br>
+
+**🎯 Supported versions:**
+
+| 7.5.6 |
+| :---: |
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Disable ADB detection](#disable-adb-detection) |  |  |
+| [Disable Firebase analytics](#disable-firebase-analytics) | Disable Firebase telemetry and token registration. Push is unavailable; also disables shared app DataTransport telemetry. |  |
+| [Disable Google analytics](#disable-google-analytics) | Disable ML Kit diagnostics and advertising permissions. Shared DataTransport telemetry is discarded. |  |
+| [Disable Rirosoft analytics](#disable-rirosoft-analytics) | Omit native device_id UUID transmission. BLE attendance remains unchanged. |  |
+| [Disable VPN detection](#disable-vpn-detection) |  |  |
+| [Spoof GMS availability](#spoof-gms-availability) | Treat the app startup Google Play Services availability check as SUCCESS. Does not install GMS or change analytics collection. |  |
+
+</details>
+
+<details>
 <summary>📦 SOOP&nbsp;&nbsp;•&nbsp;&nbsp;11 patches</summary>
 <br>
 
@@ -310,9 +332,9 @@ patches to Morphe (update the links below after creating your new patches repo):
 
 #### How to use these patches
 
-Click here to add these patches to Morphe: https://morphe.software/add-source?github=AmpleReVanced/revanced-patches
+Click here to add these patches to Morphe: https://morphe.software/add-source?github=mchany/revanced-patches
 
-Or manually add this repository url as a patch source in Morphe: https://github.com/AmpleReVanced/revanced-patches
+Or manually add this repository url as a patch source in Morphe: https://github.com/mchany/revanced-patches
 
 ### 🛠️ Building
 
