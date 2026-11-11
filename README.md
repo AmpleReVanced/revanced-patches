@@ -1,6 +1,9 @@
 # 👋🧩 Ample Patches
 
 &nbsp;
+
+Riro School 7.5.6 privacy patches and compatibility notes: [documentation](docs/riroschool.md).
+
 ## 🩹 Patches list
 
 <!-- PATCHES_START -->
