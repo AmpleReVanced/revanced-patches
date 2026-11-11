@@ -31,21 +31,31 @@ dependencies {
     compileOnly(project(":patches:stub"))
 }
 
-sourceSets.named("test") {
-    // Pure Java helper: compile it for JVM tests without packaging it into the patch JAR.
+val riroSchoolVerification by sourceSets.creating {
+    // Standalone artifact checks have their own classpath and do not participate in JUnit discovery.
     java.srcDir(rootProject.file("extensions/riroschool/src/main/java"))
+    compileClasspath += sourceSets["main"].output
+    runtimeClasspath += sourceSets["main"].output
 }
 
+kotlin.target.compilations.named(riroSchoolVerification.name) {
+    associateWith(kotlin.target.compilations.getByName("main"))
+}
+
+configurations[riroSchoolVerification.implementationConfigurationName].extendsFrom(configurations["implementation"])
+configurations[riroSchoolVerification.runtimeOnlyConfigurationName].extendsFrom(configurations["runtimeOnly"])
+
 tasks {
-    named<JavaCompile>("compileTestJava") {
+    named<JavaCompile>(riroSchoolVerification.compileJavaTaskName) {
+        options.encoding = "UTF-8"
         options.release.set(11)
     }
 
     register<JavaExec>("verifyRiroSchool") {
         description = "Verify Riro School patches against a user-supplied original APK and decoded manifest"
         group = "verification"
-        dependsOn(testClasses)
-        classpath = sourceSets["test"].runtimeClasspath
+        dependsOn(riroSchoolVerification.classesTaskName)
+        classpath = riroSchoolVerification.runtimeClasspath
         mainClass.set("app.revanced.patches.riroschool.PrivacyPatchTestsKt")
         doFirst {
             val apk = providers.gradleProperty("riroschoolApk").orNull ?: System.getenv("RIRO_TEST_APK")
