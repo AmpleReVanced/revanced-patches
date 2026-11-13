@@ -6,11 +6,7 @@ import app.revanced.patches.riroschool.misc.analytics.*
 import app.revanced.patches.riroschool.misc.integrity.*
 import app.revanced.patches.riroschool.shared.*
 
-/**
- * 역할: 독립 실행 가능한 패치 회귀 검사 전체를 실행한다.
- * 입력: 원본 APK와 디코딩한 manifest를 지정하는 RIRO_TEST_APK·RIRO_TEST_MANIFEST 환경 변수.
- * 출력: 계약 검사 통과 메시지 또는 실패 예외.
- */
+/** Runs the standalone artifact regression suite using RIRO_TEST_APK and RIRO_TEST_MANIFEST. */
 fun main() {
     val publicPatches = listOf(disableFirebaseAnalyticsPatch, disableGoogleAnalyticsPatch,
         disableRirosoftAnalyticsPatch, disableVpnDetectionPatch, disableAdbDetectionPatch, spoofGmsAvailabilityPatch)
@@ -26,15 +22,13 @@ fun main() {
     runDevicePatchTests()
     runIdentityPatchTests()
     runFirebasePatchTests()
+    runFirebaseFingerprintTests()
+    runNativeCombinationTests()
     runGooglePatchTests()
     println("PASS: target, detector, identity, Firebase and ML Kit contracts")
 }
 
-/**
- * 역할: 정적 필드 초기화 순서로 생긴 null 의존성과 순환 의존성을 거부한다.
- * 입력: 공개 패치 또는 그 의존성과 현재 탐색 경로.
- * 출력: 정상 그래프이면 반환하고 불완전한 그래프이면 검사 실패.
- */
+/** Rejects null or cyclic dependencies caused by invalid static initialization order. */
 private fun checkDependencies(patch: Patch<*>, active: MutableSet<Patch<*>>) {
     check(active.add(patch)) { "Cyclic patch dependency" }
     patch.dependencies.forEach { dependency -> checkDependencies(requireNotNull(dependency), active) }

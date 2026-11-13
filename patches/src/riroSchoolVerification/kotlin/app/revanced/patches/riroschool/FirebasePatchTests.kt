@@ -18,15 +18,15 @@ import java.io.File
 import javax.xml.parsers.DocumentBuilderFactory
 
 internal object FirebasePatchTestRunner {
-    /** 역할: Firebase 테스트를 독립 실행한다. 입력: 사용하지 않는 실행 인수. 출력: 검증 결과 또는 예외. */
+    /** Validate the original artifact contract and reject unsafe transformation anchors. */
     @JvmStatic fun main(args: Array<String>) { runFirebasePatchTests(); println("PASS: Firebase contracts") }
 }
 
-/** 역할: 실제 원본 DEX와 manifest의 엄격 Firebase 차단 계약을 검증한다. 입력: 원본 APK 환경 변수. 출력: 성공 또는 계약 위반 예외. */
+/** Validate the original artifact contract and reject unsafe transformation anchors. */
 fun runFirebasePatchTests() {
     val dex = DexFileFactory.loadDexFile(File(System.getenv("RIRO_TEST_APK") ?: error("Set RIRO_TEST_APK to the original Riro School 7.5.6 APK")), Opcodes.getDefault())
     val classes = dex.classes.associateBy { it.type }
-    /** 역할: 정확한 원본 메서드를 찾는다. 입력: 클래스와 이름. 출력: 유일한 메서드. */
+    /** Validate the original artifact contract and reject unsafe transformation anchors. */
     fun method(owner: String, name: String): Method = classes.getValue(owner).methods.single { it.name == name }
     val intro = "Lcom/rirosoft/riroschool/views/activity/IntroActivity;"
     val firebaseApiOwners = listOf("Lcom/google/firebase/FirebaseApp;", "Lcom/google/firebase/messaging/FirebaseMessaging;",
@@ -71,7 +71,7 @@ fun runFirebasePatchTests() {
         checkFirebaseControlFlow(first)
         check(runCatching { omitNativeFcmCode(first) }.isFailure)
     }
-    val ingress = firebaseTransportIngress(method("Li3/r;", "a"))
+    val ingress = firebaseTransportIngress(method("Li3/r;", "a"), classes.getValue("Lf3/i;").methods.single { it.parameterTypes == listOf("Ljava/lang/Exception;") && it.returnType == "V" })
     check(firebaseRefs(ingress) == listOf("Lf3/i;->b(Ljava/lang/Exception;)V"))
     val uploader = MutableMethod(method("Lo3/i;", "a"))
     dropQueuedTelemetry(uploader)
@@ -108,7 +108,7 @@ fun runFirebasePatchTests() {
     check(runCatching { applyFirebaseManifest(manifest) }.isFailure)
 }
 
-/** 역할: 검증용 참조를 정규화한다. 입력: 메서드. 출력: 문자열과 전체 메서드 서명 목록. */
+/** Validate the original artifact contract and reject unsafe transformation anchors. */
 private fun firebaseRefs(method: Method): List<String> = method.implementation!!.instructions.mapNotNull {
     when (val ref = (it as? ReferenceInstruction)?.reference) {
         is MethodReference -> "${ref.definingClass}->${ref.name}(${ref.parameterTypes.joinToString("")})${ref.returnType}"
@@ -117,7 +117,7 @@ private fun firebaseRefs(method: Method): List<String> = method.implementation!!
     }
 }
 
-/** 역할: 삭제 후 모든 분기와 예외 주소를 검증한다. 입력: 변경된 메서드. 출력: 유효하면 반환하며 경계 오류는 실패한다. */
+/** Validate the original artifact contract and reject unsafe transformation anchors. */
 private fun checkFirebaseControlFlow(method: Method) {
     val implementation = method.implementation!!
     var total = 0

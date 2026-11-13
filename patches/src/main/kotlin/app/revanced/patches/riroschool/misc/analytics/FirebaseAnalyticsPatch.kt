@@ -14,6 +14,7 @@ import com.android.tools.smali.dexlib2.iface.Method
 import com.android.tools.smali.dexlib2.iface.instruction.Instruction
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
+import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.reference.StringReference
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
@@ -29,14 +30,18 @@ private val telemetryTransportBytecodePatch = bytecodePatch {
     compatibleWith(riroCompatibility)
     execute {
         requireRiroTarget(packageMetadata)
-        editFirebaseMethod("Li3/r;", "a", listOf("Lf3/d;", "Lf3/i;"), "V", ::firebaseTransportIngress)
-        editFirebaseMethod("Lo3/i;", "a", listOf("Li3/j;", "I"), "V") { original ->
-            MutableMethod(original).also(::dropQueuedTelemetry)
+        val ingress = firebaseFingerprint("transport ingress", ::firebaseIsTransportIngress)
+        val uploader = firebaseFingerprint("queued uploader", ::firebaseIsUploader)
+        val scheduler = firebaseFingerprint("job scheduler", ::firebaseIsScheduler)
+        val callback = classDefBy(ingress.parameterTypes[1].toString()).methods.single {
+            it.parameterTypes == listOf("Ljava/lang/Exception;") && it.returnType == "V"
         }
-        editFirebaseMethod("Lo3/c;", "a", listOf("Li3/j;", "I", "Z"), "V") { original ->
-            require(firebaseMethodIndex(original, "Landroid/app/job/JobScheduler;", "schedule") >= 0)
-            firebaseBody(original, 4, "return-void")
-        }
+        val replacements = listOf(
+            ingress to firebaseTransportIngress(ingress, callback),
+            uploader to MutableMethod(uploader).also(::dropQueuedTelemetry),
+            scheduler to firebaseBody(scheduler, 4, "return-void"),
+        )
+        replacements.forEach { (original, replacement) -> replaceFirebaseMethod(original, replacement) }
 
     }
 }
@@ -59,81 +64,122 @@ private val firebaseAnalyticsBytecodePatch = bytecodePatch(
     dependsOn(disableTelemetryTransportPatch)
     execute {
         requireRiroTarget(packageMetadata)
-        editFirebaseMethod(FIREBASE_INTRO, "onCreate", listOf("Landroid/os/Bundle;"), "V") { original ->
-            MutableMethod(original).also(::removeFirebaseStartup)
+        val startup = firebaseFingerprint("app initialization") {
+            it.definingClass == FIREBASE_INTRO && it.name == "onCreate" &&
+                it.parameterTypes == listOf("Landroid/os/Bundle;") &&
+                firebaseCalls(it, "Lcom/google/firebase/FirebaseApp;", "initializeApp", "(Landroid/content/Context;)Lcom/google/firebase/FirebaseApp;")
         }
-        editFirebaseMethod(FIREBASE_INTRO, "c", emptyList(), "V", ::firebaseProgression)
-        editFirebaseMethod("Lg6/i;", "f", listOf("Landroid/content/Context;"), "Ljava/lang/String;", ::firebaseEmptyToken)
-        editFirebaseMethod("Lg6/h;", "p", listOf("Landroid/content/Context;", "Ljava/lang/String;"), "V") { original ->
-            require(firebaseStringIndex(original, "APP_FCM_TOKEN") >= 0)
-            firebaseBody(original, 2, "return-void")
+        val progression = firebaseFingerprint("token progression") {
+            it.definingClass == FIREBASE_INTRO && it.parameterTypes.isEmpty() && it.returnType == "V" &&
+                firebaseCalls(it, "Lcom/google/firebase/messaging/FirebaseMessaging;", "getToken", "()Lcom/google/android/gms/tasks/Task;")
         }
-        for ((name, parameters) in listOf("g" to listOf("Landroid/content/Context;", "Ljava/lang/String;"),
-            "h" to listOf("Landroid/content/Context;", "Ljava/lang/String;", "Z"))) {
-            editFirebaseMethod("Lg6/i;", name, parameters, "[B") { original -> MutableMethod(original).also(::omitNativeFcmCode) }
+        val token = firebaseFingerprint("app token getter", ::firebaseIsTokenGetter)
+        val writer = firebaseFingerprint("app token persistence") {
+            it.parameterTypes == listOf("Landroid/content/Context;", "Ljava/lang/String;") && it.returnType == "V" &&
+                firebaseHasString(it, "APP_FCM_TOKEN") &&
+                firebaseCalls(it, "Landroid/content/SharedPreferences\$Editor;", "putString", "(Ljava/lang/String;Ljava/lang/String;)Landroid/content/SharedPreferences\$Editor;")
         }
-        editFirebaseMethod(FIREBASE_SERVICE, "onNewToken", listOf("Ljava/lang/String;"), "V") { original ->
-            require(firebaseMethodIndex(original, "Lcom/google/firebase/messaging/FirebaseMessaging;", "subscribeToTopic") >= 0)
-            firebaseBody(original, 2, "return-void")
+        val forms = listOf(
+            listOf("Landroid/content/Context;", "Ljava/lang/String;"),
+            listOf("Landroid/content/Context;", "Ljava/lang/String;", "Z"),
+        ).map { parameters -> firebaseFingerprint("native FCM form $parameters") {
+            it.parameterTypes == parameters && it.returnType == "[B" && firebaseHasString(it, "fcmCode=") &&
+                firebaseHasString(it, "&app_version=") && firebaseHasString(it, "&cookie_token=")
+        } }
+        val newToken = firebaseFingerprint("token refresh") {
+            it.definingClass == FIREBASE_SERVICE && it.name == "onNewToken" &&
+                it.parameterTypes == listOf("Ljava/lang/String;") &&
+                firebaseCalls(it, "Lcom/google/firebase/messaging/FirebaseMessaging;", "subscribeToTopic", "(Ljava/lang/String;)Lcom/google/android/gms/tasks/Task;")
         }
-        // 독립적인 기존 측정 queue 전송 방어. IOException은 원래 URL factory의 실패 계약이다.
-        editFirebaseMethod("Lcom/google/android/gms/internal/measurement/zzcq;", "zza", listOf("Ljava/net/URL;", "Ljava/lang/String;"), "Ljava/net/URLConnection;", ::firebaseNoConnection)
-        editFirebaseMethod("Lcom/google/firebase/crashlytics/internal/network/HttpGetRequest;", "execute", emptyList(), "Lcom/google/firebase/crashlytics/internal/network/HttpResponse;", ::firebaseNoConnection)
-        editFirebaseMethod("Lcom/google/firebase/installations/remote/FirebaseInstallationServiceClient;", "openHttpURLConnection", listOf("Ljava/net/URL;", "Ljava/lang/String;"), "Ljava/net/HttpURLConnection;", ::firebaseNoConnection)
+        val network = listOf(
+            firebaseFingerprint("measurement connection") {
+                it.definingClass.startsWith("Lcom/google/android/gms/internal/measurement/") &&
+                    it.parameterTypes == listOf("Ljava/net/URL;", "Ljava/lang/String;") &&
+                    it.returnType == "Ljava/net/URLConnection;" && firebaseCalls(it, "Ljava/net/URL;", "openConnection", "()Ljava/net/URLConnection;")
+            },
+            firebaseFingerprint("Crashlytics settings connection") {
+                it.definingClass == "Lcom/google/firebase/crashlytics/internal/network/HttpGetRequest;" && it.name == "execute" &&
+                    it.parameterTypes.isEmpty() && firebaseCalls(it, "Ljava/net/URL;", "openConnection", "()Ljava/net/URLConnection;")
+            },
+            firebaseFingerprint("installation connection") {
+                it.definingClass == "Lcom/google/firebase/installations/remote/FirebaseInstallationServiceClient;" &&
+                    it.name == "openHttpURLConnection" && firebaseCalls(it, "Ljava/net/URL;", "openConnection", "()Ljava/net/URLConnection;")
+            },
+        )
+        // Resolve and validate every replacement before modifying this patch's input methods.
+        val replacements = mutableListOf(
+            startup to MutableMethod(startup).also(::removeFirebaseStartup),
+            progression to firebaseProgression(progression),
+            token to firebaseEmptyToken(token),
+            writer to firebaseBody(writer, 2, "return-void"),
+            newToken to firebaseBody(newToken, 2, "return-void"),
+        )
+        replacements += forms.map { it to MutableMethod(it).also(::omitNativeFcmCode) }
+        replacements += network.map { it to firebaseNoConnection(it) }
+        replacements.forEach { (original, replacement) -> replaceFirebaseMethod(original, replacement) }
 
     }
 }
 
-/** 역할: 현재 변경 가능한 클래스에서 메서드 복사본만 교체한다. 입력: 전체 prototype과 변환기. 출력: 선행 패치를 보존한 클래스. */
-private fun BytecodePatchContext.editFirebaseMethod(owner: String, name: String, parameters: List<String>, result: String, transform: (Method) -> MutableMethod) {
-    val current = mutableClassDefBy(owner)
-    val original = current.methods.single { it.name == name && it.parameterTypes == parameters && it.returnType == result }
-    val replacement = transform(original)
-    check(current.methods.remove(original))
+/** Replace only a validated method copy while preserving preceding patches. */
+private fun BytecodePatchContext.replaceFirebaseMethod(original: Method, replacement: MutableMethod) {
+    val current = mutableClassDefBy(original.definingClass)
+    val existing = current.methods.single {
+        it.name == original.name && it.parameterTypes == original.parameterTypes && it.returnType == original.returnType
+    }
+    check(current.methods.remove(existing))
     current.methods.add(replacement)
 }
 
-/** 역할: 예외/디버그 위치가 남지 않는 완전한 메서드 본문을 생성한다. 입력: 원본과 레지스터 수 및 smali. 출력: 동일 prototype의 새 메서드. */
+/** Build a replacement body with no stale exception or debug positions. */
 private fun firebaseBody(original: Method, registers: Int, body: String): MutableMethod = MutableMethod(
     ImmutableMethod(original.definingClass, original.name, original.parameters, original.returnType, original.accessFlags,
         original.annotations, original.hiddenApiRestrictions, ImmutableMethodImplementation(registers, emptyList(), emptyList(), emptyList()))
 ).also { it.addInstructions(0, body) }
 
-/** 역할: 초기 SDK 생성과 구독 구간만 제거한다. 입력: IntroActivity.onCreate 복사본. 출력: 네트워크 확인·알림 채널·딥링크를 보존한 메서드. */
+/** Remove SDK initialization and subscription while retaining startup and notification handling. */
 internal fun removeFirebaseStartup(method: MutableMethod) {
     require(method.definingClass == FIREBASE_INTRO && method.name == "onCreate")
     val ins = method.implementation!!.instructions.toList()
     val apps = firebaseMethodIndex(method, "Lcom/google/firebase/FirebaseApp;", "getApps")
     val initialize = firebaseMethodIndex(method, "Lcom/google/firebase/FirebaseApp;", "initializeApp")
     val subscribe = firebaseMethodIndex(method, "Lcom/google/firebase/messaging/FirebaseMessaging;", "getInstance")
-    val token = firebaseMethodIndex(method, "Lg6/i;", "f")
+    val token = subscribe + 8
+    val tokenReference = firebaseMethodRef(ins[token])
+    require(tokenReference?.parameterTypes == listOf("Landroid/content/Context;") && tokenReference.returnType == "Ljava/lang/String;")
     require(initialize == apps + 5 && ins[apps + 4].opcode == Opcode.IF_EQZ &&
         ins[initialize + 1].opcode == Opcode.SGET && subscribe < token &&
         ins[subscribe - 1].opcode == Opcode.IF_NEZ &&
         firebaseStringIndex(method, "riro_noti") == subscribe + 2 &&
         firebaseMethodIndex(method, "Lcom/google/firebase/messaging/FirebaseMessaging;", "subscribeToTopic") == subscribe + 3)
     require(token - subscribe == 8 && ins[token + 1].opcode == Opcode.INVOKE_VIRTUAL)
-    // f는 이 패치에서 local-only 토큰 키 제거로 교체한다. 시작할 때 정리하도록 호출은 보존한다.
+    // Retain the token getter call so the patched local-only cleanup still runs at startup.
     method.removeInstructions(subscribe, token - subscribe)
     method.removeInstructions(apps, initialize - apps + 1)
 }
 
-/** 역할: 푸시 토큰 실패 재시도 대신 기존 정상 시작 경로로 진행한다. 입력: 원본 Intro.c. 출력: 원본 d 호출 후 반환하는 메서드. */
+/** Continue through the original success path instead of retrying unavailable push tokens. */
 internal fun firebaseProgression(method: Method): MutableMethod {
-    require(method.definingClass == FIREBASE_INTRO && method.name == "c" && method.parameterTypes.isEmpty() && method.returnType == "V")
-    firebaseMethodIndex(method, "Lg6/i;", "f")
-    firebaseMethodIndex(method, FIREBASE_INTRO, "d")
-    return firebaseBody(method, 1, "invoke-virtual {p0}, $FIREBASE_INTRO->d()V\nreturn-void")
+    require(method.definingClass == FIREBASE_INTRO && method.parameterTypes.isEmpty() && method.returnType == "V")
+    val continuation = method.implementation!!.instructions.mapNotNull(::firebaseMethodRef).single {
+        it.definingClass == method.definingClass && it.parameterTypes.isEmpty() && it.returnType == "V"
+    }
+    require(firebaseCalls(method, "Lcom/google/firebase/messaging/FirebaseMessaging;", "getToken", "()Lcom/google/android/gms/tasks/Task;"))
+    return firebaseBody(method, 1, "invoke-virtual {p0}, $continuation\nreturn-void")
 }
 
-/** 역할: 저장 토큰을 읽거나 발급하지 않고 정확한 앱 토큰 키만 제거한다. 입력: 원본 g6.i.f. 출력: 명시적 미지원 상태인 빈 문자열. */
+/** Clear only the persisted app token and return an explicit unsupported empty token. */
 internal fun firebaseEmptyToken(method: Method): MutableMethod {
-    require(method.definingClass == "Lg6/i;" && method.name == "f" && method.parameterTypes == listOf("Landroid/content/Context;") && method.returnType == "Ljava/lang/String;")
+    require(firebaseIsTokenGetter(method))
     firebaseMethodIndex(method, "Lcom/google/firebase/messaging/FirebaseMessaging;", "getToken")
     firebaseStringIndex(method, "APP_FCM_TOKEN")
+    val field = method.implementation!!.instructions.filter { it.opcode == Opcode.SGET_OBJECT }
+        .mapNotNull { (it as? ReferenceInstruction)?.reference as? FieldReference }
+        .filter { it.definingClass == method.definingClass && it.type == "Ljava/lang/String;" }
+        .distinctBy { it.toString() }.single()
     return firebaseBody(method, 4, """
         const-string v0, ""
-        sput-object v0, Lg6/i;->c:Ljava/lang/String;
+        sput-object v0, $field
         const-string v1, "stickyPref"
         const/4 v2, 0x0
         invoke-virtual {p0, v1, v2}, Landroid/content/Context;->getSharedPreferences(Ljava/lang/String;I)Landroid/content/SharedPreferences;
@@ -147,12 +193,15 @@ internal fun firebaseEmptyToken(method: Method): MutableMethod {
     """.trimIndent())
 }
 
-/** 역할: UUID 처리의 선후와 무관하게 native 폼에서 fcmCode 키·값만 생략한다. 입력: 현재 g/h 폼 생성기. 출력: 다른 필드를 보존한 메서드. */
+/** Omit only the native fcmCode field, independently of device_id filtering order. */
 internal fun omitNativeFcmCode(method: MutableMethod) {
-    require(method.definingClass == "Lg6/i;" && method.name in listOf("g", "h") && method.returnType == "[B")
+    require(method.returnType == "[B" && method.parameterTypes.firstOrNull() == "Landroid/content/Context;")
     val ins = method.implementation!!.instructions.toList()
     val key = firebaseStringIndex(method, "fcmCode=")
-    val getter = firebaseMethodIndex(method, "Lg6/i;", "f")
+    val getter = key + 1
+    require(firebaseMethodRef(ins[getter])?.let {
+        it.parameterTypes == listOf("Landroid/content/Context;") && it.returnType == "Ljava/lang/String;"
+    } == true)
     val constructors = ins.indices.filter { firebaseMethodRef(ins[it])?.let { ref ->
         ref.definingClass == "Ljava/lang/StringBuilder;" && ref.name == "<init>" && ref.parameterTypes == listOf("Ljava/lang/String;")
     } == true }
@@ -168,19 +217,19 @@ internal fun omitNativeFcmCode(method: MutableMethod) {
     method.replaceInstruction(key, "const-string v$register, \"\"")
 }
 
-/** 역할: 전송 이벤트를 직렬화·기기 정보 수집·저장 전에 폐기하고 완료 콜백을 한 번 전달한다. 입력: TransportImpl.a 원본. 출력: 로컬 폐기 승인 콜백만 실행하는 메서드. */
-internal fun firebaseTransportIngress(method: Method): MutableMethod {
-    require(method.definingClass == "Li3/r;" && method.name == "a" && method.parameterTypes == listOf("Lf3/d;", "Lf3/i;") && method.returnType == "V")
-    firebaseMethodIndex(method, "Lf3/f;", "apply")
+/** Discard telemetry before serialization and acknowledge completion once. */
+internal fun firebaseTransportIngress(method: Method, callback: MethodReference): MutableMethod {
+    require(firebaseIsTransportIngress(method))
+    require(callback.definingClass == method.parameterTypes[1].toString() && callback.parameterTypes.map { it.toString() } == listOf("Ljava/lang/Exception;") && callback.returnType == "V")
     firebaseMethodIndex(method, "Ljava/util/concurrent/Executor;", "execute")
-    return firebaseBody(method, 4, "const/4 v0, 0x0\ninvoke-interface {p2, v0}, Lf3/i;->b(Ljava/lang/Exception;)V\nreturn-void")
+    return firebaseBody(method, 4, "const/4 v0, 0x0\ninvoke-interface {p2, v0}, ${callback}\nreturn-void")
 }
 
-/** 역할: 이전 queue의 모든 배치를 기존 unknown-backend 폐기 분기로 보낸다. 입력: 원본 Uploader.a 복사본. 출력: 원래 트랜잭션·삭제·후처리를 사용하는 메서드. */
+/** Route queued batches through the existing unknown-backend discard transaction. */
 internal fun dropQueuedTelemetry(method: MutableMethod) {
-    require(method.definingClass == "Lo3/i;" && method.name == "a" && method.parameterTypes == listOf("Li3/j;", "I") && method.returnType == "V")
+    require(firebaseIsUploader(method))
     val ins = method.implementation!!.instructions.toList()
-    val backend = firebaseMethodIndex(method, "Lj3/f;", "a")
+    val backend = firebaseBackendIndex(method)
     firebaseMethodIndex(method, "Ljava/net/URL;", "openConnection")
     firebaseStringIndex(method, "Unknown backend for %s, deleting event batch for it...")
     require(ins[backend + 1].opcode == Opcode.MOVE_RESULT_OBJECT && ins[backend + 2].opcode == Opcode.CONST_WIDE_16)
@@ -189,19 +238,19 @@ internal fun dropQueuedTelemetry(method: MutableMethod) {
     method.removeInstructions(backend + 1, 1)
 }
 
-/** 역할: SDK 전용 URL 진입점을 원래 네트워크 실패 계약으로 차단한다. 입력: URL.openConnection을 정확히 한 번 호출하는 원본. 출력: 연결 전에 IOException을 던지는 메서드. */
+/** Fail SDK-specific URL entry points through their existing IOException contract. */
 internal fun firebaseNoConnection(method: Method): MutableMethod {
     firebaseMethodIndex(method, "Ljava/net/URL;", "openConnection")
     return firebaseBody(method, method.parameterTypes.size + 3, "new-instance v0, Ljava/io/IOException;\nconst-string v1, \"Firebase network disabled by local policy\"\ninvoke-direct {v0, v1}, Ljava/io/IOException;-><init>(Ljava/lang/String;)V\nthrow v0")
 }
 
-/** 역할: manifest의 요소를 변경 전에 열거한다. 입력: DOM 문서. 출력: 실제 Element의 목록. */
+/** Enumerate manifest elements before applying changes. */
 internal fun firebaseManifestElements(document: Document): List<Element> {
     val all = document.getElementsByTagName("*")
     return (0 until all.length).map { all.item(it) as Element }
 }
 
-/** 역할: 검증된 telemetry 작업 구성요소만 사용 중지한다. 입력: 원본 또는 Firebase가 수정한 DOM. 출력: BLE 등 다른 구성요소를 보존한 문서. */
+/** Disable only the verified telemetry scheduling components. */
 private fun disableTransportComponents(document: Document) {
     for (name in listOf("com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService",
         "com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver")) {
@@ -210,7 +259,7 @@ private fun disableTransportComponents(document: Document) {
     }
 }
 
-/** 역할: 자동 초기화·수집과 명시적 재초기화 registrar를 엄격 프로필로 제한한다. 입력: 승인된 앱의 manifest. 출력: ML Kit·BLE·계정 구성요소를 보존한 문서. */
+/** Apply strict Firebase collection and registration policy while retaining unrelated components. */
 internal fun applyFirebaseManifest(document: Document) {
     val elements = firebaseManifestElements(document)
     val disabled = listOf("com.google.firebase.provider.FirebaseInitProvider", "com.google.firebase.iid.FirebaseInstanceIdReceiver",
@@ -240,7 +289,7 @@ internal fun applyFirebaseManifest(document: Document) {
     }
 }
 
-/** 역할: 전체 prototype에서 고유한 메서드 참조를 요구한다. 입력: 메서드와 대상 클래스·이름. 출력: 유일한 인덱스 또는 예외. */
+/** Require a unique public API call and verify its complete prototype. */
 private fun firebaseMethodIndex(method: Method, owner: String, name: String): Int {
     val instructions = method.implementation!!.instructions.toList()
     val indices = instructions.indices.filter { index ->
@@ -254,11 +303,7 @@ private fun firebaseMethodIndex(method: Method, owner: String, name: String): In
         "Lcom/google/firebase/messaging/FirebaseMessaging;->getInstance" -> "()Lcom/google/firebase/messaging/FirebaseMessaging;"
         "Lcom/google/firebase/messaging/FirebaseMessaging;->subscribeToTopic" -> "(Ljava/lang/String;)Lcom/google/android/gms/tasks/Task;"
         "Lcom/google/firebase/messaging/FirebaseMessaging;->getToken" -> "()Lcom/google/android/gms/tasks/Task;"
-        "Lg6/i;->f" -> "(Landroid/content/Context;)Ljava/lang/String;"
-        "$FIREBASE_INTRO->d" -> "()V"
-        "Lf3/f;->apply" -> "(Ljava/lang/Object;)Ljava/lang/Object;"
         "Ljava/util/concurrent/Executor;->execute" -> "(Ljava/lang/Runnable;)V"
-        "Lj3/f;->a" -> "(Ljava/lang/String;)Lj3/g;"
         "Ljava/net/URL;->openConnection" -> "()Ljava/net/URLConnection;"
         else -> error("Firebase: no approved anchor prototype for $owner->$name")
     }
@@ -267,7 +312,7 @@ private fun firebaseMethodIndex(method: Method, owner: String, name: String): In
     return indices.single()
 }
 
-/** 역할: 정확한 문자열 앵커를 찾는다. 입력: 메서드와 문자열. 출력: 유일한 인덱스 또는 예외. */
+/** Require one exact stable string anchor. */
 private fun firebaseStringIndex(method: Method, value: String): Int {
     val instructions = method.implementation!!.instructions.toList()
     val indices = instructions.indices.filter { index ->
@@ -277,7 +322,7 @@ private fun firebaseStringIndex(method: Method, value: String): Int {
     return indices.single()
 }
 
-/** 역할: 명령에서 메서드 참조만 읽는다. 입력: 임의 명령. 출력: 메서드 참조 또는 null. */
+/** Read a method reference safely from an arbitrary DEX instruction. */
 private fun firebaseMethodRef(instruction: Instruction): MethodReference? = (instruction as? ReferenceInstruction)?.reference as? MethodReference
 
 @Suppress("unused")

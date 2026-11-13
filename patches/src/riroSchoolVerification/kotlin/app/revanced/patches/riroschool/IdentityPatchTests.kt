@@ -19,11 +19,7 @@ import com.android.tools.smali.dexlib2.iface.instruction.OffsetInstruction
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
 
-/**
- * 역할: 기기 UUID의 네이티브 전송 생략과 다른 폼 필드 보존을 검증한다.
- * 입력: 원본 7.5.6 APK.
- * 출력: 두 폼 생성기의 UUID 생산 호출과 전송 필드가 제거되면 반환한다.
- */
+/** Check native UUID omission and preservation of unrelated form fields against the original APK. */
 fun runIdentityPatchTests() {
     runFinalFormFilterTests()
     val apk = File(System.getenv("RIRO_TEST_APK") ?: error("Set RIRO_TEST_APK to the original Riro School 7.5.6 APK"))
@@ -31,6 +27,10 @@ fun runIdentityPatchTests() {
     val helper = dex.classes.single { it.type == "Lg6/i;" }
     for (name in listOf("g", "h")) {
         val original = helper.methods.single { it.name == name }
+        val renamed = MutableMethod(renameDeviceFixture(original))
+        omitNativeDeviceId(renamed)
+        check("&device_id=" !in identityReferences(renamed))
+        check(identityReferences(renamed).count { "FormParameters;->withoutDeviceId(" in it } == 1)
         val before = identityReferences(MutableMethod(original))
         check("&device_id=" in before)
         val copy = MutableMethod(original)
@@ -51,11 +51,7 @@ fun runIdentityPatchTests() {
     check(identityReferences(MutableMethod(helper.methods.single { it.name == "j" })).contains("SAVE_KEY_UUID"))
 }
 
-/**
- * 역할: 추가 폼의 정확한 키 제거와 다른 값·순서·원시 바이트 보존을 검증한다.
- * 입력: 중복·위치·인코딩·잘못된 입력을 포함한 고정 폼 fixture.
- * 출력: 각 필터 결과가 기대 문자열 및 UTF-8 바이트와 일치하면 반환한다.
- */
+/** Exercise exact root-key filtering, raw-byte/order preservation, duplicates and malformed encodings. */
 private fun runFinalFormFilterTests() {
     val cases = listOf(
         "device_id=x&a=1" to "a=1",
@@ -90,11 +86,7 @@ private fun runFinalFormFilterTests() {
     verifyLargeNakedForm()
 }
 
-/**
- * 역할: 등호 없는 필드가 많아도 키 탐색이 본문 전체를 반복 스캔하지 않는지 검증한다.
- * 입력: 백만 개 naked 필드와 마지막 제거 대상 키를 담은 6MB 폼.
- * 출력: 5초 내 다른 필드를 그대로 보존한 결과이며 초과하면 실패한다.
- */
+/** Ensure a six-megabyte form with one million naked fields is processed within five seconds without rescanning the remaining input for each key. */
 private fun verifyLargeNakedForm() {
     val prefix = "naked&".repeat(1_000_000)
     val input = prefix + "device_id=drop"
@@ -107,11 +99,7 @@ private fun verifyLargeNakedForm() {
     check(actual == prefix.dropLast(1)) { "Large naked form fields or separators changed" }
 }
 
-/**
- * 역할: 필터 결과와 원래 getBytes 수신 레지스터의 연결 및 인코딩 계약을 검증한다.
- * 입력: 변환을 완료한 네이티브 폼 생성기.
- * 출력: getBytes 직전 호출과 move-result가 같은 레지스터를 사용하면 반환한다.
- */
+/** Check that the final filter result is used by the original getBytes receiver with the original encoding contract. */
 private fun assertFinalFormFilterBoundary(method: MutableMethod) {
     val instructions = method.implementation!!.instructions.toList()
     val index = instructions.indices.single { index ->
@@ -134,11 +122,7 @@ private fun assertFinalFormFilterBoundary(method: MutableMethod) {
     }
 }
 
-/**
- * 역할: 식별자 관련 문자열과 호출 참조를 검사용 목록으로 정규화한다.
- * 입력: 검사할 메서드.
- * 출력: 문자열 리터럴 또는 메서드 참조 목록.
- */
+/** Normalize identity-related strings and method references for comparisons. */
 private fun identityReferences(method: MutableMethod): List<String> = method.implementation!!.instructions.mapNotNull {
     when (val ref = (it as? ReferenceInstruction)?.reference) {
         is StringReference -> ref.string

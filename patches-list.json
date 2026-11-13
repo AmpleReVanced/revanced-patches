@@ -1280,31 +1280,6 @@
       "options": []
     },
     {
-      "name": "Disable ADB detection",
-      "description": null,
-      "default": true,
-      "dependencies": [],
-      "compatiblePackages": [
-        {
-          "packageName": "com.rirosoft.riroschool",
-          "name": "Riro School",
-          "description": null,
-          "apkFileType": null,
-          "appIconColor": null,
-          "signatures": null,
-          "targets": [
-            {
-              "version": "7.5.6",
-              "isExperimental": false,
-              "minSdk": null,
-              "description": null
-            }
-          ]
-        }
-      ],
-      "options": []
-    },
-    {
       "name": "Disable AdFit environment detection",
       "description": "Stops the AdFit ad SDK from reporting a root or emulator verdict to its telemetry and ad request endpoints.",
       "default": true,
@@ -1465,33 +1440,6 @@
       "options": []
     },
     {
-      "name": "Disable Firebase analytics",
-      "description": "Disable Firebase telemetry and token registration. Push is unavailable; also disables shared app DataTransport telemetry.",
-      "default": true,
-      "dependencies": [
-        "BytecodePatch"
-      ],
-      "compatiblePackages": [
-        {
-          "packageName": "com.rirosoft.riroschool",
-          "name": "Riro School",
-          "description": null,
-          "apkFileType": null,
-          "appIconColor": null,
-          "signatures": null,
-          "targets": [
-            {
-              "version": "7.5.6",
-              "isExperimental": false,
-              "minSdk": null,
-              "description": null
-            }
-          ]
-        }
-      ],
-      "options": []
-    },
-    {
       "name": "Disable Friend Feed tab",
       "description": "Adds an option to replace the Friend Feed tab with the classic Friends tab.",
       "default": true,
@@ -1538,33 +1486,6 @@
           "targets": [
             {
               "version": "26.9.0",
-              "isExperimental": false,
-              "minSdk": null,
-              "description": null
-            }
-          ]
-        }
-      ],
-      "options": []
-    },
-    {
-      "name": "Disable Google analytics",
-      "description": "Disable ML Kit diagnostics and advertising permissions. Shared DataTransport telemetry is discarded.",
-      "default": true,
-      "dependencies": [
-        "BytecodePatch"
-      ],
-      "compatiblePackages": [
-        {
-          "packageName": "com.rirosoft.riroschool",
-          "name": "Riro School",
-          "description": null,
-          "apkFileType": null,
-          "appIconColor": null,
-          "signatures": null,
-          "targets": [
-            {
-              "version": "7.5.6",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -1738,33 +1659,6 @@
       "options": []
     },
     {
-      "name": "Disable Rirosoft analytics",
-      "description": "Omit native device_id UUID transmission. BLE attendance remains unchanged.",
-      "default": true,
-      "dependencies": [
-        "BytecodePatch"
-      ],
-      "compatiblePackages": [
-        {
-          "packageName": "com.rirosoft.riroschool",
-          "name": "Riro School",
-          "description": null,
-          "apkFileType": null,
-          "appIconColor": null,
-          "signatures": null,
-          "targets": [
-            {
-              "version": "7.5.6",
-              "isExperimental": false,
-              "minSdk": null,
-              "description": null
-            }
-          ]
-        }
-      ],
-      "options": []
-    },
-    {
       "name": "Disable S2Event",
       "description": "Disables Tracker",
       "default": true,
@@ -1902,31 +1796,6 @@
           "targets": [
             {
               "version": "26.9.0",
-              "isExperimental": false,
-              "minSdk": null,
-              "description": null
-            }
-          ]
-        }
-      ],
-      "options": []
-    },
-    {
-      "name": "Disable VPN detection",
-      "description": null,
-      "default": true,
-      "dependencies": [],
-      "compatiblePackages": [
-        {
-          "packageName": "com.rirosoft.riroschool",
-          "name": "Riro School",
-          "description": null,
-          "apkFileType": null,
-          "appIconColor": null,
-          "signatures": null,
-          "targets": [
-            {
-              "version": "7.5.6",
               "isExperimental": false,
               "minSdk": null,
               "description": null
@@ -3958,31 +3827,6 @@
           "targets": [
             {
               "version": "26.9.0",
-              "isExperimental": false,
-              "minSdk": null,
-              "description": null
-            }
-          ]
-        }
-      ],
-      "options": []
-    },
-    {
-      "name": "Spoof GMS availability",
-      "description": "Treat the app startup Google Play Services availability check as SUCCESS. Does not install GMS or change analytics collection.",
-      "default": false,
-      "dependencies": [],
-      "compatiblePackages": [
-        {
-          "packageName": "com.rirosoft.riroschool",
-          "name": "Riro School",
-          "description": null,
-          "apkFileType": null,
-          "appIconColor": null,
-          "signatures": null,
-          "targets": [
-            {
-              "version": "7.5.6",
               "isExperimental": false,
               "minSdk": null,
               "description": null

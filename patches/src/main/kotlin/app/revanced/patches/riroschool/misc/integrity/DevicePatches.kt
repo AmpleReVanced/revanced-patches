@@ -3,7 +3,6 @@ package app.revanced.patches.riroschool.misc.integrity
 import app.morphe.patcher.extensions.InstructionExtensions.removeInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.patcher.patch.resourcePatch
 import app.morphe.patcher.patch.BytecodePatchContext
 import app.revanced.patches.riroschool.shared.requireRiroTarget
 import app.revanced.patches.riroschool.shared.riroCompatibility
@@ -11,6 +10,7 @@ import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.Method
 import com.android.tools.smali.dexlib2.iface.instruction.Instruction
+import com.android.tools.smali.dexlib2.iface.instruction.OffsetInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
@@ -27,9 +27,9 @@ val disableVpnDetectionPatch = bytecodePatch(name = "Disable VPN detection", def
     compatibleWith(riroCompatibility)
     execute {
         requireRiroTarget(packageMetadata)
-        val owner = classDefBy("${ACTIVITY}p;")
-        val original = owner.methods.single { it.name == "run" && it.parameterTypes.isEmpty() && it.returnType == "V" }
-        // 모든 앵커 검증은 복사본에서 완료한다. 실패한 일치는 원본 클래스를 변경하지 않는다.
+        val original = vpnDetectorFingerprint().matchAll().single().method
+        val owner = classDefBy(original.definingClass)
+        // Validate a copy so a rejected match never edits the input method.
         val replacement = MutableMethod(original)
         removeVpnDetection(replacement)
         val mutableOwner = mutableClassDefBy(owner)
@@ -42,8 +42,8 @@ val disableAdbDetectionPatch = bytecodePatch(name = "Disable ADB detection", def
     compatibleWith(riroCompatibility)
     execute {
         requireRiroTarget(packageMetadata)
-        val owner = classDefBy(MAIN)
-        val original = owner.methods.single { it.name == "onResume" && it.parameterTypes.isEmpty() && it.returnType == "V" }
+        val original = adbDetectorFingerprint().matchAll().single().method
+        val owner = classDefBy(original.definingClass)
         val replacement = removeDebugDetection(original)
         val mutableOwner = mutableClassDefBy(owner)
         check(mutableOwner.methods.removeIf { it.name == "onResume" && it.parameterTypes.isEmpty() })
@@ -51,24 +51,30 @@ val disableAdbDetectionPatch = bytecodePatch(name = "Disable ADB detection", def
     }
 }
 
-/**
- * 역할: 인터넷 확인과 정상 시작 호출을 보존하면서 discriminator 0의 VPN 전용 구간을 삭제한다.
- * 입력: 7.5.6의 p.run 메서드 복사본.
- * 출력: 검증된 VPN 구간을 삭제하며 불일치 또는 중복 앵커는 변경 전에 예외로 거부한다.
- */
+/** Remove only the VPN branch while preserving the real connectivity predicate and both startup continuations. Validate every boundary before modifying the copy. */
 internal fun removeVpnDetection(method: MutableMethod) {
-    require(method.definingClass == "${ACTIVITY}p;" && method.name == "run") { "VPN: unexpected method" }
+    require(method.name == "run" && method.parameterTypes.isEmpty() && method.returnType == "V") { "VPN: unexpected method" }
     val implementation = requireNotNull(method.implementation) { "VPN: missing implementation" }
     val ins = implementation.instructions.toList()
     require(implementation.tryBlocks.isEmpty()) { "VPN: unexpected try block" }
-    val internet = uniqueMethod(ins, "Ld6/b;", "a", "(Landroid/content/Context;)Z")
     val start = uniqueString(ins, "connectivity")
-    val progress = uniqueMethod(ins, INTRO, "c", "()V")
-    val offline = uniqueMethod(ins, INTRO, "e", "()V")
+    require(start >= 3)
+    val internet = start - 3
+    val internetReference = (ins[internet] as? ReferenceInstruction)?.reference as? MethodReference
+    require(ins[internet].opcode == Opcode.INVOKE_STATIC && internetReference?.parameterTypes == listOf("Landroid/content/Context;") && internetReference.returnType == "Z") { "VPN: connectivity predicate missing" }
+    val continuations = ins.indices.filter { index ->
+        val ref = (ins[index] as? ReferenceInstruction)?.reference as? MethodReference
+        index > start && ref?.definingClass == INTRO && ref.parameterTypes.isEmpty() && ref.returnType == "V"
+    }
+    require(continuations.size == 2) { "VPN: expected online and offline continuations" }
+    val (progress, offline) = continuations
+    val addresses = IntArray(ins.size + 1)
+    ins.forEachIndexed { index, instruction -> addresses[index + 1] = addresses[index] + instruction.codeUnits }
+    require((ins[internet + 2] as? OffsetInstruction)?.let { addresses[internet + 2] + it.codeOffset == addresses[offline] } == true) { "VPN: offline branch does not target the preserved continuation" }
     require(start == internet + 3 && ins[internet + 1].opcode == Opcode.MOVE_RESULT &&
         ins[internet + 2].opcode == Opcode.IF_EQZ && progress < offline) { "VPN: invalid internet/progression anchors" }
     require(ins.any { ((it as? ReferenceInstruction)?.reference as? FieldReference)?.let { field ->
-        field.definingClass == "${ACTIVITY}p;" && field.name == "h" && field.type == "I"
+        field.definingClass == method.definingClass && field.type == "I"
     } == true } && ins.any { it.opcode == Opcode.PACKED_SWITCH }) { "VPN: discriminator missing" }
     for ((owner, name, descriptor) in listOf(
         Triple("Landroid/net/ConnectivityManager;", "getAllNetworks", "()[Landroid/net/Network;"),
@@ -86,11 +92,7 @@ internal fun removeVpnDetection(method: MutableMethod) {
     method.removeInstructions(start, progress - start)
 }
 
-/**
- * 역할: onResume의 debugger와 adb_enabled 조회·경고 및 해당 두 예외 처리만 제거한다.
- * 입력: 7.5.6 MainActivity.onResume 원본 메서드.
- * 출력: 나머지 생명주기·WebView·학생증·업데이트 흐름을 보존한 새 메서드.
- */
+/** Remove debugger/ADB queries, warnings and their dedicated exception handlers. Preserve the rest of the activity lifecycle, WebView and update flow. */
 internal fun removeDebugDetection(method: Method): MutableMethod {
     require(method.definingClass == MAIN && method.name == "onResume") { "ADB: unexpected method" }
     val implementation = requireNotNull(method.implementation) { "ADB: missing implementation" }
@@ -105,8 +107,14 @@ internal fun removeDebugDetection(method: Method): MutableMethod {
     require(uiCalls.size == 2 && uiCalls[0] == debuggerWarning + 2 && uiCalls[1] == adbWarning + 2) { "ADB: unexpected warning producer" }
     val end = uiCalls[1] + 1
     val continuation = (ins[end] as? ReferenceInstruction)?.reference as? FieldReference
-    require(ins[end].opcode == Opcode.IGET_OBJECT && continuation?.definingClass == MAIN && continuation.name == "I") { "ADB: continuation binding missing" }
-    require(ins.subList(start, end).count { methodMatches(it, "${ACTIVITY}q;", "<init>", "(${MAIN}Ljava/lang/String;)V") } == 2) { "ADB: shared warning consumer mismatch" }
+    val webView = (ins.getOrNull(end + 1) as? ReferenceInstruction)?.reference as? FieldReference
+    require(ins[end].opcode == Opcode.IGET_OBJECT && continuation?.definingClass == MAIN &&
+        ins.getOrNull(end + 1)?.opcode == Opcode.IGET_OBJECT && webView?.definingClass == continuation.type &&
+        webView.type == "Landroid/webkit/WebView;") { "ADB: continuation binding missing" }
+    val warningConstructors = ins.subList(start, end).mapNotNull { (it as? ReferenceInstruction)?.reference as? MethodReference }.filter {
+        it.name == "<init>" && it.parameterTypes == listOf(MAIN, "Ljava/lang/String;") && it.returnType == "V"
+    }
+    require(warningConstructors.size == 2 && warningConstructors.distinct().size == 1) { "ADB: shared warning consumer mismatch" }
     val addresses = IntArray(ins.size + 1)
     ins.forEachIndexed { index, instruction -> addresses[index + 1] = addresses[index] + instruction.codeUnits }
     val startAddress = addresses[start]
@@ -130,23 +138,15 @@ internal fun removeDebugDetection(method: Method): MutableMethod {
     return replacement
 }
 
-/**
- * 역할: 시작 화면의 GMS 가용성 소비 지점만 정상값 0으로 고정한다.
- * 입력: 현재 패치 컨텍스트의 IntroActivity.b.
- * 출력: 실제 가용성 조회를 실행하지 않는 앱 전용 시작 판정.
- */
+/** Find the startup GMS result consumer by public API references and spoof that app-local decision only. */
 internal fun BytecodePatchContext.spoofGmsAvailability() {
-    val method = mutableClassDefBy(INTRO).methods.single { it.name == "b" && it.parameterTypes.isEmpty() && it.returnType == "V" }
+    val method = gmsAvailabilityFingerprint().matchAll().single().method
     spoofGmsAvailability(method)
 }
 
-/**
- * 역할: 검증된 GMS availability 호출과 move-result를 상수 명령으로 교체한다.
- * 입력: 7.5.6 IntroActivity.b의 변경 가능한 메서드.
- * 출력: 동일 결과 레지스터에 SUCCESS/0을 기록한 메서드.
- */
+/** Replace the validated availability call/result with SUCCESS in its original result register. */
 internal fun spoofGmsAvailability(method: MutableMethod) {
-    require(method.definingClass == INTRO && method.name == "b") { "GMS: unexpected method" }
+    require(method.definingClass == INTRO && method.parameterTypes.isEmpty() && method.returnType == "V") { "GMS: unexpected method" }
     val ins = requireNotNull(method.implementation).instructions.toList()
     val call = uniqueMethod(ins, "Lcom/google/android/gms/common/GoogleApiAvailability;", "isGooglePlayServicesAvailable", "(Landroid/content/Context;)I")
     val instance = uniqueMethod(ins, "Lcom/google/android/gms/common/GoogleApiAvailability;", "getInstance", "()Lcom/google/android/gms/common/GoogleApiAvailability;")
@@ -157,42 +157,26 @@ internal fun spoofGmsAvailability(method: MutableMethod) {
     method.removeInstructions(call + 1, 1)
 }
 
-/**
- * 역할: 정확한 메서드 참조를 단일 앵커로 찾는다.
- * 입력: 명령 목록과 클래스·이름·DEX 서명.
- * 출력: 유일한 명령 인덱스이며 누락·중복은 예외다.
- */
+/** Find exactly one complete public method reference; missing or duplicate anchors are rejected. */
 private fun uniqueMethod(ins: List<Instruction>, owner: String, name: String, descriptor: String): Int {
     val matches = ins.indices.filter { methodMatches(ins[it], owner, name, descriptor) }
     require(matches.size == 1) { "Detector anchor $owner->$name$descriptor: expected 1, found ${matches.size}" }
     return matches.single()
 }
 
-/**
- * 역할: 명령의 메서드 참조를 전체 서명으로 비교한다.
- * 입력: 명령과 예상 클래스·이름·서명.
- * 출력: 참조가 정확히 일치할 때 true.
- */
+/** Compare a method reference using its complete owner, name and descriptor. */
 private fun methodMatches(instruction: Instruction, owner: String, name: String, descriptor: String): Boolean {
     val ref = (instruction as? ReferenceInstruction)?.reference as? MethodReference ?: return false
     return ref.definingClass == owner && ref.name == name && "(${ref.parameterTypes.joinToString("")})${ref.returnType}" == descriptor
 }
 
-/**
- * 역할: 정확히 일치하는 문자열 앵커의 유일성을 검사한다.
- * 입력: 명령 목록과 기대 문자열.
- * 출력: 유일한 인덱스이며 불일치하면 예외다.
- */
+/** Find exactly one matching string anchor and reject missing or ambiguous input. */
 private fun uniqueString(ins: List<Instruction>, value: String): Int {
     val matches = ins.indices.filter { stringOf(ins[it]) == value }
     require(matches.size == 1) { "Detector string anchor '$value': expected 1, found ${matches.size}" }
     return matches.single()
 }
 
-/**
- * 역할: 명령에서 문자열 참조만 안전하게 읽는다.
- * 입력: 임의 DEX 명령.
- * 출력: 문자열 또는 해당하지 않으면 null.
- */
+/** Read a string reference without assuming every instruction has a reference. */
 private fun stringOf(instruction: Instruction): String? =
     ((instruction as? ReferenceInstruction)?.reference as? StringReference)?.string

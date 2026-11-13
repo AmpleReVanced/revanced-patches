@@ -4,6 +4,7 @@ import app.revanced.patches.riroschool.misc.analytics.*
 import app.revanced.patches.riroschool.misc.integrity.*
 import app.revanced.patches.riroschool.shared.*
 
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import com.android.tools.smali.dexlib2.DexFileFactory
@@ -24,23 +25,22 @@ import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.reference.StringReference
 import java.io.File
 
-/**
- * 역할: 실제 7.5.6 DEX의 탐지 경로 제거와 잘못된 입력 거부를 검증한다.
- * 입력: RIRO_TEST_APK 환경 변수 또는 승인된 원본 APK 경로.
- * 출력: 모든 계약을 만족하면 정상 반환하고 위반하면 예외를 발생시킨다.
- */
+/** Check detector removal and malformed-input rejection against the original APK selected by RIRO_TEST_APK. */
 fun runDevicePatchTests() {
     val negativeControl = System.getenv("RIRO_DEVICE_NEGATIVE_CONTROL")
     val apk = File(System.getenv("RIRO_TEST_APK") ?: error("Set RIRO_TEST_APK to the original Riro School 7.5.6 APK"))
     val dex = DexFileFactory.loadDexFile(apk, Opcodes.getDefault())
     val classes = dex.classes.associateBy { it.type }
-    /** 역할: 정확한 무인자 void 메서드를 찾는다. 입력: 클래스·메서드명. 출력: 유일한 원본 메서드. */
+    /** Find a unique original no-argument void method for the fixed artifact fixture. */
     fun method(owner: String, name: String): Method = classes.getValue(owner).methods.single {
         it.name == name && it.parameterTypes.isEmpty() && it.returnType == "V"
     }
     val activity = "Lcom/rirosoft/riroschool/views/activity/"
     val vpn = method("${activity}p;", "run")
     check(deviceReferences(vpn).any { "getAllNetworks" in it })
+    val renamedVpn = MutableMethod(renameDeviceFixture(vpn))
+    removeVpnDetection(renamedVpn)
+    check(deviceReferences(renamedVpn).none { "VPN_CHECK" in it })
     val vpnCopy = MutableMethod(vpn)
     if (negativeControl != "vpn") removeVpnDetection(vpnCopy)
     check(deviceReferences(vpnCopy).none { it.contains("Landroid/net/") })
@@ -48,7 +48,7 @@ fun runDevicePatchTests() {
     check(deviceReferences(vpnCopy).count { "IntroActivity;->c()V" in it } == 1)
     check(deviceReferences(vpnCopy).count { "IntroActivity;->e()V" in it } == 1)
     check(deviceReferences(vpnCopy).none { "VPN" in it })
-    // 다른 discriminator의 푸시 오류와 공용 listener 생성은 보존해야 한다.
+    // Preserve the other discriminator branches and their shared listeners.
     check(deviceReferences(vpnCopy).filter { "푸시코드" in it } ==
         deviceReferences(vpn).filter { "푸시코드" in it })
     val vpnInstructions = vpn.implementation!!.instructions.toList()
@@ -62,6 +62,8 @@ fun runDevicePatchTests() {
     val resume = method("${activity}MainActivity;", "onResume")
     check(deviceReferences(resume).any { "isDebuggerConnected" in it })
     check(deviceReferences(resume).any { it == "adb_enabled" })
+    val renamedResume = removeDebugDetection(renameDeviceFixture(resume))
+    check(deviceReferences(renamedResume).none { "adb_enabled" in it })
     val resumeCopy = if (negativeControl == "adb") MutableMethod(resume) else removeDebugDetection(resume)
     check(deviceReferences(resumeCopy).none { "isDebuggerConnected" in it || "adb_enabled" in it })
     check(deviceReferences(resumeCopy).none { "디버깅을 해제" in it })
@@ -79,7 +81,16 @@ fun runDevicePatchTests() {
     }
     checkDeviceControlFlow(resumeCopy)
 
-    val intro = MutableMethod(method("${activity}IntroActivity;", "b"))
+    val originalGms = method("${activity}IntroActivity;", "b")
+    val renamedGms = MutableMethod(renameDeviceFixture(originalGms))
+    spoofGmsAvailability(renamedGms)
+    check(deviceReferences(renamedGms).none { "isGooglePlayServicesAvailable" in it })
+    val ambiguousGms = MutableMethod(originalGms)
+    ambiguousGms.addInstructions(0, "invoke-static {}, Lcom/google/android/gms/common/GoogleApiAvailability;->getInstance()Lcom/google/android/gms/common/GoogleApiAvailability;")
+    val ambiguousBefore = instructionTokens(ambiguousGms)
+    check(runCatching { spoofGmsAvailability(ambiguousGms) }.isFailure)
+    check(instructionTokens(ambiguousGms) == ambiguousBefore)
+    val intro = MutableMethod(originalGms)
     check(deviceReferences(intro).any { "isGooglePlayServicesAvailable" in it })
     if (negativeControl != "gms") spoofGmsAvailability(intro)
     check(deviceReferences(intro).none { "isGooglePlayServicesAvailable" in it })
@@ -107,20 +118,12 @@ fun runDevicePatchTests() {
     check(runCatching { spoofGmsAvailability(intro) }.isFailure) { "already patched GMS accepted" }
 }
 
-/**
- * 역할: 검사 결과 비교에 사용할 메서드와 문자열 참조를 순서대로 정규화한다.
- * 입력: 원본 또는 변형된 DEX 메서드.
- * 출력: 인덱스와 주소에 의존하지 않는 참조 목록.
- */
+/** Normalize method and string references for stable contract comparisons. */
 private fun deviceReferences(method: Method): List<String> = method.implementation!!.instructions.mapNotNull {
     referenceToken(it)
 }
 
-/**
- * 역할: DEX 참조를 인덱스와 무관한 문자열로 변환한다.
- * 입력: 참조를 포함할 수 있는 명령.
- * 출력: 문자열·메서드·필드 참조 또는 null.
- */
+/** Represent a DEX reference independently of its global index. */
 private fun referenceToken(instruction: Instruction): String? =
     when (val ref = (instruction as? ReferenceInstruction)?.reference) {
         is StringReference -> ref.string
@@ -130,14 +133,10 @@ private fun referenceToken(instruction: Instruction): String? =
         else -> ref.toString()
     }
 
-/** 역할: 메서드 명령을 정규화한다. 입력: 메서드. 출력: 주소에 무관한 명령 목록. */
+/** Normalize executable instructions independently of their addresses. */
 private fun instructionTokens(method: Method): List<String> = instructionTokens(method.implementation!!.instructions.toList())
 
-/**
- * 역할: DEX 인덱스·재배치 주소·payload 정렬 NOP를 제외한 명령 의미를 비교한다.
- * 입력: 비교할 명령 목록.
- * 출력: opcode·참조·레지스터·상수의 순서 있는 표현.
- */
+/** Compare instruction semantics while excluding relocated addresses, global indices and payload-alignment NOPs. */
 private fun instructionTokens(instructions: List<Instruction>): List<String> = instructions.filter { it.opcode != Opcode.NOP }.map {
     val registers = when (it) {
         is FiveRegisterInstruction -> listOf(it.registerCount, it.registerC, it.registerD, it.registerE, it.registerF, it.registerG)
@@ -150,11 +149,7 @@ private fun instructionTokens(instructions: List<Instruction>): List<String> = i
     "${it.opcode}|${referenceToken(it)}|$registers|${(it as? WideLiteralInstruction)?.wideLiteral}"
 }
 
-/**
- * 역할: 변형 후 분기와 예외 처리 주소가 실제 명령 경계에 있는지 검증한다.
- * 입력: 변형된 메서드.
- * 출력: 정상 반환 또는 잘못된 제어 흐름의 예외.
- */
+/** Ensure every transformed branch and exception handler targets a valid instruction boundary. */
 private fun checkDeviceControlFlow(method: Method) {
     val implementation = method.implementation!!
     val instructions = implementation.instructions.toList()
@@ -170,4 +165,35 @@ private fun checkDeviceControlFlow(method: Method) {
         check(block.startCodeAddress + block.codeUnitCount in byAddress || block.startCodeAddress + block.codeUnitCount == address)
         block.exceptionHandlers.forEach { check(it.handlerCodeAddress in byAddress) }
     }
+}
+
+/** Rename app-local fixture symbols while retaining complete bytecode reference relationships. */
+internal fun renameDeviceFixture(method: Method): Method {
+    val app = "Lcom/rirosoft/riroschool/views/activity/"
+    val rewriter = com.android.tools.smali.dexlib2.rewriter.DexRewriter(object : com.android.tools.smali.dexlib2.rewriter.RewriterModule() {
+        override fun getTypeRewriter(rewriters: com.android.tools.smali.dexlib2.rewriter.Rewriters) =
+            com.android.tools.smali.dexlib2.rewriter.Rewriter<String> { type -> when(type) {
+                "${app}p;" -> "Lfixture/RenamedRunnable;"
+                "Lg6/i;" -> "Lfixture/RenamedIdentity;"
+                "Ld6/b;" -> "Lfixture/RenamedConnectivity;"
+                "${app}q;" -> "Lfixture/RenamedWarning;"
+                else -> type
+            } }
+        override fun getMethodReferenceRewriter(rewriters: com.android.tools.smali.dexlib2.rewriter.Rewriters) =
+            com.android.tools.smali.dexlib2.rewriter.Rewriter<MethodReference> { reference ->
+                val rewritten = com.android.tools.smali.dexlib2.rewriter.MethodReferenceRewriter(rewriters).rewrite(reference)
+                val rename = reference.definingClass == "Lg6/i;" || reference.definingClass == "Ld6/b;" ||
+                    reference.definingClass == "${app}IntroActivity;" && reference.name in listOf("b", "c", "e")
+                com.android.tools.smali.dexlib2.immutable.reference.ImmutableMethodReference(rewritten.definingClass,
+                    if(rename && reference.name != "<init>") "renamed_${reference.name}" else rewritten.name,
+                    rewritten.parameterTypes, rewritten.returnType)
+            }
+        override fun getFieldReferenceRewriter(rewriters: com.android.tools.smali.dexlib2.rewriter.Rewriters) =
+            com.android.tools.smali.dexlib2.rewriter.Rewriter<FieldReference> { reference ->
+                val rewritten = com.android.tools.smali.dexlib2.rewriter.FieldReferenceRewriter(rewriters).rewrite(reference)
+                com.android.tools.smali.dexlib2.immutable.reference.ImmutableFieldReference(rewritten.definingClass,
+                    if(reference.definingClass.startsWith(app)) "renamed_${reference.name}" else rewritten.name, rewritten.type)
+            }
+    })
+    return rewriter.methodRewriter.rewrite(method)
 }

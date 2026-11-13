@@ -1,15 +1,10 @@
 # 👋🧩 Ample Patches
 
 &nbsp;
-
-Riro School 7.5.6 privacy patches and compatibility notes: [documentation](docs/riroschool.md).
-
-The list reflects current `main` sources, including changes after the `v1.5.0` baseline. Riro School patches are pending the next published bundle.
-
 ## 🩹 Patches list
 
 <!-- PATCHES_START -->
-> **[v1.5.0](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.5.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;134 patches total
+> **[v1.5.0](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.5.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;128 patches total
 <details>
 <summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;76 patches</summary>
 <br>
@@ -190,26 +185,6 @@ The list reflects current `main` sources, including changes after the `v1.5.0` b
 | [Enable local handwriting search](#enable-local-handwriting-search) | Uses the on-device ML engine to index and search handwriting. |  |
 | [Unlock Premium features](#unlock-premium-features) | Enables local premium features and raises the local note creation quota. |  |
 | [Use local ML for Smart HWR](#use-local-ml-for-smart-hwr) | Uses the on-device ML engine instead of SuNia for Smart HWR. |  |
-
-</details>
-
-<details>
-<summary>📦 Riro School&nbsp;&nbsp;•&nbsp;&nbsp;6 patches</summary>
-<br>
-
-**🎯 Supported versions:**
-
-| 7.5.6 |
-| :---: |
-
-| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
-|----------|----------------|-----------|
-| [Disable ADB detection](#disable-adb-detection) |  |  |
-| [Disable Firebase analytics](#disable-firebase-analytics) | Disable Firebase telemetry and token registration. Push is unavailable; also disables shared app DataTransport telemetry. |  |
-| [Disable Google analytics](#disable-google-analytics) | Disable ML Kit diagnostics and advertising permissions. Shared DataTransport telemetry is discarded. |  |
-| [Disable Rirosoft analytics](#disable-rirosoft-analytics) | Omit native device_id UUID transmission. BLE attendance remains unchanged. |  |
-| [Disable VPN detection](#disable-vpn-detection) |  |  |
-| [Spoof GMS availability](#spoof-gms-availability) | Treat the app startup Google Play Services availability check as SUCCESS. Does not install GMS or change analytics collection. |  |
 
 </details>
 
