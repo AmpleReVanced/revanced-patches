@@ -31,7 +31,42 @@ dependencies {
     compileOnly(project(":patches:stub"))
 }
 
+val riroSchoolVerification by sourceSets.creating {
+    // Standalone artifact checks have their own classpath and do not participate in JUnit discovery.
+    java.srcDir(rootProject.file("extensions/riroschool/src/main/java"))
+    compileClasspath += sourceSets["main"].output
+    runtimeClasspath += sourceSets["main"].output
+}
+
+kotlin.target.compilations.named(riroSchoolVerification.name) {
+    associateWith(kotlin.target.compilations.getByName("main"))
+}
+
+configurations[riroSchoolVerification.implementationConfigurationName].extendsFrom(configurations["implementation"])
+configurations[riroSchoolVerification.runtimeOnlyConfigurationName].extendsFrom(configurations["runtimeOnly"])
+
 tasks {
+    named<JavaCompile>(riroSchoolVerification.compileJavaTaskName) {
+        options.encoding = "UTF-8"
+        options.release.set(11)
+    }
+
+    register<JavaExec>("verifyRiroSchool") {
+        description = "Verify Riro School patches against a user-supplied original APK and decoded manifest"
+        group = "verification"
+        dependsOn(riroSchoolVerification.classesTaskName)
+        classpath = riroSchoolVerification.runtimeClasspath
+        mainClass.set("app.revanced.patches.riroschool.PrivacyPatchTestsKt")
+        doFirst {
+            val apk = providers.gradleProperty("riroschoolApk").orNull ?: System.getenv("RIRO_TEST_APK")
+            val manifest = providers.gradleProperty("riroschoolManifest").orNull ?: System.getenv("RIRO_TEST_MANIFEST")
+            require(!apk.isNullOrBlank() && file(apk).isFile) { "Provide -PriroschoolApk=/path/to/original.apk" }
+            require(!manifest.isNullOrBlank() && file(manifest).isFile) { "Provide -PriroschoolManifest=/path/to/original-manifest.xml" }
+            environment("RIRO_TEST_APK", file(apk).absolutePath)
+            environment("RIRO_TEST_MANIFEST", file(manifest).absolutePath)
+        }
+    }
+
     register<JavaExec>("checkStringResources") {
         description = "Checks resource strings for invalid formatting"
 
