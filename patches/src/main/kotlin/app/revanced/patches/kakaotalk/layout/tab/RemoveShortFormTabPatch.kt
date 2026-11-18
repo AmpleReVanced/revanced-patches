@@ -4,7 +4,7 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
@@ -34,7 +34,7 @@ private const val SETTINGS_CLASS = "Lapp/revanced/extension/kakaotalk/settings/S
 private const val NORMALIZE_TAB_METHOD = "revanced_normalizeNowChildTab"
 
 @Suppress("unused")
-val removeShortFormTabPatch = bytecodePatch(
+val removeShortFormTabPatch = patch(
     name = "Remove Short-form Tab",
     description = "Removes the Short-form tab from the now screen.",
 ) {

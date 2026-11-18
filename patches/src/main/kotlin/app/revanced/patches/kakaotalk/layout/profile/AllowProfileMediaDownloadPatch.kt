@@ -5,7 +5,8 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.mutableClassDefBy
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.resource.ResourceType
 import app.morphe.patcher.resource.resourceId
 import app.morphe.patcher.util.getFreeRegisterProvider
@@ -25,7 +26,7 @@ private const val EXTENSION_CLASS =
     "Lapp/revanced/extension/kakaotalk/patches/AllowProfileMediaDownloadPatch;"
 
 @Suppress("unused")
-val allowProfileMediaDownloadPatch = bytecodePatch(
+val allowProfileMediaDownloadPatch = patch(
     name = "Allow profile media download",
     description = "Adds the save option of the profile media viewer to the profile pictures and " +
             "background images of other people.",

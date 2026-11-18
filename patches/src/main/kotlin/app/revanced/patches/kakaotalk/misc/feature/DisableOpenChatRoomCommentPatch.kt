@@ -1,6 +1,6 @@
 package app.revanced.patches.kakaotalk.misc.feature
 
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.kakaotalk.misc.settings.PreferenceScreen
 import app.revanced.patches.kakaotalk.misc.settings.addSettingsTabPatch
@@ -11,7 +11,7 @@ private const val EXTENSION_CLASS =
     "Lapp/revanced/extension/kakaotalk/patches/DisableOpenChatRoomCommentPatch;"
 
 @Suppress("unused")
-val disableOpenChatRoomCommentPatch = bytecodePatch(
+val disableOpenChatRoomCommentPatch = patch(
     name = "Disable open chat room comments",
     description = "Adds a setting to disable comments in open chat rooms.",
 ) {

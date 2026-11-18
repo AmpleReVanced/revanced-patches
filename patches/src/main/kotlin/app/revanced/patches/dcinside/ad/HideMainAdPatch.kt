@@ -1,12 +1,12 @@
 package app.revanced.patches.dcinside.ad
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.revanced.patches.dcinside.ad.fingerprints.HideMainAdFingerprint
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
 
 @Suppress("unused")
-val hideMainAdPatch = bytecodePatch(
+val hideMainAdPatch = patch(
     name = "Hide Main Ad",
     description = "Hides the main ad in the app.",
 ) {

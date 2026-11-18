@@ -2,7 +2,8 @@ package app.revanced.patches.kakaotalk.misc.feature
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.packageMetadata
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.patch.stringOption
 import app.morphe.patcher.util.cloneParameters
 import app.morphe.patcher.util.getFreeRegisterProvider
@@ -19,7 +20,7 @@ private const val EXTENSION_CLASS =
     "Lapp/revanced/extension/kakaotalk/patches/OverrideFeatureFlagPatch;"
 
 @Suppress("unused")
-val overrideFeatureFlagPatch = bytecodePatch(
+val overrideFeatureFlagPatch = patch(
     name = "Override feature flag",
     description = "Overrides the feature flag to enable the feature.",
 //    default = false

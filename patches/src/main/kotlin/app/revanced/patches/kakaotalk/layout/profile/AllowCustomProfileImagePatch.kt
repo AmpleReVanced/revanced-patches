@@ -3,7 +3,7 @@ package app.revanced.patches.kakaotalk.layout.profile
 import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getReference
 import app.morphe.patches.all.misc.resources.addResourcesPatch
 import app.morphe.util.indexOfFirstInstructionOrThrow
@@ -17,7 +17,7 @@ import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 private const val EXTENSION_CLASS = "Lapp/revanced/extension/kakaotalk/patches/CustomProfileImagePatch;"
 
 @Suppress("unused")
-val allowCustomProfileImagePatch = bytecodePatch(
+val allowCustomProfileImagePatch = patch(
     name = "Allow custom profile images",
     description = "Adds a photo picker and adjustable images to the custom profile editor.",
 ) {

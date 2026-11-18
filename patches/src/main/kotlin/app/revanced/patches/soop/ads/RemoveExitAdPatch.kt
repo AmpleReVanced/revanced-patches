@@ -2,7 +2,7 @@ package app.revanced.patches.soop.ads
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.findFreeRegister
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
@@ -14,7 +14,7 @@ import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
 @Suppress("unused")
-val removeExitAdPatch = bytecodePatch(
+val removeExitAdPatch = patch(
     name = "Remove exit dialog ad",
     description = "Removes the ad area shown in the app-exit confirmation dialog, keeping the dialog itself.",
 ) {

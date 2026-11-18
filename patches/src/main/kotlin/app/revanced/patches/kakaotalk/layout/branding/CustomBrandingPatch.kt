@@ -1,6 +1,7 @@
 package app.revanced.patches.kakaotalk.layout.branding
 
-import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.patch.document
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.patch.stringOption
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.util.removeStringsElements
@@ -8,7 +9,7 @@ import java.util.logging.Logger
 
 // TODO: Implement customize icon
 @Suppress("unused")
-val customBrandingPatch = resourcePatch(
+val customBrandingPatch = patch(
     name = "Custom branding",
     description = "Customize app branding (name)",
     default = false

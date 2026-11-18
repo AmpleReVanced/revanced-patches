@@ -1,13 +1,13 @@
 package app.revanced.patches.kakaotalk.misc.integrity
 
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.returnEarly
 import app.revanced.patches.kakaotalk.misc.integrity.fingerprints.IntentResolveClientMethod
 import app.revanced.patches.kakaotalk.misc.integrity.fingerprints.VerifyingSignatureFingerprint
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 
 @Suppress("unused")
-val verifyingSignaturePatch = bytecodePatch(
+val verifyingSignaturePatch = patch(
     name = "Disable verifying signature",
     description = "Disables the signature verification check that prevents the app from running.",
 ) {

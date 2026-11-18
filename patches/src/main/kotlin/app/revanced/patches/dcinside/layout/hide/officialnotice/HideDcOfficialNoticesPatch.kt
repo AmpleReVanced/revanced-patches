@@ -2,7 +2,8 @@ package app.revanced.patches.dcinside.layout.hide.officialnotice
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.classDefByOrNull
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
@@ -22,7 +23,7 @@ import com.android.tools.smali.dexlib2.iface.value.StringEncodedValue
 private const val AUTHOR_SERIALIZED_NAME = "name"
 
 @Suppress("unused")
-val hideDcOfficialNoticesPatch = bytecodePatch(
+val hideDcOfficialNoticesPatch = patch(
     name = "Hide DC official notices",
     description = "Hides official DCInside operator notices from gallery notice lists.",
 ) {

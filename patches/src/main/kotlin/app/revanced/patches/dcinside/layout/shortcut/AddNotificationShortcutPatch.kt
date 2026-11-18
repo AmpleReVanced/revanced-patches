@@ -2,8 +2,8 @@ package app.revanced.patches.dcinside.layout.shortcut
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
-import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.patch.document
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getReference
 import app.morphe.patches.all.misc.resources.addResourcesPatch
 import app.morphe.util.asSequence
@@ -16,7 +16,7 @@ import org.w3c.dom.Element
 
 private const val NOTIFICATION_SHORTCUT_ID_NAME = "morphe_dcinside_post_list_quick_notifi"
 
-private val addNotificationShortcutBytecodePatch = bytecodePatch {
+private val addNotificationShortcutBytecodePatch = patch {
     compatibleWith(COMPATIBILITY_DC_INSIDE)
     dependsOn(addExtensionPatch, sharedExtensionPatch, addResourcesPatch)
 
@@ -87,7 +87,7 @@ private val addNotificationShortcutBytecodePatch = bytecodePatch {
 }
 
 @Suppress("unused")
-val addNotificationShortcutPatch = resourcePatch(
+val addNotificationShortcutPatch = patch(
     name = "Add notification shortcut",
     description = "Adds a notification shortcut button above quick write in the post list.",
 ) {

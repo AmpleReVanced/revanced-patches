@@ -1,7 +1,9 @@
 package app.revanced.patches.kakaotalk.interaction.chatlog
 
-import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
+import app.morphe.patcher.patch.classDefByOrNull
+import app.morphe.patcher.patch.classDefForEach
+import app.morphe.patcher.patch.mutableClassDefBy
 import app.morphe.patcher.util.proxy.mutableTypes.MutableAnnotation
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.AnnotationVisibility
@@ -25,14 +27,13 @@ private val excludedPackages = listOf(
 )
 private val classTypePattern = Regex("L[^;<]+;")
 
-context(context: BytecodePatchContext)
 internal fun annotateMessageDetailsFields(chatLogClass: ClassDef) {
     val pending = ArrayDeque(messageSubclasses(chatLogClass.type))
     val visited = mutableSetOf<String>()
     while (pending.isNotEmpty()) {
         val type = pending.removeFirst().trimStart('[')
         if (!visited.add(type) || excludedPackages.any(type::startsWith)) continue
-        val classDef = context.classDefByOrNull(type) ?: continue
+        val classDef = classDefByOrNull(type) ?: continue
         if (AccessFlags.ENUM.isSet(classDef.accessFlags)) continue
 
         val names = classDef.kotlinFieldNames()
@@ -41,7 +42,7 @@ internal fun annotateMessageDetailsFields(chatLogClass: ClassDef) {
         }
         val sourceName = classDef.sourceFile?.substringBeforeLast('.')
         if (sourceName != null || names.isNotEmpty()) {
-            context.mutableClassDefBy(classDef).apply {
+            mutableClassDefBy(classDef).apply {
                 sourceName?.let { annotations.add(detailsNameAnnotation(it)) }
                 instanceFields.forEach { field ->
                     names[JvmFieldSignature(field.name, field.type)]?.let { name ->
@@ -55,10 +56,9 @@ internal fun annotateMessageDetailsFields(chatLogClass: ClassDef) {
     }
 }
 
-context(context: BytecodePatchContext)
 private fun messageSubclasses(root: String): Set<String> {
     val subclasses = mutableMapOf<String, MutableList<String>>()
-    context.classDefForEach { classDef ->
+    classDefForEach { classDef ->
         classDef.superclass?.let { parent -> subclasses.getOrPut(parent, ::mutableListOf).add(classDef.type) }
     }
     val result = linkedSetOf<String>()

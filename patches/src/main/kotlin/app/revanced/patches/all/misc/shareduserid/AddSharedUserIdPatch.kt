@@ -26,7 +26,7 @@ fun setOrGetFallbackSharedUserId(fallbackSharedUserId: String): String {
 }
 
 @Suppress("unused")
-val addSharedUserIdPatch = resourcePatch(
+val addSharedUserIdPatch = patch(
     name = "Add shared user ID",
     description = "Adds or updates the sharedUserId attribute in the app's manifest. " +
             "This allows multiple apps with the same sharedUserId to share data and run in the same process. " +

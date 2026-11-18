@@ -1,8 +1,8 @@
 package app.revanced.patches.dcinside.layout.dccon
 
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
-import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
+import app.morphe.patcher.patch.classDefByOrNull
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.revanced.util.parameterRegister
@@ -33,7 +33,7 @@ internal data class PostElementMethods(
     val remove: MethodReference,
 )
 
-internal fun MutableMethod.inferPostElementMethods(context: BytecodePatchContext): PostElementMethods {
+internal fun MutableMethod.inferPostElementMethods(): PostElementMethods {
     val elementAliasInvokes = elementParameterAliasInvokeIndices(1)
 
     val attr = instructions.mapNotNull { instruction ->
@@ -61,7 +61,7 @@ internal fun MutableMethod.inferPostElementMethods(context: BytecodePatchContext
         instruction.toNonRangeInvoke() to reference
     }.firstOrNull() ?: throw PatchException("Could not infer post element dataset method")
 
-    val removeClass = inferJsoupRemoveClassReference(context)
+    val removeClass = inferJsoupRemoveClassReference()
     val removeClassInvoke = instructions.firstNotNullOfOrNull { instruction ->
         val reference = instruction.getReference<MethodReference>() ?: return@firstNotNullOfOrNull null
         if (reference.signatureKey == removeClass.signatureKey) instruction.toNonRangeInvoke() else null
@@ -182,7 +182,7 @@ private fun MutableMethod.inferLoadedDcconImageField(): FieldReference? {
     return null
 }
 
-private fun MutableMethod.inferJsoupRemoveClassReference(context: BytecodePatchContext): MethodReference {
+private fun MutableMethod.inferJsoupRemoveClassReference(): MethodReference {
     val elementClass = parameterTypes.getOrNull(1)?.toString()
         ?: throw PatchException("Could not inspect post element parameter type")
 
@@ -200,12 +200,12 @@ private fun MutableMethod.inferJsoupRemoveClassReference(context: BytecodePatchC
     }.distinctBy { it.signatureKey }
 
     return candidates.singleOrNull { reference ->
-        reference.isJsoupRemoveClassImplementation(context)
+        reference.isJsoupRemoveClassImplementation()
     } ?: throw PatchException("Could not infer post element removeClass(String) method")
 }
 
-private fun MethodReference.isJsoupRemoveClassImplementation(context: BytecodePatchContext): Boolean {
-    val method = context.classDefByOrNull(definingClass)?.methods?.firstOrNull { method ->
+private fun MethodReference.isJsoupRemoveClassImplementation(): Boolean {
+    val method = classDefByOrNull(definingClass)?.methods?.firstOrNull { method ->
         method.name == name &&
             method.parameterTypes.map { it.toString() } == parameterTypes.map { it.toString() } &&
             method.returnType == returnType

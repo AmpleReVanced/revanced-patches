@@ -2,7 +2,7 @@ package app.revanced.patches.dcinside.layout.hide.minigallerycover
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.dcinside.misc.settings.PreferenceScreen
 import app.revanced.patches.dcinside.misc.settings.addSettingsPatch
@@ -16,7 +16,7 @@ private const val EXTENSION_CLASS =
     "Lapp/revanced/extension/dcinside/patches/HideMiniGalleryCoverImagePatch;"
 
 @Suppress("unused")
-val hideMiniGalleryCoverImagePatch = bytecodePatch(
+val hideMiniGalleryCoverImagePatch = patch(
     name = "Hide mini gallery cover image",
     description = "Adds a setting to hide the mini gallery cover image above post lists.",
 ) {

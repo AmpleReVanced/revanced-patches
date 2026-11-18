@@ -2,7 +2,7 @@ package app.revanced.patches.kakaotalk.layout.subdevice
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patcher.util.returnEarly
@@ -11,7 +11,7 @@ import app.revanced.util.smaliReference
 import com.android.tools.smali.dexlib2.iface.Field
 
 @Suppress("unused")
-val showSubDeviceRestrictedMessagesPatch = bytecodePatch(
+val showSubDeviceRestrictedMessagesPatch = patch(
     name = "Show messages restricted to mobile",
     description = "Shows the content of AlimTalk, Leverage and Universal messages that are replaced " +
         "with a placeholder asking to open them on mobile while signed in on a sub device.",

@@ -1,6 +1,6 @@
 package app.revanced.patches.kakaotalk.ad
 
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.returnEarly
 import app.revanced.patches.kakaotalk.ad.fingerprints.OpenChatFeedAdItemFingerprint
 import app.revanced.patches.kakaotalk.ad.fingerprints.OpenChatFeedAdLoadFingerprint
@@ -16,7 +16,7 @@ private const val EXTENSION_CLASS =
     "Lapp/revanced/extension/kakaotalk/patches/DisableOpenChatFeedAdPatch;"
 
 @Suppress("unused")
-val disableOpenChatFeedAdPatch = bytecodePatch(
+val disableOpenChatFeedAdPatch = patch(
     name = "Disable OpenChat feed ad",
     description = "Disables the OpenChat tab feed ad load and render paths.",
 ) {

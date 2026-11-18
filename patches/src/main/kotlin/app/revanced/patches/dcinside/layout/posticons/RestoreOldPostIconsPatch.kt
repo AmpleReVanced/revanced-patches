@@ -3,8 +3,9 @@ package app.revanced.patches.dcinside.layout.posticons
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.patch.classDefForEach
+import app.morphe.patcher.patch.mutableClassDefBy
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.resource.ResourceType
 import app.morphe.patcher.resource.resourceId
 import app.morphe.patcher.util.findMutableMethodOf
@@ -41,7 +42,7 @@ private val postIconDrawableNames = listOf(
     "ic_read_like_recommend_tinted",
 )
 
-internal val restoreOldPostIconsResourcesPatch = resourcePatch {
+internal val restoreOldPostIconsResourcesPatch = patch {
     compatibleWith(COMPATIBILITY_DC_INSIDE)
 
     execute {
@@ -62,7 +63,7 @@ internal val restoreOldPostIconsResourcesPatch = resourcePatch {
 }
 
 @Suppress("unused")
-val restoreOldPostIconsPatch = bytecodePatch(
+val restoreOldPostIconsPatch = patch(
     name = "Restore old post icons",
     description = "Adds a setting to restore DCInside 4.7.x post list and read footer icons.",
 ) {

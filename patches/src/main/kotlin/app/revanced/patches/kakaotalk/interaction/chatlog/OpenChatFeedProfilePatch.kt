@@ -5,7 +5,8 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLa
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.mutableClassDefBy
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
@@ -74,7 +75,7 @@ private data class OpenChatFeedProfileReferences(
 )
 
 @Suppress("unused")
-val openChatFeedProfilePatch = bytecodePatch(
+val openChatFeedProfilePatch = patch(
     name = "Open profile from open chat feed",
     description = "Opens open chat member profiles from join and leave feed messages.",
 ) {

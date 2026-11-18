@@ -1,10 +1,10 @@
 package app.revanced.patches.kakaotalk.misc.extension
 
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.revanced.patches.all.misc.versioncode.changeVersionCodePatch
 
 @Suppress("unused")
-val addExtensionPatch = bytecodePatch {
+val addExtensionPatch = patch {
     extendWith("extensions/kakaotalk.mpe")
     dependsOn(sharedExtensionPatch)
 

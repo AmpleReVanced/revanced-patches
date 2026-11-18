@@ -2,9 +2,9 @@ package app.revanced.patches.dcinside.layout.main
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
-import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.classDefByOrNull
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
@@ -32,7 +32,7 @@ private const val VIEW_GROUP_TYPE = "Landroid/view/ViewGroup;"
 private const val RECYCLER_VIEW_HOLDER_TYPE = "Landroidx/recyclerview/widget/RecyclerView\$ViewHolder;"
 
 @Suppress("unused")
-val hideHomeComponentsPatch = bytecodePatch(
+val hideHomeComponentsPatch = patch(
     name = "Hide home components",
     description = "Adds settings to hide selected DCInside home screen components.",
 ) {
@@ -79,7 +79,6 @@ val hideHomeComponentsPatch = bytecodePatch(
         val itemTypeGetter = adapterClass.methods.inferItemTypeGetter(adapterClass.type)
         val onCreateViewHolderMethod = adapterClass.methods.inferOnCreateViewHolderMethod()
         val componentTypes = onCreateViewHolderMethod.inferHomeComponentTypes(
-            context = this,
             resources = homeComponentResources(),
         )
 
@@ -149,14 +148,13 @@ private data class BranchBlock(
     fun hasAnyDirectLayout(layoutIds: Set<Int>) = layoutIds.any(::hasDirectLayout)
 
     fun hasSyntheticConstructorWithParameters(
-        context: BytecodePatchContext,
         vararg parameterTypes: String,
     ) =
         methodReferences.any { reference ->
             reference.name == "<init>" &&
                 reference.parameterTypes.size == parameterTypes.size + 1 &&
                 reference.parameterTypes.dropLast(1).map { it.toString() } == parameterTypes.toList() &&
-                context.classDefByOrNull(reference.definingClass)?.methods?.any { method ->
+                classDefByOrNull(reference.definingClass)?.methods?.any { method ->
                     method.name == reference.name &&
                         method.parameterTypes.map { it.toString() } ==
                         reference.parameterTypes.map { it.toString() } &&
@@ -165,7 +163,7 @@ private data class BranchBlock(
         }
 }
 
-private fun BytecodePatchContext.homeComponentResources() = HomeComponentResources(
+private fun homeComponentResources() = HomeComponentResources(
     searchLayouts = setOf(
         layoutResourceId("view_main_search_gallery_basic"),
         layoutResourceId("view_main_search_gallery_split"),
@@ -183,7 +181,7 @@ private fun BytecodePatchContext.homeComponentResources() = HomeComponentResourc
     recommendedItemLayout = layoutResourceId("view_best_pick_item"),
 )
 
-private fun BytecodePatchContext.layoutResourceId(name: String): Int {
+private fun layoutResourceId(name: String): Int {
     val field = classDefByOrNull("Lcom/dcinside/app/R\$layout;")
         ?.fields
         ?.firstOrNull { it.name == name }
@@ -232,7 +230,6 @@ private fun Iterable<MutableMethod>.inferOnCreateViewHolderMethod(): MutableMeth
     } ?: throw PatchException("Could not infer MainAdapter.onCreateViewHolder")
 
 private fun MutableMethod.inferHomeComponentTypes(
-    context: BytecodePatchContext,
     resources: HomeComponentResources,
 ): HomeComponentTypes {
     val branches = buildBranchBlocks(inferViewTypeBranches())
@@ -246,14 +243,13 @@ private fun MutableMethod.inferHomeComponentTypes(
             it.hasAnyDirectLayout(resources.searchLayouts)
         },
         recentGalleries = findType("recent galleries") {
-            it.hasAnyLayoutViaConstructor(context, resources.recentLayouts)
+            it.hasAnyLayoutViaConstructor(resources.recentLayouts)
         },
         recommendedGalleries = findType("recommended galleries") {
             it.hasDirectLayout(resources.recommendedGalleriesLayout)
         },
         galleryRanking = findType("gallery ranking") {
             it.hasSyntheticConstructorWithParameters(
-                context,
                 CONTEXT_TYPE,
                 ATTRIBUTE_SET_TYPE,
                 "I",
@@ -261,35 +257,35 @@ private fun MutableMethod.inferHomeComponentTypes(
             )
         },
         liveFilter = findType("live best filter") {
-            it.hasLayoutViaConstructor(context, resources.liveFilterLayout)
+            it.hasLayoutViaConstructor(resources.liveFilterLayout)
         },
         liveItem = findType("live best item") {
-            it.hasLayoutViaConstructor(context, resources.liveItemLayout)
+            it.hasLayoutViaConstructor(resources.liveItemLayout)
         },
         liveMore = findType("live best more") {
             it.hasDirectLayout(resources.liveMoreLayout)
         },
         liveRanking = findType("live best ranking item") {
-            it.hasLayoutViaConstructor(context, resources.liveRankingLayout)
+            it.hasLayoutViaConstructor(resources.liveRankingLayout)
         },
         recommendedTitle = findType("recommended posts title") {
             it.hasDirectLayout(resources.recommendedTitleLayout)
         },
         recommendedItem = findType("recommended posts item") {
-            it.hasLayoutViaConstructor(context, resources.recommendedItemLayout)
+            it.hasLayoutViaConstructor(resources.recommendedItemLayout)
         },
     )
 }
 
-private fun BranchBlock.hasLayoutViaConstructor(context: BytecodePatchContext, layoutId: Int) =
-    hasAnyLayoutViaConstructor(context, setOf(layoutId))
+private fun BranchBlock.hasLayoutViaConstructor(layoutId: Int) =
+    hasAnyLayoutViaConstructor(setOf(layoutId))
 
-private fun BranchBlock.hasAnyLayoutViaConstructor(context: BytecodePatchContext, layoutIds: Set<Int>) =
+private fun BranchBlock.hasAnyLayoutViaConstructor(layoutIds: Set<Int>) =
     methodReferences.any { reference ->
-        reference.name == "<init>" && context.constructorLiteralValues(reference).any(layoutIds::contains)
+        reference.name == "<init>" && constructorLiteralValues(reference).any(layoutIds::contains)
     }
 
-private fun BytecodePatchContext.constructorLiteralValues(
+private fun constructorLiteralValues(
     reference: MethodReference,
     visitedConstructors: MutableSet<String> = mutableSetOf(),
 ): Set<Int> {

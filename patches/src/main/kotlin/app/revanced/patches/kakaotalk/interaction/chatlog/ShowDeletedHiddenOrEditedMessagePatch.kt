@@ -8,8 +8,8 @@ import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.fieldAccess
 import app.morphe.patcher.methodCall
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.patch.document
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.patch.stringOption
 import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patcher.util.getReference
@@ -112,7 +112,7 @@ private fun parseHashColor(input: String): Long {
 private fun toSmaliIntLiteral(value: Int) =
     "0x" + (value.toLong() and ARGB_32_MASK).toString(16).padStart(8, '0')
 
-private val registerModifiedMessageHistoryActivityPatch = resourcePatch {
+private val registerModifiedMessageHistoryActivityPatch = patch {
     compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
@@ -144,7 +144,7 @@ private val registerModifiedMessageHistoryActivityPatch = resourcePatch {
 }
 
 @Suppress("unused")
-val showDeletedHiddenOrEditedMessagePatch = bytecodePatch(
+val showDeletedHiddenOrEditedMessagePatch = patch(
     name = "Show deleted, hidden, or edited messages",
     description = "Allows you to see deleted, hidden, and edited message history in chat logs.",
 ) {

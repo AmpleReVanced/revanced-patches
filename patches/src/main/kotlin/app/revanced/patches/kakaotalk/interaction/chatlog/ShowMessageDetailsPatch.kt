@@ -4,8 +4,9 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLa
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.removeInstructions
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.patch.document
+import app.morphe.patcher.patch.mutableClassDefBy
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.addInstructionsAtControlFlowLabel
 import app.morphe.patcher.util.cloneParameters
 import app.morphe.patches.all.misc.resources.addResourcesPatch
@@ -35,7 +36,7 @@ private const val EXTENSION_CLASS = "$DETAILS_PACKAGE/MessageDetailsExtension;"
 private const val ACTION_CLASS = "$DETAILS_PACKAGE/MessageDetailsAction;"
 private const val SOURCE_INTERFACE = "$DETAILS_PACKAGE/MessageDetailsSource;"
 
-private val registerMessageDetailsActivityPatch = resourcePatch {
+private val registerMessageDetailsActivityPatch = patch {
     execute {
         document("AndroidManifest.xml").use { document ->
             val application = document.getElementsByTagName("application").item(0) as Element
@@ -51,7 +52,7 @@ private val registerMessageDetailsActivityPatch = resourcePatch {
 }
 
 @Suppress("unused")
-val showMessageDetailsPatch = bytecodePatch(
+val showMessageDetailsPatch = patch(
     name = "Show message details",
     description = "Adds a long-press action to inspect the complete ChatLog object, including inherited and message-specific fields, as JSON.",
 ) {

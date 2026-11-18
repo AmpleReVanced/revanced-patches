@@ -8,8 +8,9 @@ import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.methodCall
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.patch.document
+import app.morphe.patcher.patch.mutableClassDefBy
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.matchSingle
@@ -52,7 +53,7 @@ private const val FILTER_VIEW_ID = "morphe_post_history_gallery_filter"
 private const val EDIT_VIEW_ID = "post_history_edit"
 private const val ROW_ANCHOR_VIEW_ID = "post_history_write_title"
 
-private val filterPostHistoryByGalleryBytecodePatch = bytecodePatch {
+private val filterPostHistoryByGalleryBytecodePatch = patch {
     compatibleWith(COMPATIBILITY_DC_INSIDE)
     dependsOn(addExtensionPatch, addSettingsPatch)
 
@@ -200,7 +201,7 @@ private val filterPostHistoryByGalleryBytecodePatch = bytecodePatch {
 }
 
 @Suppress("unused")
-val filterPostHistoryByGalleryPatch = resourcePatch(
+val filterPostHistoryByGalleryPatch = patch(
     name = "Filter recently viewed posts by gallery",
     description = "Adds a gallery filter below the recently viewed posts filters, " +
         "which narrows the list down to the posts of a single gallery.",

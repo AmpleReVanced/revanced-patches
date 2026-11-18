@@ -6,7 +6,7 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLa
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.methodCall
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getReference
 import app.morphe.util.cloneMutable
 import app.morphe.util.findInstructionIndicesReversedOrThrow
@@ -21,7 +21,7 @@ private const val EXTENSION_CLASS =
     "Lapp/revanced/extension/kakaotalk/patches/OpenChatMemberActions;"
 
 @Suppress("unused")
-val allowOpenChatManagersToBlockMembersPatch = bytecodePatch(
+val allowOpenChatManagersToBlockMembersPatch = patch(
     name = "Allow Open Chat Managers To Block Members",
     description = "Allows open chat room hosts and co-hosts to block regular members from their profiles.",
 ) {

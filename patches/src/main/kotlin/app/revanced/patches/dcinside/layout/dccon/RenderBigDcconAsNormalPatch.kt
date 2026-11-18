@@ -1,7 +1,7 @@
 package app.revanced.patches.dcinside.layout.dccon
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.dcinside.misc.settings.PreferenceScreen
 import app.revanced.patches.dcinside.misc.settings.addSettingsPatch
@@ -12,7 +12,7 @@ private const val EXTENSION_CLASS =
     "Lapp/revanced/extension/dcinside/patches/RenderBigDcconAsNormalPatch;"
 
 @Suppress("unused")
-val renderBigDcconAsNormalPatch = bytecodePatch(
+val renderBigDcconAsNormalPatch = patch(
     name = "Render big DCCon as normal size",
     description = "Adds a setting to render big DCCon at normal DCCon size.",
 ) {
@@ -29,7 +29,7 @@ val renderBigDcconAsNormalPatch = bytecodePatch(
         )
         setExtensionIsPatchIncluded(EXTENSION_CLASS)
 
-        val postElementMethods = PostDcconImageHandlerFingerprint.method.inferPostElementMethods(this)
+        val postElementMethods = PostDcconImageHandlerFingerprint.method.inferPostElementMethods()
 
         PostDcconImageHandlerFingerprint.method.addInstructionsWithLabels(
             0,

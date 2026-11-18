@@ -5,7 +5,7 @@ import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.removeInstructions
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.kakaotalk.misc.openlink.fingerprints.DefaultExternalBrowserFingerprint
 import app.revanced.patches.kakaotalk.misc.settings.PreferenceScreen
@@ -19,7 +19,7 @@ private const val EXTENSION_CLASS =
     "Lapp/revanced/extension/kakaotalk/patches/DefaultExternalBrowserPatch;"
 
 @Suppress("unused")
-val defaultExternalBrowserPatch = bytecodePatch(
+val defaultExternalBrowserPatch = patch(
     name = "Default external browser",
     description = "Sets the default external browser for KakaoTalk to the system's default browser.",
 ) {

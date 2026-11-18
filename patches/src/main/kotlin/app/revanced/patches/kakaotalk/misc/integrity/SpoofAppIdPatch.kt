@@ -1,13 +1,13 @@
 package app.revanced.patches.kakaotalk.misc.integrity
 
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstructions
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.revanced.patches.kakaotalk.misc.integrity.fingerprints.GetAppIdFingerprint
 import app.revanced.patches.kakaotalk.misc.integrity.fingerprints.UaffacetidMethodFingerprint
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 
 @Suppress("unused")
-val spoofAppIdPatch = bytecodePatch(
+val spoofAppIdPatch = patch(
     name = "Spoof App ID",
     description = "Spoofs the App ID to bypass integrity checks. (to bypass biometric auth etc.)",
 ) {

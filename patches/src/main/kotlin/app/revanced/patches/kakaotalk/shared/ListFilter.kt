@@ -3,8 +3,8 @@ package app.revanced.patches.kakaotalk.shared
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
-import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
+import app.morphe.patcher.patch.mutableClassDefBy
 import app.morphe.patcher.util.proxy.mutableTypes.MutableClass
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
 import app.morphe.util.cloneMutable
@@ -26,7 +26,7 @@ internal data class ListFilterGroup(
     val settings: List<String> = emptyList(),
 )
 
-internal fun BytecodePatchContext.setListFilter(
+internal fun setListFilter(
     extensionType: String,
     groups: List<ListFilterGroup>,
 ) {
@@ -68,7 +68,7 @@ internal fun BytecodePatchContext.setListFilter(
     )
 }
 
-internal fun BytecodePatchContext.filterAdapterItems(
+internal fun filterAdapterItems(
     adapter: MutableClass,
     extensionType: String,
     additionalMethods: List<Method> = emptyList(),

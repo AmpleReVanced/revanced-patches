@@ -1,6 +1,8 @@
 package app.revanced.patches.kakaotalk.misc.tracker
 
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.classDefForEach
+import app.morphe.patcher.patch.mutableClassDefBy
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.findMutableMethodOf
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.returnBoxedBooleanEarly
@@ -12,7 +14,7 @@ import app.revanced.util.matches
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
 @Suppress("unused")
-val disableTalkShareLogPatch = bytecodePatch(
+val disableTalkShareLogPatch = patch(
     name = "Disable Talk Share Log",
     description = "Disable talk share log"
 ) {

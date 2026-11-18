@@ -2,14 +2,14 @@ package app.revanced.patches.chzzk.tongpow
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.revanced.patches.chzzk.shared.Constants.COMPATIBILITY_CHZZK
 import app.revanced.util.parameterTypeNames
 import app.revanced.util.smaliReference
 import com.android.tools.smali.dexlib2.AccessFlags
 
 @Suppress("unused")
-val autoClaimTongPowPatch = bytecodePatch(
+val autoClaimTongPowPatch = patch(
     name = "Auto claim TongPow",
     description = "Automatically claims CHZZK TongPow rewards when they become available while watching streams.",
 ) {

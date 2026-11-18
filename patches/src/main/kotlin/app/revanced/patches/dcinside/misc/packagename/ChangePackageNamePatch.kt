@@ -2,7 +2,8 @@ package app.revanced.patches.dcinside.misc.packagename
 
 import app.morphe.patcher.patch.Option
 import app.morphe.patcher.patch.booleanOption
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.document
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.patch.stringOption
 import app.morphe.util.getNode
 import app.revanced.patches.dcinside.misc.integrity.bypassGetTextPath
@@ -14,7 +15,7 @@ import org.w3c.dom.Element
 lateinit var packageNameOption: Option<String>
 
 @Suppress("unused")
-val changePackageNamePatch = bytecodePatch(
+val changePackageNamePatch = patch(
     name = "Change package name",
     description = "Appends \".revanced\" to the package name by default. " +
             "For DCinside only",

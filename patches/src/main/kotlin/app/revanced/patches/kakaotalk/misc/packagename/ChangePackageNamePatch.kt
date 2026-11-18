@@ -6,7 +6,7 @@ import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.Option
 import app.morphe.patcher.patch.booleanOption
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.patch.stringOption
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.returnEarly
@@ -23,7 +23,7 @@ import com.android.tools.smali.dexlib2.immutable.reference.ImmutableStringRefere
 lateinit var packageNameOption: Option<String>
 
 @Suppress("unused")
-private val ignoreCheckPackageNamePatch = bytecodePatch(
+private val ignoreCheckPackageNamePatch = patch(
     description = "Ignores the package name check to allow installation of modified versions.",
     default = false,
 ) {
@@ -70,7 +70,7 @@ private val ignoreCheckPackageNamePatch = bytecodePatch(
 }
 
 @Suppress("unused")
-val changePackageNamePatch = bytecodePatch(
+val changePackageNamePatch = patch(
     name = "Change package name",
     description = "Appends \".revanced\" to the package name by default. " +
             "For KakaoTalk only",

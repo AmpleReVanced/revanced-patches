@@ -1,7 +1,7 @@
 package app.revanced.patches.kakaotalk.interaction.media
 
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.addInstructionsAtControlFlowLabel
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import app.morphe.util.findInstructionIndicesReversedOrThrow
@@ -20,7 +20,7 @@ private const val SANITIZE =
     "$EXTENSION_CLASS->sanitize(Ljava/io/File;)Ljava/io/File;"
 
 @Suppress("unused")
-val stripImageMetadataPatch = bytecodePatch(
+val stripImageMetadataPatch = patch(
     name = "Strip image metadata",
     description = "Removes EXIF metadata, including the GPS capture location, from images sent in " +
             "original quality, while keeping the picture and its orientation intact.",

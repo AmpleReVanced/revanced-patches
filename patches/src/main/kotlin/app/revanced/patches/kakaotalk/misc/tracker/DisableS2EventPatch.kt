@@ -2,7 +2,7 @@ package app.revanced.patches.kakaotalk.misc.tracker
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getFreeRegisterProvider
 import app.revanced.patches.kakaotalk.misc.tracker.fingerprints.DisableSaveS2EventFingerprint
 import app.revanced.patches.kakaotalk.misc.tracker.fingerprints.SendS2EventFingerprint
@@ -11,7 +11,7 @@ import app.revanced.patches.kakaotalk.shared.fingerprints.KotlinUnitInstanceFing
 import app.revanced.util.smaliReference
 
 @Suppress("unused")
-val disableS2EventPatch = bytecodePatch(
+val disableS2EventPatch = patch(
     name = "Disable S2Event",
     description = "Disables Tracker",
 ) {

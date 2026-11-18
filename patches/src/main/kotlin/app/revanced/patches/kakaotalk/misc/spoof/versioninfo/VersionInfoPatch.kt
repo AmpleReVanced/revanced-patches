@@ -3,7 +3,7 @@ package app.revanced.patches.kakaotalk.misc.spoof.versioninfo
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction21c
@@ -12,7 +12,7 @@ import com.android.tools.smali.dexlib2.immutable.reference.ImmutableStringRefere
 import java.time.format.DateTimeFormatter
 
 @Suppress("unused")
-val versionInfoPatch = bytecodePatch(
+val versionInfoPatch = patch(
     name = "Version info patch",
     description = "Patches the version info to include '(ReVanced)' in the version string.",
 ) {

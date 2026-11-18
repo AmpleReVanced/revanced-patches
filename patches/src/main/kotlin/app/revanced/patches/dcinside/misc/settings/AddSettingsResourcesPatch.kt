@@ -1,6 +1,8 @@
 package app.revanced.patches.dcinside.misc.settings
 
-import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.patch.document
+import app.morphe.patcher.patch.patch
+import app.morphe.patches.all.misc.resources.addResourcesPatch
 import app.morphe.util.ResourceGroup
 import app.morphe.util.asSequence
 import app.morphe.util.copyResources
@@ -11,11 +13,12 @@ import org.w3c.dom.Element
 
 private const val SETTINGS_SHORTCUT_ID = "morphe_dcinside_settings"
 
-internal val addSettingsResourcesPatch = resourcePatch(
+internal val addSettingsResourcesPatch = patch(
     name = "Add settings resources",
     description = "Adds Morphe settings resources to the app.",
 ) {
     compatibleWith(COMPATIBILITY_DC_INSIDE)
+    dependsOn(addResourcesPatch)
 
     execute {
         addDcInsideResources()

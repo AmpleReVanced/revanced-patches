@@ -3,7 +3,7 @@ package app.revanced.patches.soop.ads
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.revanced.patches.soop.ads.fingerprints.*
 import app.revanced.patches.soop.shared.Constants.COMPATIBILITY_SOOP
 import com.android.tools.smali.dexlib2.Opcode
@@ -13,7 +13,7 @@ import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
 @Suppress("unused")
-val removeLiveAdsPatch = bytecodePatch(
+val removeLiveAdsPatch = patch(
     name = "Remove live ads",
     description = "Removes the live pre-roll ad by routing every ad decision into the app's own " +
         "no-video path so the stream starts immediately.",

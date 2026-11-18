@@ -1,7 +1,7 @@
 package app.revanced.patches.dcinside.ad
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.returnEarly
 import app.revanced.patches.dcinside.ad.fingerprints.PostReadImageAdViewFingerprint
@@ -12,7 +12,7 @@ import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
 @Suppress("unused")
-val disableImageAdPatch = bytecodePatch(
+val disableImageAdPatch = patch(
     name = "Disable Image Ad",
     description = "Disables the image ad in the app.",
 ) {

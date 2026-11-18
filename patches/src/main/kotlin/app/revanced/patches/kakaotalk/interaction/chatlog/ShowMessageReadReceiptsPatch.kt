@@ -5,8 +5,9 @@ import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.methodCall
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.patch.document
+import app.morphe.patcher.patch.mutableClassDefBy
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
@@ -78,7 +79,7 @@ private const val EXTENSION_CLASS =
 private const val PATCH_MARKER_CLASS =
     "Lapp/revanced/extension/kakaotalk/patches/ShowMessageReadReceiptsPatch;"
 
-private val registerMessageReadReceiptsActivityPatch = resourcePatch {
+private val registerMessageReadReceiptsActivityPatch = patch {
     compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
@@ -112,7 +113,7 @@ private val registerMessageReadReceiptsActivityPatch = resourcePatch {
 }
 
 @Suppress("unused")
-val showMessageReadReceiptsPatch = bytecodePatch(
+val showMessageReadReceiptsPatch = patch(
     name = "Show message read receipts",
     description = "Shows the members who have or have not read each chat message.",
 ) {

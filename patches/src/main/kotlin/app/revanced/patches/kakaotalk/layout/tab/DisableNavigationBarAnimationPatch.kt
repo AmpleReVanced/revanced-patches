@@ -2,7 +2,7 @@ package app.revanced.patches.kakaotalk.layout.tab
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.kakaotalk.layout.tab.fingerprints.ChatNavigationProgressFingerprint
@@ -21,7 +21,7 @@ private const val EXTENSION_CLASS =
     "Lapp/revanced/extension/kakaotalk/patches/DisableNavigationBarAnimationPatch;"
 
 @Suppress("unused")
-val disableNavigationBarAnimationPatch = bytecodePatch(
+val disableNavigationBarAnimationPatch = patch(
     name = "Disable navigation bar animation",
     description = "Adds an option to enter chats without transition delays and show the bottom bar immediately on return.",
 ) {

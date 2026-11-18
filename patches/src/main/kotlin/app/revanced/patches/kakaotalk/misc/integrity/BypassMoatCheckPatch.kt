@@ -5,7 +5,10 @@ import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.classDefBy
+import app.morphe.patcher.patch.classDefForEach
+import app.morphe.patcher.patch.mutableClassDefBy
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.findMutableMethodOf
 import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patcher.util.getReference
@@ -66,7 +69,7 @@ private class MoatNativeGate(
 }
 
 @Suppress("unused")
-val bypassMoatCheckPatch = bytecodePatch(
+val bypassMoatCheckPatch = patch(
     name = "Bypass Moat check",
     description = "Adds a setting to prevent KakaoPay Moat initialization, network requests, " +
             "scans, security information sharing, telemetry, and force-off reports while returning benign " +

@@ -1,7 +1,7 @@
 package app.revanced.patches.kakaotalk.interaction.chatlog
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import app.morphe.util.setExtensionIsPatchIncluded
@@ -17,7 +17,7 @@ private const val BLOCK_MODIFIED_MESSAGE_REACTION =
     "Lapp/revanced/extension/kakaotalk/settings/Settings;->blockModifiedMessageReaction()Z"
 
 @Suppress("unused")
-val blockModifiedMessageReactionPatch = bytecodePatch(
+val blockModifiedMessageReactionPatch = patch(
     name = "Block reactions on deleted or hidden messages",
     description = "Stops reactions, including the double tap gesture, from being sent on messages " +
             "that the server considers deleted or hidden and that are only still visible because " +

@@ -3,7 +3,7 @@ package app.revanced.patches.soop.ads
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.revanced.patches.soop.ads.fingerprints.*
 import app.revanced.patches.soop.shared.Constants.COMPATIBILITY_SOOP
@@ -16,7 +16,7 @@ private fun MutableMethod.returnVoidAfterSuper() {
 }
 
 @Suppress("unused")
-val removeBannerAdsPatch = bytecodePatch(
+val removeBannerAdsPatch = patch(
     name = "Remove banner ads",
     description = "Removes the VOD companion and search banner ads.",
 ) {

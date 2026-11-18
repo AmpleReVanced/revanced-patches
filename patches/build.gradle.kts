@@ -20,7 +20,10 @@ dependencies {
     // Required due to smali, or build fails. Can be removed once smali is bumped.
     implementation(libs.guava)
 
-    implementation(libs.morphe.patches.library)
+    implementation(libs.morphe.patches.library) {
+        // The patcher-provided classpath supplies the matching Smali revision.
+        exclude(group = "com.github.MorpheApp.smali")
+    }
 
     implementation(libs.apksig)
 

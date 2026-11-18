@@ -5,7 +5,6 @@ import app.morphe.patcher.InstructionLocation.MatchAfterImmediately
 import app.morphe.patcher.StringComparisonType.STARTS_WITH
 import app.morphe.patcher.methodCall
 import app.morphe.patcher.opcode
-import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.string
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
@@ -33,7 +32,6 @@ internal object ChatNavigationProgressFingerprint : Fingerprint(
     custom = { _, classDef -> classDef.sourceFile == "ChatScreen.kt" },
 )
 
-context(_: BytecodePatchContext)
 internal fun chatDetailNavigationFingerprint() = Fingerprint(
     definingClass = ChatNavigationProgressFingerprint.originalClassDef.type,
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.FINAL),
@@ -67,7 +65,6 @@ internal fun chatDetailNavigationFingerprint() = Fingerprint(
     ),
 )
 
-context(_: BytecodePatchContext)
 internal fun chatListPaneVisibilityFingerprint() = Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.FINAL),
     returnType = "V",
@@ -87,7 +84,6 @@ internal fun chatListPaneVisibilityFingerprint() = Fingerprint(
     custom = { _, classDef -> classDef.sourceFile == "ChatScreen.kt" },
 )
 
-context(_: BytecodePatchContext)
 internal fun chatNavigationVisibilityFingerprint() = Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.FINAL),
     returnType = "V",

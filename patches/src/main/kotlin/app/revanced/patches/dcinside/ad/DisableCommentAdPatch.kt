@@ -2,7 +2,7 @@ package app.revanced.patches.dcinside.ad
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.revanced.patches.dcinside.ad.fingerprints.PostReadCommentAdViewFingerprint
 import app.revanced.patches.dcinside.ad.fingerprints.PostReadCommentTopAdViewFingerprint
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
@@ -10,7 +10,7 @@ import app.revanced.util.smaliReference
 import com.android.tools.smali.dexlib2.Opcode
 
 @Suppress("unused")
-val disableCommentAdPatch = bytecodePatch(
+val disableCommentAdPatch = patch(
     name = "Disable Comment Ad",
     description = "Disables the comment ad in the app.",
 ) {

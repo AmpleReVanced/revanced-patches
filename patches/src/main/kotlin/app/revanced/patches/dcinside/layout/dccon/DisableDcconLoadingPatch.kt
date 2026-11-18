@@ -1,7 +1,7 @@
 package app.revanced.patches.dcinside.layout.dccon
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.dcinside.misc.settings.PreferenceScreen
 import app.revanced.patches.dcinside.misc.settings.addSettingsPatch
@@ -12,7 +12,7 @@ private const val EXTENSION_CLASS =
     "Lapp/revanced/extension/dcinside/patches/DisableDcconLoadingPatch;"
 
 @Suppress("unused")
-val disableDcconLoadingPatch = bytecodePatch(
+val disableDcconLoadingPatch = patch(
     name = "Disable DCCon loading",
     description = "Adds settings to block DCCon image loading in posts and replies.",
 ) {
@@ -34,7 +34,7 @@ val disableDcconLoadingPatch = bytecodePatch(
         )
         setExtensionIsPatchIncluded(EXTENSION_CLASS)
 
-        val postElementMethods = PostDcconImageHandlerFingerprint.method.inferPostElementMethods(this)
+        val postElementMethods = PostDcconImageHandlerFingerprint.method.inferPostElementMethods()
 
         PostDcconImageHandlerFingerprint.method.addInstructionsWithLabels(
             0,

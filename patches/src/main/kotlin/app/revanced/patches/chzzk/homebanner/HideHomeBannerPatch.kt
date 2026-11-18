@@ -2,7 +2,7 @@ package app.revanced.patches.chzzk.homebanner
 
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getReference
 import app.morphe.util.indexOfFirstInstructionOrThrow
 import app.revanced.patches.chzzk.common.utils.forceBooleanGetterFalse
@@ -13,7 +13,7 @@ import com.android.tools.smali.dexlib2.iface.instruction.TwoRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.reference.TypeReference
 
 @Suppress("unused")
-val hideHomeBannerPatch = bytecodePatch(
+val hideHomeBannerPatch = patch(
     name = "Hide home banners",
     description = "Hides promotional banners on the CHZZK home recommend tab, including the top " +
         "banner carousel and the in-feed event and image banners.",

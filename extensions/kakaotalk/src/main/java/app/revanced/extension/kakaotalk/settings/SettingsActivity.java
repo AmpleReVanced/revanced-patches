@@ -186,7 +186,7 @@ public final class SettingsActivity extends Activity {
             bindRiskySwitchIfIncluded(PREF_BYPASS_MOAT_INTEGRITY_CHECK, Settings.BYPASS_MOAT_INTEGRITY_CHECK, BypassMoatCheckPatch.isPatchIncluded());
             bindTextIfIncluded(PREF_FEATURE_FLAG_OVERRIDES, Settings.FEATURE_FLAG_OVERRIDES, OverrideFeatureFlagPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_FORCE_DEBUG_MODE, Settings.FORCE_DEBUG_MODE, ForceEnableDebugModePatch.isPatchIncluded());
-            bindSwitch(PREF_DEBUG, BaseSettings.DEBUG);
+            bindDebugLevelPreference(PREF_DEBUG, this::refreshPreferences);
             bindSwitch(PREF_DEBUG_STACKTRACE, BaseSettings.DEBUG_STACKTRACE);
             bindSwitch(PREF_DEBUG_TOAST, BaseSettings.DEBUG_TOAST_ON_ERROR);
 
@@ -346,6 +346,7 @@ public final class SettingsActivity extends Activity {
             Preference preference = requirePreference(PREF_RESET, Preference.class);
             preference.setPersistent(false);
             preference.setOnPreferenceClickListener(pref -> {
+                BaseSettings.DEBUG_LEVEL.resetToDefault();
                 for (BooleanSetting setting : resettableSettings) {
                     setting.resetToDefault();
                 }
@@ -358,6 +359,7 @@ public final class SettingsActivity extends Activity {
         }
 
         private void refreshPreferences() {
+            refreshDebugLevelPreference();
             for (SwitchBinding binding : switchBindings) {
                 binding.preference.setChecked(binding.setting.get());
                 binding.preference.setEnabled(binding.setting.isAvailable());

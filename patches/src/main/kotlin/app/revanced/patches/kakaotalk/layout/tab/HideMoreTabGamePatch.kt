@@ -3,7 +3,7 @@ package app.revanced.patches.kakaotalk.layout.tab
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import app.morphe.util.setExtensionIsPatchIncluded
@@ -26,7 +26,7 @@ private const val EXTENSION_CLASS =
 private const val HIDE_GAME = "Lapp/revanced/extension/kakaotalk/settings/Settings;->hideMoreTabGame()Z"
 
 @Suppress("unused")
-val hideMoreTabGamePatch = bytecodePatch(
+val hideMoreTabGamePatch = patch(
     name = "Hide More tab Game tab",
     description = "Hides the Game tab from the More tab.",
 ) {

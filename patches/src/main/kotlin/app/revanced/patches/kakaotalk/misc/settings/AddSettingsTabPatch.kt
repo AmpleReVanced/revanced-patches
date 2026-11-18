@@ -4,18 +4,14 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
-import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableField.Companion.toMutable
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
-import app.morphe.patches.all.misc.resources.addResourcesPatch
 import app.morphe.util.cloneMutable
-import app.revanced.patches.kakaotalk.misc.extension.addExtensionPatch
-import app.revanced.patches.kakaotalk.misc.extension.sharedExtensionPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.util.argumentRegister
 import app.revanced.util.parameterTypeNames
@@ -37,18 +33,12 @@ private const val ADD_MORPHE_SETTINGS_ITEM_METHOD = "revanced_addMorpheSettingsI
 private const val DEFAULT_CONSTRUCTOR_MARKER = "Lkotlin/jvm/internal/DefaultConstructorMarker;"
 
 @Suppress("unused")
-val addSettingsTabPatch = bytecodePatch(
+val addSettingsTabPatch = patch(
     name = "Add settings tab",
     description = "Adds a settings tab to the app.",
 ) {
     compatibleWith(COMPATIBILITY_KAKAO)
-    dependsOn(
-        addExtensionPatch,
-        addResourcesPatch,
-        addSettingsResourcesPatch,
-        sharedExtensionPatch,
-        registerSettingsActivityPatch
-    )
+    dependsOn(registerSettingsActivityPatch)
 
     execute {
         syncThemeNightModePreference()
@@ -434,7 +424,7 @@ private fun addMorpheSettingsItemMethod(
     )
 }
 
-private fun BytecodePatchContext.syncThemeNightModePreference() {
+private fun syncThemeNightModePreference() {
     ThemePrefNightModeReadFingerprint.method.apply {
         val returnIndex = instructions.indexOfLast {
             it.opcode == Opcode.RETURN

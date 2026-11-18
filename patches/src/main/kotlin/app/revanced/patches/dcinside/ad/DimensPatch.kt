@@ -2,8 +2,8 @@ package app.revanced.patches.dcinside.ad
 
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstructions
-import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.patch.document
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.returnEarly
 import app.morphe.util.asSequence
 import app.revanced.patches.dcinside.ad.fingerprints.GetMinimumDimensFingerprint
@@ -12,7 +12,7 @@ import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
 import com.android.tools.smali.dexlib2.Opcode
 
 @Suppress("unused")
-internal val dimensBytecodePatch = bytecodePatch {
+internal val dimensBytecodePatch = patch {
     execute {
         GetMinimumDimensFingerprint.method.returnEarly(0)
 
@@ -30,7 +30,7 @@ internal val dimensBytecodePatch = bytecodePatch {
 }
 
 @Suppress("unused")
-val dimensPatch = resourcePatch(
+val dimensPatch = patch(
     name = "Dimens Patch",
     description = "reassigns ad_minimum_height to 0dp to remove ads from the app.",
 ) {

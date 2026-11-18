@@ -1,12 +1,12 @@
 package app.revanced.patches.dcinside.ad
 
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.returnEarly
 import app.revanced.patches.dcinside.ad.fingerprints.DisableAdControllerFingerprint
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
 
 @Suppress("unused")
-val disableAdControllerPatch = bytecodePatch(
+val disableAdControllerPatch = patch(
     name = "Disable ad controller",
     description = "Disables the ad controller that manages ads in the app.",
 ) {

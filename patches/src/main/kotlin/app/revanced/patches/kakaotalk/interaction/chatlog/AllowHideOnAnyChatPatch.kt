@@ -3,7 +3,7 @@ package app.revanced.patches.kakaotalk.interaction.chatlog
 import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.methodCall
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.util.indexOfFirstInstructionOrThrow
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.CheckIsAllowedHideFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.CheckIsEqualWithMyUserIdFingerprint
@@ -12,7 +12,7 @@ import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 
 @Suppress("unused")
-val allowHideOnAnyChatPatch = bytecodePatch(
+val allowHideOnAnyChatPatch = patch(
     name = "Allow Hide on Any Chat",
     description = "Users with hiding privileges can hide any chat, including their own messages.",
 ) {

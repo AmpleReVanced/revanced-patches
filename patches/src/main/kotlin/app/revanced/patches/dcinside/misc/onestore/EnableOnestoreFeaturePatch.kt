@@ -1,13 +1,13 @@
 package app.revanced.patches.dcinside.misc.onestore
 
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.returnEarly
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction11n
 
 @Suppress("unused")
-val enableOnestoreFeaturePatch = bytecodePatch(
+val enableOnestoreFeaturePatch = patch(
     name = "Enable OneStore feature",
     description = "Enables the OneStore feature in DC Inside app.",
 ) {

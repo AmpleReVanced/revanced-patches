@@ -2,7 +2,8 @@ package app.revanced.patches.dcinside.misc.settings
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.classDefByOrNull
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patches.shared.misc.settings.preference.NonInteractivePreference
@@ -22,7 +23,7 @@ private const val EXTENSION_CLASS =
     "Lapp/revanced/extension/dcinside/settings/UserMemoPatch;"
 private typealias ClassLookup = (String) -> ClassDef?
 
-internal val userMemoPatch = bytecodePatch {
+internal val userMemoPatch = patch {
     compatibleWith(COMPATIBILITY_DC_INSIDE)
     dependsOn(
         addExtensionPatch,

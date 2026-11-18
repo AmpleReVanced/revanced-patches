@@ -4,9 +4,10 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.methodCall
-import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.classDefBy
+import app.morphe.patcher.patch.mutableClassDefBy
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patcher.util.getMutableMethod
 import app.morphe.patcher.util.getReference
@@ -37,7 +38,7 @@ import java.util.logging.Logger
 private const val loggerName = "app.revanced.patches.dcinside.layout.history.ShowAuthorIdentifierPatch"
 
 @Suppress("unused")
-val showAuthorIdentifierPatch = bytecodePatch(
+val showAuthorIdentifierPatch = patch(
     name = "Show author identifier",
     description = "Adds options to show the author identifier next to the nickname in posts, " +
         "post lists, comments, and the recently-viewed posts list. The recently-viewed list only " +
@@ -219,7 +220,7 @@ val showAuthorIdentifierPatch = bytecodePatch(
     }
 }
 
-private fun BytecodePatchContext.addCommentAuthorIdentifier() {
+private fun addCommentAuthorIdentifier() {
     // Matched exhaustively, as the signature is what identifies the builder and a second
     // method of the same shape must not silently decide the type the bridge casts to.
     val commentAuthorLine = CommentAuthorLineFingerprint.matchSingle().originalMethod

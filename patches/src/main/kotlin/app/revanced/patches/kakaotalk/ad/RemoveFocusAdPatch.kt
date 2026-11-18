@@ -1,12 +1,12 @@
 package app.revanced.patches.kakaotalk.ad
 
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.returnEarly
 import app.revanced.patches.kakaotalk.ad.fingerprints.LoadFocusAdFingerprint
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 
 @Suppress("unused")
-val removeFocusAdPatch = bytecodePatch(
+val removeFocusAdPatch = patch(
     name = "Remove focus ad",
     description = "Removes the focus ad from the app.",
 ) {

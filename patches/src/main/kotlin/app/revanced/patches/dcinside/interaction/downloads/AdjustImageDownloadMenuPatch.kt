@@ -1,7 +1,8 @@
 package app.revanced.patches.dcinside.interaction.downloads
 
+import app.morphe.patcher.patch.document
 import app.morphe.patcher.patch.intOption
-import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.util.asSequence
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
 import org.w3c.dom.Element
@@ -14,7 +15,7 @@ private fun Element.hasId(id: String) =
         getAttribute("android:id") == "@+id/$id"
 
 @Suppress("unused")
-val adjustImageDownloadMenuPatch = resourcePatch(
+val adjustImageDownloadMenuPatch = patch(
     name = "Adjust image download menu",
     description = "Moves the image download menu buttons upward by adding bottom padding.",
     default = false,

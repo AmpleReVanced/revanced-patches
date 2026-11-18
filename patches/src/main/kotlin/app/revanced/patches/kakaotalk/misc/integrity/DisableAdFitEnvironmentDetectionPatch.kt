@@ -1,6 +1,7 @@
 package app.revanced.patches.kakaotalk.misc.integrity
 
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.mutableClassDefBy
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.returnEarly
 import app.revanced.patches.kakaotalk.misc.integrity.fingerprints.AdFitEmulatorCheckFingerprint
 import app.revanced.patches.kakaotalk.misc.integrity.fingerprints.AdFitRootCheckFingerprint
@@ -9,7 +10,7 @@ import app.revanced.util.parameterTypeNames
 import com.android.tools.smali.dexlib2.AccessFlags
 
 @Suppress("unused")
-val disableAdFitEnvironmentDetectionPatch = bytecodePatch(
+val disableAdFitEnvironmentDetectionPatch = patch(
     name = "Disable AdFit environment detection",
     description = "Stops the AdFit ad SDK from reporting a root or emulator verdict to its " +
             "telemetry and ad request endpoints.",

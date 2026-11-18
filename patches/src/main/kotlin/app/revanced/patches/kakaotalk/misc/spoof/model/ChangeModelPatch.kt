@@ -1,13 +1,13 @@
 package app.revanced.patches.kakaotalk.misc.spoof.model
 
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.patch.stringOption
 import app.revanced.patches.all.misc.build.BuildInfo
 import app.revanced.patches.all.misc.build.baseSpoofBuildInfoPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 
 @Suppress("unused")
-val changeModelPatch = bytecodePatch(
+val changeModelPatch = patch(
     name = "Change model",
     description = "Changes the device model to supporting subdevice features",
     default = false, // Starting with version 26.9.0, it's no longer necessary to enable subdevice feature

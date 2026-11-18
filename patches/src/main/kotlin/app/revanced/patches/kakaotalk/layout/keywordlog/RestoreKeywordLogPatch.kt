@@ -4,10 +4,11 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
-import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.patch.classDefBy
+import app.morphe.patcher.patch.document
+import app.morphe.patcher.patch.mutableClassDefBy
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableField
@@ -57,7 +58,7 @@ private const val LOAD_PROFILE_METHOD = "patch_loadKeywordLogProfile"
 
 private const val REFRESH_ROOM_LIST_METHOD = "patch_refreshKeywordLogChatRoom"
 
-private val registerKeywordLogActivityPatch = resourcePatch {
+private val registerKeywordLogActivityPatch = patch {
     compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
@@ -88,7 +89,7 @@ private val registerKeywordLogActivityPatch = resourcePatch {
 }
 
 @Suppress("unused")
-val restoreKeywordLogPatch = bytecodePatch(
+val restoreKeywordLogPatch = patch(
     name = "Restore keyword notification log",
     description = "Restores the removed keyword notification collection view "
         + "along with its chat list entry.",
@@ -304,7 +305,7 @@ val restoreKeywordLogPatch = bytecodePatch(
  * ChatRoom declares more than one field of the chat room type, so every no argument getter that
  * returns one must agree on which field is the real type before its descriptor can be baked in.
  */
-private fun BytecodePatchContext.chatRoomTypeField(
+private fun chatRoomTypeField(
     chatRoomType: String,
     chatRoomTypeEnum: String,
 ): MutableField {
@@ -317,7 +318,7 @@ private fun BytecodePatchContext.chatRoomTypeField(
         ?: throw PatchException("Chat room type getters resolve to ${fields.size} different fields.")
 }
 
-private fun BytecodePatchContext.hookKeywordMatch() {
+private fun hookKeywordMatch() {
     keywordMatchCallSiteFingerprint(KeywordMatchFingerprint.originalMethod)
         .matchAll()
         .sortedByDescending { it.instructionMatches[3].index }
@@ -348,7 +349,7 @@ private fun BytecodePatchContext.hookKeywordMatch() {
         }
 }
 
-private fun BytecodePatchContext.addHelperMethod(
+private fun addHelperMethod(
     definingClass: String,
     name: String,
     parameters: List<String>,
@@ -373,7 +374,7 @@ private fun BytecodePatchContext.addHelperMethod(
     )
 }
 
-private fun BytecodePatchContext.addPseudoChatRoom(
+private fun addPseudoChatRoom(
     chatRoomType: String,
     chatRoomConstructor: String,
     keywordLogListEnum: String,
@@ -517,7 +518,7 @@ private fun MutableMethod.returnVoidWhenHandled(
     )
 }
 
-private fun BytecodePatchContext.hookChatRoomProfile(
+private fun hookChatRoomProfile(
     chatRoomTypeEnum: String,
     keywordLogListEnum: String,
 ) {
@@ -553,7 +554,7 @@ private fun BytecodePatchContext.hookChatRoomProfile(
     )
 }
 
-private fun BytecodePatchContext.hookChatRoomItemClick(
+private fun hookChatRoomItemClick(
     chatRoomType: String,
 ) {
     val matches = ChatRoomItemClickFingerprint.instructionMatches

@@ -1,5 +1,7 @@
 package app.morphe.extension.shared.settings.preference;
 
+import static app.morphe.extension.shared.StringRef.str;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -29,10 +31,15 @@ import java.util.Locale;
 
 import app.morphe.extension.shared.Logger;
 import app.morphe.extension.shared.Utils;
+import app.morphe.extension.shared.settings.BaseSettings;
+import app.morphe.extension.shared.settings.DebugLevel;
+import app.morphe.extension.shared.settings.DebugSettings;
 import app.morphe.extension.shared.settings.Setting;
 
 @SuppressWarnings({"deprecation", "unused"})
 public abstract class AbstractPreferenceFragment extends PreferenceFragment {
+    private MorpheListPreference debugLevelPreference;
+
     private static final class DebouncedListView extends ListView {
         private DebouncedListView(android.content.Context context) {
             super(context);
@@ -133,6 +140,29 @@ public abstract class AbstractPreferenceFragment extends PreferenceFragment {
             throw new IllegalStateException("Missing preference: " + key);
         }
         return type.cast(preference);
+    }
+
+    protected final void bindDebugLevelPreference(String key, Runnable refreshPreferences) {
+        debugLevelPreference = requirePreference(key, MorpheListPreference.class);
+        debugLevelPreference.setPersistent(false);
+        debugLevelPreference.setEntries(new CharSequence[]{
+                str("morphe_settings_debug_disabled"),
+                str("morphe_settings_debug_basic"),
+                str("morphe_settings_debug_verbose")
+        });
+        debugLevelPreference.setEntryValues(new CharSequence[]{
+                DebugLevel.DISABLED.name(), DebugLevel.DEBUG.name(), DebugLevel.VERBOSE.name()
+        });
+        debugLevelPreference.setOnPreferenceChangeListener((preference, value) -> {
+            BaseSettings.DEBUG_LEVEL.save(DebugLevel.valueOf((String) value));
+            refreshPreferences.run();
+            return true;
+        });
+    }
+
+    protected final void refreshDebugLevelPreference() {
+        debugLevelPreference.setValue(BaseSettings.DEBUG_LEVEL.get().name());
+        debugLevelPreference.setSummary(debugLevelPreference.getEntry());
     }
 
     @Override
@@ -344,8 +374,8 @@ public abstract class AbstractPreferenceFragment extends PreferenceFragment {
                 buffer.write(chunk, 0, count);
             }
 
-            boolean restartNeeded = Setting.importFromJSON(
-                    activity, buffer.toString(StandardCharsets.UTF_8.name()));
+            String backup = buffer.toString(StandardCharsets.UTF_8.name());
+            boolean restartNeeded = Setting.importFromJSON(activity, DebugSettings.migrateLegacyBackup(backup));
             onSettingsImported(restartNeeded);
         } catch (Exception ex) {
             Logger.printException(() -> "Could not import the settings", ex);

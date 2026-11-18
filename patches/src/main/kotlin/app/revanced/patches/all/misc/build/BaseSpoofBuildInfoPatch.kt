@@ -2,7 +2,7 @@ package app.revanced.patches.all.misc.build
 
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getReference
 import app.revanced.patches.all.misc.transformation.transformInstructionsPatch
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
@@ -39,7 +39,7 @@ class BuildInfo(
     val user: String? = null,
 )
 
-fun baseSpoofBuildInfoPatch(buildInfoSupplier: () -> BuildInfo) = bytecodePatch {
+fun baseSpoofBuildInfoPatch(buildInfoSupplier: () -> BuildInfo) = patch {
     // Lazy, so that patch options above are initialized before they are accessed.
     val replacements by lazy {
         with(buildInfoSupplier()) {

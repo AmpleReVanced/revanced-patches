@@ -2,25 +2,20 @@ package app.revanced.patches.dcinside.misc.settings
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
-import app.morphe.patches.all.misc.resources.addResourcesPatch
-import app.revanced.patches.dcinside.misc.extension.addExtensionPatch
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
 @Suppress("unused")
-val addSettingsPatch = bytecodePatch(
+val addSettingsPatch = patch(
     name = "Add settings",
     description = "Adds a Morphe settings entry to the DCInside settings screen.",
 ) {
     compatibleWith(COMPATIBILITY_DC_INSIDE)
     dependsOn(
-        addExtensionPatch,
-        addResourcesPatch,
-        addSettingsResourcesPatch,
         registerSettingsActivityPatch,
         userMemoPatch,
     )

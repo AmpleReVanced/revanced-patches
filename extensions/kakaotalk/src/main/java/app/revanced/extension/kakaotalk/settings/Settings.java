@@ -4,6 +4,7 @@ import static java.lang.Boolean.TRUE;
 
 import app.morphe.extension.shared.settings.BaseSettings;
 import app.morphe.extension.shared.settings.BooleanSetting;
+import app.morphe.extension.shared.settings.DebugSettings;
 import app.morphe.extension.shared.settings.StringSetting;
 
 /**
@@ -11,6 +12,10 @@ import app.morphe.extension.shared.settings.StringSetting;
  */
 @SuppressWarnings("unused")
 public final class Settings extends BaseSettings {
+    static {
+        DebugSettings.migrateLegacyPreference();
+    }
+
     private Settings() {
     }
 
