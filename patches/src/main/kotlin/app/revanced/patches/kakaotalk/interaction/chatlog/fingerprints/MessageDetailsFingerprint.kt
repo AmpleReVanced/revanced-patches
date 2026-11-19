@@ -32,6 +32,29 @@ internal object ChatLogContextMenuActionsFingerprint : Fingerprint(
     custom = { _, classDef -> classDef.sourceFile == "ChatLogContextMenuManager.kt" },
 )
 
+internal fun chatLogAdapterBindFingerprint(holderType: String) = Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf(holderType, "I", "Ljava/util/Set;"),
+    returnType = "V",
+    filters = listOf(
+        methodCall(definingClass = holderType, parameters = listOf("L", "Ljava/util/Set;"), returnType = "V"),
+        methodCall(definingClass = holderType, parameters = listOf("L"), returnType = "V"),
+    ),
+    custom = { _, classDef -> classDef.sourceFile == "ChatLogAdapter.kt" },
+)
+
+internal fun senderlessMessageMenuFingerprint(chatLogType: String) = Fingerprint(
+    classFingerprint = ChatLogContextMenuActionsFingerprint,
+    name = "invokeSuspend",
+    parameters = listOf("Ljava/lang/Object;"),
+    filters = listOf(
+        methodCall(definingClass = chatLogType, parameters = emptyList(), returnType = "Lcom/kakao/talk/db/model/Friend;"),
+        opcode(Opcode.MOVE_RESULT_OBJECT, location = MatchAfterImmediately()),
+        opcode(Opcode.IF_NEZ, location = MatchAfterImmediately()),
+        opcode(Opcode.GOTO_16, location = MatchAfterImmediately()),
+    ),
+)
+
 internal fun threadMessageActionFilterFingerprint(actionType: String) = object : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     parameters = listOf(actionType),

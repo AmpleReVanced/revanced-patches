@@ -132,6 +132,8 @@ val showMessageDetailsPatch = patch(
             }
         }
 
+        addMessageDetailsMenus(chatLogType)
+
         ChatLogContextMenuActionsFingerprint.apply {
             val result = instructionMatches[1]
             val listRegister = result.getInstruction<OneRegisterInstruction>().registerA
