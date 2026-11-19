@@ -44,7 +44,9 @@ val galleryWatchModePatch = patch(
     execute {
         addGalleryWatchPreferences()
         setExtensionIsPatchIncluded(EXTENSION_CLASS)
-        AutoRefreshDurationFingerprint.method.injectDurationOverride()
+        AutoRefreshDurationFingerprint.method.injectDurationOverride(
+            AutoRefreshDurationFingerprint.instructionMatches.single().index + 1,
+        )
         injectGalleryWatchBridges()
         injectGalleryWatchCallbacks()
     }
@@ -65,12 +67,11 @@ private fun addGalleryWatchPreferences() {
     )
 }
 
-private fun MutableMethod.injectDurationOverride() {
-    val returnIndex = indexOfFirstInstructionReversedOrThrow(Opcode.RETURN_WIDE)
+private fun MutableMethod.injectDurationOverride(returnIndex: Int) {
     val durationRegister = getInstruction<OneRegisterInstruction>(returnIndex).registerA
 
     addInstructionsAtControlFlowLabel(
-        returnIndex,
+        returnIndex + 1,
         """
             invoke-static/range {v$durationRegister .. v${durationRegister + 1}}, $EXTENSION_CLASS->overrideAutoRefreshDuration(J)J
             move-result-wide v$durationRegister
@@ -98,7 +99,7 @@ private fun injectGalleryWatchCallbacks() {
     }
 
     AutoRefreshTickFingerprint.method.addInstructionsAtControlFlowLabel(
-        AutoRefreshTickFingerprint.instructionMatches.single().index,
+        0,
         "invoke-static/range {p0 .. p0}, $EXTENSION_CLASS->onAutoRefreshTick(Ljava/lang/Object;)V",
     )
 

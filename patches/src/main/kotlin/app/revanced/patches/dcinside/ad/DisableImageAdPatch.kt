@@ -1,6 +1,7 @@
 package app.revanced.patches.dcinside.ad
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.returnEarly
@@ -8,7 +9,6 @@ import app.revanced.patches.dcinside.ad.fingerprints.PostReadImageAdViewFingerpr
 import app.revanced.patches.dcinside.ad.fingerprints.RefreshImageAdFingerprint
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
 import com.android.tools.smali.dexlib2.Opcode
-import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
 @Suppress("unused")
@@ -20,25 +20,17 @@ val disableImageAdPatch = patch(
 
     execute {
         PostReadImageAdViewFingerprint.method.apply {
-            val setGravityIndex = implementation!!.instructions.indexOfFirst {
-                it.opcode == Opcode.INVOKE_VIRTUAL &&
-                        (it as? ReferenceInstruction)?.getReference<MethodReference>()?.name == "setGravity"
+            val heightSetter = instructions.mapNotNull { it.getReference<MethodReference>() }.single {
+                it.definingClass == definingClass && it.parameterTypes == listOf("I") && it.returnType == "V"
             }
-
             addInstructions(
-                setGravityIndex + 1,
+                instructions.indexOfLast { it.opcode == Opcode.RETURN_VOID },
                 """
-                    const/4 v0, 0x2
-                    iput v0, p0, Lcom/dcinside/app/view/PostReadImageAdView;->a:I
-                    
                     const/4 p1, 0x0
-                    invoke-direct {p0, p1}, Lcom/dcinside/app/view/PostReadImageAdView;->setAdViewHeight(I)V
-                    
+                    invoke-direct {p0, p1}, $heightSetter
                     const/16 p1, 0x8
                     invoke-virtual {p0, p1}, Landroid/view/View;->setVisibility(I)V
-                    
-                    return-void
-                """.trimIndent()
+                """,
             )
         }
 

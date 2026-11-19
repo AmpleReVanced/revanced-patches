@@ -27,7 +27,7 @@ val bypassGetTextPath = patch(
         NativeGetTextFingerprint.classDef.methods.add(
             ImmutableMethod(
                 nativeGetTextMethod.definingClass,
-                "gt",
+                nativeGetTextMethod.name,
                 listOf(
                     ImmutableMethodParameter("Landroid/content/Context;", null, null),
                     ImmutableMethodParameter("Ljava/lang/String;", null, null),

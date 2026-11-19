@@ -21,8 +21,8 @@ private const val VIEW_TYPE = "Landroid/view/View;"
 private const val VIEW_STUB_TYPE = "Landroid/view/ViewStub;"
 
 internal object MiniGalleryHeaderSetupFingerprint : Fingerprint(
-    accessFlags = listOf(AccessFlags.PRIVATE, AccessFlags.FINAL),
-    parameters = emptyList(),
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf(GALLERY_INFO_TYPE),
     returnType = "V",
     filters = listOf(
         methodCall(
@@ -129,7 +129,7 @@ private fun Method.isMiniGalleryHeaderHideMethod(ownerClass: String): Boolean {
     if (parameterTypes.isNotEmpty() || returnType != "V") {
         return false
     }
-    if (!AccessFlags.PRIVATE.isSet(accessFlags) || !AccessFlags.FINAL.isSet(accessFlags)) {
+    if (!AccessFlags.PUBLIC.isSet(accessFlags) || !AccessFlags.FINAL.isSet(accessFlags)) {
         return false
     }
 

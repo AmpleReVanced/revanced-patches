@@ -17,7 +17,7 @@ val renderBigDcconAsNormalPatch = patch(
     description = "Adds a setting to render big DCCon at normal DCCon size.",
 ) {
     compatibleWith(COMPATIBILITY_DC_INSIDE)
-    dependsOn(addSettingsPatch)
+    dependsOn(addSettingsPatch, postDcconPatch)
 
     execute {
         PreferenceScreen.FEATURES.addPreferences(
@@ -29,27 +29,7 @@ val renderBigDcconAsNormalPatch = patch(
         )
         setExtensionIsPatchIncluded(EXTENSION_CLASS)
 
-        val postElementMethods = PostDcconImageHandlerFingerprint.method.inferPostElementMethods()
-
-        PostDcconImageHandlerFingerprint.method.addInstructionsWithLabels(
-            0,
-            """
-                invoke-static {}, $SETTINGS_CLASS->renderBigDcconAsNormal()Z
-                move-result v0
-                if-eqz v0, :morphe_post_big_dccon_continue
-
-                move-object/from16 v1, p1
-                const-string v0, "bigdccon"
-                ${postElementMethods.removeClassInvoke} {v1, v0}, ${postElementMethods.removeClass}
-
-                :morphe_post_big_dccon_continue
-                nop
-            """.trimIndent(),
-        )
-
-        val replyDcconImageFields = ReplyDcconBindFingerprint.method.inferReplyDcconImageFields(
-            ReplyDcconBindFingerprint.classDef.methods,
-        )
+        val replyDcconImageFields = ReplyDcconBindFingerprint.method.inferReplyDcconImageFields()
 
         ReplyDcconBindFingerprint.method.addInstructionsWithLabels(
             0,

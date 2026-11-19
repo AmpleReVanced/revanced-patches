@@ -1,47 +1,23 @@
 package app.revanced.patches.dcinside.ad.fingerprints
 
 import app.morphe.patcher.Fingerprint
-import app.morphe.patcher.OpcodesFilter
-import app.morphe.patcher.fingerprint
-import com.android.tools.smali.dexlib2.AccessFlags
-import com.android.tools.smali.dexlib2.Opcode
+import app.morphe.patcher.methodCall
+import app.morphe.patcher.resource.ResourceType
+import app.morphe.patcher.resourceLiteral
 
-object GetMinimumDimensFingerprint : Fingerprint(
-    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+internal object GetMinimumDimensFingerprint : Fingerprint(
     parameters = listOf("Ljava/util/List;"),
     returnType = "I",
-    strings = listOf("list"),
-    filters = OpcodesFilter.opcodesToFilters(
-        Opcode.CONST_STRING,
-        Opcode.INVOKE_STATIC,
-        Opcode.CHECK_CAST,
-        Opcode.INSTANCE_OF,
-        Opcode.CONST_4,
-        Opcode.IF_EQZ,
-        Opcode.MOVE_OBJECT,
-        Opcode.CHECK_CAST,
-        Opcode.INVOKE_INTERFACE,
-        Opcode.MOVE_RESULT,
-        Opcode.IF_EQZ
-    )
+    filters = listOf(
+        resourceLiteral(ResourceType.DIMEN, "ad_main_small_native"),
+        resourceLiteral(ResourceType.DIMEN, "ad_minimum"),
+    ),
 )
 
-object ReadFooterAdContainerSetupFingerprint : Fingerprint(
-    definingClass = "Lcom/dcinside/app/view",
-    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+internal object ReadFooterAdContainerSetupFingerprint : Fingerprint(
     returnType = "V",
-    strings = listOf("lifecycleOwner", "readFooterAdContainer"),
-    filters = OpcodesFilter.opcodesToFilters(
-        Opcode.CONST_STRING,
-        Opcode.INVOKE_STATIC,
-        Opcode.IGET_BOOLEAN,
-        Opcode.IF_EQZ,
-        Opcode.GOTO,
-        Opcode.IGET_OBJECT,
-        Opcode.INVOKE_STATIC,
-        Opcode.MOVE_RESULT,
-        Opcode.IF_NEZ,
-        Opcode.IPUT_OBJECT,
-        Opcode.IGET_OBJECT,
-    )
+    filters = listOf(
+        resourceLiteral(ResourceType.DIMEN, "read_ad_minimum"),
+        methodCall("Landroid/view/View;->setMinimumHeight(I)V"),
+    ),
 )

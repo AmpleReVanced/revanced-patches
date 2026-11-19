@@ -6,10 +6,8 @@ private const val USER_MEMO_EXTENSION_CLASS =
     "Lapp/revanced/extension/dcinside/settings/UserMemoPatch;"
 
 internal object UserMemoRegisterFingerprint : Fingerprint(
-    returnType = "Z",
+    returnType = "V",
     strings = listOf(
-        "galleryId",
-        "keyValues",
         "userValue",
         "memo",
     ),
@@ -85,4 +83,14 @@ internal object UserMemoReloadCacheFingerprint : Fingerprint(
 internal object UserMemoDeleteRealmObjectFingerprint : Fingerprint(
     definingClass = USER_MEMO_EXTENSION_CLASS,
     name = "deleteRealmObject",
+)
+
+internal object UserMemoPairsFingerprint : Fingerprint(
+    definingClass = USER_MEMO_EXTENSION_CLASS,
+    name = "getMemoPairs",
+)
+
+internal object UserMemoTextFingerprint : Fingerprint(
+    definingClass = USER_MEMO_EXTENSION_CLASS,
+    name = "getMemoText",
 )

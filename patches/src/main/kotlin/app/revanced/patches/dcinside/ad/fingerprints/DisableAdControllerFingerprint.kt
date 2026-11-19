@@ -1,20 +1,20 @@
 package app.revanced.patches.dcinside.ad.fingerprints
 
 import app.morphe.patcher.Fingerprint
-import app.morphe.patcher.OpcodesFilter
-import com.android.tools.smali.dexlib2.AccessFlags
-import com.android.tools.smali.dexlib2.Opcode
+import app.morphe.patcher.methodCall
+import app.morphe.patcher.util.getReference
+import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
 internal object DisableAdControllerFingerprint : Fingerprint(
-    definingClass = "Lcom/dcinside/app/ad/support",
-    accessFlags = listOf(AccessFlags.PRIVATE, AccessFlags.FINAL),
-    parameters = listOf(),
+    isStatic = false,
+    parameters = emptyList(),
     returnType = "V",
-    filters = OpcodesFilter.opcodesToFilters(
-        Opcode.IGET_OBJECT,
-        Opcode.IF_NEZ,
-        Opcode.GOTO,
-        Opcode.IGET_OBJECT,
-        Opcode.INVOKE_VIRTUAL,
-    )
+    filters = listOf(methodCall("Ljava/util/LinkedList;->pollFirst()Ljava/lang/Object;")),
+    custom = { method, classDef ->
+        method.implementation?.instructions?.any {
+            it.getReference<MethodReference>()?.let { call ->
+                call.name != "<init>" && call.parameterTypes == listOf(classDef.type) && call.returnType == "V"
+            } == true
+        } == true
+    },
 )

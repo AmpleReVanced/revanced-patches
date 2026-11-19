@@ -5,6 +5,8 @@ import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.classDefByOrNull
 import app.morphe.patcher.patch.patch
+import app.morphe.patcher.resource.ResourceType
+import app.morphe.patcher.resource.resourceId
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
@@ -12,6 +14,7 @@ import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.dcinside.misc.settings.PreferenceScreen
 import app.revanced.patches.dcinside.misc.settings.addSettingsPatch
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
+import app.revanced.patches.dcinside.shared.recyclerViewHolderType
 import app.revanced.util.parameterRegister
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
@@ -23,13 +26,11 @@ import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.SwitchPayload
 import com.android.tools.smali.dexlib2.iface.instruction.TwoRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
-import com.android.tools.smali.dexlib2.iface.value.IntEncodedValue
 
 private const val EXTENSION_CLASS = "Lapp/revanced/extension/dcinside/patches/HomeComponentsPatch;"
 private const val CONTEXT_TYPE = "Landroid/content/Context;"
 private const val ATTRIBUTE_SET_TYPE = "Landroid/util/AttributeSet;"
 private const val VIEW_GROUP_TYPE = "Landroid/view/ViewGroup;"
-private const val RECYCLER_VIEW_HOLDER_TYPE = "Landroidx/recyclerview/widget/RecyclerView\$ViewHolder;"
 
 @Suppress("unused")
 val hideHomeComponentsPatch = patch(
@@ -181,15 +182,7 @@ private fun homeComponentResources() = HomeComponentResources(
     recommendedItemLayout = layoutResourceId("view_best_pick_item"),
 )
 
-private fun layoutResourceId(name: String): Int {
-    val field = classDefByOrNull("Lcom/dcinside/app/R\$layout;")
-        ?.fields
-        ?.firstOrNull { it.name == name }
-        ?: throw PatchException("Could not find layout resource $name")
-
-    return (field.initialValue as? IntEncodedValue)?.value
-        ?: throw PatchException("Could not read layout resource id for $name")
-}
+private fun layoutResourceId(name: String) = resourceId(ResourceType.LAYOUT, name).toInt()
 
 private fun Iterable<MutableMethod>.inferItemTypeGetter(adapterClass: String): MethodReference {
     val candidates = mapNotNull { method ->
@@ -220,7 +213,7 @@ private fun Iterable<MutableMethod>.inferItemTypeGetter(adapterClass: String): M
 private fun Iterable<MutableMethod>.inferOnCreateViewHolderMethod(): MutableMethod =
     singleOrNull { method ->
         method.parameterTypes.map { it.toString() } == listOf(VIEW_GROUP_TYPE, "I") &&
-            method.returnType == RECYCLER_VIEW_HOLDER_TYPE &&
+            method.returnType == recyclerViewHolderType &&
             method.instructions.any { instruction ->
                 instruction.getReference<MethodReference>()?.let { reference ->
                     reference.definingClass == "Landroid/view/LayoutInflater;" &&
@@ -252,7 +245,6 @@ private fun MutableMethod.inferHomeComponentTypes(
             it.hasSyntheticConstructorWithParameters(
                 CONTEXT_TYPE,
                 ATTRIBUTE_SET_TYPE,
-                "I",
                 "I",
             )
         },

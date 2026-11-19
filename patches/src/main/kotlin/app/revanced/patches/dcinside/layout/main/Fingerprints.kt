@@ -1,32 +1,34 @@
 package app.revanced.patches.dcinside.layout.main
 
 import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.InstructionFilter
 import app.morphe.patcher.methodCall
-import com.android.tools.smali.dexlib2.AccessFlags
+import app.morphe.patcher.resource.ResourceType
+import app.morphe.patcher.resourceLiteral
+import app.morphe.patcher.util.getReference
+import com.android.tools.smali.dexlib2.iface.reference.StringReference
+
+internal object HomeContentsRequestFingerprint : Fingerprint(
+    strings = listOf("api_mainContents"),
+    filters = listOf(InstructionFilter { _, instruction ->
+        instruction.getReference<StringReference>()?.string in setOf("main_content_new.php", "main_content.php")
+    }),
+)
+
+internal object MainAdapterFingerprint : Fingerprint(
+    name = "onCreateViewHolder",
+    parameters = listOf("Landroid/view/ViewGroup;", "I"),
+    returnType = "L",
+    filters = listOf(resourceLiteral(ResourceType.LAYOUT, "view_main_search_gallery_basic")),
+)
 
 internal object MainAdapterItemsUpdateFingerprint : Fingerprint(
-    superclass = "Landroidx/recyclerview/widget/RecyclerView\$Adapter;",
-    definingClass = "Lcom/dcinside/app/main/adapter/",
-    accessFlags = listOf(AccessFlags.PRIVATE, AccessFlags.FINAL),
+    classFingerprint = MainAdapterFingerprint,
     parameters = listOf("Ljava/util/List;"),
     returnType = "V",
     filters = listOf(
-        methodCall(
-            definingClass = "Ljava/util/ArrayList;",
-            name = "clear",
-            parameters = emptyList(),
-            returnType = "V",
-        ),
-        methodCall(
-            definingClass = "Ljava/util/ArrayList;",
-            name = "addAll",
-            parameters = listOf("Ljava/util/Collection;"),
-            returnType = "Z",
-        ),
-        methodCall(
-            definingClass = "Landroidx/recyclerview/widget/RecyclerView\$Adapter;",
-            parameters = emptyList(),
-            returnType = "V",
-        ),
+        methodCall("Ljava/util/ArrayList;->clear()V"),
+        methodCall("Ljava/util/ArrayList;->addAll(Ljava/util/Collection;)Z"),
+        methodCall(name = "notifyDataSetChanged", parameters = emptyList(), returnType = "V"),
     ),
 )

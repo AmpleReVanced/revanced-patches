@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import app.morphe.extension.shared.Utils;
 import app.revanced.extension.dcinside.helper.ResourceHelper;
@@ -117,7 +118,14 @@ public final class UserMemoPatch {
                 MemoEntry entry = entries.get(i);
                 Array.set(pairArray, i, newMemoPair(entry.userValue, entry.memo, null));
             }
-            return registerEntriesWithApp(realm, pairArray, GLOBAL_GALLERY_ID, null, false);
+            registerEntriesWithApp(realm, pairArray, GLOBAL_GALLERY_ID, null, false);
+            reloadUserMemoCache(realm, null);
+            Map<?, ?> saved = getMemoPairs(realm, GLOBAL_GALLERY_ID);
+            for (MemoEntry entry : entries) {
+                Object pair = saved.get(entry.userValue);
+                if (pair == null || !entry.memo.equals(getMemoText(pair))) return false;
+            }
+            return true;
         } catch (Exception ignored) {
             return false;
         } finally {
@@ -214,14 +222,21 @@ public final class UserMemoPatch {
         return null;
     }
 
-    private static boolean registerEntriesWithApp(
+    private static void registerEntriesWithApp(
             Object realm,
             Object pairArray,
             String galleryId,
             String color,
             boolean applySameMemoColor
     ) {
-        return false;
+    }
+
+    private static Map<?, ?> getMemoPairs(Object realm, String galleryId) {
+        return null;
+    }
+
+    private static String getMemoText(Object pair) {
+        return null;
     }
 
     private static boolean clearUserMemosWithApp(Object realm, Object unused1, Object unused2) {

@@ -59,7 +59,7 @@ val hideDcOfficialNoticesPatch = patch(
         MiniNoticeAdapterItemsFingerprint.method.addInstructions(
             0,
             """
-                invoke-static {p1}, $OFFICIAL_NOTICE_EXTENSION_CLASS->filterOfficialNotices(Ljava/util/List;)V
+                invoke-static {p4}, $OFFICIAL_NOTICE_EXTENSION_CLASS->filterOfficialNotices(Ljava/util/List;)V
             """.trimIndent(),
         )
     }

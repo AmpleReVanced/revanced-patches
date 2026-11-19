@@ -122,7 +122,6 @@ private val filterPostHistoryByGalleryBytecodePatch = patch {
                         if-eqz v$galleriesRegister, :unfiltered
                         const-string v$columnRegister, "$GALLERY_ID_COLUMN"
                         invoke-virtual {v$queryRegister, v$columnRegister, v$galleriesRegister}, ${realmQueryIn.smaliReference}
-                        move-result-object v$queryRegister
                         :unfiltered
                         nop
                     """.trimIndent(),
@@ -161,7 +160,7 @@ private val filterPostHistoryByGalleryBytecodePatch = patch {
                     addInstructions(
                         0,
                         """
-                            invoke-direct {p0}, ${reloadMethod.smaliReference}
+                            invoke-virtual {p0}, ${reloadMethod.smaliReference}
                             return-void
                         """.trimIndent(),
                     )
@@ -180,7 +179,7 @@ private val filterPostHistoryByGalleryBytecodePatch = patch {
                             if-eqz v1, :done
                             const-wide/16 v3, 0x0
                             const-wide v5, 0x7fffffffffffffffL
-                            invoke-virtual/range {v1 .. v6}, $itemManagerType->${queryMethod.name}(${realmType}JJ)Ljava/util/List;
+                            invoke-virtual/range {v1 .. v6}, ${queryMethod.smaliReference}
                             move-result-object v0
                             invoke-static {v0}, $GALLERY_FILTER_EXTENSION_CLASS->collectGalleries(Ljava/util/List;)V
                             :done
@@ -194,7 +193,7 @@ private val filterPostHistoryByGalleryBytecodePatch = patch {
         PostHistoryActivityOnCreateFingerprint.method.apply {
             addInstruction(
                 indexOfFirstInstructionOrThrow(methodCall(reloadMethod)),
-                "invoke-static {p0}, $GALLERY_FILTER_EXTENSION_CLASS->initialize($GALLERY_FILTER_HOST_INTERFACE)V",
+                "invoke-static/range {p0 .. p0}, $GALLERY_FILTER_EXTENSION_CLASS->initialize($GALLERY_FILTER_HOST_INTERFACE)V",
             )
         }
     }
