@@ -2,12 +2,14 @@ package app.revanced.patches.kakaotalk.layout.keywordlog
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.InstructionLocation.MatchAfterImmediately
+import app.morphe.patcher.InstructionLocation.MatchAfterWithin
 import app.morphe.patcher.checkCast
 import app.morphe.patcher.fieldAccess
 import app.morphe.patcher.literal
 import app.morphe.patcher.methodCall
 import app.morphe.patcher.opcode
 import app.morphe.patcher.string
+import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatLogFingerprint
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.Method
@@ -23,37 +25,40 @@ private const val PROFILE_OBJECT_CLASS = "Lcom/kakao/talk/widget/ProfileObject;"
 
 internal fun keywordMatchCallSiteFingerprint(matchMethod: Method) = Fingerprint(
     filters = listOf(
-        methodCall(
-            definingClass = matchMethod.definingClass,
-            name = matchMethod.name,
-            parameters = matchMethod.parameterTypes.map(CharSequence::toString),
-            returnType = matchMethod.returnType,
-        ),
+        methodCall(reference = matchMethod),
         checkCast("Ljava/lang/Boolean;"),
         methodCall(
             "Ljava/lang/Boolean;->booleanValue()Z",
-            location = MatchAfterImmediately(),
+            location = MatchAfterWithin(3),
         ),
         opcode(Opcode.MOVE_RESULT, location = MatchAfterImmediately()),
     ),
 )
 
 internal object KeywordMatchFingerprint : Fingerprint(
-    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.FINAL),
+    parameters = { listOf("L", ChatLogFingerprint.originalClassDef.type, "Z", "Lkotlin/coroutines/Continuation;") },
     returnType = "Ljava/lang/Object;",
-    parameters = listOf("L", "Z", "Lkotlin/coroutines/Continuation;"),
     filters = listOf(
         methodCall(name = "getChatRoomId", parameters = listOf(), returnType = "J"),
         methodCall(name = "getUserId", parameters = listOf(), returnType = "J"),
     ),
-    custom = { _, classDef -> classDef.sourceFile == "KeywordNotificationManager.kt" },
+    custom = { _, classDef -> classDef.sourceFile == "KeywordMatcher.kt" },
 )
 
 internal object KeywordHighlightFingerprint : Fingerprint(
-    classFingerprint = KeywordMatchFingerprint,
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     returnType = "Landroid/text/SpannableStringBuilder;",
     parameters = listOf("Landroid/text/SpannableStringBuilder;"),
+    custom = { _, classDef -> classDef.sourceFile == "KeywordSpanDecorator.kt" },
+)
+
+internal object AccountKeywordDecoratorFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC),
+    parameters = listOf("J"),
+    returnType = { KeywordHighlightFingerprint.originalClassDef.type },
+    filters = listOf(methodCall(opcode = Opcode.INVOKE_INTERFACE, parameters = emptyList(), returnType = "L")),
+    custom = { _, classDef -> classDef.sourceFile == "ChatLogViewHolderFactory.kt" },
 )
 
 internal object FriendToStringFingerprint : Fingerprint(
@@ -69,6 +74,13 @@ internal object ChatRoomToStringFingerprint : Fingerprint(
     parameters = listOf(),
     strings = listOf("', lastMessage: '", "', lastLogId: '"),
     custom = { _, classDef -> classDef.sourceFile == "ChatRoom.kt" },
+)
+
+internal object KeywordChatRoomConstructorFingerprint : Fingerprint(
+    classFingerprint = ChatRoomToStringFingerprint,
+    name = "<init>",
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.CONSTRUCTOR),
+    parameters = listOf("J", "J", "[J", "L"),
 )
 
 internal fun chatRoomLastUpdatedAtInMillisFingerprint(chatRoomType: String) = Fingerprint(
@@ -131,9 +143,19 @@ internal fun keywordLogChatRoomItemFingerprint(chatRoomType: String) = Fingerpri
     parameters = listOf(
         chatRoomType, "Ljava/util/Set;", "L", "I", "Z", "Ljava/lang/String;",
         "Z", "Ljava/lang/String;", "Z", "Z", "Z", "Z",
-    ),
+    ) + List(3) { "Lkotlin/jvm/functions/Function0;" },
     returnType = "L",
     custom = { _, classDef -> classDef.sourceFile == "ChatRoomItem.kt" },
+)
+
+internal fun keywordLogItemProvidersFingerprint(itemFactory: MethodReference) = Fingerprint(
+    filters = listOf(
+        methodCall(name = "<init>", opcode = Opcode.INVOKE_DIRECT, parameters = listOf("J")),
+        methodCall(name = "<init>", opcode = Opcode.INVOKE_DIRECT, parameters = listOf("J")),
+        methodCall(name = "<init>", opcode = Opcode.INVOKE_DIRECT, parameters = listOf("J")),
+        methodCall(reference = itemFactory),
+    ),
+    custom = { _, classDef -> classDef.sourceFile == "ChatRoomListHelper.kt" },
 )
 
 internal fun chatRoomListRefreshFingerprint(viewModelType: String) = Fingerprint(
@@ -205,12 +227,10 @@ internal object ChatRoomProfileFingerprint : Fingerprint(
     definingClass = PROFILE_VIEW_CLASS,
     name = "loadChatRoom",
     returnType = "V",
-    parameters = listOf(CHAT_ROOM_PROFILE_DATA_CLASS, "Lcom/kakao/talk/widget/ProfileView\$ImageQuality;"),
     filters = listOf(
         methodCall(
             definingClass = CHAT_ROOM_PROFILE_DATA_KT_CLASS,
             name = "toProfileObject",
-            parameters = listOf(CHAT_ROOM_PROFILE_DATA_CLASS),
             returnType = CHAT_ROOM_PROFILE_OBJECT_CLASS,
             opcode = Opcode.INVOKE_STATIC,
         ),

@@ -2,12 +2,12 @@ package app.revanced.patches.kakaotalk.misc.integrity.fingerprints
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.OpcodesFilter
-import app.morphe.patcher.fingerprint
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
 internal object GetApkChecksumsFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf("Landroid/content/Context;", "Lkotlin/coroutines/Continuation;"),
     returnType = "Ljava/lang/Object;",
     strings = listOf("call to \'resume\' before \'invoke\' with coroutine"),
     filters = OpcodesFilter.opcodesToFilters(
@@ -23,5 +23,5 @@ internal object GetApkChecksumsFingerprint : Fingerprint(
         Opcode.IPUT,
         Opcode.GOTO
     ),
-    custom = { method, classDef -> classDef.sourceFile == "AbuseDetectUtil.kt" && method.parameters.size == 2 }
+    custom = { _, classDef -> classDef.sourceFile == "AbuseDetectUtil.kt" }
 )

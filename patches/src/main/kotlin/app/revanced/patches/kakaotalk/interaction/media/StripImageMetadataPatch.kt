@@ -46,7 +46,7 @@ val stripImageMetadataPatch = patch(
                 addInstructionsAtControlFlowLabel(
                     index,
                     """
-                        invoke-static { v$register }, $SANITIZE
+                        invoke-static/range { v$register .. v$register }, $SANITIZE
                         move-result-object v$register
                     """,
                 )

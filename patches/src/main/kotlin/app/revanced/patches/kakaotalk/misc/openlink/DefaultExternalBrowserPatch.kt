@@ -1,10 +1,8 @@
 package app.revanced.patches.kakaotalk.misc.openlink
 
-import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
-import app.morphe.patcher.extensions.InstructionExtensions.instructions
-import app.morphe.patcher.extensions.InstructionExtensions.removeInstructions
-import app.morphe.patcher.patch.PatchException
+import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.patch
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.kakaotalk.misc.openlink.fingerprints.DefaultExternalBrowserFingerprint
@@ -12,8 +10,7 @@ import app.revanced.patches.kakaotalk.misc.settings.PreferenceScreen
 import app.revanced.patches.kakaotalk.misc.settings.addSettingsTabPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
-import com.android.tools.smali.dexlib2.Opcode
-import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction11n
+import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 
 private const val EXTENSION_CLASS =
     "Lapp/revanced/extension/kakaotalk/patches/DefaultExternalBrowserPatch;"
@@ -36,24 +33,14 @@ val defaultExternalBrowserPatch = patch(
         )
         setExtensionIsPatchIncluded(EXTENSION_CLASS)
 
-        val method = DefaultExternalBrowserFingerprint.method
-        val index = method.instructions.indexOfFirst {
-            it.opcode == Opcode.CONST_4 && (it as BuilderInstruction11n).narrowLiteral in listOf(0x0, 0x1)
+        DefaultExternalBrowserFingerprint.apply {
+            val index = instructionMatches.last().index
+            val register = method.getInstruction<OneRegisterInstruction>(index).registerA
+            method.replaceInstruction(
+                index,
+                "invoke-static {}, Lapp/revanced/extension/kakaotalk/settings/Settings;->useDefaultExternalBrowser()Z",
+            )
+            method.addInstruction(index + 1, "move-result v$register")
         }
-
-        if (index < 0) {
-            throw PatchException("Could not find const/4 default value in defaultExternalBrowser")
-        }
-
-        val register = (method.getInstruction(index) as BuilderInstruction11n).registerA
-
-        method.removeInstructions(index, 1)
-        method.addInstructions(
-            index,
-            """
-                invoke-static {}, Lapp/revanced/extension/kakaotalk/settings/Settings;->useDefaultExternalBrowser()Z
-                move-result v$register
-            """.trimIndent()
-        )
     }
 }

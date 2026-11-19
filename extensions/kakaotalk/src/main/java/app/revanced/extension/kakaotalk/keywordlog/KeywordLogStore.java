@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import app.morphe.extension.shared.Logger;
 import app.morphe.extension.shared.Utils;
@@ -18,7 +20,6 @@ final class KeywordLogStore extends SQLiteOpenHelper {
     static final int SORT_CHAT_ROOM = 1;
     static final int SORT_SENDER = 2;
 
-    private static final String DATABASE_NAME = "morphe_keyword_log.db";
     private static final int DATABASE_VERSION = 2;
     private static final String TABLE = "keyword_log";
     private static final int MAX_ROWS = 5000;
@@ -45,22 +46,17 @@ final class KeywordLogStore extends SQLiteOpenHelper {
             COLUMN_PROTECTED,
     };
 
-    private static volatile KeywordLogStore instance;
+    private static final Map<Long, KeywordLogStore> STORES = new ConcurrentHashMap<>();
 
-    private KeywordLogStore(Context context) {
-        super(context.getApplicationContext(), DATABASE_NAME, null, DATABASE_VERSION);
+    private KeywordLogStore(Context context, String databaseName) {
+        super(context.getApplicationContext(), databaseName, null, DATABASE_VERSION);
     }
 
-    static KeywordLogStore getInstance() {
-        KeywordLogStore local = instance;
-        if (local != null) return local;
-
-        synchronized (KeywordLogStore.class) {
-            if (instance == null) {
-                instance = new KeywordLogStore(Utils.getContext());
-            }
-            return instance;
-        }
+    static KeywordLogStore getInstance(long ownerId) {
+        return STORES.computeIfAbsent(ownerId, id -> new KeywordLogStore(
+                Utils.getContext(),
+                "morphe_keyword_log_" + id + ".db"
+        ));
     }
 
     @Override

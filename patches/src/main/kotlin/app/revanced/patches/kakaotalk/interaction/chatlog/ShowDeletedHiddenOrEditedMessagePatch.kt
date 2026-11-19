@@ -1,5 +1,6 @@
 package app.revanced.patches.kakaotalk.interaction.chatlog
 
+import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
@@ -9,6 +10,7 @@ import app.morphe.patcher.fieldAccess
 import app.morphe.patcher.methodCall
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.document
+import app.morphe.patcher.patch.mutableClassDefBy
 import app.morphe.patcher.patch.patch
 import app.morphe.patcher.patch.stringOption
 import app.morphe.patcher.util.getFreeRegisterProvider
@@ -22,28 +24,22 @@ import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import app.morphe.util.indexOfFirstInstructionOrThrow
 import app.morphe.util.indexOfFirstInstructionReversedOrThrow
 import app.morphe.util.setExtensionIsPatchIncluded
-import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatInfoViewClassFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatLogFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatLogItemViewHolderFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatLogVFieldPutBooleanFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatLogVFieldPutStringFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatLogViewHolderBindProfileFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatLogViewHolderSetupChatInfoViewFingerprint
-import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatRoomListManagerGetInstanceFingerprint
+import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatRoomSyncFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.FilterChatLogItemFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.FlushToDBChatLogFingerprint
-import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.GetChatRoomByChannelIdFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.GetDeletedColorFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.GetHiddenColorFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ModifiedChatLogApplyFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ModifiedChatLogFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ModifyLogBuilderFingerprint
-import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.MyChatInfoViewClassFingerprint
-import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.OriginalSyncMethodFingerprint
-import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.OthersChatInfoViewClassFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.PutDeletedMessageCacheFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ReplaceToFeedFingerprint
-import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.checkViewableChatLogFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.getDeletedMessageCacheFingerprint
 import app.revanced.patches.kakaotalk.misc.extension.addExtensionPatch
 import app.revanced.patches.kakaotalk.misc.extension.sharedExtensionPatch
@@ -58,6 +54,7 @@ import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.MutableMethodImplementation
 import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction11n
+import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
@@ -73,6 +70,7 @@ private const val MODIFIED_PROFILE_USER_ID_METHOD = "revanced_modified_profile_u
 private const val MODIFIED_PROFILE_IMAGE_URL_METHOD = "revanced_modified_profile_image_url"
 private const val MODIFIED_PROFILE_IMAGE_TYPE_METHOD = "revanced_modified_profile_image_type"
 private const val PRESERVE_MODIFIED_HISTORY_METHOD = "revanced_preserveModifiedHistory"
+private const val CHAT_INFO_VIEW_CLASS = "Lcom/kakao/talk/widget/chatlog/ChatInfoView;"
 private const val EXTENSION_CLASS =
     "Lapp/revanced/extension/kakaotalk/patches/ShowDeletedHiddenOrEditedMessagePatch;"
 
@@ -185,7 +183,7 @@ val showDeletedHiddenOrEditedMessagePatch = patch(
         GetDeletedColorFingerprint.method.replaceInstruction(0, "const v0, $deletedLit")
         GetHiddenColorFingerprint.method.replaceInstruction(0, "const v0, $hiddenLit")
 
-        val chatInfoViewClass = ChatInfoViewClassFingerprint.classDef
+        val chatInfoViewClass = mutableClassDefBy("Lcom/kakao/talk/widget/chatlog/ChatInfoView;")
 
         chatInfoViewClass.fields.add(
             ImmutableField(
@@ -287,9 +285,8 @@ val showDeletedHiddenOrEditedMessagePatch = patch(
             )
         }
 
-        val otherChatInfoViewClass = OthersChatInfoViewClassFingerprint.classDef
-        otherChatInfoViewClass.let {
-            val getTotalWidthMethod = otherChatInfoViewClass.methods.first { it.name == "getTotalWidth" }
+        mutableClassDefBy("Lcom/kakao/talk/widget/chatlog/OthersChatInfoView;").apply {
+            val getTotalWidthMethod = methods.first { it.name == "getTotalWidth" }
             val getPaddingLeftIndex = getTotalWidthMethod.indexOfFirstInstructionOrThrow(
                 methodCall(name = "getPaddingLeft", opcodes = listOf(Opcode.INVOKE_VIRTUAL)),
             )
@@ -308,7 +305,7 @@ val showDeletedHiddenOrEditedMessagePatch = patch(
                 """.trimIndent()
             )
 
-            val makeRectMethod = otherChatInfoViewClass.methods.first { it.name == "makeRect" }
+            val makeRectMethod = methods.first { it.name == "makeRect" }
             val getBookmarkIconIndex = makeRectMethod.indexOfFirstInstructionOrThrow(
                 methodCall(name = "getBookmarkIcon", opcodes = listOf(Opcode.INVOKE_VIRTUAL)),
             )
@@ -331,8 +328,8 @@ val showDeletedHiddenOrEditedMessagePatch = patch(
             )
         }
 
-        MyChatInfoViewClassFingerprint.classDef.let {
-            val getTotalWidthMethod = it.methods.first { it.name == "getTotalWidth" }
+        mutableClassDefBy("Lcom/kakao/talk/widget/chatlog/MyChatInfoView;").apply {
+            val getTotalWidthMethod = methods.first { it.name == "getTotalWidth" }
             val getPaddingLeftIndex = getTotalWidthMethod.indexOfFirstInstructionOrThrow(
                 methodCall(name = "getPaddingLeft", opcodes = listOf(Opcode.INVOKE_VIRTUAL)),
             )
@@ -351,8 +348,7 @@ val showDeletedHiddenOrEditedMessagePatch = patch(
                 """.trimIndent()
             )
 
-            val makeRectMethod =
-                MyChatInfoViewClassFingerprint.classDef.methods.first { it.name == "makeRect" }
+            val makeRectMethod = methods.first { it.name == "makeRect" }
             val getDateLayoutIndex = makeRectMethod.indexOfFirstInstructionOrThrow(
                 methodCall(name = "getDateLayout", opcodes = listOf(Opcode.INVOKE_VIRTUAL)),
             )
@@ -583,41 +579,18 @@ val showDeletedHiddenOrEditedMessagePatch = patch(
         val replaceToFeedMethod = ReplaceToFeedFingerprint.method
         replaceToFeedMethod.let {
             val flushToDBMethod = FlushToDBChatLogFingerprint(chatLogClass.type).method
-            val chatRoomListManagerGetInstanceMethod = ChatRoomListManagerGetInstanceFingerprint.method
-            val getChatRoomByChannelIdMethod = GetChatRoomByChannelIdFingerprint.method
-            val originalSyncMethod = OriginalSyncMethodFingerprint.method
-            val channelIdResultIndex = it.indexOfFirstInstructionOrThrow {
-                getReference<MethodReference>()?.let { reference ->
-                    reference.definingClass == chatLogClass.type &&
-                            reference.parameterTypeNames.isEmpty() &&
-                            reference.returnType == "J"
-                } == true
+            val getChatRoomByChannelIdMethod = ChatRoomSyncFingerprint.chatRoomLookup
+            val managerClass = ReplaceToFeedFingerprint.classDef
+            val managerField = managerClass.instanceFields.single {
+                it.type == getChatRoomByChannelIdMethod.definingClass
             }
-            val chatRoomIdGetter =
-                it.instructions[channelIdResultIndex].getReference<MethodReference>()
-                    ?: throw PatchException("Could not resolve chat room ID getter.")
-
-            val lastChatLogIndex = originalSyncMethod.indexOfFirstInstructionOrThrow(
-                methodCall(
-                    parameters = listOf("J"),
-                    returnType = chatLogClass.type,
-                    opcodes = listOf(Opcode.INVOKE_INTERFACE),
-                ),
-            )
-            val lastChatLogGetter = originalSyncMethod.getInstruction(lastChatLogIndex)
-                .getReference<MethodReference>()!!
-            val chatLogDaoGetter = originalSyncMethod.instructions.take(lastChatLogIndex)
-                .last {
-                    it.opcode == Opcode.INVOKE_STATIC &&
-                            it.getReference<MethodReference>()?.let { reference ->
-                                reference.parameterTypeNames.isEmpty() &&
-                                        reference.returnType == lastChatLogGetter.definingClass
-                            } == true
-                }.getReference<MethodReference>()!!
+            val originalSyncMethod = ChatRoomSyncFingerprint.method
+            val chatRoomIdGetter = ChatRoomSyncFingerprint.chatRoomIdGetter
+            val lastChatLogGetter = ChatRoomSyncFingerprint.lastChatLogGetter
+            val chatLogDaoField = managerClass.instanceFields.single { it.type == lastChatLogGetter.definingClass }
 
             fun latestMessageGuard(endLabel: String, value: Int, flag: Int) = """
-                invoke-static {}, $chatLogDaoGetter
-                move-result-object v$value
+                iget-object v$value, p0, ${chatLogDaoField.smaliReference}
                 invoke-virtual {p1}, $chatRoomIdGetter
                 move-result-wide p2
                 invoke-interface {v$value, p2, p3}, $lastChatLogGetter
@@ -661,8 +634,7 @@ val showDeletedHiddenOrEditedMessagePatch = patch(
                     invoke-virtual {p0, p1}, ${it.definingClass}->${flushToDBMethod.name}(${chatLogClass.type})Z
                     
                     ${latestMessageGuard(endLabel, value, flag)}
-                    invoke-static {}, $chatRoomListManagerGetInstanceMethod
-                    move-result-object v$value
+                    iget-object v$value, p0, ${managerField.smaliReference}
                     invoke-virtual {p1}, $chatRoomIdGetter
                     move-result-wide p2
                     invoke-virtual {v$value, p2, p3}, $getChatRoomByChannelIdMethod
@@ -692,8 +664,6 @@ val showDeletedHiddenOrEditedMessagePatch = patch(
             it.addInstructionsWithLabels(lastSgetFeedIndex, preserveMessage(lastSgetFeedIndex, deleted = false))
         }
 
-        checkViewableChatLogFingerprint(chatLogClass.type).method.returnEarly(true)
-
         val modifiedProfileReferences = ChatLogViewHolderBindProfileFingerprint.method.resolveModifiedProfileReferences(
             ChatLogItemViewHolderFingerprint.method.definingClass,
         )
@@ -702,64 +672,61 @@ val showDeletedHiddenOrEditedMessagePatch = patch(
             modifiedProfileAccessorMethods(chatLogViewHolderProfileClass.type, modifiedProfileReferences)
         )
 
-        val chatLogViewHolderSetupChatInfoViewMethod = ChatLogViewHolderSetupChatInfoViewFingerprint.method
-        chatLogViewHolderSetupChatInfoViewMethod.let {
-            val getChatLogItemMethod = ChatLogItemViewHolderFingerprint.method
+        ChatLogViewHolderSetupChatInfoViewFingerprint.apply {
+            val setModifyIndex = method.indexOfFirstInstructionOrThrow(
+                methodCall("$CHAT_INFO_VIEW_CLASS->setModify(Z)V", opcode = Opcode.INVOKE_VIRTUAL),
+            )
+            val viewRegister = method.getInstruction<FiveRegisterInstruction>(setModifyIndex).registerC
+            val bindModifiedChatInfo = bridgeMethod(
+                definingClass = classDef.type,
+                name = "revanced_bindModifiedChatInfo",
+                parameterTypes = listOf(CHAT_INFO_VIEW_CLASS),
+                returnType = "V",
+                accessFlags = AccessFlags.PRIVATE.value,
+                registerCount = 9,
+                instructions = """
+                    invoke-virtual {p1}, $CHAT_INFO_VIEW_CLASS->getExtension()Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;
+                    move-result-object v0
+                    if-eqz v0, :done
 
-            val setModifyIndex = it.indexOfFirstInstructionOrThrow(
-                methodCall(name = "setModify", opcodes = listOf(Opcode.INVOKE_VIRTUAL)),
+                    invoke-virtual {p0}, ${ChatLogItemViewHolderFingerprint.method.smaliReference}
+                    move-result-object v1
+                    instance-of v2, v1, ${chatLogClass.type}
+                    if-eqz v2, :empty
+                    check-cast v1, ${chatLogClass.type}
+                    iget-object v2, v1, ${vFieldField.smaliReference}
+
+                    invoke-virtual {v2}, ${vFieldField.type}->getDeleted()Z
+                    move-result v3
+                    invoke-virtual {v2}, ${vFieldField.type}->getHidden()Z
+                    move-result v4
+                    invoke-virtual {v2}, ${vFieldField.type}->getModifiedHistory()Ljava/lang/String;
+                    move-result-object v5
+                    invoke-virtual {v1}, ${messageGetterReference.smaliReference}
+                    move-result-object v6
+                    goto :bind
+
+                    :empty
+                    const/4 v3, 0x0
+                    const/4 v4, 0x0
+                    const-string v5, ""
+                    move-object v6, v5
+
+                    :bind
+                    invoke-virtual {v0, v3}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->setDeleted(Z)V
+                    invoke-virtual {v0, v4}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->setHidden(Z)V
+                    instance-of v2, p1, Lcom/kakao/talk/widget/chatlog/MyChatInfoView;
+                    invoke-static {p0, v5, v6, v2}, Lapp/revanced/extension/kakaotalk/chatlog/ModifiedMessageHistoryExtension;->bindModifiedLabel(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;Z)V
+
+                    :done
+                    return-void
+                """.trimIndent(),
             )
 
-            it.addInstructionsWithLabels(
+            classDef.methods.add(bindModifiedChatInfo)
+            method.addInstruction(
                 setModifyIndex + 1,
-                """
-                    invoke-virtual {v0}, Lcom/kakao/talk/widget/chatlog/ChatInfoView;->getExtension()Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;
-                    move-result-object v5
-                    if-eqz v5, :skip_set_flags
-                    
-                    invoke-virtual {p0}, $getChatLogItemMethod
-                    move-result-object v6
-                    instance-of v7, v6, ${chatLogClass.type}
-                    if-eqz v7, :cond_chatlog_null
-                    check-cast v6, ${chatLogClass.type}
-                    goto :goto_chatlog_cvar
-                    :cond_chatlog_null
-                    const/4 v6, 0x0
-                    :goto_chatlog_cvar
-                    if-nez v6, :cond_get_vfield
-                    const/4 v8, 0x0
-                    const/4 v9, 0x0
-                    const-string v10, ""
-                    goto :goto_set_flags
-                    
-                    :cond_get_vfield
-                    iget-object v7, v6, ${chatLogClass.type}->${vFieldField.name}:${vFieldField.type}
-                    
-                    invoke-virtual {v7}, ${vFieldField.type}->getDeleted()Z
-                    move-result v8
-                    
-                    invoke-virtual {v7}, ${vFieldField.type}->getHidden()Z
-                    move-result v9
-
-                    invoke-virtual {v7}, ${vFieldField.type}->getModifiedHistory()Ljava/lang/String;
-                    move-result-object v10
-                    
-                    :goto_set_flags
-                    invoke-virtual {v5, v8}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->setDeleted(Z)V
-                    invoke-virtual {v5, v9}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->setHidden(Z)V
-                    if-nez v6, :cond_get_current_message
-                    const-string v12, ""
-                    goto :goto_get_current_message
-                    :cond_get_current_message
-                    invoke-virtual {v6}, ${messageGetterReference.smaliReference}
-                    move-result-object v12
-                    :goto_get_current_message
-                    instance-of v11, v0, Lcom/kakao/talk/widget/chatlog/MyChatInfoView;
-                    invoke-static {p0, v10, v12, v11}, Lapp/revanced/extension/kakaotalk/chatlog/ModifiedMessageHistoryExtension;->bindModifiedLabel(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;Z)V
-                    
-                    :skip_set_flags
-                    nop
-                """.trimIndent()
+                "invoke-direct {p0, v$viewRegister}, ${bindModifiedChatInfo.smaliReference}",
             )
         }
 

@@ -3,9 +3,11 @@ package app.revanced.patches.kakaotalk.layout.tab.fingerprints
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.InstructionLocation.MatchAfterImmediately
 import app.morphe.patcher.StringComparisonType.STARTS_WITH
+import app.morphe.patcher.fieldAccess
 import app.morphe.patcher.methodCall
 import app.morphe.patcher.opcode
 import app.morphe.patcher.string
+import app.morphe.util.findFieldFromToString
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
@@ -65,40 +67,30 @@ internal fun chatDetailNavigationFingerprint() = Fingerprint(
     ),
 )
 
-internal fun chatListPaneVisibilityFingerprint() = Fingerprint(
-    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.FINAL),
-    returnType = "V",
-    parameters = listOf(
-        "L", "L", "L", "Z", "Lkotlin/jvm/functions/Function0;",
-        "Lkotlin/jvm/functions/Function2;", "Lkotlin/jvm/functions/Function3;",
-        "Lkotlin/jvm/functions/Function1;", "Lkotlin/jvm/functions/Function0;", "L", "I",
-    ),
-    strings = listOf(string("com.kakao.talk.activity.adaptive.main.tab.chat.ChatScreenScaffold (", STARTS_WITH)),
+internal object ChatListPaneVisibilityFingerprint : Fingerprint(
+    classFingerprint = ChatPaneStateFingerprint,
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    returnType = "Z",
+    parameters = emptyList(),
     filters = listOf(
-        methodCall(
-            definingClass = ChatPaneStateFingerprint.originalClassDef.type,
-            parameters = listOf(),
-            returnType = "Z",
+        fieldAccess(
+            reference = { ChatPaneStateFingerprint.originalMethod.findFieldFromToString(", isListPaneHidden=") },
+            opcode = Opcode.IGET_BOOLEAN,
         ),
     ),
-    custom = { _, classDef -> classDef.sourceFile == "ChatScreen.kt" },
 )
 
 internal fun chatNavigationVisibilityFingerprint() = Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.FINAL),
     returnType = "V",
-    parameters = listOf(
-        "L", "L", "Z", "L", "L", "Lkotlin/jvm/functions/Function1;",
-        "Lkotlin/jvm/functions/Function1;", "Lkotlin/jvm/functions/Function2;",
-        "Lkotlin/jvm/functions/Function3;", "Lkotlin/jvm/functions/Function0;", "L", "I", "I",
-    ),
     strings = listOf(string("com.kakao.talk.activity.adaptive.main.tab.chat.ChatScreen (", STARTS_WITH)),
     filters = listOf(
-        methodCall(smali = ChatNavigationProgressFingerprint.originalMethod.toString()),
+        methodCall(reference = { ChatNavigationProgressFingerprint.originalMethod }),
         methodCall(
             definingClass = ChatPaneStateFingerprint.originalClassDef.type,
             parameters = listOf(),
             returnType = "Z",
+            opcode = Opcode.INVOKE_VIRTUAL_RANGE,
         ),
         methodCall(smali = "Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;"),
         opcode(Opcode.MOVE_RESULT_OBJECT, location = MatchAfterImmediately()),

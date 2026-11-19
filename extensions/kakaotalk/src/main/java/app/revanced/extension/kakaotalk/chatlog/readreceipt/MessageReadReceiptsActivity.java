@@ -44,6 +44,8 @@ public final class MessageReadReceiptsActivity extends Activity {
             "app.revanced.extension.kakaotalk.readreceipt.MESSAGE_ID";
     private static final String EXTRA_SENDER_ID =
             "app.revanced.extension.kakaotalk.readreceipt.SENDER_ID";
+    private static final String EXTRA_OWNER_ID =
+            "app.revanced.extension.kakaotalk.readreceipt.OWNER_ID";
     private static final String EXTRA_CHAT_LOG_CLASS =
             "app.revanced.extension.kakaotalk.readreceipt.CHAT_LOG_CLASS";
     private static final long PROFILE_RETRY_DELAY_MS = 1200L;
@@ -613,6 +615,7 @@ public final class MessageReadReceiptsActivity extends Activity {
                 state.getLong(EXTRA_CHAT_ID, 0L),
                 state.getLong(EXTRA_MESSAGE_ID, 0L),
                 state.getLong(EXTRA_SENDER_ID, 0L),
+                state.getLong(EXTRA_OWNER_ID, 0L),
                 state.getString(EXTRA_CHAT_LOG_CLASS)
         );
     }
@@ -624,6 +627,7 @@ public final class MessageReadReceiptsActivity extends Activity {
         intent.putExtra(EXTRA_CHAT_ID, request.chatId);
         intent.putExtra(EXTRA_MESSAGE_ID, request.messageId);
         intent.putExtra(EXTRA_SENDER_ID, request.senderId);
+        intent.putExtra(EXTRA_OWNER_ID, request.ownerId);
         intent.putExtra(EXTRA_CHAT_LOG_CLASS, request.chatLogClassName);
     }
 
@@ -634,6 +638,7 @@ public final class MessageReadReceiptsActivity extends Activity {
         state.putLong(EXTRA_CHAT_ID, request.chatId);
         state.putLong(EXTRA_MESSAGE_ID, request.messageId);
         state.putLong(EXTRA_SENDER_ID, request.senderId);
+        state.putLong(EXTRA_OWNER_ID, request.ownerId);
         state.putString(EXTRA_CHAT_LOG_CLASS, request.chatLogClassName);
     }
 

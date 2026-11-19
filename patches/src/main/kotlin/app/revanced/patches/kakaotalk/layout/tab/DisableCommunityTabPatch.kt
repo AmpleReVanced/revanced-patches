@@ -29,17 +29,7 @@ val disableCommunityTabPatch = patch(
 
     execute {
         SetupAdapterFingerprint.method.apply {
-            val fragmentType = SetupAdapterFingerprint.classDef.type
-
-            val setAdapterIndex = indexOfFirstInstructionOrThrow {
-                opcode == Opcode.INVOKE_VIRTUAL &&
-                        getReference<MethodReference>()?.let { reference ->
-                            reference.definingClass == "Landroidx/recyclerview/widget/RecyclerView;" &&
-                                    reference.name == "setAdapter" &&
-                                    reference.parameterTypes.size == 1 &&
-                                    reference.returnType == "V"
-                        } == true
-            }
+            val setAdapterIndex = SetupAdapterFingerprint.instructionMatches.first().index
 
             val setAdapterInstruction = getInstruction<FiveRegisterInstruction>(setAdapterIndex)
             val setAdapterReference = setAdapterInstruction.getReference<MethodReference>()
@@ -70,44 +60,22 @@ val disableCommunityTabPatch = patch(
                         getReference<TypeReference>()?.type == concatAdapterType
             }
 
-            val adapterSetupConditionIndex = indexOfFirstInstructionReversedOrThrow(concatAdapterIndex - 1) {
-                opcode == Opcode.INVOKE_VIRTUAL &&
-                        getReference<MethodReference>()?.let { reference ->
-                            reference.definingClass == fragmentType &&
-                                    reference.parameterTypes.isEmpty() &&
-                                    reference.returnType == "Z"
-                        } == true
-            }
-            val conditionResult = getInstruction(adapterSetupConditionIndex + 1)
-            if (conditionResult.opcode != Opcode.MOVE_RESULT) {
-                throw PatchException("Could not inspect OpenChat community adapter condition")
-            }
-            val conditionRegister = (conditionResult as OneRegisterInstruction).registerA
-            indexOfFirstInstructionOrThrow(adapterSetupConditionIndex + 2) {
-                opcode == Opcode.IF_EQZ &&
-                        (this as? OneRegisterInstruction)?.registerA == conditionRegister
-            }
-
             val chatListAdapterType = CommonChatRoomListAdapterClassFingerprint.classDef.type
-            val chatListAdapterFieldGetIndex =
-                indexOfFirstInstructionOrThrow(adapterSetupConditionIndex) {
-                    opcode == Opcode.IGET_OBJECT &&
-                            getReference<FieldReference>()?.type == chatListAdapterType
-                }
-            val chatListAdapterFieldGet = getInstruction<TwoRegisterInstruction>(chatListAdapterFieldGetIndex)
+            val chatListAdapterFieldGet = getInstruction<TwoRegisterInstruction>(concatAdapterIndex + 1)
             val chatListAdapterField = chatListAdapterFieldGet.getReference<FieldReference>()
+                ?.takeIf { it.type == chatListAdapterType && chatListAdapterFieldGet.opcode == Opcode.IGET_OBJECT }
                 ?: throw PatchException("Could not inspect OpenChat chat list adapter field")
             val chatListAdapterRegister = chatListAdapterFieldGet.registerA
             val fragmentRegister = chatListAdapterFieldGet.registerB
 
-            indexOfFirstInstructionOrThrow(adapterSetupConditionIndex) {
+            indexOfFirstInstructionOrThrow(concatAdapterIndex) {
                 opcode == Opcode.NEW_ARRAY &&
                         (this as? TwoRegisterInstruction)?.registerA == adapterArrayRegister &&
                         getReference<TypeReference>()?.type == recyclerViewAdapterArrayType
             }
 
             val zeroRegister = getInstruction<ThreeRegisterInstruction>(
-                indexOfFirstInstructionOrThrow(adapterSetupConditionIndex) {
+                indexOfFirstInstructionOrThrow(concatAdapterIndex) {
                     if (opcode != Opcode.APUT_OBJECT) {
                         return@indexOfFirstInstructionOrThrow false
                     }
@@ -119,9 +87,9 @@ val disableCommunityTabPatch = patch(
                 }
             ).registerC
 
-            removeInstructions(adapterSetupConditionIndex, setAdapterIndex - adapterSetupConditionIndex)
+            removeInstructions(concatAdapterIndex, setAdapterIndex - concatAdapterIndex)
             addInstructions(
-                adapterSetupConditionIndex,
+                concatAdapterIndex,
                 """
                     new-instance v$targetAdapterRegister, $concatAdapterType
                     iget-object v$chatListAdapterRegister, v$fragmentRegister, $chatListAdapterField

@@ -1,6 +1,7 @@
 package app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints
 
 import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.InstructionLocation.MatchAfterImmediately
 import app.morphe.patcher.methodCall
 import app.morphe.patcher.opcode
 import com.android.tools.smali.dexlib2.AccessFlags
@@ -15,14 +16,21 @@ internal object ChatContextMenuActionLabelFingerprint : Fingerprint(
     custom = { _, classDef -> classDef.sourceFile == "ChatContextMenuAction.kt" },
 )
 
-internal fun realMessageActionsFingerprint(chatLogType: String) = object : Fingerprint(
-    accessFlags = listOf(AccessFlags.PUBLIC),
-    parameters = listOf(chatLogType, "L", "Ljava/lang/Object;"),
-    returnType = "Ljava/util/Set;",
-    strings = listOf("Required value was null."),
-    filters = listOf(methodCall("Ljava/util/Map;->values()Ljava/util/Collection;")),
-    custom = { _, classDef -> classDef.sourceFile == "RealAction.kt" },
-) {}
+internal object ChatLogContextMenuActionsFingerprint : Fingerprint(
+    name = "invokeSuspend",
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = listOf("Ljava/lang/Object;"),
+    returnType = "Ljava/lang/Object;",
+    filters = listOf(
+        methodCall("Lkotlin/collections/CollectionsKt;->plus(Ljava/util/Collection;Ljava/lang/Iterable;)Ljava/util/List;"),
+        opcode(Opcode.MOVE_RESULT_OBJECT, location = MatchAfterImmediately()),
+        opcode(Opcode.NEW_INSTANCE, location = MatchAfterImmediately()),
+        methodCall("Ljava/util/ArrayList;-><init>()V", location = MatchAfterImmediately()),
+        methodCall("Ljava/util/List;->iterator()Ljava/util/Iterator;", location = MatchAfterImmediately()),
+        methodCall(reference = { ChatContextMenuActionLabelFingerprint.originalMethod }),
+    ),
+    custom = { _, classDef -> classDef.sourceFile == "ChatLogContextMenuManager.kt" },
+)
 
 internal fun threadMessageActionFilterFingerprint(actionType: String) = object : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),

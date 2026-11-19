@@ -5,10 +5,9 @@ import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.patch.patch
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import app.morphe.util.setExtensionIsPatchIncluded
+import app.revanced.patches.kakaotalk.layout.tab.fingerprints.ChatListPaneVisibilityFingerprint
 import app.revanced.patches.kakaotalk.layout.tab.fingerprints.ChatNavigationProgressFingerprint
-import app.revanced.patches.kakaotalk.layout.tab.fingerprints.MainNavigationSuiteFingerprint
 import app.revanced.patches.kakaotalk.layout.tab.fingerprints.chatDetailNavigationFingerprint
-import app.revanced.patches.kakaotalk.layout.tab.fingerprints.chatListPaneVisibilityFingerprint
 import app.revanced.patches.kakaotalk.layout.tab.fingerprints.chatNavigationVisibilityFingerprint
 import app.revanced.patches.kakaotalk.misc.settings.PreferenceScreen
 import app.revanced.patches.kakaotalk.misc.settings.addSettingsTabPatch
@@ -38,16 +37,8 @@ val disableNavigationBarAnimationPatch = patch(
         )
         setExtensionIsPatchIncluded(EXTENSION_CLASS)
 
-        MainNavigationSuiteFingerprint.method.addInstructions(
-            0,
-            """
-                invoke-static/range {p9 .. p9}, $EXTENSION_CLASS->shouldAnimateBarReturn(Z)Z
-                move-result p9
-            """,
-        )
-
         val isBackTransitionRunning = ChatNavigationProgressFingerprint.instructionMatches[1].getMethodCalled()
-        val isListPaneHidden = chatListPaneVisibilityFingerprint().instructionMatches.single().getMethodCalled()
+        val isListPaneHidden = ChatListPaneVisibilityFingerprint.method
         chatNavigationVisibilityFingerprint().apply {
             val backStateRegister = method.getInstruction<FiveRegisterInstruction>(instructionMatches[0].index).registerE
             val paneStateRegister = method.getInstruction<RegisterRangeInstruction>(instructionMatches[1].index).startRegister

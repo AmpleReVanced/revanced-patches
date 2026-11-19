@@ -7,10 +7,6 @@ public final class DisableNavigationBarAnimationPatch {
     private DisableNavigationBarAnimationPatch() {
     }
 
-    public static boolean shouldAnimateBarReturn(boolean original) {
-        return original && !Settings.disableNavigationBarAnimation();
-    }
-
     public static boolean shouldCompleteEntry(boolean navigationBar, boolean detailActive) {
         return navigationBar && !detailActive && Settings.disableNavigationBarAnimation();
     }

@@ -5,8 +5,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -33,12 +33,13 @@ public final class MessageDetailsExtension {
         return StringRef.str("morphe_kakaotalk_message_details_title");
     }
 
-    public static Set<?> appendAction(Set<?> actions, Object message, Object chatRoom) {
+    public static List<?> prependAction(List<?> actions, Object message, Object chatRoom) {
         if (!Settings.SHOW_MESSAGE_DETAILS.get() || !(message instanceof MessageDetailsSource)) {
             return actions;
         }
-        Set<Object> result = new LinkedHashSet<>(actions);
+        List<Object> result = new ArrayList<>(actions.size() + 1);
         result.add(new MessageDetailsAction(message, chatRoom));
+        result.addAll(actions);
         return result;
     }
 

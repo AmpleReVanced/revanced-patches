@@ -44,6 +44,7 @@ public final class KeywordLogListActivity extends Activity {
     private final RowAdapter adapter = new RowAdapter();
 
     private boolean darkMode;
+    private long ownerId;
     private int sort = KeywordLogStore.SORT_TIME;
     private int loadedCount;
     private int loadGeneration;
@@ -65,12 +66,13 @@ public final class KeywordLogListActivity extends Activity {
         SettingsActivityLayout.applyTheme(this);
         super.onCreate(savedInstanceState);
 
+        ownerId = KeywordLogPatch.currentOwnerId();
         darkMode = MorphePreferenceStyle.isDark(this);
         sort = preferences().getInt("sort", KeywordLogStore.SORT_TIME);
 
         int containerId = SettingsActivityLayout.setContentView(
                 this,
-                KeywordLogPatch.string("title_for_keyword_log_list")
+                KeywordLogPatch.roomTitle()
         );
         FrameLayout container = findViewById(containerId);
         container.addView(createContent(), new FrameLayout.LayoutParams(
@@ -84,6 +86,10 @@ public final class KeywordLogListActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (ownerId != KeywordLogPatch.currentOwnerId()) {
+            finish();
+            return;
+        }
         if (MorphePreferenceStyle.isDark(this) != darkMode) recreate();
     }
 
@@ -114,11 +120,11 @@ public final class KeywordLogListActivity extends Activity {
                 KeywordLogStore.SORT_TIME
         );
         chatRoomTab = createSortTab(
-                KeywordLogPatch.string("label_for_keyword_log_chatroom_first"),
+                KeywordLogPatch.string("morphe_kakaotalk_keyword_log_sort_chat"),
                 KeywordLogStore.SORT_CHAT_ROOM
         );
         senderTab = createSortTab(
-                KeywordLogPatch.string("label_for_keyword_log_friend_first"),
+                KeywordLogPatch.string("morphe_kakaotalk_keyword_log_sort_sender"),
                 KeywordLogStore.SORT_SENDER
         );
 
@@ -152,7 +158,7 @@ public final class KeywordLogListActivity extends Activity {
 
     private View createDeleteAllAction() {
         TextView action = text(
-                KeywordLogPatch.string("desc_for_keyword_log_remove_all"),
+                KeywordLogPatch.string("morphe_kakaotalk_keyword_log_delete_all"),
                 12,
                 secondaryTextColor(),
                 Typeface.NORMAL
@@ -212,7 +218,7 @@ public final class KeywordLogListActivity extends Activity {
         ));
 
         emptyView = text(
-                KeywordLogPatch.string("desc_for_keyword_log_list_empty"),
+                KeywordLogPatch.string("morphe_kakaotalk_keyword_log_empty"),
                 14,
                 secondaryTextColor(),
                 Typeface.NORMAL
@@ -238,10 +244,10 @@ public final class KeywordLogListActivity extends Activity {
 
     private void confirmDeleteAll() {
         new AlertDialog.Builder(this)
-                .setMessage(KeywordLogPatch.string("desc_for_keyword_log_remove_all"))
+                .setMessage(KeywordLogPatch.string("morphe_kakaotalk_keyword_log_delete_all"))
                 .setNegativeButton(android.R.string.cancel, null)
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> Utils.runOnBackgroundThread(() -> {
-                    KeywordLogStore.getInstance().deleteUnprotected();
+                    KeywordLogStore.getInstance(ownerId).deleteUnprotected();
                     Utils.runOnMainThread(this::reload);
                 }))
                 .show();
@@ -249,8 +255,8 @@ public final class KeywordLogListActivity extends Activity {
 
     private void showEntryMenu(KeywordLogEntry entry) {
         String protectLabel = entry.isProtected
-                ? KeywordLogPatch.string("label_for_keyword_log_no_protection")
-                : KeywordLogPatch.string("label_for_keyword_log_protection");
+                ? KeywordLogPatch.string("morphe_kakaotalk_keyword_log_unprotect")
+                : KeywordLogPatch.string("morphe_kakaotalk_keyword_log_protect");
 
         new AlertDialog.Builder(this)
                 .setItems(
@@ -261,7 +267,7 @@ public final class KeywordLogListActivity extends Activity {
                         (dialog, which) -> {
                             if (which == 0) {
                                 Utils.runOnBackgroundThread(() -> {
-                                    KeywordLogStore.getInstance()
+                                    KeywordLogStore.getInstance(ownerId)
                                             .setProtected(entry.id, !entry.isProtected);
                                     Utils.runOnMainThread(this::reload);
                                 });
@@ -278,7 +284,7 @@ public final class KeywordLogListActivity extends Activity {
                 .setMessage(KeywordLogPatch.string("desc_for_keyword_log_remove"))
                 .setNegativeButton(android.R.string.cancel, null)
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> Utils.runOnBackgroundThread(() -> {
-                    KeywordLogStore.getInstance().delete(Collections.singletonList(entry.id));
+                    KeywordLogStore.getInstance(ownerId).delete(Collections.singletonList(entry.id));
                     Utils.runOnMainThread(this::reload);
                 }))
                 .show();
@@ -289,7 +295,8 @@ public final class KeywordLogListActivity extends Activity {
             Intent intent = KeywordLogPatch.createChatRoomIntent(
                     this,
                     entry.chatRoomId,
-                    entry.id
+                    entry.id,
+                    ownerId
             );
             if (intent == null) {
                 Utils.showToastShort(
@@ -325,12 +332,16 @@ public final class KeywordLogListActivity extends Activity {
         final int generation = loadGeneration;
         Utils.runOnBackgroundThread(() -> {
             List<KeywordLogEntry> page =
-                    KeywordLogStore.getInstance().query(requestedSort, offset, PAGE_SIZE);
+                    KeywordLogStore.getInstance(ownerId).query(requestedSort, offset, PAGE_SIZE);
             Utils.runOnMainThread(() -> onPageLoaded(page, generation));
         });
     }
 
     private void onPageLoaded(List<KeywordLogEntry> page, int generation) {
+        if (ownerId != KeywordLogPatch.currentOwnerId()) {
+            finish();
+            return;
+        }
         if (generation != loadGeneration) return;
 
         loading = false;

@@ -16,12 +16,8 @@ val alwaysShowKickButtonPatch = patch(
 
     execute {
         val kickButtonBuilder = KickButtonBuilderFingerprint.method
-        listOf(
-            kickButtonEligibilityFingerprint(kickButtonBuilder, 2),
-            kickButtonEligibilityFingerprint(kickButtonBuilder),
-            OpenProfileHostKickActionFingerprint,
-            OpenProfileKickActionFingerprint,
-        ).forEach { fingerprint ->
+        listOf(2, 3).forEach { parameterCount ->
+            val fingerprint = kickButtonEligibilityFingerprint(kickButtonBuilder, parameterCount)
             fingerprint.method.apply {
                 val membershipRegister = implementation!!.registerCount - parameterTypes.size
                 removeInstruction(indexOfFirstInstructionOrThrow {

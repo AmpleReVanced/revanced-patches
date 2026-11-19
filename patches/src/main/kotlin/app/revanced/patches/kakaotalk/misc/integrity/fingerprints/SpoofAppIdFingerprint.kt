@@ -2,7 +2,6 @@ package app.revanced.patches.kakaotalk.misc.integrity.fingerprints
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.OpcodesFilter
-import app.morphe.patcher.fingerprint
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
@@ -11,7 +10,7 @@ internal object GetAppIdFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC),
     parameters = listOf("Landroid/content/Context;"),
     returnType = "Ljava/lang/String;",
-    strings = listOf("@\u0015s1w\u0000N4", "??-98", "OnePassManager"),
+    strings = listOf("OnePassManager"),
     filters = OpcodesFilter.opcodesToFilters(
         Opcode.CONST_STRING,
         Opcode.INVOKE_STATIC,

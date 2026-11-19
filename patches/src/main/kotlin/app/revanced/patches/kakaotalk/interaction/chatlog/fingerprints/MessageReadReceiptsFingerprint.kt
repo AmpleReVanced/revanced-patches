@@ -3,7 +3,6 @@ package app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.fieldAccess
 import app.morphe.patcher.methodCall
-import app.morphe.patcher.opcode
 import app.morphe.patcher.util.getReference
 import app.revanced.util.parameterTypeNames
 import com.android.tools.smali.dexlib2.AccessFlags
@@ -13,18 +12,11 @@ import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
 internal object ChatMemberSetConstructorFingerprint : Fingerprint(
+    name = "<init>",
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.CONSTRUCTOR),
-    parameters = listOf(
-        "J",
-        "Ljava/util/List;",
-        "Ljava/util/List;",
-        "Ljava/util/Set;",
-        "I",
-    ),
+    parameters = listOf("J", "J", "Ljava/util/List;", "Ljava/util/List;", "Ljava/util/Set;", "I"),
     returnType = "V",
-    custom = { method, classDef ->
-        method.name == "<init>" && classDef.sourceFile == "ChatMemberSet.kt"
-    },
+    custom = { _, classDef -> classDef.sourceFile == "ChatMemberSet.kt" },
 )
 
 internal object MemberWatermarksGetterFingerprint : Fingerprint(
@@ -94,18 +86,11 @@ internal fun chatRoomMemberSetGetterFingerprint(
 ) {}
 
 internal object FriendPrimaryConstructorFingerprint : Fingerprint(
+    name = "<init>",
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.CONSTRUCTOR),
+    parameters = listOf("J", "J", "Ljava/lang/String;", "Ljava/lang/String;", "L", "Z"),
     returnType = "V",
-    custom = { method, classDef ->
-        method.name == "<init>" &&
-            classDef.sourceFile == "Friend.kt" &&
-            method.parameterTypeNames.size == 5 &&
-            method.parameterTypeNames[0] == "J" &&
-            method.parameterTypeNames[1] == "Ljava/lang/String;" &&
-            method.parameterTypeNames[2] == "Ljava/lang/String;" &&
-            method.parameterTypeNames[3].startsWith("L") &&
-            method.parameterTypeNames[4] == "Z"
-    },
+    custom = { _, classDef -> classDef.sourceFile == "Friend.kt" },
 )
 
 internal object FriendProfileImageUrlFingerprint : Fingerprint(
@@ -140,17 +125,3 @@ internal object FriendDisplayNameFingerprint : Fingerprint(
             instructions.count { it.opcode == Opcode.RETURN_OBJECT } >= 3
     },
 )
-
-internal fun currentUserPredicateFingerprint(meType: String) = object : Fingerprint(
-    accessFlags = listOf(AccessFlags.PUBLIC),
-    parameters = listOf("J"),
-    returnType = "Z",
-    filters = listOf(
-        opcode(Opcode.INVOKE_VIRTUAL),
-        opcode(Opcode.MOVE_RESULT_WIDE),
-        opcode(Opcode.CMP_LONG),
-    ),
-    custom = { _, classDef ->
-        meType in classDef.interfaces && classDef.sourceFile == "Me.kt"
-    },
-) {}

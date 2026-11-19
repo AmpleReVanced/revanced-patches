@@ -323,6 +323,16 @@ private fun openOpenChatFeedProfileMethod(
     null,
     MutableMethodImplementation(14),
 ).toMutable().apply {
+    val loadFacade = """
+        invoke-virtual {p0}, ${references.openLinkFacadeGetter.smaliReference}
+        move-result-object v0
+    """.trimIndent()
+    val loadManager = """
+        $loadFacade
+        invoke-interface {v0}, ${references.openLinkManagerGetter.smaliReference}
+        move-result-object v0
+    """.trimIndent()
+
     addInstructionsWithLabels(
         0,
         """
@@ -334,8 +344,7 @@ private fun openOpenChatFeedProfileMethod(
             goto :revanced_open_profile_open_profile
 
             :revanced_open_profile_link_check
-            invoke-static {}, ${references.openLinkManagerGetter.smaliReference}
-            move-result-object v0
+            $loadManager
             invoke-virtual {p0}, ${references.chatRoomGetter.smaliReference}
             move-result-object v1
             invoke-virtual {v1}, ${references.openLinkIdGetter.smaliReference}
@@ -349,8 +358,7 @@ private fun openOpenChatFeedProfileMethod(
             invoke-virtual {v1}, ${references.openLinkProfileSecondCheck.smaliReference}
             move-result v0
             if-eqz v0, :revanced_open_profile_generic
-            invoke-static {}, ${references.openLinkManagerGetter.smaliReference}
-            move-result-object v0
+            $loadManager
             invoke-virtual {p1}, ${references.friendOpenProfileIdGetter.smaliReference}
             move-result-wide v3
             invoke-interface {v0, v1, v3, v4}, ${references.openLinkProfileMemberCheck.smaliReference}
@@ -359,8 +367,7 @@ private fun openOpenChatFeedProfileMethod(
             move-object v2, v1
 
             :revanced_open_profile_open_profile
-            invoke-static {}, ${references.openLinkFacadeGetter.smaliReference}
-            move-result-object v0
+            $loadFacade
             invoke-virtual {p2}, Landroid/view/View;->getContext()Landroid/content/Context;
             move-result-object v1
             new-instance v3, ${references.openProfileFriendDataConstructor.definingClass}
@@ -378,8 +385,7 @@ private fun openOpenChatFeedProfileMethod(
             goto :revanced_open_profile_intent
 
             :revanced_open_profile_generic
-            invoke-static {}, ${references.openLinkFacadeGetter.smaliReference}
-            move-result-object v0
+            $loadFacade
             invoke-virtual {p2}, Landroid/view/View;->getContext()Landroid/content/Context;
             move-result-object v1
             move-object v2, p1
@@ -393,7 +399,7 @@ private fun openOpenChatFeedProfileMethod(
             move-result-object v4
             invoke-virtual {v4}, ${references.chatIdGetter.smaliReference}
             move-result-wide v4
-            invoke-static {}, ${references.openLinkManagerGetter.smaliReference}
+            invoke-interface {v0}, ${references.openLinkManagerGetter.smaliReference}
             move-result-object v6
             invoke-virtual {p0}, ${references.chatRoomGetter.smaliReference}
             move-result-object v7
@@ -442,9 +448,10 @@ private fun resolveOpenChatFeedProfileReferences(
     val feedMessageReference = bindMethodReferences
         .firstOrNull {
             it.returnType == "Ljava/lang/CharSequence;" &&
-                    it.parameterTypeNames.lastOrNull() == chatLogType
+                it.parameterTypeNames.indexOf(chatLogType) > 0
         } ?: throw PatchException("Could not find feed message formatter.")
-    val chatRoomType = feedMessageReference.parameterTypeNames.first()
+    val formatterParameters = feedMessageReference.parameterTypeNames
+    val chatRoomType = formatterParameters[formatterParameters.indexOf(chatLogType) - 1]
     val chatRoomGetter = bindMethodReferences
         .lastOrNull {
             it.definingClass != feedMessageReference.definingClass &&
@@ -658,18 +665,8 @@ private fun resolveOpenChatFeedProfileReferences(
         } == true
     }.takeIf { it >= 0 }
         ?: throw PatchException("Could not find open link chat member intent call.")
-    val openLinkManagerGetterIndex = openLinkMemberIntentInstructions
-        .take(openLinkMemberIntentIndex)
-        .indexOfLast { instruction ->
-            instruction.getReference<MethodReference>()?.let { reference ->
-                reference.definingClass == openLinkManagerGetter.definingClass &&
-                        reference.name == openLinkManagerGetter.name &&
-                        reference.parameterTypeNames == openLinkManagerGetter.parameterTypeNames
-            } == true
-        }.takeIf { it >= 0 }
-        ?: throw PatchException("Could not find open link manager getter call.")
     val openLinkFacadeGetterIndex = openLinkMemberIntentInstructions
-        .take(openLinkManagerGetterIndex)
+        .take(openLinkMemberIntentIndex)
         .indexOfLast { instruction ->
             instruction.getReference<MethodReference>()?.let { reference ->
                 reference.definingClass == openLinkFacadeGetter.definingClass &&
@@ -679,7 +676,7 @@ private fun resolveOpenChatFeedProfileReferences(
         }.takeIf { it >= 0 }
         ?: throw PatchException("Could not find open link facade getter call.")
     val openLinkMemberIntentArgumentReferences = openLinkMemberIntentInstructions
-        .subList(openLinkFacadeGetterIndex, openLinkManagerGetterIndex)
+        .subList(openLinkFacadeGetterIndex, openLinkMemberIntentIndex)
         .mapNotNull { it.getReference<MethodReference>() }
     val openLinkChatInfoGetter = openLinkMemberIntentArgumentReferences
         .firstOrNull { reference ->
@@ -703,9 +700,9 @@ private fun resolveOpenChatFeedProfileReferences(
                     it.returnType == "J"
         } ?: throw PatchException("Could not find open link chat id getter.")
     val openLinkIdGetter = openLinkMemberIntentInstructions
-        .subList(openLinkManagerGetterIndex, openLinkMemberIntentIndex)
+        .take(openLinkMemberIntentIndex)
         .mapNotNull { it.getReference<MethodReference>() }
-        .firstOrNull {
+        .lastOrNull {
             it.definingClass == chatRoomType &&
                     it.parameterTypeNames.isEmpty() &&
                     it.returnType == "J"

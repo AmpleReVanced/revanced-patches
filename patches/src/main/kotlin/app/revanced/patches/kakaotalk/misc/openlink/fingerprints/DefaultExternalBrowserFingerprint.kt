@@ -1,21 +1,16 @@
 package app.revanced.patches.kakaotalk.misc.openlink.fingerprints
 
 import app.morphe.patcher.Fingerprint
-import app.morphe.patcher.OpcodesFilter
-import com.android.tools.smali.dexlib2.AccessFlags
+import app.morphe.patcher.opcode
+import app.morphe.patcher.string
 import com.android.tools.smali.dexlib2.Opcode
 
 internal object DefaultExternalBrowserFingerprint : Fingerprint(
-    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
-    parameters = listOf(),
-    strings = listOf("defaultExternalBrowser"),
-    filters = OpcodesFilter.opcodesToFilters(
-        Opcode.INVOKE_VIRTUAL,
-        Opcode.MOVE_RESULT_OBJECT,
-        Opcode.CONST_STRING,
-        Opcode.INVOKE_STATIC,
-        Opcode.MOVE_RESULT_OBJECT,
-        Opcode.CONST_4
+    parameters = emptyList(),
+    returnType = "L",
+    filters = listOf(
+        string("defaultExternalBrowser"),
+        opcode(Opcode.CONST_4),
     ),
-    custom = { method, classDef -> classDef.sourceFile == "CbtPreferences.kt" }
+    custom = { _, classDef -> classDef.sourceFile == "CbtPreferences.kt" },
 )
