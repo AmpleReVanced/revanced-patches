@@ -112,6 +112,9 @@ public final class Settings extends BaseSettings {
     public static final BooleanSetting FORCE_DEBUG_MODE =
             new BooleanSetting("kakaotalk_force_debug_mode", TRUE, true);
 
+    public static final BooleanSetting DISABLE_SSL_PINNING =
+            new BooleanSetting("kakaotalk_disable_ssl_pinning", false, true);
+
     public static boolean showModifiedMessageSenderProfile() {
         return SHOW_MODIFIED_MESSAGE_SENDER_PROFILE.get();
     }

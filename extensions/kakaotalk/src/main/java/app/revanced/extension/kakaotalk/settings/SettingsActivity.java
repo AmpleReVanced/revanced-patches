@@ -33,6 +33,7 @@ import app.revanced.extension.kakaotalk.patches.DefaultExternalBrowserPatch;
 import app.revanced.extension.kakaotalk.patches.DisableFriendFeedTabPatch;
 import app.revanced.extension.kakaotalk.patches.DisableNavigationBarAnimationPatch;
 import app.revanced.extension.kakaotalk.patches.DisableOpenChatRoomCommentPatch;
+import app.revanced.extension.kakaotalk.patches.DisableSslPinningPatch;
 import app.revanced.extension.kakaotalk.patches.EnableMarkdownPatch;
 import app.revanced.extension.kakaotalk.patches.EnableSendBigTextPatch;
 import app.revanced.extension.kakaotalk.patches.ForceEnableDebugModePatch;
@@ -84,6 +85,7 @@ public final class SettingsActivity extends Activity {
     private static final String PREF_BYPASS_MOAT_INTEGRITY_CHECK = "morphe_pref_bypass_moat_integrity_check";
     private static final String PREF_FEATURE_FLAG_OVERRIDES = "morphe_pref_feature_flag_overrides";
     private static final String PREF_FORCE_DEBUG_MODE = "morphe_pref_force_debug_mode";
+    private static final String PREF_DISABLE_SSL_PINNING = "morphe_pref_disable_ssl_pinning";
     private static final String PREF_DEBUG = "morphe_pref_debug";
     private static final String PREF_DEBUG_STACKTRACE = "morphe_pref_debug_stacktrace";
     private static final String PREF_DEBUG_TOAST = "morphe_pref_debug_toast";
@@ -152,6 +154,7 @@ public final class SettingsActivity extends Activity {
             RESTART_SENSITIVE_PREFERENCES.add(PREF_HIDE_MORE_TAB_SERVICE_GROUP_SECTION);
             RESTART_SENSITIVE_PREFERENCES.add(PREF_HIDE_MORE_TAB_LINE_SERVICE_SECTION);
             RESTART_SENSITIVE_PREFERENCES.add(PREF_FORCE_DEBUG_MODE);
+            RESTART_SENSITIVE_PREFERENCES.add(PREF_DISABLE_SSL_PINNING);
             RESTART_SENSITIVE_PREFERENCES.add(PREF_BYPASS_MOAT_INTEGRITY_CHECK);
             RESTART_SENSITIVE_PREFERENCES.add(PREF_RESTORE_KEYWORD_LOG);
         }
@@ -192,6 +195,7 @@ public final class SettingsActivity extends Activity {
             bindRiskySwitchIfIncluded(PREF_BYPASS_MOAT_INTEGRITY_CHECK, Settings.BYPASS_MOAT_INTEGRITY_CHECK, BypassMoatCheckPatch.isPatchIncluded());
             bindTextIfIncluded(PREF_FEATURE_FLAG_OVERRIDES, Settings.FEATURE_FLAG_OVERRIDES, OverrideFeatureFlagPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_FORCE_DEBUG_MODE, Settings.FORCE_DEBUG_MODE, ForceEnableDebugModePatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_DISABLE_SSL_PINNING, Settings.DISABLE_SSL_PINNING, DisableSslPinningPatch.isPatchIncluded());
             bindDebugLevelPreference(PREF_DEBUG, this::refreshPreferences);
             bindSwitch(PREF_DEBUG_STACKTRACE, BaseSettings.DEBUG_STACKTRACE);
             bindSwitch(PREF_DEBUG_TOAST, BaseSettings.DEBUG_TOAST_ON_ERROR);

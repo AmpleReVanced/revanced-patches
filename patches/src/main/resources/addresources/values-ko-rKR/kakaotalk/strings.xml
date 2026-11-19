@@ -82,6 +82,9 @@
     <string name="morphe_settings_patch_bypass_moat_check_confirm_enable">위험을 이해하고 켜기</string>
     <string name="morphe_settings_patch_force_debug_mode">카카오톡 디버그 모드 강제 사용</string>
     <string name="morphe_settings_patch_force_debug_mode_summary">카카오톡 내부 디버그 플래그를 강제로 켭니다.</string>
+    <string name="morphe_settings_patch_disable_ssl_pinning">SSL pinning 해제</string>
+    <string name="morphe_settings_patch_disable_ssl_pinning_summary">Burp Suite 등의 프록시로 OkHttp와 WebView의 HTTPS 통신을 분석합니다. Android에 프록시 CA 인증서를 설치하세요. 설정 변경 후 카카오톡을 다시 시작해야 합니다.</string>
+    <string name="morphe_pref_disable_ssl_pinning_summary">Burp Suite 등의 프록시로 OkHttp와 WebView의 HTTPS 통신을 분석합니다. Android에 프록시 CA 인증서를 설치하세요. 설정 변경 후 카카오톡을 다시 시작해야 합니다.</string>
     <string name="morphe_settings_support">프로젝트 후원하기</string>
     <string name="morphe_settings_support_summary">결과물이 마음에 드시나요? 후원으로 더 나은 결과물을 만드는 데 힘을 보태주세요. 여러분의 지원으로 이 프로젝트는 계속 개발됩니다.</string>
     <string name="morphe_settings_catalog_remove_short_form_tab">숏폼 탭 숨기기</string>
