@@ -1,20 +1,20 @@
 package app.revanced.patches.kakaotalk.layout.tab
 
-import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.patch.patch
+import app.morphe.patcher.util.getFreeRegisterProvider
+import app.morphe.patcher.util.smali.ExternalLabel
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
+import app.morphe.util.findFieldFromToString
 import app.morphe.util.setExtensionIsPatchIncluded
-import app.revanced.patches.kakaotalk.layout.tab.fingerprints.ChatListPaneVisibilityFingerprint
-import app.revanced.patches.kakaotalk.layout.tab.fingerprints.ChatNavigationProgressFingerprint
+import app.revanced.patches.kakaotalk.layout.tab.fingerprints.ChatPaneStateFingerprint
 import app.revanced.patches.kakaotalk.layout.tab.fingerprints.chatDetailNavigationFingerprint
-import app.revanced.patches.kakaotalk.layout.tab.fingerprints.chatNavigationVisibilityFingerprint
+import app.revanced.patches.kakaotalk.layout.tab.fingerprints.chatListPaneFingerprint
 import app.revanced.patches.kakaotalk.misc.settings.PreferenceScreen
 import app.revanced.patches.kakaotalk.misc.settings.addSettingsTabPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
-import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
-import com.android.tools.smali.dexlib2.iface.instruction.RegisterRangeInstruction
 
 private const val EXTENSION_CLASS =
     "Lapp/revanced/extension/kakaotalk/patches/DisableNavigationBarAnimationPatch;"
@@ -37,30 +37,28 @@ val disableNavigationBarAnimationPatch = patch(
         )
         setExtensionIsPatchIncluded(EXTENSION_CLASS)
 
-        val isBackTransitionRunning = ChatNavigationProgressFingerprint.instructionMatches[1].getMethodCalled()
-        val isListPaneHidden = ChatListPaneVisibilityFingerprint.method
-        chatNavigationVisibilityFingerprint().apply {
-            val backStateRegister = method.getInstruction<FiveRegisterInstruction>(instructionMatches[0].index).registerE
-            val paneStateRegister = method.getInstruction<RegisterRangeInstruction>(instructionMatches[1].index).startRegister
-            val visibilityIndex = instructionMatches[2].index
-            val visibilityRegister = method.getInstruction<FiveRegisterInstruction>(visibilityIndex).registerC
-            val hiddenRegister = method.getInstruction<OneRegisterInstruction>(instructionMatches[3].index).registerA
-            val backRegister = method.getInstruction<OneRegisterInstruction>(instructionMatches[4].index).registerA
+        completeChatEntryWithoutAnimation(chatDetailNavigationFingerprint())
 
-            method.addInstructions(
-                visibilityIndex,
+        chatListPaneFingerprint().apply {
+            val index = instructionMatches.single().index
+            val scaffold = method.getInstruction<FiveRegisterInstruction>(index)
+            val registers = method.getFreeRegisterProvider(index, 3)
+            val twoPane = registers.getFreeRegister4Bit()
+            val detail = registers.getFreeRegister4Bit()
+            val settled = registers.getFreeRegister4Bit()
+            val paneState = ChatPaneStateFingerprint.originalMethod
+            method.addInstructionsWithLabels(
+                index,
                 """
-                    invoke-virtual/range {v$paneStateRegister .. v$paneStateRegister}, $isListPaneHidden
-                    move-result v$hiddenRegister
-                    invoke-static/range {v$backStateRegister .. v$backStateRegister}, $isBackTransitionRunning
-                    move-result v$backRegister
-                    invoke-static {v$visibilityRegister, v$hiddenRegister, v$backRegister}, $EXTENSION_CLASS->isCompactDetailOpen(ZZZ)Z
-                    move-result v$visibilityRegister
+                    iget-boolean v$twoPane, p0, ${paneState.findFieldFromToString(", isTwoPaneLayout=")}
+                    iget-boolean v$detail, p0, ${paneState.findFieldFromToString(", isDetailPaneActive=")}
+                    iget-boolean v$settled, p0, ${paneState.findFieldFromToString(", isListPaneSettledVisible=")}
+                    invoke-static {v$twoPane, v$detail, v$settled, v${scaffold.registerD}, v${scaffold.registerE}}, $EXTENSION_CLASS->renderListPreview(ZZZLkotlin/jvm/functions/Function2;Ljava/lang/Object;)Z
+                    move-result v$detail
+                    if-nez v$detail, :after_bar
                 """,
+                ExternalLabel("after_bar", method.getInstruction(index + 1)),
             )
         }
-
-        val entry = chatDetailNavigationFingerprint().also { it.match() }
-        completeChatEntryWithoutAnimation(entry)
     }
 }
