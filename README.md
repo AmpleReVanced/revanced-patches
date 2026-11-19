@@ -4,14 +4,14 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START -->
-> **[v1.6.0-dev.1](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.6.0-dev.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;128 patches total
+> **[v1.6.0-dev.2](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.6.0-dev.2)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;129 patches total
 <details>
-<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;76 patches</summary>
+<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;77 patches</summary>
 <br>
 
 **🎯 Supported versions:**
 
-| 26.9.1 |
+| 26.10.0 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
@@ -21,7 +21,7 @@
 | [Add settings resources](#add-settings-resources) | Adds Morphe settings layout resources to the app. |  |
 | [Add settings tab](#add-settings-tab) | Adds a settings tab to the app. |  |
 | [Allow Hide on Any Chat](#allow-hide-on-any-chat) | Users with hiding privileges can hide any chat, including their own messages. |  |
-| [Allow Open Chat Managers To Block Members](#allow-open-chat-managers-to-block-members) | Allows open chat room hosts and co-hosts to block regular members from their profiles. |  |
+| [Allow Open Chat Managers To Block Members](#allow-open-chat-managers-to-block-members) | Shows the personal block button for eligible members alongside Open Chat host actions. |  |
 | [Allow custom profile images](#allow-custom-profile-images) | Adds a photo picker and adjustable images to the custom profile editor. |  |
 | [Allow direct thread reply editing](#allow-direct-thread-reply-editing) | Shows the edit action when long-pressing your own thread replies in the main chat. |  |
 | [Allow invisible characters](#allow-invisible-characters) | Stops zero width and other invisible characters from being stripped out of the chat input and out of the messages shown in a chat room. |  |
@@ -49,6 +49,7 @@
 | [Disable Pay banner ad](#disable-pay-banner-ad) | Disables the KakaoPay banner ad load and render paths. |  |
 | [Disable S2Event](#disable-s2event) | Disables Tracker |  |
 | [Disable SDK Tracker](#disable-sdk-tracker) | Disables the SDK Tracker in KakaoTalk. |  |
+| [Disable SSL pinning](#disable-ssl-pinning) | Adds a debug option to inspect OkHttp and WebView HTTPS traffic using an installed proxy CA certificate. |  |
 | [Disable Sentry](#disable-sentry) | Disables Sentry error reporting in KakaoTalk. |  |
 | [Disable ShortForm ad](#disable-shortform-ad) | Disables the shortform ad load and render paths. |  |
 | [Disable Talk Share Log](#disable-talk-share-log) | Disable talk share log |  |

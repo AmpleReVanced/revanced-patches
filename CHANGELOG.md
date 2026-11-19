@@ -1,3 +1,17 @@
+# [1.6.0-dev.2](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.1...v1.6.0-dev.2) (2026-11-19)
+
+
+### Bug Fixes
+
+* **kakaotalk:** enable message details menus for all chat logs ([a97582a](https://github.com/AmpleReVanced/revanced-patches/commit/a97582a98df3aeb71cf12987194dd03a7be67d72))
+* **kakaotalk:** keep the bottom tab bar hidden during predictive back ([fd33286](https://github.com/AmpleReVanced/revanced-patches/commit/fd3328666b81e91e99e5653750f669c74b633001))
+
+
+### Features
+
+* **kakaotalk:** add SSL pinning toggle to debug settings ([fb20e6b](https://github.com/AmpleReVanced/revanced-patches/commit/fb20e6be724bc8cd498850641b0500f4428da026))
+* **kakaotalk:** support version `26.10.0` ([4341c1f](https://github.com/AmpleReVanced/revanced-patches/commit/4341c1f86795aaa6c2d639dfb0ca96eae1fd6789))
+
 # [1.6.0-dev.1](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0...v1.6.0-dev.1) (2026-10-24)
 
 
