@@ -79,9 +79,7 @@ val hideHomeComponentsPatch = patch(
         val adapterClass = MainAdapterItemsUpdateFingerprint.classDef
         val itemTypeGetter = adapterClass.methods.inferItemTypeGetter(adapterClass.type)
         val onCreateViewHolderMethod = adapterClass.methods.inferOnCreateViewHolderMethod()
-        val componentTypes = onCreateViewHolderMethod.inferHomeComponentTypes(
-            resources = homeComponentResources(),
-        )
+        val componentTypes = onCreateViewHolderMethod.homeComponentTypes()
 
         updateItemsMethod.addInstructions(
             0,
@@ -107,7 +105,7 @@ private data class HomeComponentResources(
     val recommendedItemLayout: Int,
 )
 
-private data class HomeComponentTypes(
+internal data class HomeComponentTypes(
     val searchMenu: Int,
     val recentGalleries: Int,
     val recommendedGalleries: Int,
@@ -118,6 +116,7 @@ private data class HomeComponentTypes(
     val liveRanking: Int,
     val recommendedTitle: Int,
     val recommendedItem: Int,
+    val spacer: Int,
 ) {
     fun toTypeSpec(): String = listOf(
         listOf(searchMenu),
@@ -184,7 +183,7 @@ private fun homeComponentResources() = HomeComponentResources(
 
 private fun layoutResourceId(name: String) = resourceId(ResourceType.LAYOUT, name).toInt()
 
-private fun Iterable<MutableMethod>.inferItemTypeGetter(adapterClass: String): MethodReference {
+internal fun Iterable<MutableMethod>.inferItemTypeGetter(adapterClass: String): MethodReference {
     val candidates = mapNotNull { method ->
         if (method.parameterTypes.map { it.toString() } != listOf("I") || method.returnType != "I") {
             return@mapNotNull null
@@ -221,6 +220,8 @@ private fun Iterable<MutableMethod>.inferOnCreateViewHolderMethod(): MutableMeth
                 } == true
             }
     } ?: throw PatchException("Could not infer MainAdapter.onCreateViewHolder")
+
+internal fun MutableMethod.homeComponentTypes() = inferHomeComponentTypes(homeComponentResources())
 
 private fun MutableMethod.inferHomeComponentTypes(
     resources: HomeComponentResources,
@@ -265,6 +266,9 @@ private fun MutableMethod.inferHomeComponentTypes(
         },
         recommendedItem = findType("recommended posts item") {
             it.hasLayoutViaConstructor(resources.recommendedItemLayout)
+        },
+        spacer = findType("home spacer") {
+            resourceId(ResourceType.DIMEN, "main_space_divide5").toInt() in it.literalValues
         },
     )
 }
