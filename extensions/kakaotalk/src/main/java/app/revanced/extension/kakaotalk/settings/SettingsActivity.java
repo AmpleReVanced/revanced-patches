@@ -218,7 +218,6 @@ public final class SettingsActivity extends Activity {
 
         private void bindSwitch(String key, BooleanSetting setting) {
             SwitchPreference preference = requirePreference(key, SwitchPreference.class);
-            preference.setPersistent(false);
             switchBindings.add(new SwitchBinding(preference, setting));
             resettableSettings.add(setting);
             preference.setOnPreferenceChangeListener((pref, newValue) -> {
@@ -240,7 +239,6 @@ public final class SettingsActivity extends Activity {
 
         private void bindRiskySwitch(String key, BooleanSetting setting) {
             SwitchPreference preference = requirePreference(key, SwitchPreference.class);
-            preference.setPersistent(false);
             switchBindings.add(new SwitchBinding(preference, setting));
             resettableSettings.add(setting);
             preference.setOnPreferenceChangeListener((pref, newValue) -> {
@@ -268,7 +266,6 @@ public final class SettingsActivity extends Activity {
 
         private void bindText(String key, StringSetting setting) {
             EditTextPreference preference = requirePreference(key, EditTextPreference.class);
-            preference.setPersistent(false);
             textBindings.add(new TextBinding(preference, setting, preference.getSummary()));
             resettableTextSettings.add(setting);
             preference.setOnPreferenceChangeListener((pref, newValue) -> {
@@ -317,7 +314,6 @@ public final class SettingsActivity extends Activity {
 
         private void bindInfoPreference(String key, String summary) {
             Preference preference = requirePreference(key, Preference.class);
-            preference.setPersistent(false);
             preference.setSelectable(false);
             preference.setSummary(normalizeSummary(summary));
         }
@@ -354,7 +350,6 @@ public final class SettingsActivity extends Activity {
 
         private void bindResetPreference() {
             Preference preference = requirePreference(PREF_RESET, Preference.class);
-            preference.setPersistent(false);
             preference.setOnPreferenceClickListener(pref -> {
                 BaseSettings.DEBUG_LEVEL.resetToDefault();
                 for (BooleanSetting setting : resettableSettings) {

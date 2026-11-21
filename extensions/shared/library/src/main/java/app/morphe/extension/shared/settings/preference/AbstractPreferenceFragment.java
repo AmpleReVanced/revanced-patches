@@ -144,7 +144,6 @@ public abstract class AbstractPreferenceFragment extends PreferenceFragment {
 
     protected final void bindDebugLevelPreference(String key, Runnable refreshPreferences) {
         debugLevelPreference = requirePreference(key, MorpheListPreference.class);
-        debugLevelPreference.setPersistent(false);
         debugLevelPreference.setEntries(new CharSequence[]{
                 str("morphe_settings_debug_disabled"),
                 str("morphe_settings_debug_basic"),
