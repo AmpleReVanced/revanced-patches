@@ -1,3 +1,10 @@
+# [1.6.0-dev.6](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.5...v1.6.0-dev.6) (2026-11-21)
+
+
+### Bug Fixes
+
+* **dcinside:** match ad placement key on OneStore builds ([01a5c3a](https://github.com/AmpleReVanced/revanced-patches/commit/01a5c3a6f59b38226f0bf3ebf0277bbaa2f70043))
+
 # [1.6.0-dev.5](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.4...v1.6.0-dev.5) (2026-11-21)
 
 
