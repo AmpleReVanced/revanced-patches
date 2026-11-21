@@ -14,8 +14,10 @@ import app.morphe.patcher.util.smali.ExternalLabel
 import app.morphe.util.indexOfFirstInstructionOrThrow
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatLogContextMenuActionsFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatLogItemViewHolderFingerprint
+import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatLogViewHolderSetupChatInfoViewFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.chatLogAdapterBindFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.senderlessMessageMenuFingerprint
+import app.revanced.util.parameterRegister
 import app.revanced.util.smaliReference
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
@@ -46,13 +48,16 @@ internal fun addMessageDetailsMenus(chatLogType: String) {
     val itemView = classDefBy(holder.superclass!!).instanceFields.single { it.type == "Landroid/view/View;" }
     chatLogAdapterBindFingerprint(holder.type).method.apply {
         val index = indexOfFirstInstructionOrThrow(Opcode.RETURN_VOID)
-        val register = getFreeRegisterProvider(index, 1).getFreeRegister4Bit()
-        addInstructions(
+        val register = getFreeRegisterProvider(index, 1, parameterRegister(0)).getFreeRegister4Bit()
+        addInstructionsWithLabels(
             index,
             """
+                instance-of v$register, p1, ${ChatLogViewHolderSetupChatInfoViewFingerprint.originalClassDef.type}
+                if-nez v$register, :bound
                 iget-object v$register, p1, ${itemView.smaliReference}
-                invoke-static {v$register, p1}, $EXTENSION_CLASS->bindMenu(Landroid/view/View;$HOLDER_INTERFACE)V
+                invoke-static {v$register, p1}, $EXTENSION_CLASS->bindFallbackMenu(Landroid/view/View;$HOLDER_INTERFACE)V
             """,
+            ExternalLabel("bound", getInstruction(index)),
         )
     }
 

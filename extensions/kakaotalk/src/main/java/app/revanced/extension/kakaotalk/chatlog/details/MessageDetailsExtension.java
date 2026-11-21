@@ -4,15 +4,21 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.graphics.Insets;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.InputDevice;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.WindowInsets;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -28,6 +34,8 @@ public final class MessageDetailsExtension {
     });
     private static final Handler MAIN = new Handler(Looper.getMainLooper());
     private static final int MENU_ITEM_ID = View.generateViewId();
+    private static final WeakHashMap<View, Boolean> originalLongClickable = new WeakHashMap<>();
+    private static final Set<View> systemBackGestures = Collections.newSetFromMap(new WeakHashMap<>());
 
     private MessageDetailsExtension() {
     }
@@ -50,9 +58,17 @@ public final class MessageDetailsExtension {
         return result;
     }
 
-    public static void bindMenu(View view, MessageDetailsViewHolder holder) {
-        if (!Settings.SHOW_MESSAGE_DETAILS.get()) return;
-        bindMenu(view, (menu, target, info) -> {
+    public static void bindFallbackMenu(View row, MessageDetailsViewHolder holder) {
+        if (!canInspect(holder.getMessageDetailsSource())) {
+            Boolean previous = originalLongClickable.remove(row);
+            if (previous != null) {
+                row.setOnCreateContextMenuListener(null);
+                row.setLongClickable(previous);
+            }
+            return;
+        }
+        if (originalLongClickable.putIfAbsent(row, row.isLongClickable()) != null) return;
+        row.setOnCreateContextMenuListener((menu, target, info) -> {
             Object message = holder.getMessageDetailsSource();
             Activity activity = findActivity(target.getContext());
             if (canInspect(message) && activity != null && menu.findItem(MENU_ITEM_ID) == null) {
@@ -64,14 +80,30 @@ public final class MessageDetailsExtension {
         });
     }
 
-    private static void bindMenu(View view, View.OnCreateContextMenuListener listener) {
-        view.setOnCreateContextMenuListener(listener);
-        if (view instanceof ViewGroup) {
-            ViewGroup group = (ViewGroup) view;
-            for (int i = 0; i < group.getChildCount(); i++) {
-                bindMenu(group.getChildAt(i), listener);
-            }
+    public static void trackSystemBackGesture(View list, MotionEvent event) {
+        int action = event.getActionMasked();
+        if (action == MotionEvent.ACTION_DOWN && startsAtBackEdge(list, event)) {
+            systemBackGestures.add(list);
+        } else if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
+            systemBackGestures.remove(list);
         }
+    }
+
+    public static boolean isSystemBackGesture(View list) {
+        return systemBackGestures.contains(list);
+    }
+
+    private static boolean startsAtBackEdge(View list, MotionEvent event) {
+        if (!event.isFromSource(InputDevice.SOURCE_TOUCHSCREEN)) return false;
+        WindowInsets insets = list.getRootWindowInsets();
+        if (insets == null) return false;
+        Insets gestures = insets.getSystemGestureInsets();
+        if (gestures.left == 0 && gestures.right == 0) return false;
+        int[] location = new int[2];
+        list.getLocationInWindow(location);
+        float x = location[0] + event.getX();
+        return (gestures.left > 0 && x < gestures.left)
+                || (gestures.right > 0 && x >= list.getRootView().getWidth() - gestures.right);
     }
 
     public static boolean showMenu(View view, MessageDetailsViewHolder holder) {

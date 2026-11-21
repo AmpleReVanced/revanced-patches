@@ -28,7 +28,6 @@ import app.revanced.patches.kakaotalk.shared.addKakaoTalkResources
 import app.revanced.util.parameterTypeNames
 import app.revanced.util.smaliReference
 import com.android.tools.smali.dexlib2.AccessFlags
-import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import org.w3c.dom.Element
 
@@ -133,6 +132,7 @@ val showMessageDetailsPatch = patch(
         }
 
         addMessageDetailsMenus(chatLogType)
+        preserveChatSwipeGestures()
 
         ChatLogContextMenuActionsFingerprint.apply {
             val result = instructionMatches[1]
