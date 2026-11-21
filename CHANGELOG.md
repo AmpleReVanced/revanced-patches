@@ -1,3 +1,14 @@
+# [1.6.0-dev.5](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.4...v1.6.0-dev.5) (2026-11-21)
+
+
+### Bug Fixes
+
+* **dcinside:** block every ad placement and skip ad SDK initialization ([af4d593](https://github.com/AmpleReVanced/revanced-patches/commit/af4d59362c94b142fcc19ef4aa8c6ae22a419666))
+* **dcinside:** hide spacers left behind by hidden home components ([c384883](https://github.com/AmpleReVanced/revanced-patches/commit/c38488344709c58931cb143b298c04d63d48514e))
+* **kakaotalk:** keep keyword logs saved before per-account storage ([feb4c69](https://github.com/AmpleReVanced/revanced-patches/commit/feb4c694ec4e837af122528b4c7f0c0dc54c6c6f))
+* **kakaotalk:** open links in the external browser on every route ([34b7ba5](https://github.com/AmpleReVanced/revanced-patches/commit/34b7ba5eeaf248d60c1f7e11bca012911bf963c6))
+* **settings:** prevent crashes from stale persisted preference values ([c304fbb](https://github.com/AmpleReVanced/revanced-patches/commit/c304fbb9e5a747e9fa2c9f14d6d7f387e921b809))
+
 # [1.6.0-dev.4](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.3...v1.6.0-dev.4) (2026-11-21)
 
 
