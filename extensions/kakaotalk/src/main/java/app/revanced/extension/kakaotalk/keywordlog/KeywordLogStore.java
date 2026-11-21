@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -20,6 +21,7 @@ final class KeywordLogStore extends SQLiteOpenHelper {
     static final int SORT_CHAT_ROOM = 1;
     static final int SORT_SENDER = 2;
 
+    private static final String LEGACY_DATABASE_NAME = "morphe_keyword_log.db";
     private static final int DATABASE_VERSION = 2;
     private static final String TABLE = "keyword_log";
     private static final int MAX_ROWS = 5000;
@@ -53,10 +55,25 @@ final class KeywordLogStore extends SQLiteOpenHelper {
     }
 
     static KeywordLogStore getInstance(long ownerId) {
-        return STORES.computeIfAbsent(ownerId, id -> new KeywordLogStore(
-                Utils.getContext(),
-                "morphe_keyword_log_" + id + ".db"
-        ));
+        return STORES.computeIfAbsent(ownerId, id -> {
+            Context context = Utils.getContext();
+            String databaseName = "morphe_keyword_log_" + id + ".db";
+            if (id > 0) adoptLegacyDatabase(context, databaseName);
+            return new KeywordLogStore(context, databaseName);
+        });
+    }
+
+    private static void adoptLegacyDatabase(Context context, String databaseName) {
+        File legacy = context.getDatabasePath(LEGACY_DATABASE_NAME);
+        File target = context.getDatabasePath(databaseName);
+        if (!legacy.exists() || target.exists()) return;
+
+        for (String suffix : new String[]{"", "-journal", "-wal", "-shm"}) {
+            File from = new File(legacy.getPath() + suffix);
+            if (from.exists() && !from.renameTo(new File(target.getPath() + suffix))) {
+                Logger.printException(() -> "Failed to migrate keyword log file " + from.getName());
+            }
+        }
     }
 
     @Override
