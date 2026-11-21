@@ -1,3 +1,15 @@
+# [1.6.0-dev.4](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.3...v1.6.0-dev.4) (2026-11-21)
+
+
+### Bug Fixes
+
+* **kakaotalk:** restore photo taps and prevent back swipes from triggering replies ([82cd324](https://github.com/AmpleReVanced/revanced-patches/commit/82cd32441b8c7e873958d27752b202e294294c68))
+
+
+### Features
+
+* **kakaotalk:** support version `26.10.1` ([b79022b](https://github.com/AmpleReVanced/revanced-patches/commit/b79022b35af06252a05ba61125fa758e42ce2d1a))
+
 # [1.6.0-dev.3](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.2...v1.6.0-dev.3) (2026-11-21)
 
 
