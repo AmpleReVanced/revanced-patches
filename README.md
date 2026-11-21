@@ -4,7 +4,7 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START -->
-> **[v1.6.0-dev.2](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.6.0-dev.2)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;129 patches total
+> **[v1.6.0-dev.3](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.6.0-dev.3)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;129 patches total
 <details>
 <summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;77 patches</summary>
 <br>
@@ -102,7 +102,7 @@
 
 **🎯 Supported versions:**
 
-| 5.3.20 |
+| 5.3.25 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
@@ -120,7 +120,6 @@
 | [Disable Image Ad](#disable-image-ad) | Disables the image ad in the app. |  |
 | [Disable ad controller](#disable-ad-controller) | Disables the ad controller that manages ads in the app. |  |
 | [Disable update check](#disable-update-check) | Disables the app's update check. |  |
-| [Enable OneStore feature](#enable-onestore-feature) | Enables the OneStore feature in DC Inside app. |  |
 | [Filter recently viewed posts by gallery](#filter-recently-viewed-posts-by-gallery) | Adds a gallery filter below the recently viewed posts filters, which narrows the list down to the posts of a single gallery. |  |
 | [Gallery watch mode](#gallery-watch-mode) | Keeps gallery auto-refresh active, highlights newly arrived posts, and optionally alerts with sound or vibration while the gallery is open. |  |
 | [Hide DC official notices](#hide-dc-official-notices) | Hides official DCInside operator notices from gallery notice lists. |  |
@@ -132,6 +131,7 @@
 | [Render big DCCon as normal size](#render-big-dccon-as-normal-size) | Adds a setting to render big DCCon at normal DCCon size. |  |
 | [Restore old post icons](#restore-old-post-icons) | Adds a setting to restore DCInside 4.7.x post list and read footer icons. |  |
 | [Show author identifier](#show-author-identifier) | Adds options to show the author identifier next to the nickname in posts, post lists, comments, and the recently-viewed posts list. The recently-viewed list only shows it for posts opened after this patch is installed. |  |
+| [Show live best on home](#show-live-best-on-home) | Shows real-time best posts instead of recommended posts on the home screen. |  |
 | [Spoof Signature](#spoof-signature) | Spoofs the app signature to bypass integrity checks. |  |
 
 </details>

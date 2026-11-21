@@ -1,3 +1,15 @@
+# [1.6.0-dev.3](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.2...v1.6.0-dev.3) (2026-11-21)
+
+
+### Bug Fixes
+
+* **dcinside:** restore shared home component helpers to fix compilation ([378c8cf](https://github.com/AmpleReVanced/revanced-patches/commit/378c8cf201c6b34f588bffc80ad98a3ef2ef3a5b))
+
+
+### Features
+
+* **dcinside:** support version `5.3.25` ([80b0bf5](https://github.com/AmpleReVanced/revanced-patches/commit/80b0bf56f7badc6705bf41d0cdfb2da367d2a94d))
+
 # [1.6.0-dev.2](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.1...v1.6.0-dev.2) (2026-11-19)
 
 
