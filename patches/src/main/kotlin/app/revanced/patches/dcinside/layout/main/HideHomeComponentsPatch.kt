@@ -125,6 +125,7 @@ internal data class HomeComponentTypes(
         listOf(galleryRanking),
         listOf(liveFilter, liveItem, liveMore, liveRanking),
         listOf(recommendedTitle, recommendedItem),
+        listOf(spacer),
     ).joinToString(";") { group -> group.sorted().joinToString(",") }
 }
 
