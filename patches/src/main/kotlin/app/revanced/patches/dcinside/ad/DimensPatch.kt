@@ -1,36 +1,31 @@
 package app.revanced.patches.dcinside.ad
 
-import app.morphe.patcher.extensions.InstructionExtensions.instructions
-import app.morphe.patcher.extensions.InstructionExtensions.replaceInstructions
-import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
+import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
+import app.morphe.patcher.patch.document
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.returnEarly
 import app.morphe.util.asSequence
 import app.revanced.patches.dcinside.ad.fingerprints.GetMinimumDimensFingerprint
 import app.revanced.patches.dcinside.ad.fingerprints.ReadFooterAdContainerSetupFingerprint
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
-import com.android.tools.smali.dexlib2.Opcode
+import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
 
 @Suppress("unused")
-internal val dimensBytecodePatch = bytecodePatch {
+internal val dimensBytecodePatch = patch {
     execute {
         GetMinimumDimensFingerprint.method.returnEarly(0)
 
-        ReadFooterAdContainerSetupFingerprint.method.apply {
-            val ifLez = instructions.indexOfFirst { it.opcode == Opcode.IF_LEZ }
-            replaceInstructions(
-                ifLez + 2,
-                """
-                    invoke-static {v2}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
-                    move-result-object v0
-                """.trimIndent()
-            )
+        ReadFooterAdContainerSetupFingerprint.apply {
+            val index = instructionMatches.last().index
+            val call = method.getInstruction<FiveRegisterInstruction>(index)
+            method.addInstruction(index, "const/4 v${call.registerD}, 0x0")
         }
     }
 }
 
 @Suppress("unused")
-val dimensPatch = resourcePatch(
+val dimensPatch = patch(
     name = "Dimens Patch",
     description = "reassigns ad_minimum_height to 0dp to remove ads from the app.",
 ) {

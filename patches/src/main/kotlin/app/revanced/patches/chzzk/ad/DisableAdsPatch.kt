@@ -2,7 +2,7 @@ package app.revanced.patches.chzzk.ad
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.returnEarly
 import app.morphe.util.indexOfFirstInstructionOrThrow
@@ -11,7 +11,7 @@ import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.reference.StringReference
 
 @Suppress("unused")
-val disableAdsPatch = bytecodePatch(
+val disableAdsPatch = patch(
     name = "Disable ads",
     description = "Disables CHZZK advertisements, including live stream pre-roll, mid-roll and " +
         "post-roll ads and clip feed ads.",

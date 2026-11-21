@@ -2,9 +2,11 @@ package app.revanced.patches.dcinside.layout.main
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
-import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.classDefByOrNull
+import app.morphe.patcher.patch.patch
+import app.morphe.patcher.resource.ResourceType
+import app.morphe.patcher.resource.resourceId
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
@@ -12,6 +14,7 @@ import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.dcinside.misc.settings.PreferenceScreen
 import app.revanced.patches.dcinside.misc.settings.addSettingsPatch
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
+import app.revanced.patches.dcinside.shared.recyclerViewHolderType
 import app.revanced.util.parameterRegister
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
@@ -23,16 +26,14 @@ import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.SwitchPayload
 import com.android.tools.smali.dexlib2.iface.instruction.TwoRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
-import com.android.tools.smali.dexlib2.iface.value.IntEncodedValue
 
 private const val EXTENSION_CLASS = "Lapp/revanced/extension/dcinside/patches/HomeComponentsPatch;"
 private const val CONTEXT_TYPE = "Landroid/content/Context;"
 private const val ATTRIBUTE_SET_TYPE = "Landroid/util/AttributeSet;"
 private const val VIEW_GROUP_TYPE = "Landroid/view/ViewGroup;"
-private const val RECYCLER_VIEW_HOLDER_TYPE = "Landroidx/recyclerview/widget/RecyclerView\$ViewHolder;"
 
 @Suppress("unused")
-val hideHomeComponentsPatch = bytecodePatch(
+val hideHomeComponentsPatch = patch(
     name = "Hide home components",
     description = "Adds settings to hide selected DCInside home screen components.",
 ) {
@@ -78,10 +79,7 @@ val hideHomeComponentsPatch = bytecodePatch(
         val adapterClass = MainAdapterItemsUpdateFingerprint.classDef
         val itemTypeGetter = adapterClass.methods.inferItemTypeGetter(adapterClass.type)
         val onCreateViewHolderMethod = adapterClass.methods.inferOnCreateViewHolderMethod()
-        val componentTypes = onCreateViewHolderMethod.inferHomeComponentTypes(
-            context = this,
-            resources = homeComponentResources(),
-        )
+        val componentTypes = onCreateViewHolderMethod.homeComponentTypes()
 
         updateItemsMethod.addInstructions(
             0,
@@ -107,7 +105,7 @@ private data class HomeComponentResources(
     val recommendedItemLayout: Int,
 )
 
-private data class HomeComponentTypes(
+internal data class HomeComponentTypes(
     val searchMenu: Int,
     val recentGalleries: Int,
     val recommendedGalleries: Int,
@@ -118,6 +116,7 @@ private data class HomeComponentTypes(
     val liveRanking: Int,
     val recommendedTitle: Int,
     val recommendedItem: Int,
+    val spacer: Int,
 ) {
     fun toTypeSpec(): String = listOf(
         listOf(searchMenu),
@@ -126,6 +125,7 @@ private data class HomeComponentTypes(
         listOf(galleryRanking),
         listOf(liveFilter, liveItem, liveMore, liveRanking),
         listOf(recommendedTitle, recommendedItem),
+        listOf(spacer),
     ).joinToString(";") { group -> group.sorted().joinToString(",") }
 }
 
@@ -149,14 +149,13 @@ private data class BranchBlock(
     fun hasAnyDirectLayout(layoutIds: Set<Int>) = layoutIds.any(::hasDirectLayout)
 
     fun hasSyntheticConstructorWithParameters(
-        context: BytecodePatchContext,
         vararg parameterTypes: String,
     ) =
         methodReferences.any { reference ->
             reference.name == "<init>" &&
                 reference.parameterTypes.size == parameterTypes.size + 1 &&
                 reference.parameterTypes.dropLast(1).map { it.toString() } == parameterTypes.toList() &&
-                context.classDefByOrNull(reference.definingClass)?.methods?.any { method ->
+                classDefByOrNull(reference.definingClass)?.methods?.any { method ->
                     method.name == reference.name &&
                         method.parameterTypes.map { it.toString() } ==
                         reference.parameterTypes.map { it.toString() } &&
@@ -165,7 +164,7 @@ private data class BranchBlock(
         }
 }
 
-private fun BytecodePatchContext.homeComponentResources() = HomeComponentResources(
+private fun homeComponentResources() = HomeComponentResources(
     searchLayouts = setOf(
         layoutResourceId("view_main_search_gallery_basic"),
         layoutResourceId("view_main_search_gallery_split"),
@@ -183,17 +182,9 @@ private fun BytecodePatchContext.homeComponentResources() = HomeComponentResourc
     recommendedItemLayout = layoutResourceId("view_best_pick_item"),
 )
 
-private fun BytecodePatchContext.layoutResourceId(name: String): Int {
-    val field = classDefByOrNull("Lcom/dcinside/app/R\$layout;")
-        ?.fields
-        ?.firstOrNull { it.name == name }
-        ?: throw PatchException("Could not find layout resource $name")
+private fun layoutResourceId(name: String) = resourceId(ResourceType.LAYOUT, name).toInt()
 
-    return (field.initialValue as? IntEncodedValue)?.value
-        ?: throw PatchException("Could not read layout resource id for $name")
-}
-
-private fun Iterable<MutableMethod>.inferItemTypeGetter(adapterClass: String): MethodReference {
+internal fun Iterable<MutableMethod>.inferItemTypeGetter(adapterClass: String): MethodReference {
     val candidates = mapNotNull { method ->
         if (method.parameterTypes.map { it.toString() } != listOf("I") || method.returnType != "I") {
             return@mapNotNull null
@@ -222,7 +213,7 @@ private fun Iterable<MutableMethod>.inferItemTypeGetter(adapterClass: String): M
 private fun Iterable<MutableMethod>.inferOnCreateViewHolderMethod(): MutableMethod =
     singleOrNull { method ->
         method.parameterTypes.map { it.toString() } == listOf(VIEW_GROUP_TYPE, "I") &&
-            method.returnType == RECYCLER_VIEW_HOLDER_TYPE &&
+            method.returnType == recyclerViewHolderType &&
             method.instructions.any { instruction ->
                 instruction.getReference<MethodReference>()?.let { reference ->
                     reference.definingClass == "Landroid/view/LayoutInflater;" &&
@@ -231,8 +222,9 @@ private fun Iterable<MutableMethod>.inferOnCreateViewHolderMethod(): MutableMeth
             }
     } ?: throw PatchException("Could not infer MainAdapter.onCreateViewHolder")
 
+internal fun MutableMethod.homeComponentTypes() = inferHomeComponentTypes(homeComponentResources())
+
 private fun MutableMethod.inferHomeComponentTypes(
-    context: BytecodePatchContext,
     resources: HomeComponentResources,
 ): HomeComponentTypes {
     val branches = buildBranchBlocks(inferViewTypeBranches())
@@ -246,50 +238,51 @@ private fun MutableMethod.inferHomeComponentTypes(
             it.hasAnyDirectLayout(resources.searchLayouts)
         },
         recentGalleries = findType("recent galleries") {
-            it.hasAnyLayoutViaConstructor(context, resources.recentLayouts)
+            it.hasAnyLayoutViaConstructor(resources.recentLayouts)
         },
         recommendedGalleries = findType("recommended galleries") {
             it.hasDirectLayout(resources.recommendedGalleriesLayout)
         },
         galleryRanking = findType("gallery ranking") {
             it.hasSyntheticConstructorWithParameters(
-                context,
                 CONTEXT_TYPE,
                 ATTRIBUTE_SET_TYPE,
-                "I",
                 "I",
             )
         },
         liveFilter = findType("live best filter") {
-            it.hasLayoutViaConstructor(context, resources.liveFilterLayout)
+            it.hasLayoutViaConstructor(resources.liveFilterLayout)
         },
         liveItem = findType("live best item") {
-            it.hasLayoutViaConstructor(context, resources.liveItemLayout)
+            it.hasLayoutViaConstructor(resources.liveItemLayout)
         },
         liveMore = findType("live best more") {
             it.hasDirectLayout(resources.liveMoreLayout)
         },
         liveRanking = findType("live best ranking item") {
-            it.hasLayoutViaConstructor(context, resources.liveRankingLayout)
+            it.hasLayoutViaConstructor(resources.liveRankingLayout)
         },
         recommendedTitle = findType("recommended posts title") {
             it.hasDirectLayout(resources.recommendedTitleLayout)
         },
         recommendedItem = findType("recommended posts item") {
-            it.hasLayoutViaConstructor(context, resources.recommendedItemLayout)
+            it.hasLayoutViaConstructor(resources.recommendedItemLayout)
+        },
+        spacer = findType("home spacer") {
+            resourceId(ResourceType.DIMEN, "main_space_divide5").toInt() in it.literalValues
         },
     )
 }
 
-private fun BranchBlock.hasLayoutViaConstructor(context: BytecodePatchContext, layoutId: Int) =
-    hasAnyLayoutViaConstructor(context, setOf(layoutId))
+private fun BranchBlock.hasLayoutViaConstructor(layoutId: Int) =
+    hasAnyLayoutViaConstructor(setOf(layoutId))
 
-private fun BranchBlock.hasAnyLayoutViaConstructor(context: BytecodePatchContext, layoutIds: Set<Int>) =
+private fun BranchBlock.hasAnyLayoutViaConstructor(layoutIds: Set<Int>) =
     methodReferences.any { reference ->
-        reference.name == "<init>" && context.constructorLiteralValues(reference).any(layoutIds::contains)
+        reference.name == "<init>" && constructorLiteralValues(reference).any(layoutIds::contains)
     }
 
-private fun BytecodePatchContext.constructorLiteralValues(
+private fun constructorLiteralValues(
     reference: MethodReference,
     visitedConstructors: MutableSet<String> = mutableSetOf(),
 ): Set<Int> {

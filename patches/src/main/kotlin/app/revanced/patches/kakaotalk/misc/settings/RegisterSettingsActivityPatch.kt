@@ -1,15 +1,18 @@
 package app.revanced.patches.kakaotalk.misc.settings
 
-import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.patch.document
+import app.morphe.patcher.patch.patch
+import app.revanced.patches.kakaotalk.misc.extension.addExtensionPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import org.w3c.dom.Element
 
 @Suppress("unused")
-val registerSettingsActivityPatch = resourcePatch(
+val registerSettingsActivityPatch = patch(
     name = "Register settings activity",
     description = "Registers the Morphe settings activity in the app manifest.",
 ) {
     compatibleWith(COMPATIBILITY_KAKAO)
+    dependsOn(addExtensionPatch, addSettingsResourcesPatch)
 
     execute {
         document("AndroidManifest.xml").use { document ->

@@ -2,7 +2,7 @@ package app.revanced.patches.kakaotalk.misc.hook
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patcher.util.p0Register
 import app.revanced.patches.kakaotalk.misc.extension.addExtensionPatch
@@ -19,7 +19,7 @@ private const val PACKET_HOOK_CLASS = "Lapp/revanced/extension/kakaotalk/packet/
 private const val REMOTE_PACKET_HANDLER_CLASS = "Lapp/revanced/extension/kakaotalk/packet/RemotePacketHandler;"
 
 @Suppress("unused")
-val addPacketHandlerPatch = bytecodePatch(
+val addPacketHandlerPatch = patch(
     name = "Add Packet Handler",
     description = "Adding the Loco Packet Handler allows external applications to handle the app's packets, which may compromise security.\n" +
             "Conflicts may occur on some systems.",

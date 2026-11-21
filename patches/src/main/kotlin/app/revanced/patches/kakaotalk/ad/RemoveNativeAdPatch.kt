@@ -1,12 +1,12 @@
 package app.revanced.patches.kakaotalk.ad
 
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.returnEarly
 import app.revanced.patches.kakaotalk.ad.fingerprints.LoadNativeAdFingerprint
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 
 @Suppress("unused")
-val removeNativeAdPatch = bytecodePatch(
+val removeNativeAdPatch = patch(
     name = "Remove native ad",
     description = "Removes the native ad from the app.",
 ) {

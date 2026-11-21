@@ -5,31 +5,32 @@ import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.methodCall
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.patch.document
+import app.morphe.patcher.patch.mutableClassDefBy
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
 import app.morphe.patches.all.misc.resources.addResourcesPatch
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import app.morphe.util.indexOfFirstInstructionOrThrow
-import app.morphe.util.indexOfFirstStringInstructionOrThrow
 import app.morphe.util.setExtensionIsPatchIncluded
+import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.AccountChatRoomManagerFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatLogFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatLogItemViewHolderFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatLogViewHolderBindProfileFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatLogViewHolderSetupChatInfoViewFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatMemberSetConstructorFingerprint
-import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatRoomListManagerGetInstanceFingerprint
+import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatRoomSyncFingerprint
+import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.CurrentOwnerIdFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.FriendDisplayNameFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.FriendPrimaryConstructorFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.FriendProfileImageUrlFingerprint
-import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.GetChatRoomByChannelIdFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.MemberWatermarksGetterFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.OpenLinkIdGetterFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.activeMembersCountGetterFingerprint
+import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.chatLogOwnerIdGetter
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.chatRoomMemberSetGetterFingerprint
-import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.currentUserPredicateFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.normalMemberProfileFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.openMemberProfileFingerprint
 import app.revanced.patches.kakaotalk.misc.extension.addExtensionPatch
@@ -45,11 +46,9 @@ import app.revanced.util.smaliReference
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.MutableMethodImplementation
-import com.android.tools.smali.dexlib2.iface.Field
 import com.android.tools.smali.dexlib2.iface.Method
 import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.Instruction
-import com.android.tools.smali.dexlib2.iface.instruction.RegisterRangeInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.TwoRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
@@ -57,9 +56,7 @@ import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethodParameter
 import org.w3c.dom.Element
 
-private const val CHAT_LOG_ID_METHOD = "revanced_read_receipt_log_id"
-private const val CHAT_ID_METHOD = "revanced_read_receipt_chat_id"
-private const val SENDER_ID_METHOD = "revanced_read_receipt_sender_id"
+private const val OWNER_ID_METHOD = "revanced_read_receipt_owner_id"
 private const val MEMBER_SET_BY_CHAT_ID_METHOD = "revanced_read_receipt_member_set_by_chat_id"
 private const val WATERMARKS_METHOD = "revanced_read_receipt_watermarks"
 private const val ACTIVE_COUNT_METHOD = "revanced_read_receipt_active_count"
@@ -78,7 +75,7 @@ private const val EXTENSION_CLASS =
 private const val PATCH_MARKER_CLASS =
     "Lapp/revanced/extension/kakaotalk/patches/ShowMessageReadReceiptsPatch;"
 
-private val registerMessageReadReceiptsActivityPatch = resourcePatch {
+private val registerMessageReadReceiptsActivityPatch = patch {
     compatibleWith(COMPATIBILITY_KAKAO)
 
     execute {
@@ -112,7 +109,7 @@ private val registerMessageReadReceiptsActivityPatch = resourcePatch {
 }
 
 @Suppress("unused")
-val showMessageReadReceiptsPatch = bytecodePatch(
+val showMessageReadReceiptsPatch = patch(
     name = "Show message read receipts",
     description = "Shows the members who have or have not read each chat message.",
 ) {
@@ -140,7 +137,7 @@ val showMessageReadReceiptsPatch = bytecodePatch(
         val memberSetClass = ChatMemberSetConstructorFingerprint.classDef
         val memberSetType = memberSetClass.type
         val activeMembersCountField = memberSetConstructor.requireParameterBackedField(
-            parameterIndex = 4,
+            parameterIndex = memberSetConstructor.parameters.lastIndex,
             opcode = Opcode.IPUT,
             expectedType = "I",
         )
@@ -188,36 +185,7 @@ val showMessageReadReceiptsPatch = bytecodePatch(
         if (normalProfileGetter.parameterTypeNames[1] != openProfileGetter.parameterTypeNames[2]) {
             throw PatchException("ChatMemberSet profile resolver parameter types do not match.")
         }
-        val currentUserReferences = normalProfileGetter.implementation?.instructions
-            ?.mapNotNull { it.getReference<MethodReference>() }
-            ?.zipWithNext()
-            ?.singleOrNull { (provider, predicate) ->
-                provider.returnType.startsWith("L") &&
-                    predicate.definingClass == provider.returnType &&
-                    predicate.parameterTypeNames == listOf("J") &&
-                    predicate.returnType == "Z"
-            }
-            ?: throw PatchException("Could not resolve current user predicate calls.")
-        val meType = currentUserReferences.first.returnType
-        val currentUserPredicate = currentUserPredicateFingerprint(meType)
-        val currentUserPredicateMethod = currentUserPredicate.method
-        // The reference is to the interface, so only the signature can be compared.
-        if (!currentUserReferences.second.matches(currentUserPredicateMethod)) {
-            throw PatchException("Current user predicate fingerprint resolved an incompatible method.")
-        }
-        val currentUserIdReference = currentUserPredicateMethod.implementation?.instructions
-            ?.mapNotNull { it.getReference<MethodReference>() }
-            ?.singleOrNull { reference ->
-                reference.definingClass == currentUserPredicateMethod.definingClass &&
-                    reference.parameterTypeNames.isEmpty() &&
-                    reference.returnType == "J"
-            }
-            ?: throw PatchException("Could not resolve current user ID getter call.")
-        val meImplementationClass = currentUserPredicate.classDef
-        val meInstanceField = meImplementationClass.fields.singleOrNull { field ->
-            AccessFlags.STATIC.isSet(field.accessFlags) &&
-                field.type == meImplementationClass.type
-        } ?: throw PatchException("Could not resolve current user provider instance.")
+        val memberSetOwnerId = memberSetConstructor.requireParameterBackedField(0, Opcode.IPUT_WIDE, "J")
         val profileStateReferences = normalProfileGetter.implementation?.instructions
             ?.mapNotNull { it.getReference<MethodReference>() }
             ?.zipWithNext()
@@ -255,8 +223,7 @@ val showMessageReadReceiptsPatch = bytecodePatch(
                 watermarkManagerField = watermarkManagerField,
                 watermarkMapField = watermarkMapField,
                 activeCountGetter = activeCountGetter,
-                meInstanceField = meInstanceField,
-                currentUserIdReference = currentUserIdReference,
+                ownerIdField = memberSetOwnerId,
                 openLinkIdGetter = openLinkIdGetter,
                 normalProfileGetter = normalProfileGetter,
                 openProfileGetter = openProfileGetter,
@@ -265,26 +232,13 @@ val showMessageReadReceiptsPatch = bytecodePatch(
 
         val chatLogClass = ChatLogFingerprint.classDef
         val chatLogType = chatLogClass.type
-        val chatLogIdentityMethod = ChatLogFingerprint.method
-        val chatLogIdField = chatLogIdentityMethod.requirePrintedWideField("] ChatLog [id=")
-        val chatLogChatIdField = chatLogIdentityMethod.requirePrintedWideField(", chatRoomId=")
-        val chatLogSenderIdField = chatLogIdentityMethod.requirePrintedWideField(", userId=")
-
-        val getManagerInstance = ChatRoomListManagerGetInstanceFingerprint.method
-        val getChatRoom = GetChatRoomByChannelIdFingerprint.method
-        if (getManagerInstance.returnType != getChatRoom.definingClass) {
-            throw PatchException("ChatRoomListManager fingerprints resolved incompatible methods.")
-        }
+        val getChatRoom = ChatRoomSyncFingerprint.chatRoomLookup
         val chatRoomType = getChatRoom.returnType
         val memberSetGetter = chatRoomMemberSetGetterFingerprint(chatRoomType, memberSetType).method
 
         chatLogClass.methods.addAll(
             chatLogBridgeMethods(
                 chatLogType = chatLogType,
-                chatLogIdField = chatLogIdField,
-                chatLogChatIdField = chatLogChatIdField,
-                chatLogSenderIdField = chatLogSenderIdField,
-                getManagerInstance = getManagerInstance,
                 getChatRoom = getChatRoom,
                 memberSetGetter = memberSetGetter,
             ),
@@ -407,8 +361,7 @@ private fun memberSetBridgeMethods(
     watermarkManagerField: FieldReference,
     watermarkMapField: FieldReference,
     activeCountGetter: Method,
-    meInstanceField: Field,
-    currentUserIdReference: MethodReference,
+    ownerIdField: FieldReference,
     openLinkIdGetter: Method,
     normalProfileGetter: Method,
     openProfileGetter: Method,
@@ -443,9 +396,7 @@ private fun memberSetBridgeMethods(
         returnType = "J",
         registerCount = 3,
         instructions = """
-            sget-object v0, ${meInstanceField.smaliReference}
-            invoke-virtual {v0}, ${currentUserIdReference.smaliReference}
-            move-result-wide v0
+            iget-wide v0, p0, ${ownerIdField.smaliReference}
             return-wide v0
         """.trimIndent(),
     ),
@@ -498,25 +449,34 @@ private fun memberSetBridgeMethods(
 
 private fun chatLogBridgeMethods(
     chatLogType: String,
-    chatLogIdField: FieldReference,
-    chatLogChatIdField: FieldReference,
-    chatLogSenderIdField: FieldReference,
-    getManagerInstance: Method,
-    getChatRoom: Method,
+    getChatRoom: MethodReference,
     memberSetGetter: Method,
 ) = listOf(
-    wideFieldGetter(chatLogType, CHAT_LOG_ID_METHOD, chatLogIdField),
-    wideFieldGetter(chatLogType, CHAT_ID_METHOD, chatLogChatIdField),
-    wideFieldGetter(chatLogType, SENDER_ID_METHOD, chatLogSenderIdField),
+    bridgeMethod(
+        definingClass = chatLogType,
+        name = OWNER_ID_METHOD,
+        returnType = "J",
+        registerCount = 3,
+        instructions = """
+            invoke-virtual {p0}, ${chatLogOwnerIdGetter()}
+            move-result-wide v0
+            return-wide v0
+        """.trimIndent(),
+    ),
     bridgeMethod(
         definingClass = chatLogType,
         name = MEMBER_SET_BY_CHAT_ID_METHOD,
-        parameterTypes = listOf("J"),
+        parameterTypes = listOf("J", "J"),
         returnType = "Ljava/lang/Object;",
         accessFlags = AccessFlags.PUBLIC.value or AccessFlags.STATIC.value or AccessFlags.FINAL.value,
-        registerCount = 3,
+        registerCount = 7,
         instructions = """
-            invoke-static {}, ${getManagerInstance.smaliReference}
+            sget-object v0, ${AccountChatRoomManagerFingerprint.provider.smaliReference}
+            invoke-virtual {v0}, ${CurrentOwnerIdFingerprint.originalMethod}
+            move-result-wide v1
+            cmp-long v1, v1, p2
+            if-nez v1, :revanced_missing_chat_room
+            invoke-virtual {v0, p2, p3}, ${AccountChatRoomManagerFingerprint.originalMethod}
             move-result-object v0
             invoke-virtual {v0, p0, p1}, ${getChatRoom.smaliReference}
             move-result-object v0
@@ -531,7 +491,7 @@ private fun chatLogBridgeMethods(
     ),
 )
 
-private fun bridgeMethod(
+internal fun bridgeMethod(
     definingClass: String,
     name: String,
     parameterTypes: List<String> = emptyList(),
@@ -551,21 +511,6 @@ private fun bridgeMethod(
 ).toMutable().apply {
     addInstructionsWithLabels(0, instructions)
 }
-
-private fun wideFieldGetter(
-    definingClass: String,
-    name: String,
-    field: FieldReference,
-) = bridgeMethod(
-    definingClass = definingClass,
-    name = name,
-    returnType = "J",
-    registerCount = 3,
-    instructions = """
-        iget-wide v0, p0, ${field.smaliReference}
-        return-wide v0
-    """.trimIndent(),
-)
 
 private fun MutableMethod.profileImageTypeConstant(profileStateType: String): FieldReference {
     val profileLoadIndex = indexOfFirstInstructionOrThrow(
@@ -587,36 +532,6 @@ private fun MutableMethod.profileImageTypeConstant(profileStateType: String): Fi
         ?: throw PatchException("Could not resolve the open profile user status constant.")
 }
 
-private fun Method.requirePrintedWideField(label: String): FieldReference {
-    val instructions = implementation?.instructions?.toList()
-        ?: throw PatchException("Method $definingClass->$name has no implementation.")
-    val labelIndex = indexOfFirstStringInstructionOrThrow(label)
-    val appendInstruction = instructions.asSequence()
-        .drop(labelIndex + 1)
-        .firstOrNull { instruction ->
-            instruction.getReference<MethodReference>()?.let { reference ->
-                reference.definingClass == "Ljava/lang/StringBuilder;" &&
-                    reference.name == "append" &&
-                    reference.parameterTypeNames == listOf("J") &&
-                    reference.returnType == "Ljava/lang/StringBuilder;"
-            } == true
-        }
-        ?: throw PatchException("Could not find wide append for ChatLog label: $label")
-    val valueRegister = appendInstruction.invokeRegisters?.getOrNull(1)
-        ?: throw PatchException("Could not resolve value register for ChatLog label: $label")
-
-    return instructions.asSequence()
-        .take(labelIndex)
-        .filter { it.opcode == Opcode.IGET_WIDE }
-        .filterIsInstance<TwoRegisterInstruction>()
-        .filter { it.registerA == valueRegister }
-        .mapNotNull { (it as Instruction).getReference<FieldReference>() }
-        .lastOrNull { field ->
-            field.definingClass == definingClass && field.type == "J"
-        }
-        ?: throw PatchException("Could not resolve ChatLog field for label: $label")
-}
-
 private fun Method.requireParameterBackedField(
     parameterIndex: Int,
     opcode: Opcode,
@@ -634,11 +549,3 @@ private fun Method.requireParameterBackedField(
             "Could not resolve parameter $parameterIndex field in $definingClass->$name.",
         )
 }
-
-private val Instruction.invokeRegisters: List<Int>?
-    get() = when (this) {
-        is FiveRegisterInstruction ->
-            listOf(registerC, registerD, registerE, registerF, registerG).take(registerCount)
-        is RegisterRangeInstruction -> (startRegister until startRegister + registerCount).toList()
-        else -> null
-    }

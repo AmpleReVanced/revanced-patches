@@ -4,14 +4,14 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START -->
-> **[v1.5.0](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.5.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;128 patches total
+> **[v1.6.0-dev.6](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.6.0-dev.6)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;129 patches total
 <details>
-<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;76 patches</summary>
+<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;77 patches</summary>
 <br>
 
 **🎯 Supported versions:**
 
-| 26.9.0 |
+| 26.10.1 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
@@ -21,7 +21,7 @@
 | [Add settings resources](#add-settings-resources) | Adds Morphe settings layout resources to the app. |  |
 | [Add settings tab](#add-settings-tab) | Adds a settings tab to the app. |  |
 | [Allow Hide on Any Chat](#allow-hide-on-any-chat) | Users with hiding privileges can hide any chat, including their own messages. |  |
-| [Allow Open Chat Managers To Block Members](#allow-open-chat-managers-to-block-members) | Allows open chat room hosts and co-hosts to block regular members from their profiles. |  |
+| [Allow Open Chat Managers To Block Members](#allow-open-chat-managers-to-block-members) | Shows the personal block button for eligible members alongside Open Chat host actions. |  |
 | [Allow custom profile images](#allow-custom-profile-images) | Adds a photo picker and adjustable images to the custom profile editor. |  |
 | [Allow direct thread reply editing](#allow-direct-thread-reply-editing) | Shows the edit action when long-pressing your own thread replies in the main chat. |  |
 | [Allow invisible characters](#allow-invisible-characters) | Stops zero width and other invisible characters from being stripped out of the chat input and out of the messages shown in a chat room. |  |
@@ -49,6 +49,7 @@
 | [Disable Pay banner ad](#disable-pay-banner-ad) | Disables the KakaoPay banner ad load and render paths. |  |
 | [Disable S2Event](#disable-s2event) | Disables Tracker |  |
 | [Disable SDK Tracker](#disable-sdk-tracker) | Disables the SDK Tracker in KakaoTalk. |  |
+| [Disable SSL pinning](#disable-ssl-pinning) | Adds a debug option to inspect OkHttp and WebView HTTPS traffic using an installed proxy CA certificate. |  |
 | [Disable Sentry](#disable-sentry) | Disables Sentry error reporting in KakaoTalk. |  |
 | [Disable ShortForm ad](#disable-shortform-ad) | Disables the shortform ad load and render paths. |  |
 | [Disable Talk Share Log](#disable-talk-share-log) | Disable talk share log |  |
@@ -101,7 +102,7 @@
 
 **🎯 Supported versions:**
 
-| 5.3.20 |
+| 5.3.25 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
@@ -119,7 +120,6 @@
 | [Disable Image Ad](#disable-image-ad) | Disables the image ad in the app. |  |
 | [Disable ad controller](#disable-ad-controller) | Disables the ad controller that manages ads in the app. |  |
 | [Disable update check](#disable-update-check) | Disables the app's update check. |  |
-| [Enable OneStore feature](#enable-onestore-feature) | Enables the OneStore feature in DC Inside app. |  |
 | [Filter recently viewed posts by gallery](#filter-recently-viewed-posts-by-gallery) | Adds a gallery filter below the recently viewed posts filters, which narrows the list down to the posts of a single gallery. |  |
 | [Gallery watch mode](#gallery-watch-mode) | Keeps gallery auto-refresh active, highlights newly arrived posts, and optionally alerts with sound or vibration while the gallery is open. |  |
 | [Hide DC official notices](#hide-dc-official-notices) | Hides official DCInside operator notices from gallery notice lists. |  |
@@ -131,6 +131,7 @@
 | [Render big DCCon as normal size](#render-big-dccon-as-normal-size) | Adds a setting to render big DCCon at normal DCCon size. |  |
 | [Restore old post icons](#restore-old-post-icons) | Adds a setting to restore DCInside 4.7.x post list and read footer icons. |  |
 | [Show author identifier](#show-author-identifier) | Adds options to show the author identifier next to the nickname in posts, post lists, comments, and the recently-viewed posts list. The recently-viewed list only shows it for posts opened after this patch is installed. |  |
+| [Show live best on home](#show-live-best-on-home) | Shows real-time best posts instead of recommended posts on the home screen. |  |
 | [Spoof Signature](#spoof-signature) | Spoofs the app signature to bypass integrity checks. |  |
 
 </details>

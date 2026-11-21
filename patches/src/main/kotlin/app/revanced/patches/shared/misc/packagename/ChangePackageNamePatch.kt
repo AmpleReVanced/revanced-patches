@@ -1,9 +1,9 @@
 package app.revanced.patches.shared.misc.packagename
 
 import app.morphe.patcher.patch.Option
-import app.morphe.patcher.patch.ResourcePatch
-import app.morphe.patcher.patch.ResourcePatchContext
-import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.patch.Patch
+import app.morphe.patcher.patch.document
+import app.morphe.patcher.patch.patch
 import app.morphe.util.asSequence
 import app.morphe.util.getNode
 import org.w3c.dom.Element
@@ -32,8 +32,8 @@ internal fun baseChangePackageNamePatch(
     packageName: () -> Option<String>,
     updatePermissions: () -> Boolean,
     updateProviders: () -> Boolean,
-    extraChanges: ResourcePatchContext.(currentPackageName: String, newPackageName: String) -> Unit = { _, _ -> },
-): ResourcePatch = resourcePatch {
+    extraChanges: (currentPackageName: String, newPackageName: String) -> Unit = { _, _ -> },
+): Patch = patch {
     finalize {
         lateinit var currentPackageName: String
         lateinit var newPackageName: String

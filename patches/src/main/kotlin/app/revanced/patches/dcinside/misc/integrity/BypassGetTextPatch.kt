@@ -1,7 +1,7 @@
 package app.revanced.patches.dcinside.misc.integrity
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
 import app.revanced.patches.dcinside.misc.integrity.fingerprints.NativeGetTextFingerprint
 import app.revanced.patches.dcinside.misc.extension.addExtensionPatch
@@ -12,7 +12,7 @@ import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethodParameter
 
 @Suppress("unused")
-val bypassGetTextPath = bytecodePatch(
+val bypassGetTextPath = patch(
     name = "Bypass getText",
     description = "Bypasses the integrity check for getText.",
 ) {
@@ -27,7 +27,7 @@ val bypassGetTextPath = bytecodePatch(
         NativeGetTextFingerprint.classDef.methods.add(
             ImmutableMethod(
                 nativeGetTextMethod.definingClass,
-                "gt",
+                nativeGetTextMethod.name,
                 listOf(
                     ImmutableMethodParameter("Landroid/content/Context;", null, null),
                     ImmutableMethodParameter("Ljava/lang/String;", null, null),

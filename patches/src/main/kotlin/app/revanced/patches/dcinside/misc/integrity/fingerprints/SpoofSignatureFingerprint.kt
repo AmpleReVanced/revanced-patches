@@ -1,9 +1,8 @@
 package app.revanced.patches.dcinside.misc.integrity.fingerprints
 
 import app.morphe.patcher.Fingerprint
-import app.morphe.patcher.OpcodesFilter
+import app.morphe.patcher.methodCall
 import com.android.tools.smali.dexlib2.AccessFlags
-import com.android.tools.smali.dexlib2.Opcode
 
 // sh
 internal object NativeGetSignatureHexFingerprint : Fingerprint(
@@ -20,18 +19,7 @@ internal object NativeGetSignatureByTypeFingerprint : Fingerprint(
 )
 
 internal object GenerateXAndroidCertFingerprint : Fingerprint(
-    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.SYNTHETIC),
     returnType = "V",
-    definingClass = "Lcom/dcinside/app/util",
-    filters = OpcodesFilter.opcodesToFilters(
-        Opcode.INVOKE_VIRTUAL,
-        Opcode.INVOKE_STATIC,
-        Opcode.MOVE_RESULT_OBJECT,
-        Opcode.INVOKE_VIRTUAL,
-        Opcode.MOVE_RESULT_OBJECT,
-        Opcode.INVOKE_VIRTUAL,
-        Opcode.MOVE_RESULT_OBJECT,
-        Opcode.CONST_16
-    ),
-    strings = listOf("SHA-1", "Package info not found.")
+    strings = listOf("SHA-1", "Package info not found."),
+    filters = listOf(methodCall("Ljava/lang/StringBuilder;->toString()Ljava/lang/String;")),
 )

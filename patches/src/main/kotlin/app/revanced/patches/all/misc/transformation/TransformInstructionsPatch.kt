@@ -1,6 +1,8 @@
 package app.revanced.patches.all.misc.transformation
 
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.classDefForEach
+import app.morphe.patcher.patch.mutableClassDefBy
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.findMutableMethodOf
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import com.android.tools.smali.dexlib2.iface.ClassDef
@@ -10,7 +12,7 @@ import com.android.tools.smali.dexlib2.iface.instruction.Instruction
 fun <T> transformInstructionsPatch(
     filterMap: (ClassDef, Method, Instruction, Int) -> T?,
     transform: (MutableMethod, T) -> Unit,
-) = bytecodePatch {
+) = patch {
     // Returns the patch indices as a Sequence, which will execute lazily.
     fun findPatchIndices(classDef: ClassDef, method: Method): Sequence<T>? =
         method.implementation?.instructions?.asSequence()?.withIndex()?.mapNotNull { (index, instruction) ->

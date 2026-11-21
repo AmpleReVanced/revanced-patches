@@ -50,8 +50,8 @@ internal object SetupAdapterFingerprint : Fingerprint(
 )
 
 internal object CommonChatRoomListAdapterClassFingerprint : Fingerprint(
-    custom = { _, classDef ->
-        classDef.sourceFile == "CommonChatRoomListAdapter.kt" &&
-            !classDef.type.contains("$")
-    }
+    name = "getItemViewType",
+    parameters = listOf("I"),
+    returnType = "I",
+    custom = { _, classDef -> classDef.sourceFile == "CommonChatRoomListAdapter.kt" },
 )

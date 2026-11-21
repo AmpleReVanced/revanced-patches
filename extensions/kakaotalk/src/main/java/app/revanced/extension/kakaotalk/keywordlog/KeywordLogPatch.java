@@ -6,6 +6,8 @@ import android.text.SpannableStringBuilder;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import app.morphe.extension.shared.Logger;
 import app.morphe.extension.shared.ResourceUtils;
@@ -15,8 +17,8 @@ import app.revanced.extension.kakaotalk.settings.Settings;
 @SuppressWarnings("unused")
 public final class KeywordLogPatch {
     private static final String REFRESH_ROOM_LIST_METHOD = "patch_refreshKeywordLogChatRoom";
-    private static volatile RoomSnapshot latestRoomSnapshot;
-    private static volatile boolean roomSnapshotLoaded;
+    private static final Map<Long, RoomSnapshot> ROOM_SNAPSHOTS = new ConcurrentHashMap<>();
+    private static final RoomSnapshot EMPTY_ROOM = new RoomSnapshot(0L, "", 0L);
     private static volatile WeakReference<Object> chatRoomListRefreshTarget =
             new WeakReference<>(null);
 
@@ -30,16 +32,20 @@ public final class KeywordLogPatch {
     public static void recordFromChatLog(Object chatLog, boolean matched) {
     }
 
-    public static Intent createChatRoomIntent(Context context, long chatRoomId, long chatLogId) {
+    public static Intent createChatRoomIntent(Context context, long chatRoomId, long chatLogId, long ownerId) {
         return null;
     }
 
-    public static String resolveChatRoomName(long chatRoomId) {
+    public static String resolveChatRoomName(long chatRoomId, long ownerId) {
         return null;
     }
 
     public static CharSequence highlight(SpannableStringBuilder message) {
         return message;
+    }
+
+    public static long currentOwnerId() {
+        return 0L;
     }
 
     public static boolean isEnabled() {
@@ -58,20 +64,21 @@ public final class KeywordLogPatch {
             String sender,
             String profileUrl,
             String message,
-            long createdAt
+            long createdAt,
+            long ownerId
     ) {
         if (!isEnabled()) return;
 
-        updateRoomSnapshot(id, message, createdAt);
-        requestChatRoomListRefresh();
+        updateRoomSnapshot(ownerId, id, message, createdAt);
+        if (ownerId == currentOwnerId()) requestChatRoomListRefresh();
         Utils.runOnBackgroundThread(() -> {
             String chatRoomName = null;
             try {
-                chatRoomName = resolveChatRoomName(chatRoomId);
+                chatRoomName = resolveChatRoomName(chatRoomId, ownerId);
             } catch (Throwable ex) {
                 Logger.printException(() -> "Failed to resolve a chat room name", ex);
             }
-            KeywordLogStore.getInstance().insert(
+            KeywordLogStore.getInstance(ownerId).insert(
                     id,
                     chatRoomId,
                     userId,
@@ -86,38 +93,38 @@ public final class KeywordLogPatch {
 
     public static String roomTitle() {
         try {
-            return string("title_for_keyword_log_list");
+            return string("morphe_kakaotalk_keyword_log_title");
         } catch (Throwable ex) {
             Logger.printException(() -> "Failed to resolve the keyword log room title", ex);
             return "";
         }
     }
 
-    public static String roomLastMessage() {
+    public static String roomLastMessage(long ownerId) {
         try {
-            RoomSnapshot latest = roomSnapshot();
+            RoomSnapshot latest = roomSnapshot(ownerId);
             Logger.printDebug(() -> "Keyword log chat room prepared");
-            return latest == null ? string("desc_for_keyword_log_list") : latest.message;
+            return latest == EMPTY_ROOM ? string("morphe_kakaotalk_keyword_log_summary") : latest.message;
         } catch (Throwable ex) {
             Logger.printException(() -> "Failed to resolve the keyword log preview", ex);
             return "";
         }
     }
 
-    public static long roomLastLogId() {
+    public static long roomLastLogId(long ownerId) {
         try {
-            RoomSnapshot latest = roomSnapshot();
-            return latest == null ? 0L : latest.id;
+            RoomSnapshot latest = roomSnapshot(ownerId);
+            return latest.id;
         } catch (Throwable ex) {
             Logger.printException(() -> "Failed to resolve the keyword log id", ex);
             return 0L;
         }
     }
 
-    public static int roomLastUpdatedAt() {
+    public static int roomLastUpdatedAt(long ownerId) {
         try {
-            RoomSnapshot latest = roomSnapshot();
-            if (latest == null || latest.createdAt <= 0L) return 0;
+            RoomSnapshot latest = roomSnapshot(ownerId);
+            if (latest.createdAt <= 0L) return 0;
 
             long seconds = latest.createdAt / 1000L;
             return seconds >= Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) seconds;
@@ -158,31 +165,20 @@ public final class KeywordLogPatch {
         return identifier == 0 ? "" : Utils.getContext().getString(identifier);
     }
 
-    private static RoomSnapshot roomSnapshot() {
-        if (roomSnapshotLoaded) return latestRoomSnapshot;
-
-        synchronized (KeywordLogPatch.class) {
-            if (roomSnapshotLoaded) return latestRoomSnapshot;
-
-            KeywordLogEntry entry = KeywordLogStore.getInstance().latest();
-            latestRoomSnapshot = entry == null
-                    ? null
+    private static RoomSnapshot roomSnapshot(long ownerId) {
+        return ROOM_SNAPSHOTS.computeIfAbsent(ownerId, id -> {
+            KeywordLogEntry entry = KeywordLogStore.getInstance(id).latest();
+            return entry == null
+                    ? EMPTY_ROOM
                     : new RoomSnapshot(entry.id, entry.message, entry.createdAt);
-            roomSnapshotLoaded = true;
-            return latestRoomSnapshot;
-        }
+        });
     }
 
-    private static void updateRoomSnapshot(long id, String message, long createdAt) {
-        synchronized (KeywordLogPatch.class) {
-            RoomSnapshot latest = latestRoomSnapshot;
-            if (latest == null
-                    || createdAt > latest.createdAt
-                    || (createdAt == latest.createdAt && id >= latest.id)) {
-                latestRoomSnapshot = new RoomSnapshot(id, message, createdAt);
-            }
-            roomSnapshotLoaded = true;
-        }
+    private static void updateRoomSnapshot(long ownerId, long id, String message, long createdAt) {
+        ROOM_SNAPSHOTS.merge(ownerId, new RoomSnapshot(id, message, createdAt),
+                (latest, incoming) -> incoming.createdAt > latest.createdAt
+                        || (incoming.createdAt == latest.createdAt && incoming.id >= latest.id)
+                        ? incoming : latest);
     }
 
     private static void requestChatRoomListRefresh() {

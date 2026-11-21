@@ -1,8 +1,10 @@
 package app.revanced.patches.dcinside.layout.branding
 
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.ResourcePatchContext
-import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.patch.decode
+import app.morphe.patcher.patch.document
+import app.morphe.patcher.patch.patch
+import app.morphe.patcher.patch.resourceFile
 import app.morphe.patcher.patch.stringOption
 import app.morphe.util.ResourceGroup
 import app.morphe.util.copyResources
@@ -64,7 +66,7 @@ private fun File.deleteResourcesByBaseName(baseName: String) {
         }
 }
 
-private fun ResourcePatchContext.copyCustomIcons(customIconPath: String) {
+private fun copyCustomIcons(customIconPath: String) {
     val iconPathFile = File(customIconPath.trim())
     if (!iconPathFile.exists()) {
         throw PatchException("The custom icon path cannot be found: ${iconPathFile.absolutePath}")
@@ -74,7 +76,7 @@ private fun ResourcePatchContext.copyCustomIcons(customIconPath: String) {
     }
 
     decode("res/mipmap*/ic_launcher.*", "res/drawable*/ic_symbol.*")
-    val resourceDirectory = get("res")
+    val resourceDirectory = resourceFile("res")
     var copiedLauncherIcon = false
     var copiedNotificationIcon = false
 
@@ -147,7 +149,7 @@ private fun ResourcePatchContext.copyCustomIcons(customIconPath: String) {
     }
 }
 
-private fun ResourcePatchContext.copyBundledCustomBrandingIcons() {
+private fun copyBundledCustomBrandingIcons() {
     copyResources(
         bundledCustomBrandingResourceDirectory,
         ResourceGroup(
@@ -173,7 +175,7 @@ private fun ResourcePatchContext.copyBundledCustomBrandingIcons() {
     }
 }
 
-private fun ResourcePatchContext.useBundledCustomBrandingIconsInManifest() {
+private fun useBundledCustomBrandingIconsInManifest() {
     document("AndroidManifest.xml").use { document ->
         val application = document.getElementsByTagName("application").item(0) as Element
         application.setAttribute("android:icon", bundledLauncherIconResourceName)
@@ -197,7 +199,7 @@ private fun ResourcePatchContext.useBundledCustomBrandingIconsInManifest() {
 }
 
 @Suppress("unused")
-val customBrandingPatch = resourcePatch(
+val customBrandingPatch = patch(
     name = "Custom branding",
     description = "Customize app branding (name and icon)",
     default = false

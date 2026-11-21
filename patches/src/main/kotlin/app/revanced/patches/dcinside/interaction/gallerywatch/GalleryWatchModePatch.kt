@@ -6,9 +6,9 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.fieldAccess
 import app.morphe.patcher.methodCall
-import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.classDefBy
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.addInstructionsAtControlFlowLabel
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
@@ -33,7 +33,7 @@ import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.value.StringEncodedValue
 
 @Suppress("unused")
-val galleryWatchModePatch = bytecodePatch(
+val galleryWatchModePatch = patch(
     name = "Gallery watch mode",
     description = "Keeps gallery auto-refresh active, highlights newly arrived posts, and " +
         "optionally alerts with sound or vibration while the gallery is open.",
@@ -44,7 +44,9 @@ val galleryWatchModePatch = bytecodePatch(
     execute {
         addGalleryWatchPreferences()
         setExtensionIsPatchIncluded(EXTENSION_CLASS)
-        AutoRefreshDurationFingerprint.method.injectDurationOverride()
+        AutoRefreshDurationFingerprint.method.injectDurationOverride(
+            AutoRefreshDurationFingerprint.instructionMatches.single().index + 1,
+        )
         injectGalleryWatchBridges()
         injectGalleryWatchCallbacks()
     }
@@ -65,12 +67,11 @@ private fun addGalleryWatchPreferences() {
     )
 }
 
-private fun MutableMethod.injectDurationOverride() {
-    val returnIndex = indexOfFirstInstructionReversedOrThrow(Opcode.RETURN_WIDE)
+private fun MutableMethod.injectDurationOverride(returnIndex: Int) {
     val durationRegister = getInstruction<OneRegisterInstruction>(returnIndex).registerA
 
     addInstructionsAtControlFlowLabel(
-        returnIndex,
+        returnIndex + 1,
         """
             invoke-static/range {v$durationRegister .. v${durationRegister + 1}}, $EXTENSION_CLASS->overrideAutoRefreshDuration(J)J
             move-result-wide v$durationRegister
@@ -78,7 +79,7 @@ private fun MutableMethod.injectDurationOverride() {
     )
 }
 
-private fun BytecodePatchContext.injectGalleryWatchCallbacks() {
+private fun injectGalleryWatchCallbacks() {
     PostListAdapterConstructorFingerprint.let { fingerprint ->
         fingerprint.method.apply {
             val superConstructorIndex = indexOfFirstInstructionOrThrow(
@@ -98,7 +99,7 @@ private fun BytecodePatchContext.injectGalleryWatchCallbacks() {
     }
 
     AutoRefreshTickFingerprint.method.addInstructionsAtControlFlowLabel(
-        AutoRefreshTickFingerprint.instructionMatches.single().index,
+        0,
         "invoke-static/range {p0 .. p0}, $EXTENSION_CLASS->onAutoRefreshTick(Ljava/lang/Object;)V",
     )
 
@@ -112,7 +113,7 @@ private fun BytecodePatchContext.injectGalleryWatchCallbacks() {
     )
 }
 
-private fun BytecodePatchContext.injectGalleryWatchBridges() {
+private fun injectGalleryWatchBridges() {
     val itemViewField = classDefBy(RECYCLER_VIEW_HOLDER).instanceFields.singleOrNull { field ->
         field.type == "Landroid/view/View;" && AccessFlags.PUBLIC.isSet(field.accessFlags)
     } ?: throw PatchException("Could not infer RecyclerView.ViewHolder item view field")

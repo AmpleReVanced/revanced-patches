@@ -4,7 +4,7 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.removeInstructions
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
@@ -31,7 +31,7 @@ private const val ENABLE_SEND_BIG_TEXT =
 private const val SEND_BIG_TEXT_METHOD = "revanced_sendBigText"
 
 @Suppress("unused")
-val enableSendBigTextPatch = bytecodePatch(
+val enableSendBigTextPatch = patch(
     name = "Enable send big text",
     description = "Allows sending big text messages in KakaoTalk.",
 ) {

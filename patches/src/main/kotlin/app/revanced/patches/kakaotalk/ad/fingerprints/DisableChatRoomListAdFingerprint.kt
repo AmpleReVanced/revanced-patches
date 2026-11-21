@@ -5,6 +5,7 @@ import app.morphe.patcher.InstructionLocation.MatchAfterImmediately
 import app.morphe.patcher.fieldAccess
 import app.morphe.patcher.methodCall
 import app.morphe.patcher.opcode
+import app.revanced.util.parameterTypeNames
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
@@ -30,18 +31,16 @@ internal object GlobalChatListAdItemFingerprint : Fingerprint(
 internal object ChatListGlobalAdEnabledFingerprint : Fingerprint(
     classFingerprint = ChatListAdHelperFingerprint,
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
-    parameters = listOf(
-        "Landroid/content/Context;",
-        "Z",
-        "Lkotlin/coroutines/Continuation;",
-    ),
     returnType = "Ljava/lang/Object;",
     filters = listOf(
         methodCall("Landroid/content/res/Resources;->getConfiguration()Landroid/content/res/Configuration;"),
         opcode(Opcode.MOVE_RESULT_OBJECT, location = MatchAfterImmediately()),
         fieldAccess("Landroid/content/res/Configuration;->orientation:I"),
     ),
-    custom = { _, classDef -> classDef.sourceFile == "ChatListAdHelper.kt" }
+    custom = { method, _ ->
+        method.parameterTypeNames.firstOrNull() == "Landroid/content/Context;" &&
+            method.parameterTypeNames.lastOrNull() == "Lkotlin/coroutines/Continuation;"
+    },
 )
 
 internal object ChatListBizBoardEnabledFingerprint : Fingerprint(

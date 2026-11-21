@@ -82,6 +82,9 @@
     <string name="morphe_settings_patch_bypass_moat_check_confirm_enable">위험을 이해하고 켜기</string>
     <string name="morphe_settings_patch_force_debug_mode">카카오톡 디버그 모드 강제 사용</string>
     <string name="morphe_settings_patch_force_debug_mode_summary">카카오톡 내부 디버그 플래그를 강제로 켭니다.</string>
+    <string name="morphe_settings_patch_disable_ssl_pinning">SSL pinning 해제</string>
+    <string name="morphe_settings_patch_disable_ssl_pinning_summary">Burp Suite 등의 프록시로 OkHttp와 WebView의 HTTPS 통신을 분석합니다. Android에 프록시 CA 인증서를 설치하세요. 설정 변경 후 카카오톡을 다시 시작해야 합니다.</string>
+    <string name="morphe_pref_disable_ssl_pinning_summary">Burp Suite 등의 프록시로 OkHttp와 WebView의 HTTPS 통신을 분석합니다. Android에 프록시 CA 인증서를 설치하세요. 설정 변경 후 카카오톡을 다시 시작해야 합니다.</string>
     <string name="morphe_settings_support">프로젝트 후원하기</string>
     <string name="morphe_settings_support_summary">결과물이 마음에 드시나요? 후원으로 더 나은 결과물을 만드는 데 힘을 보태주세요. 여러분의 지원으로 이 프로젝트는 계속 개발됩니다.</string>
     <string name="morphe_settings_catalog_remove_short_form_tab">숏폼 탭 숨기기</string>
@@ -107,6 +110,9 @@
     <string name="morphe_settings_catalog_hide_more_tab_line_service_section">개별 서비스 항목 숨기기</string>
     <string name="morphe_settings_catalog_hide_more_tab_line_service_section_summary">더보기 탭에서 개별 서비스 항목을 숨깁니다. 이 설정을 바꾼 뒤에는 카카오톡을 다시 시작해야 합니다.</string>
     <string name="morphe_settings_debug">디버그 로그</string>
+    <string name="morphe_settings_debug_disabled">끄기</string>
+    <string name="morphe_settings_debug_basic">디버그</string>
+    <string name="morphe_settings_debug_verbose">상세</string>
     <string name="morphe_settings_debug_summary">Morphe 패치의 추가 진단 로그를 기록합니다.</string>
     <string name="morphe_settings_debug_stacktrace">스택 트레이스 포함</string>
     <string name="morphe_settings_debug_stacktrace_summary">오류 보고에 전체 스택 트레이스를 함께 표시합니다.</string>
@@ -168,6 +174,14 @@
     <string name="morphe_settings_patch_restore_keyword_log">키워드 알림 모아보기 복원</string>
     <string name="morphe_pref_restore_keyword_log_summary">알림 키워드에 해당하는 메시지를 모아 보여주는 제거된 목록과 채팅 목록 항목을 복원합니다.</string>
     <string name="morphe_kakaotalk_keyword_log_sort_latest">최신순</string>
+    <string name="morphe_kakaotalk_keyword_log_sort_chat">채팅방순</string>
+    <string name="morphe_kakaotalk_keyword_log_sort_sender">보낸 사람순</string>
+    <string name="morphe_kakaotalk_keyword_log_title">키워드 알림 모아보기</string>
+    <string name="morphe_kakaotalk_keyword_log_summary">설정한 키워드가 포함된 메시지</string>
+    <string name="morphe_kakaotalk_keyword_log_empty">키워드 알림이 없습니다</string>
+    <string name="morphe_kakaotalk_keyword_log_delete_all">보호되지 않은 기록 모두 삭제</string>
+    <string name="morphe_kakaotalk_keyword_log_protect">기록 보호</string>
+    <string name="morphe_kakaotalk_keyword_log_unprotect">기록 보호 해제</string>
     <string name="morphe_settings_patch_show_message_details">메시지 자세히 보기</string>
     <string name="morphe_pref_show_message_details_summary">메시지를 길게 눌러 ChatLog 객체 전체를 JSON으로 확인합니다.</string>
     <string name="morphe_kakaotalk_message_details_title">메시지 자세히 보기</string>

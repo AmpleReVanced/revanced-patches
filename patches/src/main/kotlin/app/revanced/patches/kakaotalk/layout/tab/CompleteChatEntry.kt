@@ -6,7 +6,7 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLa
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.methodCall
-import app.morphe.patcher.patch.BytecodePatchContext
+import app.morphe.patcher.patch.classDefBy
 import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
@@ -28,7 +28,7 @@ private const val EXTENSION_CLASS =
     "Lapp/revanced/extension/kakaotalk/patches/DisableNavigationBarAnimationPatch;"
 private const val CONTINUATION = "Lkotlin/coroutines/Continuation;"
 
-internal fun BytecodePatchContext.completeChatEntryWithoutAnimation(entry: Fingerprint) {
+internal fun completeChatEntryWithoutAnimation(entry: Fingerprint) {
     val navigatorType = entry.originalMethod.parameterTypes[0]
     val navigateIndex = entry.method.indexOfFirstInstructionOrThrow {
         opcode == Opcode.INVOKE_INTERFACE && getReference<MethodReference>()?.let {

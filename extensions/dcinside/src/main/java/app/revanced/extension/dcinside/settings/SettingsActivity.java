@@ -177,7 +177,7 @@ public final class SettingsActivity extends Activity {
             bindSwitchIfIncluded(PREF_HIDE_HOME_LIVE_BEST, Settings.HIDE_HOME_LIVE_BEST, HomeComponentsPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_HIDE_HOME_RECOMMENDED_POSTS, Settings.HIDE_HOME_RECOMMENDED_POSTS, HomeComponentsPatch.isPatchIncluded());
             bindUserMemoPresetPreferenceIfIncluded(UserMemoPatch.isPatchIncluded());
-            bindSwitch(PREF_DEBUG, BaseSettings.DEBUG);
+            bindDebugLevelPreference(PREF_DEBUG, this::refreshPreferences);
             bindSwitch(PREF_DEBUG_STACKTRACE, BaseSettings.DEBUG_STACKTRACE);
             bindSwitch(PREF_DEBUG_TOAST, BaseSettings.DEBUG_TOAST_ON_ERROR);
 
@@ -203,7 +203,6 @@ public final class SettingsActivity extends Activity {
 
         private void bindUserMemoPresetPreference() {
             Preference preference = requirePreference(PREF_APPLY_USER_MEMO_PRESET, Preference.class);
-            preference.setPersistent(false);
             preference.setOnPreferenceClickListener(pref -> {
                 showUserMemoPresetSelectionDialog();
                 return true;
@@ -266,7 +265,6 @@ public final class SettingsActivity extends Activity {
 
         private void bindClearUserMemosPreference() {
             Preference preference = requirePreference(PREF_CLEAR_USER_MEMOS, Preference.class);
-            preference.setPersistent(false);
             preference.setOnPreferenceClickListener(pref -> {
                 Activity activity = requireActivity();
                 new AlertDialog.Builder(activity)
@@ -299,7 +297,6 @@ public final class SettingsActivity extends Activity {
 
         private void bindSwitch(String key, BooleanSetting setting) {
             SwitchPreference preference = requirePreference(key, SwitchPreference.class);
-            preference.setPersistent(false);
             switchBindings.add(new SwitchBinding(preference, setting));
             resettableSettings.add(setting);
             preference.setOnPreferenceChangeListener((pref, newValue) -> {
@@ -320,7 +317,6 @@ public final class SettingsActivity extends Activity {
 
         private void bindInfoPreference(String key, String summary) {
             Preference preference = requirePreference(key, Preference.class);
-            preference.setPersistent(false);
             preference.setSelectable(false);
             preference.setSummary(normalizeSummary(summary));
         }
@@ -357,8 +353,8 @@ public final class SettingsActivity extends Activity {
 
         private void bindResetPreference() {
             Preference preference = requirePreference(PREF_RESET, Preference.class);
-            preference.setPersistent(false);
             preference.setOnPreferenceClickListener(pref -> {
+                BaseSettings.DEBUG_LEVEL.resetToDefault();
                 for (BooleanSetting setting : resettableSettings) {
                     setting.resetToDefault();
                 }
@@ -368,6 +364,7 @@ public final class SettingsActivity extends Activity {
         }
 
         private void refreshPreferences() {
+            refreshDebugLevelPreference();
             for (SwitchBinding binding : switchBindings) {
                 binding.preference.setChecked(binding.setting.get());
                 binding.preference.setEnabled(binding.setting.isAvailable());

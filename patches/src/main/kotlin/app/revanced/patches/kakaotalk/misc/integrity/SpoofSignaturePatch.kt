@@ -1,13 +1,13 @@
 package app.revanced.patches.kakaotalk.misc.integrity
 
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.returnEarly
 import app.revanced.patches.kakaotalk.misc.integrity.fingerprints.PlatformSignatureFingerprint
 import app.revanced.patches.kakaotalk.misc.integrity.fingerprints.UtilityGetSignatureFingerprint
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 
 @Suppress("unused")
-val spoofSignaturePatch = bytecodePatch(
+val spoofSignaturePatch = patch(
     name = "Spoof signature",
     description = "Spoofs the app signature to pass integrity checks.",
 ) {

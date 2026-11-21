@@ -1,9 +1,9 @@
 package app.revanced.patches.dcinside.misc.extension
 
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 
 @Suppress("unused")
-val addExtensionPatch = bytecodePatch {
+val addExtensionPatch = patch {
     extendWith("extensions/dcinside.mpe")
     dependsOn(sharedExtensionPatch)
 

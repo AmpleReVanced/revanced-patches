@@ -3,7 +3,7 @@ package app.revanced.patches.kakaotalk.interaction.chatlog
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patcher.util.getReference
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
@@ -29,7 +29,7 @@ private const val BLOCK_MODIFIED_MESSAGE_REPLY =
     "Lapp/revanced/extension/kakaotalk/settings/Settings;->blockModifiedMessageReply()Z"
 
 @Suppress("unused")
-val blockModifiedMessageReplyPatch = bytecodePatch(
+val blockModifiedMessageReplyPatch = patch(
     name = "Block replies on deleted or hidden messages",
     description = "Stops the swipe gesture, and any reply or comment send, from targeting messages " +
             "that the server considers deleted or hidden and that are only still visible because " +

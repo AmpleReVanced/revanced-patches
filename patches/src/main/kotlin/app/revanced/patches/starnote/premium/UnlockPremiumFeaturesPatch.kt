@@ -1,13 +1,13 @@
 package app.revanced.patches.starnote.premium
 
-import app.morphe.patcher.patch.rawResourcePatch
+import app.morphe.patcher.patch.patch
 import app.revanced.patches.starnote.shared.Constants.COMPATIBILITY_STARNOTE
 import app.revanced.patches.starnote.shared.ProtectedDex
 import app.revanced.patches.starnote.shared.loadProtectedDexPatch
 
 private const val LOCAL_NOTE_QUOTA = 1_000_000L
 
-internal val unlockPremiumStatePatch = rawResourcePatch {
+internal val unlockPremiumStatePatch = patch {
     dependsOn(loadProtectedDexPatch)
 
     execute {
@@ -20,7 +20,7 @@ internal val unlockPremiumStatePatch = rawResourcePatch {
 }
 
 @Suppress("unused")
-val unlockPremiumFeaturesPatch = rawResourcePatch(
+val unlockPremiumFeaturesPatch = patch(
     name = "Unlock Premium features",
     description = "Enables local premium features and raises the local note creation quota.",
 ) {

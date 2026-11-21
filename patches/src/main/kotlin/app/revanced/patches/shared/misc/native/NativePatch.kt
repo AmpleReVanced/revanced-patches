@@ -2,15 +2,16 @@ package app.revanced.patches.shared.misc.native
 
 import app.morphe.patcher.patch.Compatibility
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.ResourcePatch
-import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.patch.Patch
+import app.morphe.patcher.patch.patch
+import app.morphe.patcher.patch.resourceFile
 import net.fornwall.jelf.ElfFile
 import java.io.File
 
 internal fun nativePatch(
     compatibility: Compatibility,
     block: NativePatchBuilder.() -> Unit,
-): ResourcePatch = resourcePatch {
+): Patch = patch {
     compatibleWith(compatibility)
 
     execute {
@@ -18,7 +19,7 @@ internal fun nativePatch(
         var patchedFiles = 0
 
         replacements.groupBy { it.filePath }.forEach { (filePath, fileReplacements) ->
-            val file = File(get(filePath).toString())
+            val file = File(resourceFile(filePath).toString())
             if (!file.exists()) return@forEach
 
             val fileBytes = file.readBytes()

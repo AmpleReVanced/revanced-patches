@@ -4,10 +4,10 @@ import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.methodCall
 
 internal object OpenChatListMoreItemFingerprint : Fingerprint(
-    custom = { _, classDef ->
-        classDef.sourceFile == "OpenChatListMoreItem.kt" &&
-            !classDef.type.contains("$")
-    }
+    name = "getBindingType",
+    parameters = emptyList(),
+    returnType = "I",
+    custom = { _, classDef -> classDef.sourceFile == "OpenChatListMoreItem.kt" },
 )
 
 internal object TrimOpenChatListForMoreButtonFingerprint : Fingerprint(

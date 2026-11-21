@@ -3,7 +3,7 @@ package app.revanced.patches.kakaotalk.misc.debugging
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patcher.util.getReference
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
@@ -21,7 +21,7 @@ private const val EXTENSION_CLASS =
     "Lapp/revanced/extension/kakaotalk/patches/ForceEnableDebugModePatch;"
 
 @Suppress("unused")
-val forceEnableDebugModePatch = bytecodePatch(
+val forceEnableDebugModePatch = patch(
     name = "Force enable debug mode",
     description = "Enables debug mode in the app.",
 ) {

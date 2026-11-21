@@ -1,9 +1,10 @@
 package app.revanced.patches.starnote.hwr
 
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.ResourcePatch
-import app.morphe.patcher.patch.ResourcePatchContext
-import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.patch.Patch
+import app.morphe.patcher.patch.decode
+import app.morphe.patcher.patch.patch
+import app.morphe.patcher.patch.resourceFile
 import app.revanced.patches.starnote.premium.unlockPremiumStatePatch
 import app.revanced.patches.starnote.shared.Constants.COMPATIBILITY_STARNOTE
 import com.google.gson.GsonBuilder
@@ -31,7 +32,7 @@ private fun localHandwritingPatch(
     name: String,
     description: String,
     functionKey: String,
-): ResourcePatch = resourcePatch(
+): Patch = patch(
     name = name,
     description = description,
 ) {
@@ -52,12 +53,12 @@ private fun localHandwritingPatch(
     }
 }
 
-private fun ResourcePatchContext.rawResource(name: String): File {
+private fun rawResource(name: String): File {
     val matches = decode("res/raw/$name")
     if (matches.size != 1) {
         throw PatchException("Expected one raw resource, found ${matches.size}: $name")
     }
-    return get(matches.single())
+    return resourceFile(matches.single())
 }
 
 private fun File.updateJson(block: (JsonObject) -> Unit) {

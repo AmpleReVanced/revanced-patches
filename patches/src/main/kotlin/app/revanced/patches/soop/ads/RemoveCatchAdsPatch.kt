@@ -1,12 +1,12 @@
 package app.revanced.patches.soop.ads
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.revanced.patches.soop.ads.fingerprints.*
 import app.revanced.patches.soop.shared.Constants.COMPATIBILITY_SOOP
 
 @Suppress("unused")
-val removeCatchAdsPatch = bytecodePatch(
+val removeCatchAdsPatch = patch(
     name = "Remove Catch ads",
     description = "Removes the ads inserted between clips in the Catch feed by reporting no ad slots.",
 ) {

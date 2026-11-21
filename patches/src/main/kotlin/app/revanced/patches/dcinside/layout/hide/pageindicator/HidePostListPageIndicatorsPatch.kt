@@ -2,7 +2,7 @@ package app.revanced.patches.dcinside.layout.hide.pageindicator
 
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
@@ -19,7 +19,7 @@ private const val EXTENSION_CLASS =
     "Lapp/revanced/extension/dcinside/patches/HidePostListPageIndicatorsPatch;"
 
 @Suppress("unused")
-val hidePostListPageIndicatorsPatch = bytecodePatch(
+val hidePostListPageIndicatorsPatch = patch(
     name = "Hide post list page indicators",
     description = "Adds a setting to hide the Page N indicators between pages in post lists.",
 ) {

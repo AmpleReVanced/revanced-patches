@@ -4,7 +4,7 @@ import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.methodCall
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getReference
 import app.morphe.util.findInstructionIndicesReversedOrThrow
 import app.revanced.patches.kakaotalk.ad.fingerprints.AdBigUIModelFingerprint
@@ -13,7 +13,7 @@ import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
 @Suppress("unused")
-val removeMoreTabAdPatch = bytecodePatch(
+val removeMoreTabAdPatch = patch(
     name = "Remove More tab ad",
     description = "Removes the ad from the More tab.",
 ) {

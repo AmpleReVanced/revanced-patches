@@ -4,7 +4,7 @@ import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.removeInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.revanced.patches.kakaotalk.layout.chatroom.fingerprints.GetUnreadCountFingerprint
 import app.revanced.patches.kakaotalk.layout.chatroom.fingerprints.Limit300PlusBaseChatRoomFingerprint
 import app.revanced.patches.kakaotalk.layout.chatroom.fingerprints.Limit300PlusOpenChatRoomFingerprint
@@ -15,7 +15,7 @@ import com.android.tools.smali.dexlib2.builder.instruction.BuilderInstruction22t
 import com.android.tools.smali.dexlib2.iface.instruction.NarrowLiteralInstruction
 
 @Suppress("unused")
-val remove300PlusLimitChatRoomPatch = bytecodePatch(
+val remove300PlusLimitChatRoomPatch = patch(
     name = "Disable 300+ unread limit",
     description = "Always show the real unread count instead of '300+' in chatroom list"
 ) {

@@ -8,8 +8,9 @@ import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.methodCall
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.patch.document
+import app.morphe.patcher.patch.mutableClassDefBy
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.matchSingle
@@ -52,7 +53,7 @@ private const val FILTER_VIEW_ID = "morphe_post_history_gallery_filter"
 private const val EDIT_VIEW_ID = "post_history_edit"
 private const val ROW_ANCHOR_VIEW_ID = "post_history_write_title"
 
-private val filterPostHistoryByGalleryBytecodePatch = bytecodePatch {
+private val filterPostHistoryByGalleryBytecodePatch = patch {
     compatibleWith(COMPATIBILITY_DC_INSIDE)
     dependsOn(addExtensionPatch, addSettingsPatch)
 
@@ -121,7 +122,6 @@ private val filterPostHistoryByGalleryBytecodePatch = bytecodePatch {
                         if-eqz v$galleriesRegister, :unfiltered
                         const-string v$columnRegister, "$GALLERY_ID_COLUMN"
                         invoke-virtual {v$queryRegister, v$columnRegister, v$galleriesRegister}, ${realmQueryIn.smaliReference}
-                        move-result-object v$queryRegister
                         :unfiltered
                         nop
                     """.trimIndent(),
@@ -160,7 +160,7 @@ private val filterPostHistoryByGalleryBytecodePatch = bytecodePatch {
                     addInstructions(
                         0,
                         """
-                            invoke-direct {p0}, ${reloadMethod.smaliReference}
+                            invoke-virtual {p0}, ${reloadMethod.smaliReference}
                             return-void
                         """.trimIndent(),
                     )
@@ -179,7 +179,7 @@ private val filterPostHistoryByGalleryBytecodePatch = bytecodePatch {
                             if-eqz v1, :done
                             const-wide/16 v3, 0x0
                             const-wide v5, 0x7fffffffffffffffL
-                            invoke-virtual/range {v1 .. v6}, $itemManagerType->${queryMethod.name}(${realmType}JJ)Ljava/util/List;
+                            invoke-virtual/range {v1 .. v6}, ${queryMethod.smaliReference}
                             move-result-object v0
                             invoke-static {v0}, $GALLERY_FILTER_EXTENSION_CLASS->collectGalleries(Ljava/util/List;)V
                             :done
@@ -193,14 +193,14 @@ private val filterPostHistoryByGalleryBytecodePatch = bytecodePatch {
         PostHistoryActivityOnCreateFingerprint.method.apply {
             addInstruction(
                 indexOfFirstInstructionOrThrow(methodCall(reloadMethod)),
-                "invoke-static {p0}, $GALLERY_FILTER_EXTENSION_CLASS->initialize($GALLERY_FILTER_HOST_INTERFACE)V",
+                "invoke-static/range {p0 .. p0}, $GALLERY_FILTER_EXTENSION_CLASS->initialize($GALLERY_FILTER_HOST_INTERFACE)V",
             )
         }
     }
 }
 
 @Suppress("unused")
-val filterPostHistoryByGalleryPatch = resourcePatch(
+val filterPostHistoryByGalleryPatch = patch(
     name = "Filter recently viewed posts by gallery",
     description = "Adds a gallery filter below the recently viewed posts filters, " +
         "which narrows the list down to the posts of a single gallery.",

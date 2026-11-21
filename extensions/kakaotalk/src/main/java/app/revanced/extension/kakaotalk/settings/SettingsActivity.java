@@ -23,6 +23,7 @@ import app.morphe.extension.shared.settings.preference.SettingsActivityLayout;
 import app.morphe.extension.shared.settings.preference.ToolbarPreferenceFragment;
 import app.revanced.extension.kakaotalk.keywordlog.KeywordLogPatch;
 import app.revanced.extension.kakaotalk.patches.AllowInvisibleCharactersPatch;
+import app.revanced.extension.kakaotalk.patches.AllowOpenChatMediaBundlePatch;
 import app.revanced.extension.kakaotalk.patches.AllowProfileMediaDownloadPatch;
 import app.revanced.extension.kakaotalk.patches.AllowReplyToFeedPatch;
 import app.revanced.extension.kakaotalk.patches.BlockModifiedMessageReactionPatch;
@@ -32,6 +33,7 @@ import app.revanced.extension.kakaotalk.patches.DefaultExternalBrowserPatch;
 import app.revanced.extension.kakaotalk.patches.DisableFriendFeedTabPatch;
 import app.revanced.extension.kakaotalk.patches.DisableNavigationBarAnimationPatch;
 import app.revanced.extension.kakaotalk.patches.DisableOpenChatRoomCommentPatch;
+import app.revanced.extension.kakaotalk.patches.DisableSslPinningPatch;
 import app.revanced.extension.kakaotalk.patches.EnableMarkdownPatch;
 import app.revanced.extension.kakaotalk.patches.EnableSendBigTextPatch;
 import app.revanced.extension.kakaotalk.patches.ForceEnableDebugModePatch;
@@ -45,6 +47,7 @@ import app.revanced.extension.kakaotalk.patches.RemoveShopTabPatch;
 import app.revanced.extension.kakaotalk.patches.RemoveShortFormTabPatch;
 import app.revanced.extension.kakaotalk.patches.ShowDeletedHiddenOrEditedMessagePatch;
 import app.revanced.extension.kakaotalk.patches.ShowMessageReadReceiptsPatch;
+import app.revanced.extension.kakaotalk.patches.StripImageMetadataPatch;
 
 public final class SettingsActivity extends Activity {
     private static final String PREF_GHOST_MODE = "morphe_pref_ghost_mode";
@@ -75,11 +78,14 @@ public final class SettingsActivity extends Activity {
     private static final String PREF_ENABLE_SEND_BIG_TEXT = "morphe_pref_enable_send_big_text";
     private static final String PREF_ENABLE_MARKDOWN = "morphe_pref_enable_markdown";
     private static final String PREF_ALLOW_INVISIBLE_CHARACTERS = "morphe_pref_allow_invisible_characters";
+    private static final String PREF_ALLOW_OPEN_CHAT_MEDIA_BUNDLE = "morphe_pref_allow_open_chat_media_bundle";
     private static final String PREF_ALLOW_PROFILE_MEDIA_DOWNLOAD = "morphe_pref_allow_profile_media_download";
+    private static final String PREF_STRIP_IMAGE_METADATA = "morphe_pref_strip_image_metadata";
     private static final String PREF_OPEN_CHAT_ROOM_COMMENT_DISABLED = "morphe_pref_open_chat_room_comment_disabled";
     private static final String PREF_BYPASS_MOAT_INTEGRITY_CHECK = "morphe_pref_bypass_moat_integrity_check";
     private static final String PREF_FEATURE_FLAG_OVERRIDES = "morphe_pref_feature_flag_overrides";
     private static final String PREF_FORCE_DEBUG_MODE = "morphe_pref_force_debug_mode";
+    private static final String PREF_DISABLE_SSL_PINNING = "morphe_pref_disable_ssl_pinning";
     private static final String PREF_DEBUG = "morphe_pref_debug";
     private static final String PREF_DEBUG_STACKTRACE = "morphe_pref_debug_stacktrace";
     private static final String PREF_DEBUG_TOAST = "morphe_pref_debug_toast";
@@ -148,6 +154,7 @@ public final class SettingsActivity extends Activity {
             RESTART_SENSITIVE_PREFERENCES.add(PREF_HIDE_MORE_TAB_SERVICE_GROUP_SECTION);
             RESTART_SENSITIVE_PREFERENCES.add(PREF_HIDE_MORE_TAB_LINE_SERVICE_SECTION);
             RESTART_SENSITIVE_PREFERENCES.add(PREF_FORCE_DEBUG_MODE);
+            RESTART_SENSITIVE_PREFERENCES.add(PREF_DISABLE_SSL_PINNING);
             RESTART_SENSITIVE_PREFERENCES.add(PREF_BYPASS_MOAT_INTEGRITY_CHECK);
             RESTART_SENSITIVE_PREFERENCES.add(PREF_RESTORE_KEYWORD_LOG);
         }
@@ -174,7 +181,9 @@ public final class SettingsActivity extends Activity {
             bindSwitchIfIncluded(PREF_ENABLE_SEND_BIG_TEXT, Settings.ENABLE_SEND_BIG_TEXT, EnableSendBigTextPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_ENABLE_MARKDOWN, Settings.ENABLE_MARKDOWN, EnableMarkdownPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_ALLOW_INVISIBLE_CHARACTERS, Settings.ALLOW_INVISIBLE_CHARACTERS, AllowInvisibleCharactersPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_ALLOW_OPEN_CHAT_MEDIA_BUNDLE, Settings.ALLOW_OPEN_CHAT_MEDIA_BUNDLE, AllowOpenChatMediaBundlePatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_ALLOW_PROFILE_MEDIA_DOWNLOAD, Settings.ALLOW_PROFILE_MEDIA_DOWNLOAD, AllowProfileMediaDownloadPatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_STRIP_IMAGE_METADATA, Settings.STRIP_IMAGE_METADATA, StripImageMetadataPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_OPEN_CHAT_ROOM_COMMENT_DISABLED, Settings.OPEN_CHAT_ROOM_COMMENT_DISABLED, DisableOpenChatRoomCommentPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_SHOW_MODIFIED_MESSAGE_SENDER_PROFILE, Settings.SHOW_MODIFIED_MESSAGE_SENDER_PROFILE, ShowDeletedHiddenOrEditedMessagePatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_BLOCK_MODIFIED_MESSAGE_REACTION, Settings.BLOCK_MODIFIED_MESSAGE_REACTION, BlockModifiedMessageReactionPatch.isPatchIncluded());
@@ -186,7 +195,8 @@ public final class SettingsActivity extends Activity {
             bindRiskySwitchIfIncluded(PREF_BYPASS_MOAT_INTEGRITY_CHECK, Settings.BYPASS_MOAT_INTEGRITY_CHECK, BypassMoatCheckPatch.isPatchIncluded());
             bindTextIfIncluded(PREF_FEATURE_FLAG_OVERRIDES, Settings.FEATURE_FLAG_OVERRIDES, OverrideFeatureFlagPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_FORCE_DEBUG_MODE, Settings.FORCE_DEBUG_MODE, ForceEnableDebugModePatch.isPatchIncluded());
-            bindSwitch(PREF_DEBUG, BaseSettings.DEBUG);
+            bindSwitchIfIncluded(PREF_DISABLE_SSL_PINNING, Settings.DISABLE_SSL_PINNING, DisableSslPinningPatch.isPatchIncluded());
+            bindDebugLevelPreference(PREF_DEBUG, this::refreshPreferences);
             bindSwitch(PREF_DEBUG_STACKTRACE, BaseSettings.DEBUG_STACKTRACE);
             bindSwitch(PREF_DEBUG_TOAST, BaseSettings.DEBUG_TOAST_ON_ERROR);
 
@@ -208,7 +218,6 @@ public final class SettingsActivity extends Activity {
 
         private void bindSwitch(String key, BooleanSetting setting) {
             SwitchPreference preference = requirePreference(key, SwitchPreference.class);
-            preference.setPersistent(false);
             switchBindings.add(new SwitchBinding(preference, setting));
             resettableSettings.add(setting);
             preference.setOnPreferenceChangeListener((pref, newValue) -> {
@@ -230,7 +239,6 @@ public final class SettingsActivity extends Activity {
 
         private void bindRiskySwitch(String key, BooleanSetting setting) {
             SwitchPreference preference = requirePreference(key, SwitchPreference.class);
-            preference.setPersistent(false);
             switchBindings.add(new SwitchBinding(preference, setting));
             resettableSettings.add(setting);
             preference.setOnPreferenceChangeListener((pref, newValue) -> {
@@ -258,7 +266,6 @@ public final class SettingsActivity extends Activity {
 
         private void bindText(String key, StringSetting setting) {
             EditTextPreference preference = requirePreference(key, EditTextPreference.class);
-            preference.setPersistent(false);
             textBindings.add(new TextBinding(preference, setting, preference.getSummary()));
             resettableTextSettings.add(setting);
             preference.setOnPreferenceChangeListener((pref, newValue) -> {
@@ -307,7 +314,6 @@ public final class SettingsActivity extends Activity {
 
         private void bindInfoPreference(String key, String summary) {
             Preference preference = requirePreference(key, Preference.class);
-            preference.setPersistent(false);
             preference.setSelectable(false);
             preference.setSummary(normalizeSummary(summary));
         }
@@ -344,8 +350,8 @@ public final class SettingsActivity extends Activity {
 
         private void bindResetPreference() {
             Preference preference = requirePreference(PREF_RESET, Preference.class);
-            preference.setPersistent(false);
             preference.setOnPreferenceClickListener(pref -> {
+                BaseSettings.DEBUG_LEVEL.resetToDefault();
                 for (BooleanSetting setting : resettableSettings) {
                     setting.resetToDefault();
                 }
@@ -358,6 +364,7 @@ public final class SettingsActivity extends Activity {
         }
 
         private void refreshPreferences() {
+            refreshDebugLevelPreference();
             for (SwitchBinding binding : switchBindings) {
                 binding.preference.setChecked(binding.setting.get());
                 binding.preference.setEnabled(binding.setting.isAvailable());

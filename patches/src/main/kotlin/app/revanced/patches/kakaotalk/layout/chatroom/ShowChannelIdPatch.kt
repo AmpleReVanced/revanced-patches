@@ -2,9 +2,8 @@ package app.revanced.patches.kakaotalk.layout.chatroom
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
-import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.cloneParameters
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
@@ -32,7 +31,7 @@ private const val CHANNEL_ID_EXTENSION = "Lapp/revanced/extension/kakaotalk/chat
 private const val BIND_CHANNEL_ID_METHOD = "revanced_bindChannelId"
 
 @Suppress("unused")
-val showChannelIdPatch = bytecodePatch(
+val showChannelIdPatch = patch(
     name = "Show chatroom channel ID",
     description = "Shows the channel ID in chatroom settings and copies it when tapping the chat side title.",
 ) {
@@ -46,7 +45,7 @@ val showChannelIdPatch = bytecodePatch(
     }
 }
 
-private fun BytecodePatchContext.addChatSideTitleCopy() {
+private fun addChatSideTitleCopy() {
     ChatRoomSideInitFingerprint.method.addInstructions(
         0,
         "invoke-static/range {p1 .. p2}, $CHANNEL_ID_EXTENSION->setCurrentChannelId(J)V",
@@ -86,7 +85,7 @@ private fun BytecodePatchContext.addChatSideTitleCopy() {
     )
 }
 
-private fun BytecodePatchContext.addChatRoomSettingsChannelId() {
+private fun addChatRoomSettingsChannelId() {
     val chatRoomIdField = ChatRoomSetIdFingerprint.method.instructions
         .firstNotNullOfOrNull { instruction ->
             instruction.takeIf { it.opcode == Opcode.IPUT_WIDE }

@@ -1,14 +1,14 @@
 package app.revanced.patches.kakaotalk.misc.packagename
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
-import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.patch.document
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.returnEarly
 import app.morphe.util.asSequence
 import app.morphe.util.getNode
 import org.w3c.dom.Element
 
-private val cloneTelemetryResourcePatch = resourcePatch {
+private val cloneTelemetryResourcePatch = patch {
     execute {
         document("AndroidManifest.xml").use { document ->
             val application = document.getNode("application") as Element
@@ -33,7 +33,7 @@ private val cloneTelemetryResourcePatch = resourcePatch {
     }
 }
 
-internal val cloneTelemetryPatch = bytecodePatch {
+internal val cloneTelemetryPatch = patch {
     dependsOn(cloneTelemetryResourcePatch)
 
     execute {

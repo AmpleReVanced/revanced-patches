@@ -14,6 +14,7 @@ public final class HomeComponentsPatch {
     private static final int GROUP_GALLERY_RANKING = 3;
     private static final int GROUP_LIVE_BEST = 4;
     private static final int GROUP_RECOMMENDED_POSTS = 5;
+    private static final int GROUP_SPACER = 6;
     private static final int UNKNOWN_TYPE = Integer.MIN_VALUE;
 
     private static volatile TypeSpec cachedTypeSpec;
@@ -39,12 +40,16 @@ public final class HomeComponentsPatch {
 
         TypeSpec typeSpec = getTypeSpec(rawTypeSpec);
         ArrayList<Object> filtered = null;
+        boolean previousHidden = false;
 
         for (int index = 0; index < items.size(); index++) {
             Object item = items.get(index);
             int type = getItemType(item, typeGetterName);
+            boolean hide = type != UNKNOWN_TYPE && (shouldHide(type, typeSpec)
+                    || previousHidden && typeSpec.contains(GROUP_SPACER, type));
+            previousHidden = hide;
 
-            if (type != UNKNOWN_TYPE && shouldHide(type, typeSpec)) {
+            if (hide) {
                 if (filtered == null) {
                     filtered = new ArrayList<>(items.size());
                     for (int copyIndex = 0; copyIndex < index; copyIndex++) {
@@ -120,7 +125,7 @@ public final class HomeComponentsPatch {
 
         static TypeSpec parse(String rawTypeSpec) {
             String[] parts = rawTypeSpec == null ? new String[0] : rawTypeSpec.split(";", -1);
-            int[][] groups = new int[6][];
+            int[][] groups = new int[GROUP_SPACER + 1][];
             for (int index = 0; index < groups.length; index++) {
                 groups[index] = index < parts.length ? parseGroup(parts[index]) : new int[0];
             }

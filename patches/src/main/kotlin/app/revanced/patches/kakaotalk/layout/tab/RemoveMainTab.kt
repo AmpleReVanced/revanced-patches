@@ -2,7 +2,6 @@ package app.revanced.patches.kakaotalk.layout.tab
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
-import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.util.smali.ExternalLabel
 import app.revanced.patches.kakaotalk.layout.tab.fingerprints.MainTabFingerprint
 import app.revanced.patches.kakaotalk.layout.tab.fingerprints.mainTabFingerprint
@@ -10,7 +9,7 @@ import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 
 private const val SETTINGS_CLASS = "Lapp/revanced/extension/kakaotalk/settings/Settings;"
 
-internal fun BytecodePatchContext.removeMainTab(tabName: String, settingMethod: String) {
+internal fun removeMainTab(tabName: String, settingMethod: String) {
     mainTabFingerprint(MainTabFingerprint.originalClassDef.type, tabName).apply {
         val tabIndex = instructionMatches.first().index
         val register = method.getInstruction<OneRegisterInstruction>(tabIndex).registerA

@@ -1,6 +1,8 @@
 package app.revanced.patches.dcinside.layout.history
 
 import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.util.getReference
+import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import app.morphe.patcher.methodCall
 import app.morphe.patcher.string
 import com.android.tools.smali.dexlib2.AccessFlags
@@ -17,21 +19,19 @@ internal object PostAuthorLineFingerprint : Fingerprint(
     parameters = listOf(POST_INFO_CLASS, "Z", "Ljava/lang/String;"),
     returnType = "V",
     filters = listOf(
-        methodCall(returnType = "Landroid/text/Spannable;"),
+        methodCall(
+            parameters = listOf("Landroid/content/Context;", "Ljava/lang/String;", "Ljava/lang/String;", "Ljava/lang/String;"),
+            returnType = "Landroid/text/SpannableStringBuilder;",
+        ),
     ),
 )
 
 // Must be an instance method, as the comment is read from the second call site register.
 internal object CommentAuthorLineFingerprint : Fingerprint(
-    isStatic = false,
+    isStatic = true,
     returnType = "Landroid/text/SpannableStringBuilder;",
     parameters = listOf("L", "Ljava/lang/String;", "Ljava/lang/String;", "Landroid/content/Context;"),
     filters = listOf(string("owner")),
-)
-
-internal object CommentUserIdBridgeFingerprint : Fingerprint(
-    definingClass = EXTENSION_CLASS,
-    name = "getCommentUserId",
 )
 
 internal object CommentPatchIncludedFingerprint : Fingerprint(
@@ -40,20 +40,20 @@ internal object CommentPatchIncludedFingerprint : Fingerprint(
 )
 
 internal object PostHistoryWriterFingerprint : Fingerprint(
-    accessFlags = listOf(AccessFlags.PRIVATE, AccessFlags.FINAL),
+    isStatic = true,
     parameters = listOf("L", POST_INFO_CLASS),
     returnType = "V",
-    strings = listOf("this.createObject(T::class.java, primaryKeyValue)"),
+    strings = listOf("postHistoryEnabled"),
 )
 
 internal object PostHistorySummaryBindFingerprint : Fingerprint(
-    definingClass = "Lcom/dcinside/app/history/",
-    accessFlags = listOf(AccessFlags.PUBLIC),
-    parameters = listOf("Lcom/codewaves/stickyheadergrid/a\$b;", "I", "I"),
+    parameters = listOf("L", "I", "I"),
     returnType = "V",
-    filters = listOf(
-        methodCall(returnType = "Landroid/text/Spannable;"),
-    ),
+    custom = { method, _ ->
+        method.implementation?.instructions?.any {
+            it.getReference<MethodReference>()?.definingClass == PostHistoryRealmProxyFingerprint.originalClassDef.superclass
+        } == true
+    },
 )
 
 internal const val POST_HISTORY_ACTIVITY_CLASS = "Lcom/dcinside/app/history/PostHistoryActivity;"
@@ -74,7 +74,7 @@ internal object PostHistoryActivityOnCreateFingerprint : Fingerprint(
 // The only method that stops the list from laying out while the item manager is rebuilt.
 internal object PostHistoryReloadFingerprint : Fingerprint(
     definingClass = POST_HISTORY_ACTIVITY_CLASS,
-    accessFlags = listOf(AccessFlags.PRIVATE, AccessFlags.FINAL),
+    isStatic = false,
     parameters = emptyList(),
     returnType = "V",
     filters = listOf(
@@ -83,10 +83,9 @@ internal object PostHistoryReloadFingerprint : Fingerprint(
 )
 
 internal object PostHistoryQueryFingerprint : Fingerprint(
-    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     parameters = listOf("L", "J", "J"),
-    returnType = "Ljava/util/List;",
-    strings = listOf("this.where(T::class.java)", "findAll(...)", "hide", "likes"),
+    returnType = "Ljava/util/ArrayList;",
+    strings = listOf("hide", "likes", "read", "reply"),
 )
 
 // The Realm proxy names every column next to the accessor that reads it,
@@ -95,11 +94,11 @@ internal object PostHistoryRealmProxyFingerprint : Fingerprint(
     name = "toString",
     parameters = emptyList(),
     returnType = "Ljava/lang/String;",
-    strings = listOf("PostHistory = proxy["),
+    strings = listOf("PostHistory = proxy[{key:"),
     filters = listOf(
-        string("{galleryId:"),
+        string("},{galleryId:"),
         methodCall(definingClass = "this", parameters = emptyList(), returnType = "Ljava/lang/String;"),
-        string("{galleryName:"),
+        string("},{galleryName:"),
         methodCall(definingClass = "this", parameters = emptyList(), returnType = "Ljava/lang/String;"),
     ),
 )

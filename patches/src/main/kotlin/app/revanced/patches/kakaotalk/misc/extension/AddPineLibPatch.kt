@@ -1,7 +1,9 @@
 package app.revanced.patches.kakaotalk.misc.extension
 
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.patch.document
+import app.morphe.patcher.patch.patch
+import app.morphe.patcher.patch.resourceFile
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import java.io.File
 
@@ -9,7 +11,7 @@ private const val PINE_LIB_RESOURCE_DIRECTORY = "kakaotalk/libpine"
 private val PINE_LIB_ABIS = listOf("armeabi-v7a", "arm64-v8a")
 
 @Suppress("unused")
-val addPineLibPatch = resourcePatch(
+val addPineLibPatch = patch(
     name = "Add Pine Lib",
     description = "add libpine.so to the app's native libraries",
     default = false
@@ -24,7 +26,7 @@ val addPineLibPatch = resourcePatch(
             val pineLib = classLoader.getResourceAsStream(resourcePath)?.use { it.readAllBytes() }
                 ?: throw PatchException("Failed to load libpine.so for $abi")
 
-            File(get("lib/$abi").toString()).apply {
+            File(resourceFile("lib/$abi").toString()).apply {
                 mkdirs()
                 File(this, "libpine.so").writeBytes(pineLib)
             }

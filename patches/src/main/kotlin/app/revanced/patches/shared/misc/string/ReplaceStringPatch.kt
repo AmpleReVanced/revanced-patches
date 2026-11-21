@@ -1,7 +1,7 @@
 package app.revanced.patches.shared.misc.string
 
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getReference
 import app.revanced.patches.all.misc.transformation.transformInstructionsPatch
 import com.android.tools.smali.dexlib2.ReferenceType
@@ -12,7 +12,7 @@ import kotlin.text.contains
 fun replaceStringPatch(
     from: String,
     to: String
-) = bytecodePatch(
+) = patch(
     description = "Replaces occurrences of '$from' with '$to' in string references.",
 ) {
     dependsOn(

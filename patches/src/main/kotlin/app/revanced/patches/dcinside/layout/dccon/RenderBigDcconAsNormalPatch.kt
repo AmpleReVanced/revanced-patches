@@ -1,7 +1,7 @@
 package app.revanced.patches.dcinside.layout.dccon
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.dcinside.misc.settings.PreferenceScreen
 import app.revanced.patches.dcinside.misc.settings.addSettingsPatch
@@ -12,12 +12,12 @@ private const val EXTENSION_CLASS =
     "Lapp/revanced/extension/dcinside/patches/RenderBigDcconAsNormalPatch;"
 
 @Suppress("unused")
-val renderBigDcconAsNormalPatch = bytecodePatch(
+val renderBigDcconAsNormalPatch = patch(
     name = "Render big DCCon as normal size",
     description = "Adds a setting to render big DCCon at normal DCCon size.",
 ) {
     compatibleWith(COMPATIBILITY_DC_INSIDE)
-    dependsOn(addSettingsPatch)
+    dependsOn(addSettingsPatch, postDcconPatch)
 
     execute {
         PreferenceScreen.FEATURES.addPreferences(
@@ -29,27 +29,7 @@ val renderBigDcconAsNormalPatch = bytecodePatch(
         )
         setExtensionIsPatchIncluded(EXTENSION_CLASS)
 
-        val postElementMethods = PostDcconImageHandlerFingerprint.method.inferPostElementMethods(this)
-
-        PostDcconImageHandlerFingerprint.method.addInstructionsWithLabels(
-            0,
-            """
-                invoke-static {}, $SETTINGS_CLASS->renderBigDcconAsNormal()Z
-                move-result v0
-                if-eqz v0, :morphe_post_big_dccon_continue
-
-                move-object/from16 v1, p1
-                const-string v0, "bigdccon"
-                ${postElementMethods.removeClassInvoke} {v1, v0}, ${postElementMethods.removeClass}
-
-                :morphe_post_big_dccon_continue
-                nop
-            """.trimIndent(),
-        )
-
-        val replyDcconImageFields = ReplyDcconBindFingerprint.method.inferReplyDcconImageFields(
-            ReplyDcconBindFingerprint.classDef.methods,
-        )
+        val replyDcconImageFields = ReplyDcconBindFingerprint.method.inferReplyDcconImageFields()
 
         ReplyDcconBindFingerprint.method.addInstructionsWithLabels(
             0,

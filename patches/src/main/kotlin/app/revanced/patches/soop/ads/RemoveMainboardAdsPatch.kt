@@ -3,7 +3,8 @@ package app.revanced.patches.soop.ads
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.mutableClassDefBy
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.returnEarly
 import app.revanced.patches.soop.ads.fingerprints.*
 import app.revanced.patches.soop.shared.Constants.COMPATIBILITY_SOOP
@@ -11,7 +12,7 @@ import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 
 @Suppress("unused")
-val removeMainboardAdsPatch = bytecodePatch(
+val removeMainboardAdsPatch = patch(
     name = "Remove main board ads",
     description = "Removes the native \"main board\" banner ad shown in feeds and under the live player.",
 ) {

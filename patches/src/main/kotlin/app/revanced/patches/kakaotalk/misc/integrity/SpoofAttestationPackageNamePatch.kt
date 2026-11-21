@@ -4,7 +4,7 @@ import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstructions
 import app.morphe.patcher.methodCall
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.util.indexOfFirstInstructionOrThrow
 import app.revanced.patches.kakaotalk.misc.integrity.fingerprints.AttestationPayloadFingerprint
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
@@ -14,7 +14,7 @@ import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 private const val ORIGINAL_PACKAGE_NAME = "com.kakao.talk"
 
 @Suppress("unused")
-val spoofAttestationPackageNamePatch = bytecodePatch(
+val spoofAttestationPackageNamePatch = patch(
     name = "Spoof attestation package name",
     description = "Reports the original package name in the attestation report, which otherwise " +
             "reveals a renamed install. Only the report is affected, so the app keeps using its " +

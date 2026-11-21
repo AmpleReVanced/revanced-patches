@@ -1,21 +1,23 @@
 package app.revanced.patches.kakaotalk.interaction.chatlog
 
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.removeInstructions
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.patcher.patch.resourcePatch
-import app.morphe.patcher.util.addInstructionsAtControlFlowLabel
+import app.morphe.patcher.patch.document
+import app.morphe.patcher.patch.mutableClassDefBy
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.cloneParameters
+import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patches.all.misc.resources.addResourcesPatch
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import app.morphe.util.cloneMutable
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.morphe.util.transformMethods
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatContextMenuActionLabelFingerprint
+import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatLogContextMenuActionsFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ChatLogFingerprint
-import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.realMessageActionsFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.threadMessageActionFilterFingerprint
 import app.revanced.patches.kakaotalk.misc.extension.addExtensionPatch
 import app.revanced.patches.kakaotalk.misc.extension.sharedExtensionPatch
@@ -26,7 +28,6 @@ import app.revanced.patches.kakaotalk.shared.addKakaoTalkResources
 import app.revanced.util.parameterTypeNames
 import app.revanced.util.smaliReference
 import com.android.tools.smali.dexlib2.AccessFlags
-import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import org.w3c.dom.Element
 
@@ -35,7 +36,7 @@ private const val EXTENSION_CLASS = "$DETAILS_PACKAGE/MessageDetailsExtension;"
 private const val ACTION_CLASS = "$DETAILS_PACKAGE/MessageDetailsAction;"
 private const val SOURCE_INTERFACE = "$DETAILS_PACKAGE/MessageDetailsSource;"
 
-private val registerMessageDetailsActivityPatch = resourcePatch {
+private val registerMessageDetailsActivityPatch = patch {
     execute {
         document("AndroidManifest.xml").use { document ->
             val application = document.getElementsByTagName("application").item(0) as Element
@@ -51,7 +52,7 @@ private val registerMessageDetailsActivityPatch = resourcePatch {
 }
 
 @Suppress("unused")
-val showMessageDetailsPatch = bytecodePatch(
+val showMessageDetailsPatch = patch(
     name = "Show message details",
     description = "Adds a long-press action to inspect the complete ChatLog object, including inherited and message-specific fields, as JSON.",
 ) {
@@ -82,14 +83,14 @@ val showMessageDetailsPatch = bytecodePatch(
 
         val actionBase = ChatContextMenuActionLabelFingerprint.classDef
         val actionType = actionBase.type
-        val actions = realMessageActionsFingerprint(chatLogType).method.cloneParameters()
-        val roomType = actions.parameterTypeNames[1]
         val constructor = actionBase.methods.singleOrNull {
             it.name == "<init>" && AccessFlags.PUBLIC.isSet(it.accessFlags) &&
-                it.parameterTypeNames == listOf(
-                    chatLogType, roomType, "Ljava/lang/Integer;", "Lkotlin/jvm/internal/DefaultConstructorMarker;",
-                )
+                it.parameterTypeNames.let { parameters ->
+                    parameters.size == 4 && parameters.first() == chatLogType &&
+                        parameters.takeLast(2) == listOf("Ljava/lang/Integer;", "Lkotlin/jvm/internal/DefaultConstructorMarker;")
+                }
         } ?: throw PatchException("Could not resolve the message action constructor.")
+        val roomType = constructor.parameterTypeNames[1]
         val performAction = actionBase.methods.singleOrNull {
             AccessFlags.ABSTRACT.isSet(it.accessFlags) &&
                 it.parameterTypeNames == listOf("Landroidx/fragment/app/FragmentActivity;") && it.returnType == "V"
@@ -130,17 +131,30 @@ val showMessageDetailsPatch = bytecodePatch(
             }
         }
 
-        actions.instructions.withIndex().filter { it.value.opcode == Opcode.RETURN_OBJECT }
-            .reversed().forEach { (index, instruction) ->
-                val register = (instruction as OneRegisterInstruction).registerA
-                actions.addInstructionsAtControlFlowLabel(
-                    index,
-                    """
-                        invoke-static {v$register, p1, p2}, $EXTENSION_CLASS->appendAction(Ljava/util/Set;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Set;
-                        move-result-object v$register
-                    """,
-                )
-            }
+        addMessageDetailsMenus(chatLogType)
+        preserveChatSwipeGestures()
+
+        ChatLogContextMenuActionsFingerprint.apply {
+            val result = instructionMatches[1]
+            val listRegister = result.getInstruction<OneRegisterInstruction>().registerA
+            val insertIndex = result.index + 1
+            val registers = method.getFreeRegisterProvider(insertIndex, 2, listRegister)
+            val roomRegister = registers.getFreeRegister4Bit()
+            val messageRegister = registers.getFreeRegister4Bit()
+            val message = classDef.instanceFields.single { it.type == chatLogType }
+            val room = classDef.instanceFields.single { it.type == roomType }
+
+            method.addInstructions(
+                insertIndex,
+                """
+                    move-object/from16 v$roomRegister, p0
+                    iget-object v$messageRegister, v$roomRegister, ${message.smaliReference}
+                    iget-object v$roomRegister, v$roomRegister, ${room.smaliReference}
+                    invoke-static {v$listRegister, v$messageRegister, v$roomRegister}, $EXTENSION_CLASS->prependAction(Ljava/util/List;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/List;
+                    move-result-object v$listRegister
+                """,
+            )
+        }
 
         threadMessageActionFilterFingerprint(actionType).method.cloneParameters().addInstructionsWithLabels(
             0,

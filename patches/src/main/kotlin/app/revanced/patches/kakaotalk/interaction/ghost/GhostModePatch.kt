@@ -1,7 +1,7 @@
 package app.revanced.patches.kakaotalk.interaction.ghost
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import app.morphe.util.setExtensionIsPatchIncluded
@@ -13,7 +13,7 @@ private const val EXTENSION_CLASS =
     "Lapp/revanced/extension/kakaotalk/patches/GhostModePatch;"
 
 @Suppress("unused")
-val ghostMode = bytecodePatch(
+val ghostMode = patch(
     name = "Ghost Mode",
     description = "Don't expose your typing status to the other party.",
 ) {

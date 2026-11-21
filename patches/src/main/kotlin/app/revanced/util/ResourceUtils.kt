@@ -1,22 +1,23 @@
 package app.revanced.util
 
-import app.morphe.patcher.patch.ResourcePatchContext
+import app.morphe.patcher.patch.decode
+import app.morphe.patcher.patch.resourceFile
 import java.io.File
 
-fun ResourcePatchContext.removeStringsElements(
+fun removeStringsElements(
     replacements: Array<String>
 ) {
     decode("res/values*/strings.xml").forEach { path ->
-        get(path).removeStringsElements(replacements)
+        resourceFile(path).removeStringsElements(replacements)
     }
 }
 
-fun ResourcePatchContext.removeStringsElements(
+fun removeStringsElements(
     paths: Array<String>,
     replacements: Array<String>
 ) {
     paths.forEach { path ->
-        get("res/$path/strings.xml").takeIf(File::isFile)?.removeStringsElements(replacements)
+        resourceFile("res/$path/strings.xml").takeIf(File::isFile)?.removeStringsElements(replacements)
     }
 }
 

@@ -1,3 +1,66 @@
+# [1.6.0-dev.6](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.5...v1.6.0-dev.6) (2026-11-21)
+
+
+### Bug Fixes
+
+* **dcinside:** match ad placement key on OneStore builds ([01a5c3a](https://github.com/AmpleReVanced/revanced-patches/commit/01a5c3a6f59b38226f0bf3ebf0277bbaa2f70043))
+
+# [1.6.0-dev.5](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.4...v1.6.0-dev.5) (2026-11-21)
+
+
+### Bug Fixes
+
+* **dcinside:** block every ad placement and skip ad SDK initialization ([af4d593](https://github.com/AmpleReVanced/revanced-patches/commit/af4d59362c94b142fcc19ef4aa8c6ae22a419666))
+* **dcinside:** hide spacers left behind by hidden home components ([c384883](https://github.com/AmpleReVanced/revanced-patches/commit/c38488344709c58931cb143b298c04d63d48514e))
+* **kakaotalk:** keep keyword logs saved before per-account storage ([feb4c69](https://github.com/AmpleReVanced/revanced-patches/commit/feb4c694ec4e837af122528b4c7f0c0dc54c6c6f))
+* **kakaotalk:** open links in the external browser on every route ([34b7ba5](https://github.com/AmpleReVanced/revanced-patches/commit/34b7ba5eeaf248d60c1f7e11bca012911bf963c6))
+* **settings:** prevent crashes from stale persisted preference values ([c304fbb](https://github.com/AmpleReVanced/revanced-patches/commit/c304fbb9e5a747e9fa2c9f14d6d7f387e921b809))
+
+# [1.6.0-dev.4](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.3...v1.6.0-dev.4) (2026-11-21)
+
+
+### Bug Fixes
+
+* **kakaotalk:** restore photo taps and prevent back swipes from triggering replies ([82cd324](https://github.com/AmpleReVanced/revanced-patches/commit/82cd32441b8c7e873958d27752b202e294294c68))
+
+
+### Features
+
+* **kakaotalk:** support version `26.10.1` ([b79022b](https://github.com/AmpleReVanced/revanced-patches/commit/b79022b35af06252a05ba61125fa758e42ce2d1a))
+
+# [1.6.0-dev.3](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.2...v1.6.0-dev.3) (2026-11-21)
+
+
+### Bug Fixes
+
+* **dcinside:** restore shared home component helpers to fix compilation ([378c8cf](https://github.com/AmpleReVanced/revanced-patches/commit/378c8cf201c6b34f588bffc80ad98a3ef2ef3a5b))
+
+
+### Features
+
+* **dcinside:** support version `5.3.25` ([80b0bf5](https://github.com/AmpleReVanced/revanced-patches/commit/80b0bf56f7badc6705bf41d0cdfb2da367d2a94d))
+
+# [1.6.0-dev.2](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.1...v1.6.0-dev.2) (2026-11-19)
+
+
+### Bug Fixes
+
+* **kakaotalk:** enable message details menus for all chat logs ([a97582a](https://github.com/AmpleReVanced/revanced-patches/commit/a97582a98df3aeb71cf12987194dd03a7be67d72))
+* **kakaotalk:** keep the bottom tab bar hidden during predictive back ([fd33286](https://github.com/AmpleReVanced/revanced-patches/commit/fd3328666b81e91e99e5653750f669c74b633001))
+
+
+### Features
+
+* **kakaotalk:** add SSL pinning toggle to debug settings ([fb20e6b](https://github.com/AmpleReVanced/revanced-patches/commit/fb20e6be724bc8cd498850641b0500f4428da026))
+* **kakaotalk:** support version `26.10.0` ([4341c1f](https://github.com/AmpleReVanced/revanced-patches/commit/4341c1f86795aaa6c2d639dfb0ca96eae1fd6789))
+
+# [1.6.0-dev.1](https://github.com/AmpleReVanced/revanced-patches/compare/v1.5.0...v1.6.0-dev.1) (2026-10-24)
+
+
+### Features
+
+* **kakaotalk:** support version `26.9.1` ([23bc0be](https://github.com/AmpleReVanced/revanced-patches/commit/23bc0be6db94b24abb37d9c8bd2a14c809d31104))
+
 # [1.5.0](https://github.com/AmpleReVanced/revanced-patches/compare/v1.4.0...v1.5.0) (2026-10-23)
 
 
