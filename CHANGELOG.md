@@ -1,3 +1,10 @@
+# [1.6.0-dev.7](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.6...v1.6.0-dev.7) (2026-11-21)
+
+
+### Bug Fixes
+
+* **dcinside:** stop the image ad patch from breaking OneStore class verification ([f8823fc](https://github.com/AmpleReVanced/revanced-patches/commit/f8823fc546a1e515df367fdd443e21fd2d47566c))
+
 # [1.6.0-dev.6](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.5...v1.6.0-dev.6) (2026-11-21)
 
 
