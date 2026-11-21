@@ -2,12 +2,13 @@ package app.revanced.patches.dcinside.ad.fingerprints
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.InstructionLocation.MatchAfterImmediately
+import app.morphe.patcher.StringComparisonType
 import app.morphe.patcher.methodCall
 import app.morphe.patcher.string
 
 internal object AdPlacementUnitsFingerprint : Fingerprint(
     filters = listOf(
-        string("and_ad_banner_read_top"),
+        string("ad_banner_read_top", comparison = StringComparisonType.ENDS_WITH),
         methodCall(
             parameters = listOf("Ljava/lang/String;"),
             returnType = "Ljava/util/List;",
