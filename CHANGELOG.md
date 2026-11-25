@@ -1,3 +1,10 @@
+# [1.6.0-dev.9](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.8...v1.6.0-dev.9) (2026-11-25)
+
+
+### Features
+
+* **kakaotalk:** add private memos for open chat members ([af20f66](https://github.com/AmpleReVanced/revanced-patches/commit/af20f66f526e08fa7e1cd3961b98238cf337dc0c))
+
 # [1.6.0-dev.8](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.7...v1.6.0-dev.8) (2026-11-25)
 
 

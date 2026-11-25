@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-11-25T03:07:24",
-  "description": "# [1.6.0-dev.8](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.7...v1.6.0-dev.8) (2026-11-25)\n\n\n### Bug Fixes\n\n* **dcinside:** show the author identifier in post lists again ([3c1476b](https://github.com/AmpleReVanced/revanced-patches/commit/3c1476b36bdbf29c55857736ea5a55a5c2b91477))\n\n\n### Features\n\n* **kakaotalk:** add read-hiding options to ghost mode ([2c2898d](https://github.com/AmpleReVanced/revanced-patches/commit/2c2898d6ff3a01063c082ca46170b0ad56b56210))",
-  "download_url": "https://github.com/AmpleReVanced/revanced-patches/releases/download/v1.6.0-dev.8/patches-1.6.0-dev.8.mpp",
+  "created_at": "2026-11-25T03:57:34",
+  "description": "# [1.6.0-dev.9](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.8...v1.6.0-dev.9) (2026-11-25)\n\n\n### Features\n\n* **kakaotalk:** add private memos for open chat members ([af20f66](https://github.com/AmpleReVanced/revanced-patches/commit/af20f66f526e08fa7e1cd3961b98238cf337dc0c))",
+  "download_url": "https://github.com/AmpleReVanced/revanced-patches/releases/download/v1.6.0-dev.9/patches-1.6.0-dev.9.mpp",
   "signature_download_url": "",
-  "version": "1.6.0-dev.8"
+  "version": "1.6.0-dev.9"
 }
