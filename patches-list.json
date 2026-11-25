@@ -1,6 +1,6 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.6.0-dev.7",
+  "version": "1.6.0-dev.8",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -2397,7 +2397,7 @@
     },
     {
       "name": "Ghost Mode",
-      "description": "Don't expose your typing status to the other party.",
+      "description": "Adds options to hide your typing status and to keep chats from being marked as read.",
       "default": true,
       "category": null,
       "compatiblePackages": [

@@ -1,3 +1,15 @@
+# [1.6.0-dev.8](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.7...v1.6.0-dev.8) (2026-11-25)
+
+
+### Bug Fixes
+
+* **dcinside:** show the author identifier in post lists again ([3c1476b](https://github.com/AmpleReVanced/revanced-patches/commit/3c1476b36bdbf29c55857736ea5a55a5c2b91477))
+
+
+### Features
+
+* **kakaotalk:** add read-hiding options to ghost mode ([2c2898d](https://github.com/AmpleReVanced/revanced-patches/commit/2c2898d6ff3a01063c082ca46170b0ad56b56210))
+
 # [1.6.0-dev.7](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.6...v1.6.0-dev.7) (2026-11-21)
 
 

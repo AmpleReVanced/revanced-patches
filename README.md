@@ -4,7 +4,7 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START -->
-> **[v1.6.0-dev.7](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.6.0-dev.7)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;129 patches total
+> **[v1.6.0-dev.8](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.6.0-dev.8)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;129 patches total
 <details>
 <summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;77 patches</summary>
 <br>
@@ -62,7 +62,7 @@
 | [Enable send big text](#enable-send-big-text) | Allows sending big text messages in KakaoTalk. |  |
 | [Force enable debug mode](#force-enable-debug-mode) | Enables debug mode in the app. |  |
 | [Force enable emoticon plus feature](#force-enable-emoticon-plus-feature) | Force enable emoticon plus feature (Unpurchased emoticon can be sent once per day) |  |
-| [Ghost Mode](#ghost-mode) | Don't expose your typing status to the other party. |  |
+| [Ghost Mode](#ghost-mode) | Adds options to hide your typing status and to keep chats from being marked as read. |  |
 | [Hide More tab Game tab](#hide-more-tab-game-tab) | Hides the Game tab from the More tab. |  |
 | [Hide More tab components](#hide-more-tab-components) | Adds options to hide components from the More tab. |  |
 | [Hook Package Manager](#hook-package-manager) | Hooks the Package Manager to bypass integrity checks. |  |
