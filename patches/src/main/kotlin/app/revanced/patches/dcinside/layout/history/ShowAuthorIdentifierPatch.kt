@@ -76,8 +76,14 @@ val showAuthorIdentifierPatch = patch(
         val userIdGetter = postInfo.gettersOf("user_id").first()
         val ipGetter = postInfo.gettersOf("ip").first()
 
-        val authorSpanBuilder = PostAuthorLineFingerprint.instructionMatches.single().instruction
-            .getReference<MethodReference>()!!
+        val authorLineBuilders = PostAuthorLineFingerprint.instructionMatches.single().instruction
+            .getReference<MethodReference>()!!.definingClass
+            .let { builderClass ->
+                classDefBy(builderClass).methods.filter {
+                    it.returnType == "Landroid/text/SpannableStringBuilder;" &&
+                        it.parameterTypes.firstOrNull() == "Landroid/content/Context;"
+                }.map { it.smaliReference }.toSet()
+            }
 
         // Posts and post lists render the author line in obfuscated classes, so every method that
         // builds one is patched instead of fingerprinting each of them.
@@ -88,7 +94,7 @@ val showAuthorIdentifierPatch = patch(
             model.gettersOf("name").forEach { nicknameGetter ->
                 val bridge = authorNameBridge(modelType, nicknameGetter, modelUserIdGetter, "formatPostAuthorName")
                 methodCall(nicknameGetter).matchAllMethodIndicesForEach(requireMatches = false) { index ->
-                    if (instructions.none { it.getReference<MethodReference>()?.smaliReference == authorSpanBuilder.smaliReference }) {
+                    if (instructions.none { it.getReference<MethodReference>()?.smaliReference in authorLineBuilders }) {
                         return@matchAllMethodIndicesForEach
                     }
                     val receiver = getInstruction(index).firstArgumentRegister
