@@ -51,6 +51,8 @@ import app.revanced.extension.kakaotalk.patches.StripImageMetadataPatch;
 
 public final class SettingsActivity extends Activity {
     private static final String PREF_GHOST_MODE = "morphe_pref_ghost_mode";
+    private static final String PREF_GHOST_READ = "morphe_pref_ghost_read";
+    private static final String PREF_GHOST_READ_ON_SEND = "morphe_pref_ghost_read_on_send";
     private static final String PREF_RESTORE_KEYWORD_LOG = "morphe_pref_restore_keyword_log";
     private static final String PREF_SHOW_MODIFIED_MESSAGE_SENDER_PROFILE =
             "morphe_pref_show_modified_message_sender_profile";
@@ -165,6 +167,8 @@ public final class SettingsActivity extends Activity {
             addPreferencesFromResource(requireResourceId("xml", "morphe_kakaotalk_settings_preferences"));
 
             bindSwitchIfIncluded(PREF_GHOST_MODE, Settings.GHOST_MODE, GhostModePatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_GHOST_READ, Settings.GHOST_READ, GhostModePatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_GHOST_READ_ON_SEND, Settings.GHOST_READ_ON_SEND, GhostModePatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_REMOVE_SHORT_FORM_TAB, Settings.REMOVE_SHORT_FORM_TAB, RemoveShortFormTabPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_REMOVE_SHOP_TAB, Settings.REMOVE_SHOP_TAB, RemoveShopTabPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_REMOVE_LOCAL_CONNECT_TAB, Settings.REMOVE_LOCAL_CONNECT_TAB, RemoveLocalConnectTabPatch.isPatchIncluded());

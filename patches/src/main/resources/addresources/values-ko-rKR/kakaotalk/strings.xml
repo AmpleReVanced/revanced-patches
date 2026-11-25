@@ -48,8 +48,12 @@
     <string name="morphe_settings_section_debug">디버그</string>
     <string name="morphe_settings_section_manage">관리</string>
     <string name="morphe_settings_section_links">링크</string>
-    <string name="morphe_settings_patch_ghost_mode">고스트 모드</string>
+    <string name="morphe_settings_patch_ghost_mode">입력 중 상태 숨기기</string>
     <string name="morphe_settings_patch_ghost_mode_summary">상대방에게 입력 중 상태나 현재 동작 정보가 전달되지 않도록 합니다.</string>
+    <string name="morphe_settings_section_ghost_mode">고스트 모드</string>
+    <string name="morphe_settings_section_ghost_mode_summary">입력 중 상태를 숨기고 읽음 처리되지 않도록 합니다.</string>
+    <string name="morphe_settings_patch_ghost_read">채팅방 입장 시 읽음 처리 안 함</string>
+    <string name="morphe_settings_patch_ghost_read_on_send">메시지 보낼 때 읽음 처리 안 함</string>
     <string name="morphe_settings_patch_disable_99_unread_limit">읽지 않은 수 전체 표시</string>
     <string name="morphe_settings_patch_disable_99_unread_limit_summary">읽지 않은 수를 99+로 줄이지 않고 실제 숫자로 표시합니다.</string>
     <string name="morphe_settings_patch_allow_invisible_characters">투명 문자 허용</string>
@@ -136,6 +140,8 @@
     <string name="morphe_pref_show_modified_message_sender_profile_summary">메시지 수정 이력에서 보낸 사람의 프로필 사진과 닉네임을 표시합니다.</string>
     <string name="morphe_pref_bypass_moat_integrity_check_summary">카카오페이를 실행하는 데 필요할 수 있습니다. 무결성 감지 경로를 우회하므로 위험을 이해한 경우에만 사용하세요.</string>
     <string name="morphe_pref_ghost_mode_summary">상대방에게 입력 중 상태나 현재 동작 정보가 전달되지 않도록 합니다.</string>
+    <string name="morphe_pref_ghost_read_summary">채팅방에 들어가도 읽음 처리되지 않고, 내 채팅 목록에서도 안 읽은 상태로 남습니다.</string>
+    <string name="morphe_pref_ghost_read_on_send_summary">메시지를 보내도 이전 메시지가 읽음 처리되지 않습니다. 위 옵션을 켜야 설정할 수 있습니다.</string>
     <string name="morphe_pref_force_debug_mode_summary">카카오톡 내부 디버그 플래그를 강제로 켭니다.</string>
     <string name="morphe_pref_default_external_browser_summary">외부 링크를 카카오톡 내부 브라우저 대신 기본 브라우저로 엽니다.</string>
     <string name="morphe_pref_debug_summary">Morphe 패치의 추가 진단 로그를 기록합니다.</string>

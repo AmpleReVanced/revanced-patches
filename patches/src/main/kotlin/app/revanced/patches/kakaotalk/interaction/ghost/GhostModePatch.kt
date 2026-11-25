@@ -1,31 +1,73 @@
 package app.revanced.patches.kakaotalk.interaction.ghost
 
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
+import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
+import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.methodCall
+import app.morphe.patcher.patch.classDefBy
 import app.morphe.patcher.patch.patch
+import app.morphe.patcher.util.addInstructionsAtControlFlowLabel
 import app.morphe.patcher.util.getFreeRegisterProvider
+import app.morphe.patcher.util.getReference
+import app.morphe.patcher.util.matchAllMethodIndicesForEach
+import app.morphe.patcher.util.smali.ExternalLabel
+import app.morphe.patches.shared.misc.settings.preference.MORPHE_PREFERENCE_SCREEN_LAYOUT
+import app.morphe.patches.shared.misc.settings.preference.PreferenceScreenPreference
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.kakaotalk.misc.settings.PreferenceScreen
 import app.revanced.patches.kakaotalk.misc.settings.addSettingsTabPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
+import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
+import com.android.tools.smali.dexlib2.iface.reference.MethodReference
+import com.android.tools.smali.dexlib2.iface.reference.Reference
 
 private const val EXTENSION_CLASS =
     "Lapp/revanced/extension/kakaotalk/patches/GhostModePatch;"
 
+private const val LOCO_IGNORABLE_EXCEPTION =
+    "Lcom/kakao/talk/core/loco/exception/LocoIgnorableException;"
+
+private val LOCAL_READ_HOOKS = mapOf(
+    "ChatLogController.kt" to "viewedLogId",
+    "ChatThreadChatLogController.kt" to "viewedLogId",
+    "ChatRoomController.kt" to "viewedLogId",
+    "ChatSendingLogRequest.kt" to "sentLogId",
+)
+
 @Suppress("unused")
 val ghostMode = patch(
     name = "Ghost Mode",
-    description = "Don't expose your typing status to the other party.",
+    description = "Adds options to hide your typing status and to keep chats from being marked as read.",
 ) {
     compatibleWith(COMPATIBILITY_KAKAO)
     dependsOn(addSettingsTabPatch)
 
     execute {
         PreferenceScreen.CHAT.addPreferences(
-            SwitchPreference(
-                key = "morphe_pref_ghost_mode",
-                titleKey = "morphe_settings_patch_ghost_mode",
-                summary = true,
+            PreferenceScreenPreference(
+                key = "morphe_pref_ghost_mode_screen",
+                titleKey = "morphe_settings_section_ghost_mode",
+                summaryKey = "morphe_settings_section_ghost_mode_summary",
+                layout = MORPHE_PREFERENCE_SCREEN_LAYOUT,
+                preferences = setOf(
+                    SwitchPreference(
+                        key = "morphe_pref_ghost_mode",
+                        titleKey = "morphe_settings_patch_ghost_mode",
+                        summary = true,
+                    ),
+                    SwitchPreference(
+                        key = "morphe_pref_ghost_read",
+                        titleKey = "morphe_settings_patch_ghost_read",
+                        summary = true,
+                    ),
+                    SwitchPreference(
+                        key = "morphe_pref_ghost_read_on_send",
+                        titleKey = "morphe_settings_patch_ghost_read_on_send",
+                        summary = true,
+                    ),
+                ),
             ),
         )
         setExtensionIsPatchIncluded(EXTENSION_CLASS)
@@ -52,5 +94,81 @@ val ghostMode = patch(
                 nop
             """
         )
+
+        ChatOnRoomRequestFingerprint.method.apply {
+            val register = getFreeRegisterProvider(0, 1).getFreeRegister4Bit()
+            addInstructionsWithLabels(
+                0,
+                """
+                    invoke-static {}, Lapp/revanced/extension/kakaotalk/settings/Settings;->enableGhostRead()Z
+                    move-result v$register
+                    if-eqz v$register, :ghost_read_off
+                    new-instance v$register, $LOCO_IGNORABLE_EXCEPTION
+                    invoke-direct {v$register}, $LOCO_IGNORABLE_EXCEPTION-><init>()V
+                    throw v$register
+                """,
+                ExternalLabel("ghost_read_off", getInstruction(0)),
+            )
+        }
+
+        val readPointer = ReadPointerFingerprint.method
+        val readLogId = ReadPointerFingerprint.readLogId
+        MessageUnreadCountFingerprint.let {
+            val (type, yours, userId, logId, unreadCount) = it.instructionMatches.map { match ->
+                match.instruction.getReference<Reference>()!!
+            }
+            it.method.addInstructionsWithLabels(
+                0,
+                """
+                    iget-object v0, p0, $type
+                    sget-object v1, $yours
+                    if-ne v0, v1, :ghost_unread_off
+                    iget-wide v0, p0, $logId
+                    iget-wide v2, p1, $readLogId
+                    invoke-static/range {v0 .. v3}, $EXTENSION_CLASS->isUnreadByMe(JJ)Z
+                    move-result v2
+                    if-eqz v2, :ghost_unread_off
+                    iget-wide v2, p0, $userId
+                    invoke-virtual {p1, v2, v3, v0, v1}, $unreadCount
+                    move-result v0
+                    add-int/lit8 v0, v0, 0x1
+                    const/16 v1, 0x63
+                    invoke-static {v0, v1}, Ljava/lang/Math;->min(II)I
+                    move-result v0
+                    return v0
+                """,
+                ExternalLabel("ghost_unread_off", it.method.getInstruction(0)),
+            )
+        }
+
+        ReadPointerFingerprint.classDef.methods.filter { method ->
+            method.parameterTypes.firstOrNull() == "J" &&
+                method.instructions.any { it.getReference<MethodReference>() == readPointer }
+        }.forEach { localRead ->
+            methodCall(localRead).matchAllMethodIndicesForEach { index ->
+                val hook = LOCAL_READ_HOOKS[classDefBy(definingClass).sourceFile]
+                    ?: return@matchAllMethodIndicesForEach
+                val logId = getInstruction<FiveRegisterInstruction>(index).registerD
+                addInstructionsAtControlFlowLabel(
+                    index,
+                    """
+                        invoke-static/range {v$logId .. v${logId + 1}}, $EXTENSION_CLASS->$hook(J)J
+                        move-result-wide v$logId
+                    """,
+                )
+            }
+        }
+
+        NoSeenBodyFingerprint.matchAll().forEach { match ->
+            val put = match.instructionMatches.last()
+            val value = put.getInstruction<FiveRegisterInstruction>().registerE
+            match.method.addInstructions(
+                put.index,
+                """
+                    invoke-static {v$value}, $EXTENSION_CLASS->noSeen(Ljava/lang/Boolean;)Ljava/lang/Boolean;
+                    move-result-object v$value
+                """,
+            )
+        }
     }
 }

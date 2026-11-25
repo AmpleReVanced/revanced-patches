@@ -33,6 +33,8 @@ import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.chatLogOw
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.chatRoomMemberSetGetterFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.normalMemberProfileFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.openMemberProfileFingerprint
+import app.revanced.patches.kakaotalk.interaction.ghost.ReadPointerFingerprint
+import app.revanced.patches.kakaotalk.interaction.ghost.readLogId
 import app.revanced.patches.kakaotalk.misc.extension.addExtensionPatch
 import app.revanced.patches.kakaotalk.misc.extension.sharedExtensionPatch
 import app.revanced.patches.kakaotalk.misc.settings.PreferenceScreen
@@ -58,6 +60,8 @@ import org.w3c.dom.Element
 
 private const val OWNER_ID_METHOD = "revanced_read_receipt_owner_id"
 private const val MEMBER_SET_BY_CHAT_ID_METHOD = "revanced_read_receipt_member_set_by_chat_id"
+private const val CHAT_ROOM_BY_CHAT_ID_METHOD = "revanced_read_receipt_chat_room_by_chat_id"
+private const val READ_LOG_ID_BY_CHAT_ID_METHOD = "revanced_read_receipt_read_log_id_by_chat_id"
 private const val WATERMARKS_METHOD = "revanced_read_receipt_watermarks"
 private const val ACTIVE_COUNT_METHOD = "revanced_read_receipt_active_count"
 private const val CURRENT_USER_ID_METHOD = "revanced_read_receipt_current_user_id"
@@ -241,6 +245,7 @@ val showMessageReadReceiptsPatch = patch(
                 chatLogType = chatLogType,
                 getChatRoom = getChatRoom,
                 memberSetGetter = memberSetGetter,
+                readLogIdField = ReadPointerFingerprint.readLogId,
             ),
         )
 
@@ -451,45 +456,83 @@ private fun chatLogBridgeMethods(
     chatLogType: String,
     getChatRoom: MethodReference,
     memberSetGetter: Method,
-) = listOf(
-    bridgeMethod(
-        definingClass = chatLogType,
-        name = OWNER_ID_METHOD,
-        returnType = "J",
-        registerCount = 3,
-        instructions = """
-            invoke-virtual {p0}, ${chatLogOwnerIdGetter()}
-            move-result-wide v0
-            return-wide v0
-        """.trimIndent(),
-    ),
-    bridgeMethod(
-        definingClass = chatLogType,
-        name = MEMBER_SET_BY_CHAT_ID_METHOD,
-        parameterTypes = listOf("J", "J"),
-        returnType = "Ljava/lang/Object;",
-        accessFlags = AccessFlags.PUBLIC.value or AccessFlags.STATIC.value or AccessFlags.FINAL.value,
-        registerCount = 7,
-        instructions = """
-            sget-object v0, ${AccountChatRoomManagerFingerprint.provider.smaliReference}
-            invoke-virtual {v0}, ${CurrentOwnerIdFingerprint.originalMethod}
-            move-result-wide v1
-            cmp-long v1, v1, p2
-            if-nez v1, :revanced_missing_chat_room
-            invoke-virtual {v0, p2, p3}, ${AccountChatRoomManagerFingerprint.originalMethod}
-            move-result-object v0
-            invoke-virtual {v0, p0, p1}, ${getChatRoom.smaliReference}
-            move-result-object v0
-            if-eqz v0, :revanced_missing_chat_room
-            invoke-virtual {v0}, ${memberSetGetter.smaliReference}
-            move-result-object v0
-            return-object v0
-            :revanced_missing_chat_room
-            const/4 v0, 0x0
-            return-object v0
-        """.trimIndent(),
-    ),
-)
+    readLogIdField: FieldReference,
+): List<MutableMethod> {
+    val staticAccess = AccessFlags.PUBLIC.value or AccessFlags.STATIC.value or AccessFlags.FINAL.value
+    val chatRoom = "$chatLogType->$CHAT_ROOM_BY_CHAT_ID_METHOD(JJ)${getChatRoom.returnType}"
+
+    return listOf(
+        bridgeMethod(
+            definingClass = chatLogType,
+            name = OWNER_ID_METHOD,
+            returnType = "J",
+            registerCount = 3,
+            instructions = """
+                invoke-virtual {p0}, ${chatLogOwnerIdGetter()}
+                move-result-wide v0
+                return-wide v0
+            """.trimIndent(),
+        ),
+        bridgeMethod(
+            definingClass = chatLogType,
+            name = CHAT_ROOM_BY_CHAT_ID_METHOD,
+            parameterTypes = listOf("J", "J"),
+            returnType = getChatRoom.returnType,
+            accessFlags = staticAccess,
+            registerCount = 7,
+            instructions = """
+                sget-object v0, ${AccountChatRoomManagerFingerprint.provider.smaliReference}
+                invoke-virtual {v0}, ${CurrentOwnerIdFingerprint.originalMethod}
+                move-result-wide v1
+                cmp-long v1, v1, p2
+                if-nez v1, :revanced_missing_chat_room
+                invoke-virtual {v0, p2, p3}, ${AccountChatRoomManagerFingerprint.originalMethod}
+                move-result-object v0
+                invoke-virtual {v0, p0, p1}, ${getChatRoom.smaliReference}
+                move-result-object v0
+                return-object v0
+                :revanced_missing_chat_room
+                const/4 v0, 0x0
+                return-object v0
+            """.trimIndent(),
+        ),
+        bridgeMethod(
+            definingClass = chatLogType,
+            name = MEMBER_SET_BY_CHAT_ID_METHOD,
+            parameterTypes = listOf("J", "J"),
+            returnType = "Ljava/lang/Object;",
+            accessFlags = staticAccess,
+            registerCount = 5,
+            instructions = """
+                invoke-static {p0, p1, p2, p3}, $chatRoom
+                move-result-object v0
+                if-eqz v0, :revanced_missing_chat_room
+                invoke-virtual {v0}, ${memberSetGetter.smaliReference}
+                move-result-object v0
+                :revanced_missing_chat_room
+                return-object v0
+            """.trimIndent(),
+        ),
+        bridgeMethod(
+            definingClass = chatLogType,
+            name = READ_LOG_ID_BY_CHAT_ID_METHOD,
+            parameterTypes = listOf("J", "J"),
+            returnType = "J",
+            accessFlags = staticAccess,
+            registerCount = 6,
+            instructions = """
+                invoke-static {p0, p1, p2, p3}, $chatRoom
+                move-result-object v0
+                if-eqz v0, :revanced_missing_chat_room
+                iget-wide v0, v0, ${readLogIdField.smaliReference}
+                return-wide v0
+                :revanced_missing_chat_room
+                const-wide v0, 0x7fffffffffffffffL
+                return-wide v0
+            """.trimIndent(),
+        ),
+    )
+}
 
 internal fun bridgeMethod(
     definingClass: String,

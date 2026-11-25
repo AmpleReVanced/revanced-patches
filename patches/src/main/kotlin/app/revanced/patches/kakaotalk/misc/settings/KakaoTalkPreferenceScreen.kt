@@ -191,7 +191,12 @@ internal object PreferenceScreen : BasePreferenceScreen(MORPHE_PREFERENCE_SCREEN
 
     override fun commit(screen: PreferenceScreenPreference) {
         kakaoTalkSettingsPreferences.removeAll { it.key == screen.key }
-        kakaoTalkSettingsPreferences += screen
+        kakaoTalkSettingsPreferences += with(screen) {
+            PreferenceScreenPreference(
+                key, titleKey!!, summaryKey, icon, iconBold, layout,
+                preferences = preferences.sortedBy { it !is PreferenceScreenPreference }.toSet(),
+            )
+        }
     }
 }
 

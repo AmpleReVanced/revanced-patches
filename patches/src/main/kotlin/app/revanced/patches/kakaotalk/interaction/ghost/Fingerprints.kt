@@ -1,7 +1,12 @@
 package app.revanced.patches.kakaotalk.interaction.ghost
 
 import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.InstructionLocation.MatchAfterImmediately
 import app.morphe.patcher.OpcodesFilter
+import app.morphe.patcher.fieldAccess
+import app.morphe.patcher.methodCall
+import app.morphe.patcher.newInstance
+import app.morphe.patcher.string
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.util.getReference
@@ -86,4 +91,49 @@ internal object ProtocolSuccessFingerprint : Fingerprint(
         ")"
     ),
     custom = { method, classDef -> classDef.sourceFile == "ProtocolResult.kt" && method.name == "toString" }
+)
+
+private object ChatOnRoomJobFingerprint : Fingerprint(
+    filters = listOf(string("chatId"), string("token"), string("opt")),
+    custom = { _, classDef -> classDef.sourceFile == "ChatOnRoomJob.kt" },
+)
+
+internal object ChatOnRoomRequestFingerprint : Fingerprint(
+    returnType = "Ljava/lang/Object;",
+    filters = listOf(newInstance(type = { ChatOnRoomJobFingerprint.classDef.type })),
+    custom = { _, classDef -> classDef.sourceFile == "Protocol.kt" },
+)
+
+internal object NoSeenBodyFingerprint : Fingerprint(
+    superclass = "Lcom/kakao/talk/core/loco/protocol/job/LocoJob;",
+    filters = listOf(
+        string("noSeen"),
+        methodCall(
+            parameters = listOf("Ljava/lang/String;", "Ljava/lang/Object;"),
+            location = MatchAfterImmediately(),
+        ),
+    ),
+)
+
+internal object ReadPointerFingerprint : Fingerprint(
+    returnType = "Z",
+    parameters = listOf("L", "J"),
+    filters = listOf(string("last_read_log_id")),
+    custom = { _, classDef -> classDef.sourceFile == "ChatRoom.kt" },
+)
+
+internal val ReadPointerFingerprint.readLogId
+    get() = method.instructions.first { it.opcode == Opcode.IPUT_WIDE }.getReference<FieldReference>()!!
+
+internal object MessageUnreadCountFingerprint : Fingerprint(
+    returnType = "I",
+    parameters = listOf("L"),
+    filters = listOf(
+        fieldAccess(opcode = Opcode.IGET_OBJECT),
+        fieldAccess(opcode = Opcode.SGET_OBJECT, name = "YOURS", location = MatchAfterImmediately()),
+        fieldAccess(opcode = Opcode.IGET_WIDE),
+        fieldAccess(opcode = Opcode.IGET_WIDE, location = MatchAfterImmediately()),
+        methodCall(parameters = listOf("J", "J"), returnType = "I", location = MatchAfterImmediately()),
+    ),
+    custom = { _, classDef -> classDef.sourceFile == "ChatLogRecyclerItem.kt" },
 )

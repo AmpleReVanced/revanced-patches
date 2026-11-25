@@ -1,5 +1,7 @@
 package app.revanced.extension.kakaotalk.settings;
 
+import static app.morphe.extension.shared.settings.Setting.parent;
+import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 import app.morphe.extension.shared.settings.BaseSettings;
@@ -39,6 +41,12 @@ public final class Settings extends BaseSettings {
 
     public static final BooleanSetting GHOST_MODE =
             new BooleanSetting("kakaotalk_ghost_mode", TRUE);
+
+    public static final BooleanSetting GHOST_READ =
+            new BooleanSetting("kakaotalk_ghost_read", FALSE);
+
+    public static final BooleanSetting GHOST_READ_ON_SEND =
+            new BooleanSetting("kakaotalk_ghost_read_on_send", FALSE, parent(GHOST_READ));
 
     public static final BooleanSetting REMOVE_SHORT_FORM_TAB =
             new BooleanSetting("kakaotalk_remove_short_form_tab", TRUE, true);
@@ -137,6 +145,14 @@ public final class Settings extends BaseSettings {
 
     public static boolean enableGhostMode() {
         return GHOST_MODE.get();
+    }
+
+    public static boolean enableGhostRead() {
+        return GHOST_READ.get();
+    }
+
+    public static boolean enableGhostReadOnSend() {
+        return GHOST_READ.get() && GHOST_READ_ON_SEND.get();
     }
 
     public static boolean removeShortFormTab() {

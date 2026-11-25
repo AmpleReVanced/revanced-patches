@@ -64,8 +64,12 @@ Second \"item\" text"</string>
     <string name="morphe_settings_section_debug">Debug</string>
     <string name="morphe_settings_section_manage">Manage</string>
     <string name="morphe_settings_section_links">Links</string>
-    <string name="morphe_settings_patch_ghost_mode">Ghost mode</string>
+    <string name="morphe_settings_patch_ghost_mode">Hide typing status</string>
     <string name="morphe_settings_patch_ghost_mode_summary">Prevents typing and activity updates from being sent to the other side.</string>
+    <string name="morphe_settings_section_ghost_mode">Ghost mode</string>
+    <string name="morphe_settings_section_ghost_mode_summary">Hides your typing status and keeps chats from being marked as read.</string>
+    <string name="morphe_settings_patch_ghost_read">Don’t mark as read when opening chats</string>
+    <string name="morphe_settings_patch_ghost_read_on_send">Don’t mark as read when sending</string>
     <string name="morphe_settings_patch_disable_99_unread_limit">Show full unread count</string>
     <string name="morphe_settings_patch_disable_99_unread_limit_summary">Shows the full unread count instead of limiting the badge to 99+.</string>
     <string name="morphe_settings_patch_allow_invisible_characters">Allow invisible characters</string>
@@ -152,6 +156,8 @@ Second \"item\" text"</string>
     <string name="morphe_pref_show_modified_message_sender_profile_summary">Shows the sender’s profile image and nickname in message edit history.</string>
     <string name="morphe_pref_bypass_moat_integrity_check_summary">May be required to launch KakaoPay. This bypasses an integrity detection path. Use at your own risk.</string>
     <string name="morphe_pref_ghost_mode_summary">Prevents typing and activity updates from being sent to the other side.</string>
+    <string name="morphe_pref_ghost_read_summary">Opening a chat room does not mark its messages as read, and they stay unread in your chat list too.</string>
+    <string name="morphe_pref_ghost_read_on_send_summary">Sending a message does not mark earlier messages as read. Requires the option above.</string>
     <string name="morphe_pref_force_debug_mode_summary">Forces KakaoTalk’s internal debug flag on.</string>
     <string name="morphe_pref_default_external_browser_summary">Opens external links in the default browser instead of KakaoTalk’s in-app browser.</string>
     <string name="morphe_pref_debug_summary">Writes additional diagnostic logs for Morphe patches.</string>
