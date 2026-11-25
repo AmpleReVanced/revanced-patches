@@ -48,6 +48,9 @@ public final class Settings extends BaseSettings {
     public static final BooleanSetting GHOST_READ_ON_SEND =
             new BooleanSetting("kakaotalk_ghost_read_on_send", FALSE, parent(GHOST_READ));
 
+    public static final BooleanSetting MEMBER_MEMO_NICKNAME =
+            new BooleanSetting("kakaotalk_member_memo_nickname", TRUE);
+
     public static final BooleanSetting REMOVE_SHORT_FORM_TAB =
             new BooleanSetting("kakaotalk_remove_short_form_tab", TRUE, true);
 

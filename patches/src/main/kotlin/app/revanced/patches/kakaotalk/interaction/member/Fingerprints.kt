@@ -62,3 +62,19 @@ internal fun kickButtonEligibilityFingerprint(kickButtonBuilder: MethodReference
         methodCall(kickButtonBuilder),
     ),
 )
+
+internal object OpenProfileViewerCreateFingerprint : Fingerprint(
+    definingClass = "Lcom/kakao/talk/openlink/openprofile/viewer/OpenProfileViewerActivity;",
+    name = "onCreate",
+    parameters = listOf("Landroid/os/Bundle;"),
+    returnType = "V",
+    filters = listOf(methodCall(name = "onCreate", opcode = Opcode.INVOKE_SUPER)),
+)
+
+internal object OlkProfileCreateFingerprint : Fingerprint(
+    definingClass = "Lcom/kakao/talk/openlink/profile/OlkProfileActivity;",
+    name = "onCreate",
+    parameters = listOf("Landroid/os/Bundle;"),
+    returnType = "V",
+    filters = listOf(methodCall(name = "onCreate", opcode = Opcode.INVOKE_SUPER)),
+)
