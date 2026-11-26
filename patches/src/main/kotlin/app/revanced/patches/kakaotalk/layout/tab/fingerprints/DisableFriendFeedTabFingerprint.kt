@@ -6,7 +6,13 @@ import app.morphe.patcher.methodCall
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
+private object MainTabConfigToStringFingerprint : Fingerprint(
+    name = "toString",
+    strings = listOf(", isNowTabEnabled="),
+)
+
 internal object MainTabConfigFingerprint : Fingerprint(
+    classFingerprint = MainTabConfigToStringFingerprint,
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.CONSTRUCTOR),
     returnType = "V",
     filters = OpcodesFilter.opcodesToFilters(

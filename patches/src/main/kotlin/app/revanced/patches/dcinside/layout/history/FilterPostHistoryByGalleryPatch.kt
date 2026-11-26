@@ -13,7 +13,6 @@ import app.morphe.patcher.patch.mutableClassDefBy
 import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patcher.util.getReference
-import app.morphe.patcher.util.matchSingle
 import app.morphe.patcher.util.proxy.mutableTypes.MutableClass
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
@@ -76,9 +75,7 @@ private val filterPostHistoryByGalleryBytecodePatch = patch {
         GalleryIdBridgeFingerprint.returnAccessor(galleryId)
         GalleryNameBridgeFingerprint.returnAccessor(galleryName)
 
-        // Matched exhaustively, as the query is anchored on its shape and the types it
-        // declares drive the field read and the call the collect bridge below emits.
-        val queryMatch = PostHistoryQueryFingerprint.matchSingle()
+        val queryMatch = PostHistoryQueryFingerprint.match()
         val queryMethod = queryMatch.originalMethod
         val realmType = queryMethod.parameterTypes.first().toString()
         val itemManagerType = queryMethod.definingClass

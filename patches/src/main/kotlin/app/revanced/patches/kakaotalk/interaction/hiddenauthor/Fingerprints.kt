@@ -29,6 +29,12 @@ internal object LocoChatLogFeedFingerprint : Fingerprint(
         methodCall(parameters = emptyList(), returnType = "J"),
         methodCall(parameters = emptyList(), returnType = "J"),
         methodCall(parameters = emptyList(), returnType = "Ljava/lang/String;"),
+        methodCall(
+            parameters = listOf(
+                "Ljava/lang/Long;", "J", "J", "Ljava/lang/String;",
+                "Lcom/kakao/talk/loco/net/model/feed/helper/ModifiedChatLog;",
+            ),
+        ),
     ),
     custom = { method, classDef ->
         classDef.sourceFile == "IOverwriteFeed.kt" &&

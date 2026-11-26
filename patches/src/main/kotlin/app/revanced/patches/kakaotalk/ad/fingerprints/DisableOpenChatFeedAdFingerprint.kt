@@ -1,10 +1,8 @@
 package app.revanced.patches.kakaotalk.ad.fingerprints
 
 import app.morphe.patcher.Fingerprint
-import app.morphe.patcher.OpcodesFilter
-import app.revanced.util.hasMethodCall
+import app.morphe.patcher.methodCall
 import com.android.tools.smali.dexlib2.AccessFlags
-import com.android.tools.smali.dexlib2.Opcode
 
 internal object OpenChatFeedAdapterFingerprint : Fingerprint(
     name = "getItemViewType",
@@ -22,40 +20,17 @@ internal object OpenChatFeedAdItemFingerprint : Fingerprint(
 internal object OpenChatFeedAdLoadFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     returnType = "V",
-    filters = OpcodesFilter.opcodesToFilters(
-        Opcode.SGET_OBJECT,
-        Opcode.INVOKE_VIRTUAL,
-        Opcode.MOVE_RESULT_OBJECT,
-        Opcode.INVOKE_VIRTUAL,
-        Opcode.MOVE_RESULT_OBJECT,
-    ),
+    filters = listOf(methodCall(definingClass = "Lcom/kakao/adfit/ads/feed/FeedAdLoader;", name = "loadAd", returnType = "Z")),
     custom = { method, classDef ->
-        classDef.sourceFile == "OpenChatTabFeedAdViewHolder.kt" &&
-                method.parameterTypes.size == 2 &&
-                method.hasMethodCall(
-                    "Lcom/kakao/adfit/ads/feed/FeedAdLoader;",
-                    "loadAd",
-                    "Z"
-                )
+        classDef.sourceFile == "OpenChatTabFeedAdViewHolder.kt" && method.parameterTypes.size == 2
     }
 )
 
 internal object OpenChatFeedAdRenderFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     returnType = "V",
-    filters = OpcodesFilter.opcodesToFilters(
-        Opcode.INVOKE_VIRTUAL,
-        Opcode.MOVE_RESULT_OBJECT,
-        Opcode.CHECK_CAST,
-        Opcode.IGET_OBJECT
-    ),
+    filters = listOf(methodCall(definingClass = "Lcom/kakao/adfit/ads/feed/FeedAdLayout;", name = "setFeedAd", returnType = "V")),
     custom = { method, classDef ->
-        classDef.sourceFile == "OpenChatTabFeedAdViewHolder.kt" &&
-                method.parameterTypes.size == 3 &&
-                method.hasMethodCall(
-                    "Lcom/kakao/adfit/ads/feed/FeedAdLayout;",
-                    "setFeedAd",
-                    "V"
-                )
+        classDef.sourceFile == "OpenChatTabFeedAdViewHolder.kt" && method.parameterTypes.size == 3
     }
 )

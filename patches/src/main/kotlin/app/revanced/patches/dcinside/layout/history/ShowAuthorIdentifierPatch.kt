@@ -13,7 +13,6 @@ import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patcher.util.getMutableMethod
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.matchAllMethodIndicesForEach
-import app.morphe.patcher.util.matchSingle
 import app.morphe.patcher.util.returnEarly
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import app.morphe.util.indexOfFirstInstruction
@@ -154,7 +153,7 @@ val showAuthorIdentifierPatch = patch(
 }
 
 private fun addCommentAuthorIdentifier() {
-    val authorLine = CommentAuthorLineFingerprint.matchSingle().originalMethod
+    val authorLine = CommentAuthorLineFingerprint.originalMethod
     val modelType = authorLine.parameterTypes.first().toString()
     val model = classDefBy(modelType)
     val userId = model.gettersOf("user_id").first()

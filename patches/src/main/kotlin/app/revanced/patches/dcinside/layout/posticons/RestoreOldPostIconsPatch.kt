@@ -1,15 +1,12 @@
 package app.revanced.patches.dcinside.layout.posticons
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
-import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.classDefForEach
-import app.morphe.patcher.patch.mutableClassDefBy
 import app.morphe.patcher.patch.patch
 import app.morphe.patcher.resource.ResourceType
-import app.morphe.patcher.resource.resourceId
-import app.morphe.patcher.util.findMutableMethodOf
-import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
+import app.morphe.patcher.resourceLiteral
+import app.morphe.patcher.util.matchAllMethodIndicesForEach
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import app.morphe.util.ResourceGroup
 import app.morphe.util.copyResources
@@ -17,9 +14,6 @@ import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.dcinside.misc.settings.PreferenceScreen
 import app.revanced.patches.dcinside.misc.settings.addSettingsPatch
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
-import com.android.tools.smali.dexlib2.iface.Method
-import com.android.tools.smali.dexlib2.iface.instruction.Instruction
-import com.android.tools.smali.dexlib2.iface.instruction.NarrowLiteralInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 
 private const val SETTINGS_CLASS = "Lapp/revanced/extension/dcinside/settings/Settings;"
@@ -83,18 +77,18 @@ val restoreOldPostIconsPatch = patch(
         )
         setExtensionIsPatchIncluded(EXTENSION_CLASS)
 
-        val resourceIds = drawableResourceIds(postIconDrawableNames)
         var patchedInstructions = 0
-
-        classDefForEach { classDef ->
-            val methods = classDef.methods
-                .filter { method -> method.hasLegacyPostIconResourceLoad(resourceIds) }
-
-            if (methods.isNotEmpty()) {
-                val mutableClass = mutableClassDefBy(classDef)
-                methods.map(mutableClass::findMutableMethodOf).forEach { method ->
-                    patchedInstructions += method.injectLegacyPostIconResourceMapper(resourceIds)
-                }
+        postIconDrawableNames.forEach { name ->
+            resourceLiteral(ResourceType.DRAWABLE, name).matchAllMethodIndicesForEach(requireMatches = false) { index ->
+                val register = getInstruction<OneRegisterInstruction>(index).registerA
+                addInstructions(
+                    index + 1,
+                    """
+                        invoke-static/range {v$register .. v$register}, $SETTINGS_CLASS->getLegacyPostIconResource(I)I
+                        move-result v$register
+                    """,
+                )
+                patchedInstructions++
             }
         }
 
@@ -102,41 +96,4 @@ val restoreOldPostIconsPatch = patch(
             throw PatchException("Could not find DCInside post icon resource references")
         }
     }
-}
-
-private fun drawableResourceIds(names: Collection<String>): Set<Int> =
-    names.map { name ->
-        resourceId(ResourceType.DRAWABLE, name).toInt()
-    }.toSet()
-
-private fun Method.hasLegacyPostIconResourceLoad(resourceIds: Set<Int>): Boolean =
-    implementation?.instructions?.any { instruction ->
-        instruction.narrowLiteralRegister()?.second in resourceIds
-    } == true
-
-private fun MutableMethod.injectLegacyPostIconResourceMapper(resourceIds: Set<Int>): Int {
-    val matches = instructions
-        .mapIndexedNotNull { index, instruction ->
-            instruction.narrowLiteralRegister()
-                ?.takeIf { (_, literal) -> literal in resourceIds }
-                ?.let { (register, _) -> index to register }
-        }
-
-    matches.asReversed().forEach { (index, register) ->
-        addInstructions(
-            index + 1,
-            """
-                invoke-static/range {v$register .. v$register}, $SETTINGS_CLASS->getLegacyPostIconResource(I)I
-                move-result v$register
-            """.trimIndent(),
-        )
-    }
-
-    return matches.size
-}
-
-private fun Instruction.narrowLiteralRegister(): Pair<Int, Int>? {
-    val register = (this as? OneRegisterInstruction)?.registerA ?: return null
-    val literal = (this as? NarrowLiteralInstruction)?.narrowLiteral ?: return null
-    return register to literal
 }
