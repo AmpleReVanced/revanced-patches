@@ -1,3 +1,11 @@
+# [1.6.0-dev.10](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.9...v1.6.0-dev.10) (2026-11-26)
+
+
+### Features
+
+* **dcinside:** support version `5.3.30` ([0fa2725](https://github.com/AmpleReVanced/revanced-patches/commit/0fa2725917721544c35e455405bd796d753b8c79))
+* **kakaotalk:** add an option to keep ghost-read chats unread on this device ([401343d](https://github.com/AmpleReVanced/revanced-patches/commit/401343d7003c580782957d83c3ceeefae7312de7))
+
 # [1.6.0-dev.9](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.8...v1.6.0-dev.9) (2026-11-25)
 
 
