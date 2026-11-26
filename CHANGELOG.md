@@ -1,3 +1,10 @@
+# [1.6.0-dev.11](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.10...v1.6.0-dev.11) (2026-11-26)
+
+
+### Features
+
+* **kakaotalk:** show who hid messages in open chats ([e83f08d](https://github.com/AmpleReVanced/revanced-patches/commit/e83f08d62bd760b02c3ae7b1740c196f13a5ba75))
+
 # [1.6.0-dev.10](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.9...v1.6.0-dev.10) (2026-11-26)
 
 

@@ -4,9 +4,9 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START -->
-> **[v1.6.0-dev.10](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.6.0-dev.10)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;130 patches total
+> **[v1.6.0-dev.11](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.6.0-dev.11)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;131 patches total
 <details>
-<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;78 patches</summary>
+<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;79 patches</summary>
 <br>
 
 **🎯 Supported versions:**
@@ -87,6 +87,7 @@
 | [Show message details](#show-message-details) | Adds a long-press action to inspect the complete ChatLog object, including inherited and message-specific fields, as JSON. |  |
 | [Show message read receipts](#show-message-read-receipts) | Shows the members who have or have not read each chat message. |  |
 | [Show messages restricted to mobile](#show-messages-restricted-to-mobile) | Shows the content of AlimTalk, Leverage and Universal messages that are replaced with a placeholder asking to open them on mobile while signed in on a sub device. |  |
+| [Show who hid messages](#show-who-hid-messages) | Shows the nickname of the host or staff member who hid messages in open chats. |  |
 | [Spoof App ID](#spoof-app-id) | Spoofs the App ID to bypass integrity checks. (to bypass biometric auth etc.) |  |
 | [Spoof apk checksums](#spoof-apk-checksums) | Spoofs the apk checksums to pass integrity checks. |  |
 | [Spoof attestation package name](#spoof-attestation-package-name) | Reports the original package name in the attestation report, which otherwise reveals a renamed install. Only the report is affected, so the app keeps using its real package name everywhere else. |  |
