@@ -145,7 +145,8 @@ private fun ElfFile.boundsOf(name: String, filePath: String): IntRange {
     val symbol = dynamicSymbolTableSection.symbols.firstOrNull { it.name == name }
         ?: throw PatchException("Could not find the symbol $name in $filePath.")
 
-    return symbol.st_value.toInt() until (symbol.st_value + symbol.st_size).toInt()
+    val start = symbol.st_value.toInt() and (if (e_machine.toInt() == ElfFile.ARCH_ARM) -2 else -1)
+    return start until start + symbol.st_size.toInt()
 }
 
 private fun ByteArray.findAll(pattern: ByteArray, mask: BooleanArray, bounds: IntRange): List<Int> {

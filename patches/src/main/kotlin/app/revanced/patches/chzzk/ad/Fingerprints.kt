@@ -4,26 +4,17 @@ import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.StringComparisonType.CONTAINS
 import app.morphe.patcher.string
 
-private const val AD_ENTER_PLAYER_CLASS =
-    "Lcom/navercorp/game/android/community/core/feature/feature/player/ad/AdEnterPlayer;"
-
-private const val LIVE_PLAYER_EVENT_AD_CLASS =
-    "Lcom/navercorp/game/android/community/core/feature/feature/player/data/LivePlayerData\$Event\$AD;"
-
 private const val PRISM_SOURCE_CLASS = "Lcom/naver/prismplayer/Source;"
 
-private const val PLAYABLE_AD_PARAMS_CLASS =
-    "Lcom/navercorp/game/android/community/data/core/entity/player/PlayableAdParams;"
-
 internal object AdEnterPlayerFingerprint : Fingerprint(
-    definingClass = AD_ENTER_PLAYER_CLASS,
     returnType = "V",
-    parameters = listOf(LIVE_PLAYER_EVENT_AD_CLASS),
+    parameters = listOf("L"),
+    strings = listOf("디버깅: 이미광고재생중", "디버깅: 이미광고요청중"),
 )
 
 internal object ApplyPlayerAdParamsFingerprint : Fingerprint(
     returnType = PRISM_SOURCE_CLASS,
-    parameters = listOf(PRISM_SOURCE_CLASS, PLAYABLE_AD_PARAMS_CLASS),
+    parameters = listOf(PRISM_SOURCE_CLASS, "L"),
     strings = listOf("nmp_aos", "calp"),
 )
 

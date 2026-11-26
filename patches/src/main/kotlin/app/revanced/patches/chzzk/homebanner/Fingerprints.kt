@@ -1,6 +1,7 @@
 package app.revanced.patches.chzzk.homebanner
 
 import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.string
 
 internal object StreamingHomeBannersFingerprint : Fingerprint(
     returnType = "Ljava/lang/String;",
@@ -13,6 +14,8 @@ internal object FootballCampaignFingerprint : Fingerprint(
 )
 
 internal object TopicBannerRowsFingerprint : Fingerprint(
-    returnType = "V",
-    strings = listOf("topic_imageBannerListItem_", "topic_spacialEventBannerListItem_"),
+    filters = listOf(
+        string("topic_imageBannerListItem_"),
+        string("topic_spacialEventBannerListItem_"),
+    ),
 )

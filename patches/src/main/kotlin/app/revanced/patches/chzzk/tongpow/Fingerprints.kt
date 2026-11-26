@@ -1,46 +1,52 @@
 package app.revanced.patches.chzzk.tongpow
 
 import app.morphe.patcher.Fingerprint
-import app.morphe.patcher.util.getReference
-import app.revanced.util.parameterTypeNames
-import com.android.tools.smali.dexlib2.iface.reference.MethodReference
-import com.android.tools.smali.dexlib2.iface.reference.TypeReference
+import app.morphe.patcher.InstructionLocation.MatchAfterImmediately
+import app.morphe.patcher.InstructionLocation.MatchAfterWithin
+import app.morphe.patcher.methodCall
+import com.android.tools.smali.dexlib2.Opcode
 
-private const val CHAT_VIEW_MODEL_CLASS =
-    "Lcom/navercorp/game/android/community/app/ui/overlayplayerend/live/streaming/chat/StreamingChatViewModel;"
-private const val CHAT_POPUP_PACKAGE =
-    "Lcom/navercorp/game/android/community/app/ui/overlayplayerend/live/streaming/chat/popup/"
-private const val TONG_POW_EVENT_CLASS =
-    "Lcom/navercorp/game/android/community/ui/common/feature/session/SessionEvent\$TongPowEvent;"
-private const val CLAIM_EVENT_CLASS =
-    "Lcom/navercorp/game/android/community/app/ui/overlayplayerend/live/streaming/chat/popup/ChatTongPowEvent\$ShowTongPowPopupInfo;"
-private const val CLAIM_SERVICE_CLASS =
-    "Lcom/navercorp/game/android/community/data/core/service/tongpow/ApiTongPowService\$ApiService;"
+private const val STRING = "Ljava/lang/String;"
+private const val FLOW = "Lkotlinx/coroutines/flow/Flow;"
+private const val SCOPE = "Lkotlinx/coroutines/CoroutineScope;"
+private const val JOB = "Lkotlinx/coroutines/Job;"
+
+internal object ShowTongPowPopupInfoFingerprint : Fingerprint(
+    name = "toString",
+    strings = listOf("ShowTongPowPopupInfo(channelId="),
+)
 
 internal object TongPowChatEventFingerprint : Fingerprint(
-    definingClass = CHAT_VIEW_MODEL_CLASS,
     parameters = listOf("Ljava/lang/Object;"),
     returnType = "Lkotlin/Unit;",
-    custom = { method, _ ->
-        method.implementation?.instructions?.let { instructions ->
-            instructions.any { it.getReference<TypeReference>()?.type == TONG_POW_EVENT_CLASS } &&
-                instructions.any { it.getReference<MethodReference>()?.definingClass == CLAIM_EVENT_CLASS }
-        } == true
-    },
+    filters = listOf(
+        methodCall(definingClass = { ShowTongPowPopupInfoFingerprint.classDef.type }, name = "<init>"),
+        methodCall(
+            definingClass = "this",
+            parameters = { listOf(ShowTongPowPopupInfoFingerprint.classDef.superclass!!) },
+            location = MatchAfterImmediately(),
+        ),
+    ),
 )
 
 internal object TongPowManualClaimFingerprint : Fingerprint(
-    definingClass = CHAT_POPUP_PACKAGE,
-    interfaces = listOf("Lkotlin/jvm/functions/Function0;"),
-    name = "invoke",
     parameters = emptyList(),
     returnType = "Ljava/lang/Object;",
-    custom = { method, _ ->
-        method.implementation?.instructions?.any { instruction ->
-            instruction.getReference<MethodReference>()?.let { reference ->
-                reference.definingClass == CLAIM_SERVICE_CLASS &&
-                    reference.parameterTypeNames == listOf("Ljava/lang/String;", "Ljava/lang/String;")
-            } == true
-        } == true
-    },
+    filters = listOf(
+        methodCall(opcode = Opcode.INVOKE_INTERFACE, parameters = listOf(STRING, STRING)),
+        methodCall(parameters = listOf(FLOW), location = MatchAfterWithin(1)),
+        methodCall(parameters = emptyList(), returnType = SCOPE, location = MatchAfterWithin(1)),
+        methodCall(
+            name = "<init>",
+            parameters = listOf("Ljava/lang/Object;", "Lkotlin/coroutines/Continuation;", "I"),
+            location = MatchAfterWithin(2),
+        ),
+        methodCall(name = "<init>", parameters = listOf("I"), location = MatchAfterWithin(1)),
+        methodCall(
+            parameters = listOf(FLOW, SCOPE, "Lkotlin/jvm/functions/Function2;", "Lkotlin/jvm/functions/Function1;"),
+            returnType = JOB,
+            location = MatchAfterImmediately(),
+        ),
+        methodCall(parameters = listOf(JOB), returnType = "V", location = MatchAfterWithin(1)),
+    ),
 )
