@@ -24,6 +24,7 @@ import app.revanced.patches.kakaotalk.misc.settings.addSettingsTabPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.patches.kakaotalk.shared.addKakaoTalkResources
 import app.revanced.util.smaliReference
+import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
@@ -33,11 +34,12 @@ private const val MEMBER_METHOD = "morphe_hiddenMessageAuthor"
 private const val MEMBER_NAME_METHOD = "morphe_hiddenMessageAuthorName"
 private const val MEMBER_PROFILE_METHOD = "morphe_openHiddenMessageAuthorProfile"
 private const val RECORD_AUTHOR_METHOD = "morphe_recordHiddenMessageAuthor"
+private const val FEED_MESSAGE_METHOD = "morphe_hiddenMessageAuthorFeedMessage"
 
 @Suppress("unused")
 val showHiddenMessageAuthorPatch = patch(
-    name = "Show who hid messages",
-    description = "Shows the nickname of the host or staff member who hid messages in open chats.",
+    name = "Show who hid messages or removed members",
+    description = "Shows the nickname of the host or staff member who hid messages or removed members in open chats.",
 ) {
     compatibleWith(COMPATIBILITY_KAKAO)
     dependsOn(addExtensionPatch, addSettingsTabPatch, sharedExtensionPatch)
@@ -162,16 +164,38 @@ val showHiddenMessageAuthorPatch = patch(
             )
         }
 
-        FeedMessageFingerprint.method.apply {
-            instructions.indices.filter { instructions[it].opcode == Opcode.RETURN_OBJECT }.asReversed().forEach { index ->
-                val message = getInstruction<OneRegisterInstruction>(index).registerA
-                addInstructionsAtControlFlowLabel(
-                    index,
-                    """
-                        invoke-static {v$message, p1, p2}, $EXTENSION_CLASS->feedMessage(Ljava/lang/CharSequence;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/CharSequence;
-                        move-result-object v$message
-                    """,
-                )
+        FeedMessageFingerprint.let {
+            val (chatRoom, chatLog) = it.method.parameterTypes.map { type -> type.toString() }
+            val feedMessage = bridgeMethod(
+                definingClass = it.classDef.type,
+                name = FEED_MESSAGE_METHOD,
+                parameterTypes = listOf("Ljava/lang/CharSequence;", chatRoom, chatLog, "J"),
+                returnType = "Ljava/lang/CharSequence;",
+                accessFlags = AccessFlags.PRIVATE.value or AccessFlags.STATIC.value,
+                registerCount = 6,
+                instructions = """
+                    if-eqz p0, :done
+                    invoke-virtual {p2}, ${it.instructionMatches.first().methodReference}
+                    move-result-object v0
+                    invoke-static/range {v0 .. v5}, $EXTENSION_CLASS->feedMessage(Ljava/lang/String;Ljava/lang/CharSequence;Ljava/lang/Object;Ljava/lang/Object;J)Ljava/lang/CharSequence;
+                    move-result-object p0
+                    :done
+                    return-object p0
+                """,
+            )
+            it.classDef.methods.add(feedMessage)
+
+            it.method.apply {
+                instructions.indices.filter { index -> instructions[index].opcode == Opcode.RETURN_OBJECT }.asReversed().forEach { index ->
+                    val message = getInstruction<OneRegisterInstruction>(index).registerA
+                    addInstructionsAtControlFlowLabel(
+                        index,
+                        """
+                            invoke-static {v$message, p1, p2, p3, p4}, ${feedMessage.smaliReference}
+                            move-result-object v$message
+                        """,
+                    )
+                }
             }
         }
     }

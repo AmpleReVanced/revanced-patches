@@ -47,6 +47,9 @@ internal object FeedMessageFingerprint : Fingerprint(
     isStatic = false,
     returnType = "Ljava/lang/CharSequence;",
     parameters = listOf("L", "L", "J"),
-    filters = listOf(methodCall(name = "generateMessage")),
+    filters = listOf(
+        methodCall(parameters = emptyList(), returnType = "Ljava/lang/String;"),
+        methodCall(name = "generateMessage"),
+    ),
     custom = { _, classDef -> classDef.sourceFile == "FeedType.kt" },
 )
