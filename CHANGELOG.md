@@ -1,3 +1,10 @@
+# [1.6.0-dev.13](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.12...v1.6.0-dev.13) (2026-11-26)
+
+
+### Performance Improvements
+
+* speed up patching with indexed fingerprints ([5e28f81](https://github.com/AmpleReVanced/revanced-patches/commit/5e28f817debac3cdb8a5710b73146d68c2a038c2))
+
 # [1.6.0-dev.12](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.11...v1.6.0-dev.12) (2026-11-26)
 
 
