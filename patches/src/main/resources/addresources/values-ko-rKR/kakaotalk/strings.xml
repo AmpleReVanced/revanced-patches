@@ -148,7 +148,7 @@
     <string name="morphe_pref_show_modified_message_sender_profile_summary">메시지 수정 이력에서 보낸 사람의 프로필 사진과 닉네임을 표시합니다.</string>
     <string name="morphe_pref_bypass_moat_integrity_check_summary">카카오페이를 실행하는 데 필요할 수 있습니다. 무결성 감지 경로를 우회하므로 위험을 이해한 경우에만 사용하세요.</string>
     <string name="morphe_pref_ghost_mode_summary">상대방에게 입력 중 상태나 현재 동작 정보가 전달되지 않도록 합니다.</string>
-    <string name="morphe_pref_ghost_read_summary">채팅방에 들어가도 상대방에게 읽음 처리되지 않습니다.</string>
+    <string name="morphe_pref_ghost_read_summary">채팅방에 들어가거나 보고 있는 중에 온 메시지도 상대방에게 읽음 처리되지 않습니다.</string>
     <string name="morphe_pref_ghost_read_keep_unread_summary">상대방에게 안 읽은 상태인 메시지는 내 채팅 목록과 메시지의 안 읽은 수에서도 그대로 남습니다. 위 옵션을 켜야 설정할 수 있습니다.</string>
     <string name="morphe_pref_ghost_read_on_send_summary">메시지를 보내도 이전 메시지가 읽음 처리되지 않습니다. ‘채팅방 입장 시 읽음 처리 안 함’을 켜야 설정할 수 있습니다.</string>
     <string name="morphe_pref_show_hidden_message_author_summary">오픈채팅에서 메시지를 가리거나 멤버를 내보낸 방장·부방장의 닉네임을 표시합니다.</string>

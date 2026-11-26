@@ -18,6 +18,10 @@ public final class GhostModePatch {
         return Settings.enableGhostReadOnSend() ? Boolean.TRUE : original;
     }
 
+    public static Boolean notiRead(Boolean original) {
+        return Settings.enableGhostRead() ? Boolean.FALSE : original;
+    }
+
     public static long localReadLogId(long logId) {
         return Settings.enableGhostReadKeepUnread() ? Long.MIN_VALUE : logId;
     }

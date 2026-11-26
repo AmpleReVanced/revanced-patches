@@ -106,10 +106,10 @@ internal object ChatOnRoomRequestFingerprint : Fingerprint(
     custom = { _, classDef -> classDef.sourceFile == "Protocol.kt" },
 )
 
-internal object NoSeenBodyFingerprint : Fingerprint(
+internal class LocoBodyFlagFingerprint(vararg keys: String) : Fingerprint(
     superclass = "Lcom/kakao/talk/core/loco/protocol/job/LocoJob;",
     filters = listOf(
-        anyInstruction(string("noSeen"), string("ns")),
+        anyInstruction(*keys.map(::string).toTypedArray()),
         methodCall(
             parameters = listOf("Ljava/lang/String;", "Ljava/lang/Object;"),
             location = MatchAfterImmediately(),

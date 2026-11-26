@@ -210,16 +210,21 @@ val ghostMode = patch(
             """,
         )
 
-        NoSeenBodyFingerprint.matchAll().forEach { match ->
-            val put = match.instructionMatches.last()
-            val value = put.getInstruction<FiveRegisterInstruction>().registerE
-            match.method.addInstructions(
-                put.index,
-                """
-                    invoke-static {v$value}, $EXTENSION_CLASS->noSeen(Ljava/lang/Boolean;)Ljava/lang/Boolean;
-                    move-result-object v$value
-                """,
-            )
+        mapOf(
+            LocoBodyFlagFingerprint("noSeen", "ns") to "noSeen",
+            LocoBodyFlagFingerprint("notiRead") to "notiRead",
+        ).forEach { (fingerprint, hook) ->
+            fingerprint.matchAll().forEach { match ->
+                val put = match.instructionMatches.last()
+                val value = put.getInstruction<FiveRegisterInstruction>().registerE
+                match.method.addInstructions(
+                    put.index,
+                    """
+                        invoke-static {v$value}, $EXTENSION_CLASS->$hook(Ljava/lang/Boolean;)Ljava/lang/Boolean;
+                        move-result-object v$value
+                    """,
+                )
+            }
         }
     }
 }
