@@ -38,6 +38,7 @@ import app.revanced.extension.kakaotalk.patches.EnableMarkdownPatch;
 import app.revanced.extension.kakaotalk.patches.EnableSendBigTextPatch;
 import app.revanced.extension.kakaotalk.patches.ForceEnableDebugModePatch;
 import app.revanced.extension.kakaotalk.patches.GhostModePatch;
+import app.revanced.extension.kakaotalk.patches.HiddenMessageAuthorPatch;
 import app.revanced.extension.kakaotalk.patches.MemberMemoPatch;
 import app.revanced.extension.kakaotalk.patches.HideMoreTabComponentsPatch;
 import app.revanced.extension.kakaotalk.patches.HideMoreTabGamePatch;
@@ -55,6 +56,7 @@ public final class SettingsActivity extends Activity {
     private static final String PREF_GHOST_READ = "morphe_pref_ghost_read";
     private static final String PREF_GHOST_READ_KEEP_UNREAD = "morphe_pref_ghost_read_keep_unread";
     private static final String PREF_GHOST_READ_ON_SEND = "morphe_pref_ghost_read_on_send";
+    private static final String PREF_SHOW_HIDDEN_MESSAGE_AUTHOR = "morphe_pref_show_hidden_message_author";
     private static final String PREF_MEMBER_MEMO_NICKNAME = "morphe_pref_member_memo_nickname";
     private static final String PREF_RESTORE_KEYWORD_LOG = "morphe_pref_restore_keyword_log";
     private static final String PREF_SHOW_MODIFIED_MESSAGE_SENDER_PROFILE =
@@ -173,6 +175,7 @@ public final class SettingsActivity extends Activity {
             bindSwitchIfIncluded(PREF_GHOST_READ, Settings.GHOST_READ, GhostModePatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_GHOST_READ_KEEP_UNREAD, Settings.GHOST_READ_KEEP_UNREAD, GhostModePatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_GHOST_READ_ON_SEND, Settings.GHOST_READ_ON_SEND, GhostModePatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_SHOW_HIDDEN_MESSAGE_AUTHOR, Settings.SHOW_HIDDEN_MESSAGE_AUTHOR, HiddenMessageAuthorPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_MEMBER_MEMO_NICKNAME, Settings.MEMBER_MEMO_NICKNAME, MemberMemoPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_REMOVE_SHORT_FORM_TAB, Settings.REMOVE_SHORT_FORM_TAB, RemoveShortFormTabPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_REMOVE_SHOP_TAB, Settings.REMOVE_SHOP_TAB, RemoveShopTabPatch.isPatchIncluded());

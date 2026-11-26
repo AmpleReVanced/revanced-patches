@@ -10,6 +10,9 @@
     <string name="morphe_kakaotalk_custom_profile_image_error">사진을 불러오지 못했습니다. 다시 선택해 주세요.</string>
     <string name="morphe_kakaotalk_chatlog_deleted">삭제됨</string>
     <string name="morphe_kakaotalk_chatlog_hidden">가려짐</string>
+    <string name="morphe_kakaotalk_chatlog_hidden_by">%s님이 가림</string>
+    <string name="morphe_kakaotalk_hidden_by_message">%s님이 메시지를 가렸습니다.</string>
+    <string name="morphe_kakaotalk_hidden_by_messages">%1$s님이 %2$d개의 메시지를 가렸습니다.</string>
     <string name="morphe_kakaotalk_chatlog_modified_history_title">수정 이력</string>
     <string name="morphe_kakaotalk_chatlog_modified_history_revision">리비전 %1$d 이전</string>
     <string name="morphe_kakaotalk_chatlog_modified_history_current">현재 메시지</string>
@@ -55,6 +58,7 @@
     <string name="morphe_settings_patch_ghost_read">채팅방 입장 시 읽음 처리 안 함</string>
     <string name="morphe_settings_patch_ghost_read_keep_unread">내 기기에서도 안 읽음으로 유지</string>
     <string name="morphe_settings_patch_ghost_read_on_send">메시지 보낼 때 읽음 처리 안 함</string>
+    <string name="morphe_settings_patch_show_hidden_message_author">메시지를 가린 사람 표시</string>
     <string name="morphe_settings_patch_member_memo_nickname">닉네임 옆에 멤버 메모 표시</string>
     <string name="morphe_settings_patch_disable_99_unread_limit">읽지 않은 수 전체 표시</string>
     <string name="morphe_settings_patch_disable_99_unread_limit_summary">읽지 않은 수를 99+로 줄이지 않고 실제 숫자로 표시합니다.</string>
@@ -145,6 +149,7 @@
     <string name="morphe_pref_ghost_read_summary">채팅방에 들어가도 상대방에게 읽음 처리되지 않습니다.</string>
     <string name="morphe_pref_ghost_read_keep_unread_summary">상대방에게 안 읽은 상태인 메시지는 내 채팅 목록과 메시지의 안 읽은 수에서도 그대로 남습니다. 위 옵션을 켜야 설정할 수 있습니다.</string>
     <string name="morphe_pref_ghost_read_on_send_summary">메시지를 보내도 이전 메시지가 읽음 처리되지 않습니다. ‘채팅방 입장 시 읽음 처리 안 함’을 켜야 설정할 수 있습니다.</string>
+    <string name="morphe_pref_show_hidden_message_author_summary">오픈채팅에서 메시지를 가린 방장이나 부방장의 닉네임을 표시합니다.</string>
     <string name="morphe_pref_member_memo_nickname_summary">오픈채팅 멤버에게 남긴 메모를 채팅방 닉네임 옆에 표시합니다. 메모는 멤버 프로필의 메모 버튼으로 작성합니다.</string>
     <string name="morphe_kakaotalk_member_memo_title">멤버 메모</string>
     <string name="morphe_kakaotalk_member_memo_add">메모 추가</string>

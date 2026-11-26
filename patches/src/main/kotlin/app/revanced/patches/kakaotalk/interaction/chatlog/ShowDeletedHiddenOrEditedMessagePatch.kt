@@ -262,6 +262,29 @@ val showDeletedHiddenOrEditedMessagePatch = patch(
             },
         )
 
+        chatInfoViewClass.methods.add(
+            bridgeMethod(
+                definingClass = chatInfoViewClass.type,
+                name = "onTouchEvent",
+                parameterTypes = listOf("Landroid/view/MotionEvent;"),
+                returnType = "Z",
+                accessFlags = AccessFlags.PUBLIC.value,
+                registerCount = 3,
+                instructions = """
+                    iget-object v0, p0, Lcom/kakao/talk/widget/chatlog/ChatInfoView;->extension:Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;
+                    if-eqz v0, :super
+                    invoke-virtual {v0, p1}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->onTouchEvent(Landroid/view/MotionEvent;)Z
+                    move-result v0
+                    if-nez v0, :handled
+                    :super
+                    invoke-super {p0, p1}, Landroid/view/View;->onTouchEvent(Landroid/view/MotionEvent;)Z
+                    move-result v0
+                    :handled
+                    return v0
+                """.trimIndent(),
+            ),
+        )
+
         val setChatLogIdMethod = chatInfoViewClass.methods.first { it.name == "setChatLogId" }
         setChatLogIdMethod.addInstructionsWithLabels(
             setChatLogIdMethod.instructions.count() - 1,
@@ -677,13 +700,16 @@ val showDeletedHiddenOrEditedMessagePatch = patch(
                 methodCall("$CHAT_INFO_VIEW_CLASS->setModify(Z)V", opcode = Opcode.INVOKE_VIRTUAL),
             )
             val viewRegister = method.getInstruction<FiveRegisterInstruction>(setModifyIndex).registerC
+            val chatRoomGetter = ChatLogItemViewHolderFingerprint.classDef.methods.single {
+                it.parameters.isEmpty() && it.returnType == ChatRoomSyncFingerprint.chatRoomLookup.returnType
+            }
             val bindModifiedChatInfo = bridgeMethod(
                 definingClass = classDef.type,
                 name = "revanced_bindModifiedChatInfo",
                 parameterTypes = listOf(CHAT_INFO_VIEW_CLASS),
                 returnType = "V",
                 accessFlags = AccessFlags.PRIVATE.value,
-                registerCount = 9,
+                registerCount = 10,
                 instructions = """
                     invoke-virtual {p1}, $CHAT_INFO_VIEW_CLASS->getExtension()Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;
                     move-result-object v0
@@ -713,6 +739,9 @@ val showDeletedHiddenOrEditedMessagePatch = patch(
                     move-object v6, v5
 
                     :bind
+                    invoke-virtual {p0}, ${chatRoomGetter.smaliReference}
+                    move-result-object v7
+                    invoke-virtual {v0, v7}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->setChatRoom(Ljava/lang/Object;)V
                     invoke-virtual {v0, v3}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->setDeleted(Z)V
                     invoke-virtual {v0, v4}, Lapp/revanced/extension/kakaotalk/chatlog/ChatInfoExtension;->setHidden(Z)V
                     instance-of v2, p1, Lcom/kakao/talk/widget/chatlog/MyChatInfoView;

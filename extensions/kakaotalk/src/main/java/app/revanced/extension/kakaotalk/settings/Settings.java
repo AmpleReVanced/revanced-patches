@@ -51,6 +51,9 @@ public final class Settings extends BaseSettings {
     public static final BooleanSetting GHOST_READ_ON_SEND =
             new BooleanSetting("kakaotalk_ghost_read_on_send", FALSE, parent(GHOST_READ));
 
+    public static final BooleanSetting SHOW_HIDDEN_MESSAGE_AUTHOR =
+            new BooleanSetting("kakaotalk_show_hidden_message_author", TRUE);
+
     public static final BooleanSetting MEMBER_MEMO_NICKNAME =
             new BooleanSetting("kakaotalk_member_memo_nickname", TRUE);
 
@@ -163,6 +166,10 @@ public final class Settings extends BaseSettings {
 
     public static boolean enableGhostReadOnSend() {
         return GHOST_READ.get() && GHOST_READ_ON_SEND.get();
+    }
+
+    public static boolean showHiddenMessageAuthor() {
+        return SHOW_HIDDEN_MESSAGE_AUTHOR.get();
     }
 
     public static boolean removeShortFormTab() {
