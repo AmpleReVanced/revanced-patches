@@ -45,6 +45,9 @@ public final class Settings extends BaseSettings {
     public static final BooleanSetting GHOST_READ =
             new BooleanSetting("kakaotalk_ghost_read", FALSE);
 
+    public static final BooleanSetting GHOST_READ_KEEP_UNREAD =
+            new BooleanSetting("kakaotalk_ghost_read_keep_unread", TRUE, parent(GHOST_READ));
+
     public static final BooleanSetting GHOST_READ_ON_SEND =
             new BooleanSetting("kakaotalk_ghost_read_on_send", FALSE, parent(GHOST_READ));
 
@@ -152,6 +155,10 @@ public final class Settings extends BaseSettings {
 
     public static boolean enableGhostRead() {
         return GHOST_READ.get();
+    }
+
+    public static boolean enableGhostReadKeepUnread() {
+        return GHOST_READ.get() && GHOST_READ_KEEP_UNREAD.get();
     }
 
     public static boolean enableGhostReadOnSend() {

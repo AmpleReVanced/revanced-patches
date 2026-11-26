@@ -3,9 +3,11 @@ package app.revanced.patches.kakaotalk.interaction.ghost
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.InstructionLocation.MatchAfterImmediately
 import app.morphe.patcher.OpcodesFilter
+import app.morphe.patcher.anyInstruction
 import app.morphe.patcher.fieldAccess
 import app.morphe.patcher.methodCall
 import app.morphe.patcher.newInstance
+import app.morphe.patcher.opcode
 import app.morphe.patcher.string
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
@@ -107,7 +109,7 @@ internal object ChatOnRoomRequestFingerprint : Fingerprint(
 internal object NoSeenBodyFingerprint : Fingerprint(
     superclass = "Lcom/kakao/talk/core/loco/protocol/job/LocoJob;",
     filters = listOf(
-        string("noSeen"),
+        anyInstruction(string("noSeen"), string("ns")),
         methodCall(
             parameters = listOf("Ljava/lang/String;", "Ljava/lang/Object;"),
             location = MatchAfterImmediately(),
@@ -124,6 +126,24 @@ internal object ReadPointerFingerprint : Fingerprint(
 
 internal val ReadPointerFingerprint.readLogId
     get() = method.instructions.first { it.opcode == Opcode.IPUT_WIDE }.getReference<FieldReference>()!!
+
+internal object SentChatLogFingerprint : Fingerprint(
+    classFingerprint = ReadPointerFingerprint,
+    returnType = "L",
+    parameters = listOf("L"),
+    filters = listOf(
+        methodCall(parameters = listOf("J", "Ljava/lang/Long;", "I"), returnType = "Z"),
+        methodCall(reference = { ReadPointerFingerprint.method }),
+        opcode(Opcode.MOVE_RESULT, MatchAfterImmediately()),
+    ),
+)
+
+internal object ReceivedChatLogFingerprint : Fingerprint(
+    classFingerprint = ReadPointerFingerprint,
+    returnType = "L",
+    parameters = listOf("L", "Z", "L", "Z"),
+    filters = listOf(methodCall(reference = { ReadPointerFingerprint.method })),
+)
 
 internal object MessageUnreadCountFingerprint : Fingerprint(
     returnType = "I",

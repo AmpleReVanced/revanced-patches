@@ -69,6 +69,7 @@ Second \"item\" text"</string>
     <string name="morphe_settings_section_ghost_mode">Ghost mode</string>
     <string name="morphe_settings_section_ghost_mode_summary">Hides your typing status and keeps chats from being marked as read.</string>
     <string name="morphe_settings_patch_ghost_read">Don’t mark as read when opening chats</string>
+    <string name="morphe_settings_patch_ghost_read_keep_unread">Keep chats unread on this device</string>
     <string name="morphe_settings_patch_ghost_read_on_send">Don’t mark as read when sending</string>
     <string name="morphe_settings_patch_member_memo_nickname">Show member memos next to nicknames</string>
     <string name="morphe_settings_patch_disable_99_unread_limit">Show full unread count</string>
@@ -157,8 +158,9 @@ Second \"item\" text"</string>
     <string name="morphe_pref_show_modified_message_sender_profile_summary">Shows the sender’s profile image and nickname in message edit history.</string>
     <string name="morphe_pref_bypass_moat_integrity_check_summary">May be required to launch KakaoPay. This bypasses an integrity detection path. Use at your own risk.</string>
     <string name="morphe_pref_ghost_mode_summary">Prevents typing and activity updates from being sent to the other side.</string>
-    <string name="morphe_pref_ghost_read_summary">Opening a chat room does not mark its messages as read, and they stay unread in your chat list too.</string>
-    <string name="morphe_pref_ghost_read_on_send_summary">Sending a message does not mark earlier messages as read. Requires the option above.</string>
+    <string name="morphe_pref_ghost_read_summary">Opening a chat room does not mark its messages as read for others.</string>
+    <string name="morphe_pref_ghost_read_keep_unread_summary">Messages that others still see as unread stay unread in your chat list and message counts too. Requires the option above.</string>
+    <string name="morphe_pref_ghost_read_on_send_summary">Sending a message does not mark earlier messages as read. Requires “Don’t mark as read when opening chats”.</string>
     <string name="morphe_pref_member_memo_nickname_summary">Shows the memo you wrote for an open chat member next to their nickname in chat rooms. Tap the memo button on a member’s profile to write one.</string>
     <string name="morphe_kakaotalk_member_memo_title">Member memo</string>
     <string name="morphe_kakaotalk_member_memo_add">Add memo</string>

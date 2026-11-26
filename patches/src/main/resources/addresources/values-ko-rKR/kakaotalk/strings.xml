@@ -53,6 +53,7 @@
     <string name="morphe_settings_section_ghost_mode">고스트 모드</string>
     <string name="morphe_settings_section_ghost_mode_summary">입력 중 상태를 숨기고 읽음 처리되지 않도록 합니다.</string>
     <string name="morphe_settings_patch_ghost_read">채팅방 입장 시 읽음 처리 안 함</string>
+    <string name="morphe_settings_patch_ghost_read_keep_unread">내 기기에서도 안 읽음으로 유지</string>
     <string name="morphe_settings_patch_ghost_read_on_send">메시지 보낼 때 읽음 처리 안 함</string>
     <string name="morphe_settings_patch_member_memo_nickname">닉네임 옆에 멤버 메모 표시</string>
     <string name="morphe_settings_patch_disable_99_unread_limit">읽지 않은 수 전체 표시</string>
@@ -141,8 +142,9 @@
     <string name="morphe_pref_show_modified_message_sender_profile_summary">메시지 수정 이력에서 보낸 사람의 프로필 사진과 닉네임을 표시합니다.</string>
     <string name="morphe_pref_bypass_moat_integrity_check_summary">카카오페이를 실행하는 데 필요할 수 있습니다. 무결성 감지 경로를 우회하므로 위험을 이해한 경우에만 사용하세요.</string>
     <string name="morphe_pref_ghost_mode_summary">상대방에게 입력 중 상태나 현재 동작 정보가 전달되지 않도록 합니다.</string>
-    <string name="morphe_pref_ghost_read_summary">채팅방에 들어가도 읽음 처리되지 않고, 내 채팅 목록에서도 안 읽은 상태로 남습니다.</string>
-    <string name="morphe_pref_ghost_read_on_send_summary">메시지를 보내도 이전 메시지가 읽음 처리되지 않습니다. 위 옵션을 켜야 설정할 수 있습니다.</string>
+    <string name="morphe_pref_ghost_read_summary">채팅방에 들어가도 상대방에게 읽음 처리되지 않습니다.</string>
+    <string name="morphe_pref_ghost_read_keep_unread_summary">상대방에게 안 읽은 상태인 메시지는 내 채팅 목록과 메시지의 안 읽은 수에서도 그대로 남습니다. 위 옵션을 켜야 설정할 수 있습니다.</string>
+    <string name="morphe_pref_ghost_read_on_send_summary">메시지를 보내도 이전 메시지가 읽음 처리되지 않습니다. ‘채팅방 입장 시 읽음 처리 안 함’을 켜야 설정할 수 있습니다.</string>
     <string name="morphe_pref_member_memo_nickname_summary">오픈채팅 멤버에게 남긴 메모를 채팅방 닉네임 옆에 표시합니다. 메모는 멤버 프로필의 메모 버튼으로 작성합니다.</string>
     <string name="morphe_kakaotalk_member_memo_title">멤버 메모</string>
     <string name="morphe_kakaotalk_member_memo_add">메모 추가</string>

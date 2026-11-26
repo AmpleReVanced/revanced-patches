@@ -1,16 +1,18 @@
 package app.revanced.patches.kakaotalk.interaction.ghost
 
+import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.methodCall
-import app.morphe.patcher.patch.classDefBy
 import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.addInstructionsAtControlFlowLabel
 import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.matchAllMethodIndicesForEach
+import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patcher.util.smali.ExternalLabel
 import app.morphe.patches.shared.misc.settings.preference.MORPHE_PREFERENCE_SCREEN_LAYOUT
 import app.morphe.patches.shared.misc.settings.preference.PreferenceScreenPreference
@@ -20,6 +22,7 @@ import app.revanced.patches.kakaotalk.misc.settings.PreferenceScreen
 import app.revanced.patches.kakaotalk.misc.settings.addSettingsTabPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
+import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.reference.Reference
 
@@ -29,12 +32,20 @@ private const val EXTENSION_CLASS =
 private const val LOCO_IGNORABLE_EXCEPTION =
     "Lcom/kakao/talk/core/loco/exception/LocoIgnorableException;"
 
-private val LOCAL_READ_HOOKS = mapOf(
-    "ChatLogController.kt" to "viewedLogId",
-    "ChatThreadChatLogController.kt" to "viewedLogId",
-    "ChatRoomController.kt" to "viewedLogId",
-    "ChatSendingLogRequest.kt" to "sentLogId",
+private val LOCAL_READ_SOURCES = setOf(
+    "ChatLogController.kt",
+    "ChatThreadChatLogController.kt",
+    "ChatRoomController.kt",
+    "ChatSendingLogRequest.kt",
 )
+
+private val READ_ELSEWHERE_SOURCES = setOf("LocoDecUnreadPush.kt", "ClearNotiPushTask.kt")
+
+private fun MethodReference.forEachCallIn(sourceFiles: Set<String>, block: MutableMethod.(Int) -> Unit) =
+    Fingerprint(
+        filters = listOf(methodCall(this)),
+        custom = { _, classDef -> classDef.sourceFile in sourceFiles },
+    ).matchAllMethodIndicesForEach(block = block)
 
 @Suppress("unused")
 val ghostMode = patch(
@@ -60,6 +71,11 @@ val ghostMode = patch(
                     SwitchPreference(
                         key = "morphe_pref_ghost_read",
                         titleKey = "morphe_settings_patch_ghost_read",
+                        summary = true,
+                    ),
+                    SwitchPreference(
+                        key = "morphe_pref_ghost_read_keep_unread",
+                        titleKey = "morphe_settings_patch_ghost_read_keep_unread",
                         summary = true,
                     ),
                     SwitchPreference(
@@ -141,23 +157,58 @@ val ghostMode = patch(
             )
         }
 
-        ReadPointerFingerprint.classDef.methods.filter { method ->
+        val localReads = ReadPointerFingerprint.classDef.methods.filter { method ->
             method.parameterTypes.firstOrNull() == "J" &&
                 method.instructions.any { it.getReference<MethodReference>() == readPointer }
-        }.forEach { localRead ->
-            methodCall(localRead).matchAllMethodIndicesForEach { index ->
-                val hook = LOCAL_READ_HOOKS[classDefBy(definingClass).sourceFile]
-                    ?: return@matchAllMethodIndicesForEach
+        }
+        localReads.forEach { localRead ->
+            localRead.forEachCallIn(LOCAL_READ_SOURCES) { index ->
                 val logId = getInstruction<FiveRegisterInstruction>(index).registerD
                 addInstructionsAtControlFlowLabel(
                     index,
                     """
-                        invoke-static/range {v$logId .. v${logId + 1}}, $EXTENSION_CLASS->$hook(J)J
+                        invoke-static/range {v$logId .. v${logId + 1}}, $EXTENSION_CLASS->localReadLogId(J)J
                         move-result-wide v$logId
                     """,
                 )
             }
         }
+
+        val markRead = localReads.single { it.parameterTypes.size == 1 }
+        SentChatLogFingerprint.let {
+            val (visibleCheck, readPointerCall, result) = it.instructionMatches
+            val call = readPointerCall.getInstruction<FiveRegisterInstruction>()
+            it.method.addInstruction(
+                result.index + 1,
+                "invoke-virtual {v${call.registerC}, v${call.registerE}, v${call.registerF}}, $markRead",
+            )
+            it.method.addInstructions(
+                readPointerCall.index,
+                """
+                    invoke-static/range {v${call.registerE} .. v${call.registerF}}, $EXTENSION_CLASS->sentLogId(J)J
+                    move-result-wide v${call.registerE}
+                """,
+            )
+
+            visibleCheck.methodReference.forEachCallIn(READ_ELSEWHERE_SOURCES) { index ->
+                val visible = getInstruction<OneRegisterInstruction>(index + 1).registerA
+                addInstructions(
+                    index + 2,
+                    """
+                        invoke-static {v$visible}, $EXTENSION_CLASS->isChatRoomVisible(Z)Z
+                        move-result v$visible
+                    """,
+                )
+            }
+        }
+
+        ReceivedChatLogFingerprint.method.addInstructions(
+            0,
+            """
+                invoke-static/range {p2 .. p2}, $EXTENSION_CLASS->isChatRoomVisible(Z)Z
+                move-result p2
+            """,
+        )
 
         NoSeenBodyFingerprint.matchAll().forEach { match ->
             val put = match.instructionMatches.last()

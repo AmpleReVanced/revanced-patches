@@ -18,15 +18,19 @@ public final class GhostModePatch {
         return Settings.enableGhostReadOnSend() ? Boolean.TRUE : original;
     }
 
-    public static long viewedLogId(long logId) {
-        return Settings.enableGhostRead() ? Long.MIN_VALUE : logId;
+    public static long localReadLogId(long logId) {
+        return Settings.enableGhostReadKeepUnread() ? Long.MIN_VALUE : logId;
     }
 
     public static long sentLogId(long logId) {
-        return Settings.enableGhostReadOnSend() ? Long.MIN_VALUE : logId;
+        return Settings.enableGhostReadKeepUnread() && Settings.enableGhostReadOnSend() ? Long.MIN_VALUE : logId;
+    }
+
+    public static boolean isChatRoomVisible(boolean visible) {
+        return visible && !Settings.enableGhostReadKeepUnread();
     }
 
     public static boolean isUnreadByMe(long logId, long readLogId) {
-        return Settings.enableGhostRead() && logId > readLogId;
+        return Settings.enableGhostReadKeepUnread() && logId > readLogId;
     }
 }

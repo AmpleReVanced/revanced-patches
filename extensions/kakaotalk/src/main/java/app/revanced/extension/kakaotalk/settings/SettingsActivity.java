@@ -53,6 +53,7 @@ import app.revanced.extension.kakaotalk.patches.StripImageMetadataPatch;
 public final class SettingsActivity extends Activity {
     private static final String PREF_GHOST_MODE = "morphe_pref_ghost_mode";
     private static final String PREF_GHOST_READ = "morphe_pref_ghost_read";
+    private static final String PREF_GHOST_READ_KEEP_UNREAD = "morphe_pref_ghost_read_keep_unread";
     private static final String PREF_GHOST_READ_ON_SEND = "morphe_pref_ghost_read_on_send";
     private static final String PREF_MEMBER_MEMO_NICKNAME = "morphe_pref_member_memo_nickname";
     private static final String PREF_RESTORE_KEYWORD_LOG = "morphe_pref_restore_keyword_log";
@@ -170,6 +171,7 @@ public final class SettingsActivity extends Activity {
 
             bindSwitchIfIncluded(PREF_GHOST_MODE, Settings.GHOST_MODE, GhostModePatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_GHOST_READ, Settings.GHOST_READ, GhostModePatch.isPatchIncluded());
+            bindSwitchIfIncluded(PREF_GHOST_READ_KEEP_UNREAD, Settings.GHOST_READ_KEEP_UNREAD, GhostModePatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_GHOST_READ_ON_SEND, Settings.GHOST_READ_ON_SEND, GhostModePatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_MEMBER_MEMO_NICKNAME, Settings.MEMBER_MEMO_NICKNAME, MemberMemoPatch.isPatchIncluded());
             bindSwitchIfIncluded(PREF_REMOVE_SHORT_FORM_TAB, Settings.REMOVE_SHORT_FORM_TAB, RemoveShortFormTabPatch.isPatchIncluded());
