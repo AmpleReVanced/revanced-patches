@@ -1,6 +1,6 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.6.0-dev.11",
+  "version": "1.6.0-dev.12",
   "patches": [
     {
       "name": "Add Packet Handler",
@@ -4004,8 +4004,8 @@
       "options": []
     },
     {
-      "name": "Show who hid messages",
-      "description": "Shows the nickname of the host or staff member who hid messages in open chats.",
+      "name": "Show who hid messages or removed members",
+      "description": "Shows the nickname of the host or staff member who hid messages or removed members in open chats.",
       "default": true,
       "category": null,
       "compatiblePackages": [

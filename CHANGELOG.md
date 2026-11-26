@@ -1,3 +1,15 @@
+# [1.6.0-dev.12](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.11...v1.6.0-dev.12) (2026-11-26)
+
+
+### Bug Fixes
+
+* **kakaotalk:** keep messages unread while viewing a chat in ghost mode ([4a43810](https://github.com/AmpleReVanced/revanced-patches/commit/4a43810a5a91ba945078839016210b46383cf7d7))
+
+
+### Features
+
+* **kakaotalk:** show who removed members in open chats ([cc9048a](https://github.com/AmpleReVanced/revanced-patches/commit/cc9048a3eb1e87c5733326a6025fd099603ce16b))
+
 # [1.6.0-dev.11](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.10...v1.6.0-dev.11) (2026-11-26)
 
 

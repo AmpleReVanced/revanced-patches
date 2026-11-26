@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-11-26T15:24:00",
-  "description": "# [1.6.0-dev.11](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.10...v1.6.0-dev.11) (2026-11-26)\n\n\n### Features\n\n* **kakaotalk:** show who hid messages in open chats ([e83f08d](https://github.com/AmpleReVanced/revanced-patches/commit/e83f08d62bd760b02c3ae7b1740c196f13a5ba75))",
-  "download_url": "https://github.com/AmpleReVanced/revanced-patches/releases/download/v1.6.0-dev.11/patches-1.6.0-dev.11.mpp",
+  "created_at": "2026-11-26T15:49:42",
+  "description": "# [1.6.0-dev.12](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.11...v1.6.0-dev.12) (2026-11-26)\n\n\n### Bug Fixes\n\n* **kakaotalk:** keep messages unread while viewing a chat in ghost mode ([4a43810](https://github.com/AmpleReVanced/revanced-patches/commit/4a43810a5a91ba945078839016210b46383cf7d7))\n\n\n### Features\n\n* **kakaotalk:** show who removed members in open chats ([cc9048a](https://github.com/AmpleReVanced/revanced-patches/commit/cc9048a3eb1e87c5733326a6025fd099603ce16b))",
+  "download_url": "https://github.com/AmpleReVanced/revanced-patches/releases/download/v1.6.0-dev.12/patches-1.6.0-dev.12.mpp",
   "signature_download_url": "",
-  "version": "1.6.0-dev.11"
+  "version": "1.6.0-dev.12"
 }
