@@ -258,8 +258,7 @@ private data class UserMemoBindings(
                         classLookup(type)?.superclass == realmObjectType
                 } ?: throw PatchException("Could not infer user memo entry type")
 
-            val transactionOwners = generateSequence(realmType) { classLookup(it)?.superclass }.toSet()
-            val transactionMethods = registerMethodReferences.inferTransactionMethods(transactionOwners)
+            val transactionMethods = classLookup.inferTransactionMethods(realmType)
             val deleteMethod = classLookup.inferRealmObjectDeleteMethod(realmObjectType)
 
             return UserMemoBindings(
@@ -370,41 +369,17 @@ private fun List<MethodReference>.inferRealmFindAllMethod(classLookup: ClassLook
             classLookup(reference.returnType)?.superclass == "Ljava/util/AbstractList;"
     } ?: throw PatchException("Could not infer Realm findAll method")
 
-private fun List<MethodReference>.inferTransactionMethods(realmTypes: Set<String>): RealmTransactionMethods {
-    val begin = firstOrNull { reference ->
-        reference.definingClass in realmTypes &&
-            reference.name == "beginTransaction" &&
-            reference.parameterTypes.isEmpty() &&
-            reference.returnType == "V"
-    }?.name ?: throw PatchException("Could not infer Realm beginTransaction method")
-
-    val noArgumentVoidMethods = filter { reference ->
-        reference.definingClass in realmTypes &&
-            reference.parameterTypes.isEmpty() &&
-            reference.returnType == "V" &&
-            reference.name != begin
-    }.map { reference -> reference.name }.distinct()
-
-    val stateMethodCallCounts = linkedMapOf<String, Int>()
-    filter { reference ->
-        reference.definingClass in realmTypes &&
-            reference.parameterTypes.isEmpty() &&
-            reference.returnType == "Z" &&
-            reference.name != "isClosed"
-    }
-        .forEach { reference ->
-            stateMethodCallCounts[reference.name] = stateMethodCallCounts.getOrDefault(reference.name, 0) + 1
-        }
-    val isActive = stateMethodCallCounts.maxByOrNull { (_, count) -> count }
-        ?.key ?: throw PatchException("Could not infer Realm transaction state method")
+private fun ClassLookup.inferTransactionMethods(realmType: String): RealmTransactionMethods {
+    val methods = generateSequence(this(realmType)) { it.superclass?.let(this) }.flatMap { it.methods }.toList()
+    fun sharedRealmDelegate(name: String) = methods.singleOrNull { method ->
+        method.parameterTypes.isEmpty() && method.hasMethodReference("Lio/realm/internal/OsSharedRealm;", name)
+    }?.name ?: throw PatchException("Could not infer Realm $name method")
 
     return RealmTransactionMethods(
-        begin = begin,
-        commit = noArgumentVoidMethods.getOrNull(0)
-            ?: throw PatchException("Could not infer Realm commit transaction method"),
-        cancel = noArgumentVoidMethods.getOrNull(1)
-            ?: throw PatchException("Could not infer Realm cancel transaction method"),
-        isActive = isActive,
+        begin = sharedRealmDelegate("beginTransaction"),
+        commit = sharedRealmDelegate("commitTransaction"),
+        cancel = sharedRealmDelegate("cancelTransaction"),
+        isActive = sharedRealmDelegate("isInTransaction"),
     )
 }
 
