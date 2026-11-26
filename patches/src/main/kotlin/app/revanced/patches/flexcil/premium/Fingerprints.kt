@@ -1,6 +1,7 @@
 package app.revanced.patches.flexcil.premium
 
 import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.methodCall
 import com.android.tools.smali.dexlib2.AccessFlags
 
 internal object PremiumProductsGateFingerprint : Fingerprint(
@@ -23,7 +24,10 @@ internal object ActiveSubscriptionFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC),
     parameters = listOf(),
     returnType = "Z",
-    strings = listOf("active"),
+    filters = listOf(
+        methodCall("Landroid/os/SystemClock;->elapsedRealtime()J"),
+        methodCall("Ljava/lang/System;->currentTimeMillis()J"),
+    ),
     custom = { _, classDef -> classDef.sourceFile == "FlexcilAccountClient.kt" },
 )
 
