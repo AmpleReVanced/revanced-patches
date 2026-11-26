@@ -11,7 +11,6 @@
 // Tried in order, until one returns a usable reply.
 // The repository variable OPENROUTER_MODEL replaces this list. Separate multiple models with commas.
 const DEFAULT_MODELS = [
-  'nvidia/nemotron-3.5-super-vl:free',
   'google/gemma-4-26b-a4b-it:free',
   'google/gemma-4-31b-it:free',
   'deepseek/deepseek-v4-flash',
