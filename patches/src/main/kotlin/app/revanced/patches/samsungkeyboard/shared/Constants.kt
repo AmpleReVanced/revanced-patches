@@ -11,8 +11,8 @@ object Constants {
         apkFileType = ApkFileType.APK,
         targets = listOf(
             AppTarget(
-                version = "5.9.40.48",
-                versionCode = 594048300,
+                version = "5.9.50.10",
+                versionCode = 595010300,
                 minSdk = 33,
             ),
         ),
