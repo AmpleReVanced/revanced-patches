@@ -1,8 +1,9 @@
 package app.revanced.patches.dcinside.misc.integrity
 
+import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
 import app.revanced.patches.dcinside.misc.integrity.fingerprints.GenerateXAndroidCertFingerprint
 import app.revanced.patches.dcinside.misc.integrity.fingerprints.NativeGetSignatureByTypeFingerprint
@@ -12,11 +13,12 @@ import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.builder.MutableMethodImplementation
+import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethodParameter
 
 @Suppress("unused")
-val spoofSignaturePatch = bytecodePatch(
+val spoofSignaturePatch = patch(
     name = "Spoof Signature",
     description = "Spoofs the app signature to bypass integrity checks.",
 ) {
@@ -80,12 +82,10 @@ val spoofSignaturePatch = bytecodePatch(
             }
         )
 
-        GenerateXAndroidCertFingerprint.method.apply {
-            val moveResultObjectIdx = implementation!!.instructions.last { it.opcode == Opcode.MOVE_RESULT_OBJECT }
-            addInstruction(
-                moveResultObjectIdx.location.index + 1,
-                "const-string v0, \"43bd70dfc365ec1749f0424d28174da44ee7659d\""
-            )
+        GenerateXAndroidCertFingerprint.apply {
+            val index = instructionMatches.single().index + 1
+            val result = method.getInstruction<OneRegisterInstruction>(index).registerA
+            method.addInstruction(index + 1, "const-string v$result, \"43bd70dfc365ec1749f0424d28174da44ee7659d\"")
         }
     }
 }

@@ -1,14 +1,14 @@
 package app.revanced.patches.kakaotalk.ad
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getFreeRegisterProvider
 import app.revanced.patches.kakaotalk.ad.fingerprints.MeasuringBizBoardFingerprint
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.util.parameterRegister
 
 @Suppress("unused")
-val removeBizBoardPatch = bytecodePatch(
+val removeBizBoardPatch = patch(
     name = "Remove BizBoard ads",
     description = "Removes the BizBoard ad by forcing its dimensions to 0x0 and visibility to GONE in onMeasure.",
 ) {

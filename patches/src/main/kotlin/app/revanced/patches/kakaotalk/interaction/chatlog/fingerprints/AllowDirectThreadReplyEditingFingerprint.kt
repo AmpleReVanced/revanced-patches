@@ -20,7 +20,9 @@ internal object ModifyMessageActionConstructorFingerprint : Fingerprint(
     classFingerprint = ModifyMessageActionClassFingerprint,
     name = "<init>",
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.CONSTRUCTOR),
-    parameters = listOf("L", "L"),
+    parameters = {
+        listOf(ChatLogFingerprint.originalClassDef.type, "L", "Lcom/kakao/talk/drawer/DrawerFeature;")
+    },
     returnType = "V",
     filters = listOf(
         methodCall(

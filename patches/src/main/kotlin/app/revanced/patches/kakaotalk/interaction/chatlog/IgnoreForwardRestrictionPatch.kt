@@ -2,7 +2,8 @@ package app.revanced.patches.kakaotalk.interaction.chatlog
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.classDefBy
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.returnEarly
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ForwardActionTypeFingerprint
 import app.revanced.patches.kakaotalk.interaction.chatlog.fingerprints.ForwardableChatLogFingerprint
@@ -14,7 +15,7 @@ import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
 
 @Suppress("unused")
-val ignoreForwardRestrictionPatch = bytecodePatch(
+val ignoreForwardRestrictionPatch = patch(
     name = "Ignore forward restriction",
     description = "Ignores the restrictions that stop messages such as KakaoLink from being forwarded " +
         "to another chatroom.",

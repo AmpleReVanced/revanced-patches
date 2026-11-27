@@ -1,11 +1,12 @@
 package app.revanced.patches.all.misc.versioncode
 
+import app.morphe.patcher.patch.document
 import app.morphe.patcher.patch.intOption
-import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.util.getNode
 import org.w3c.dom.Element
 
-val changeVersionCodePatch = resourcePatch(
+val changeVersionCodePatch = patch(
     description = "Changes the version code of the app. This will turn off app store updates " +
             "and allows downgrading an existing app install to an older app version.",
     default = false,

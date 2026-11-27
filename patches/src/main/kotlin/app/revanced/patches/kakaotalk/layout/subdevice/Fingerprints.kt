@@ -19,7 +19,7 @@ private const val VISIBLE_COVER_STATE = "NONE"
 internal object AlimtalkCoverStateFingerprint : Fingerprint(
     definingClass = ALIMTALK_TYPE_COMPANION_CLASS,
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
-    parameters = listOf("Z"),
+    parameters = listOf("Z", "L"),
     filters = listOf(
         fieldAccess(name = VISIBLE_COVER_STATE, opcode = Opcode.SGET_OBJECT),
     ),
@@ -27,18 +27,20 @@ internal object AlimtalkCoverStateFingerprint : Fingerprint(
 
 internal object LeverageCoverStateFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
-    parameters = listOf("Z", "Z"),
+    parameters = listOf("Z", "Z", "L"),
     filters = listOf(
         fieldAccess(name = VISIBLE_COVER_STATE, opcode = Opcode.SGET_OBJECT),
         methodCall(
             definingClass = ALIMTALK_TYPE_COMPANION_CLASS,
-            parameters = listOf("Z"),
+            parameters = listOf("Z", "L"),
             opcode = Opcode.INVOKE_VIRTUAL,
         ),
     ),
 )
 
 internal object UniversalMobileOnlyFingerprint : Fingerprint(
+    parameters = listOf("J", UNIVERSAL_PUBLIC_DATA_CLASS),
+    returnType = "Z",
     filters = listOf(
         methodCall(
             definingClass = UNIVERSAL_PUBLIC_DATA_CLASS,
@@ -47,8 +49,6 @@ internal object UniversalMobileOnlyFingerprint : Fingerprint(
             opcode = Opcode.INVOKE_VIRTUAL,
         ),
         opcode(Opcode.MOVE_RESULT, location = MatchAfterImmediately()),
-        opcode(Opcode.IF_EQZ, location = MatchAfterImmediately()),
-        opcode(Opcode.NEW_INSTANCE, location = MatchAfterImmediately()),
     ),
     custom = { _, classDef -> classDef.sourceFile == "UniversalDataValidator.kt" },
 )

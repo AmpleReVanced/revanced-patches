@@ -2,7 +2,7 @@ package app.revanced.patches.soop.p2p
 
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstructions
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getMutableMethod
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
@@ -30,7 +30,7 @@ private val disableNativeP2PPatch = nativePatch(COMPATIBILITY_SOOP) {
 }
 
 @Suppress("unused")
-val disableP2PPatch = bytecodePatch(
+val disableP2PPatch = patch(
     name = "Disable P2P",
     description = "Disables SOOP peer-assisted grid streaming.",
 ) {
@@ -38,7 +38,7 @@ val disableP2PPatch = bytecodePatch(
     dependsOn(disableNativeP2PPatch)
 
     execute {
-        HlsEngineV2OffFingerprint.method.returnEarly(true)
+        V2PlayerFingerprint.method.returnEarly(false)
         ColonyConnectFingerprint.method.returnEarly()
         P2PCommandDispatchFingerprint.method.returnEarly()
 

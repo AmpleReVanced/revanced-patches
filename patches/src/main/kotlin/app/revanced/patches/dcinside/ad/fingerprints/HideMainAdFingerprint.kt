@@ -1,22 +1,12 @@
 package app.revanced.patches.dcinside.ad.fingerprints
 
 import app.morphe.patcher.Fingerprint
-import app.morphe.patcher.OpcodesFilter
-import app.morphe.patcher.fingerprint
-import com.android.tools.smali.dexlib2.AccessFlags
-import com.android.tools.smali.dexlib2.Opcode
+import app.morphe.patcher.StringComparisonType
+import app.morphe.patcher.string
 
 internal object HideMainAdFingerprint : Fingerprint(
-    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.CONSTRUCTOR),
-    parameters = listOf("Landroid/view/View;"),
+    name = "<init>",
+    parameters = listOf("Landroid/widget/FrameLayout;", "L"),
     returnType = "V",
-    strings = listOf("itemView"),
-    filters = OpcodesFilter.opcodesToFilters(
-        Opcode.CONST_STRING,
-        Opcode.INVOKE_STATIC,
-        Opcode.INVOKE_DIRECT,
-        Opcode.NEW_INSTANCE,
-        Opcode.INVOKE_DIRECT,
-        Opcode.MOVE_RESULT_OBJECT,
-    )
+    filters = listOf(string("ad_banner_main_center", comparison = StringComparisonType.ENDS_WITH)),
 )

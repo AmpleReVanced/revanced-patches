@@ -83,7 +83,7 @@
             android:title="@string/morphe_settings_package_name" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/morphe_settings_section_debug">
-        <SwitchPreference
+        <app.morphe.extension.shared.settings.preference.MorpheListPreference
             android:key="morphe_pref_debug"
             android:summary="@string/morphe_settings_debug_summary"
             android:title="@string/morphe_settings_debug" />

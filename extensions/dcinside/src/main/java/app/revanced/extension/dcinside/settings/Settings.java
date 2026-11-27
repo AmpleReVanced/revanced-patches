@@ -8,10 +8,15 @@ import android.view.ViewGroup;
 
 import app.morphe.extension.shared.settings.BaseSettings;
 import app.morphe.extension.shared.settings.BooleanSetting;
+import app.morphe.extension.shared.settings.DebugSettings;
 import app.revanced.extension.dcinside.helper.ResourceHelper;
 
 @SuppressWarnings("unused")
 public final class Settings extends BaseSettings {
+    static {
+        DebugSettings.migrateLegacyPreference();
+    }
+
     private static final int NORMAL_DCCON_SIZE_DP = 100;
 
     private Settings() {

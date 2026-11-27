@@ -1,6 +1,7 @@
 package app.revanced.patches.samsungkeyboard.misc.nononeui
 
-import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.patch.document
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.Document
 import app.morphe.util.asSequence
 import app.morphe.util.getNode
@@ -13,7 +14,7 @@ private const val ACTIVITY = "app.revanced.extension.samsungkeyboard.FeedbackSet
 private const val CATEGORY = "SETTINGS_CATEGORY_CUSTOMIZATION_GESTURE_AND_FEEDBACK"
 private const val PREFERENCE = "morphe_samsung_keyboard_feedback"
 
-internal val addFeedbackSettingsPatch = resourcePatch {
+internal val addFeedbackSettingsPatch = patch {
     compatibleWith(COMPATIBILITY_SAMSUNG_KEYBOARD)
 
     execute {

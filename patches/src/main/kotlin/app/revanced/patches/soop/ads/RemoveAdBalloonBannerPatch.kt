@@ -1,13 +1,13 @@
 package app.revanced.patches.soop.ads
 
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.returnEarly
 import app.revanced.patches.soop.ads.fingerprints.AdBalloonBannerFingerprint
 import app.revanced.patches.soop.ads.fingerprints.adBalloonBannerContainerFingerprint
 import app.revanced.patches.soop.shared.Constants.COMPATIBILITY_SOOP
 
 @Suppress("unused")
-val removeAdBalloonBannerPatch = bytecodePatch(
+val removeAdBalloonBannerPatch = patch(
     name = "Remove Ad Balloon banner",
     description = "Removes Ad Balloon banners displayed over the live player.",
 ) {

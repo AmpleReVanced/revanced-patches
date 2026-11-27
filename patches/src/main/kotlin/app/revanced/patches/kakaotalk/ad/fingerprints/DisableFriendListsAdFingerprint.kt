@@ -9,7 +9,6 @@ import com.android.tools.smali.dexlib2.Opcode
 internal object FriendListChipBizBoardBindFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     returnType = "V",
-    parameters = listOf("L", "L"),
     filters = listOf(
         methodCall(
             definingClass = "Lcom/kakao/adfit/ads/talk/TalkNativeAdBinder;",

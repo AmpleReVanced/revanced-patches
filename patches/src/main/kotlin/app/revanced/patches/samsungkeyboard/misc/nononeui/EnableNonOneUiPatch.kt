@@ -9,11 +9,14 @@ import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.getInstructionOrNull
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.fieldAccess
-import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.ResourcePatchContext
-import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.patch.classDefBy
+import app.morphe.patcher.patch.classDefForEach
+import app.morphe.patcher.patch.decode
+import app.morphe.patcher.patch.document
+import app.morphe.patcher.patch.mutableClassDefBy
+import app.morphe.patcher.patch.patch
+import app.morphe.patcher.patch.resourceFile
 import app.morphe.patcher.util.findMutableMethodOf
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
@@ -25,6 +28,7 @@ import app.morphe.util.getNode
 import app.morphe.util.indexOfFirstInstructionOrThrow
 import app.morphe.util.indexOfFirstStringInstruction
 import app.morphe.util.indexOfFirstStringInstructionOrThrow
+import app.morphe.util.inputStreamFromBundledResource
 import app.revanced.patches.samsungkeyboard.shared.Constants.COMPATIBILITY_SAMSUNG_KEYBOARD
 import app.revanced.util.argumentRegister
 import app.revanced.util.parameterRegister
@@ -77,7 +81,7 @@ private data class ReplacementOptions(
     val settingsWindowFlags: Boolean,
 )
 
-private val enableNonOneUiResourcesPatch = resourcePatch {
+private val enableNonOneUiResourcesPatch = patch {
     compatibleWith(COMPATIBILITY_SAMSUNG_KEYBOARD)
 
     execute {
@@ -107,18 +111,18 @@ private val enableNonOneUiResourcesPatch = resourcePatch {
     }
 }
 
-private fun ResourcePatchContext.addGifEncoderLibrary() {
-    val destination = get(GIF_ENCODER_PATH).apply { parentFile.mkdirs() }
-    val source = ::javaClass.javaClass.classLoader.getResourceAsStream("samsungkeyboard/$GIF_ENCODER_PATH")
+private fun addGifEncoderLibrary() {
+    val destination = resourceFile(GIF_ENCODER_PATH).apply { parentFile.mkdirs() }
+    val source = inputStreamFromBundledResource("samsungkeyboard", GIF_ENCODER_PATH)
         ?: throw PatchException("Could not load ${destination.name}.")
     source.use { input ->
         destination.outputStream().use { output -> input.copyTo(output) }
     }
 }
 
-private fun ResourcePatchContext.replaceSprResources() {
-    val resourceDirectory = get("res")
-    val drawableFiles = decode("res/drawable*").map { get(it) }.filter(File::isFile)
+private fun replaceSprResources() {
+    val resourceDirectory = resourceFile("res")
+    val drawableFiles = decode("res/drawable*").map { resourceFile(it) }.filter(File::isFile)
     val sprFiles = drawableFiles.filter { it.isSpr() }
     val resourceNames = sprFiles.mapTo(HashSet(sprFiles.size)) { it.nameWithoutExtension }
 
@@ -167,7 +171,7 @@ private fun java.io.File.isSpr() = inputStream().use { input ->
 private fun String.drawableName() = substringAfter("@drawable/", "").takeIf(String::isNotEmpty)
 
 @Suppress("unused")
-val enableNonOneUiPatch = bytecodePatch(
+val enableNonOneUiPatch = patch(
     name = "Enable non-One UI ROM support",
     description = "Makes Samsung Keyboard installable and usable on non-One UI ROMs.",
 ) {
@@ -205,7 +209,7 @@ private fun MutableMethod.applyClipboardUriCompat() = addInstructionsWithLabels(
     """.trimIndent(),
 )
 
-private fun BytecodePatchContext.patchGifVisibility() {
+private fun patchGifVisibility() {
     val match = GifVisibilityFingerprint.instructionMatches.last()
     val visibilityRegister = match.getInstruction<Instruction>().argumentRegister(0)
     GifVisibilityFingerprint.method.addInstructions(
@@ -217,7 +221,7 @@ private fun BytecodePatchContext.patchGifVisibility() {
     )
 }
 
-private fun BytecodePatchContext.patchPlatformDependencies() {
+private fun patchPlatformDependencies() {
     val enabledFeatureAccess = anyInstruction(
         ClipboardFeatureFlagFingerprint.featureFlagAccess(),
         GifFeatureFlagFingerprint.featureFlagAccess(),
@@ -258,13 +262,12 @@ private fun BytecodePatchContext.patchPlatformDependencies() {
     }
 }
 
-context(_: BytecodePatchContext)
 private fun Fingerprint.featureFlagAccess() = fieldAccess(
     instructionMatches.firstNotNullOf { it.getInstruction<Instruction>().getReference<FieldReference>() },
     Opcode.SGET_BOOLEAN,
 )
 
-private fun BytecodePatchContext.initializeInputMethodServices() {
+private fun initializeInputMethodServices() {
     val initialized = inputMethodServiceClassTypes.count { type ->
         val classDef = classDefBy(type)
         val onCreate = classDef.methods.firstOrNull { method ->
@@ -279,7 +282,7 @@ private fun BytecodePatchContext.initializeInputMethodServices() {
     if (initialized == 0) throw PatchException("Could not find an input method service initializer.")
 }
 
-private fun BytecodePatchContext.initializeApplication() {
+private fun initializeApplication() {
     val applicationClass = classDefBy(applicationClassType)
     val attachBaseContext = applicationClass.methods.firstOrNull { method ->
         method.name == "attachBaseContext" &&

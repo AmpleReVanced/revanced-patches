@@ -2,7 +2,7 @@ package app.revanced.patches.kakaotalk.layout.tab
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import app.morphe.util.indexOfFirstInstructionReversedOrThrow
 import app.morphe.util.setExtensionIsPatchIncluded
@@ -19,7 +19,7 @@ private const val EXTENSION_CLASS =
     "Lapp/revanced/extension/kakaotalk/patches/DisableFriendFeedTabPatch;"
 
 @Suppress("unused")
-val disableFriendFeedTabPatch = bytecodePatch(
+val disableFriendFeedTabPatch = patch(
     name = "Disable Friend Feed tab",
     description = "Adds an option to replace the Friend Feed tab with the classic Friends tab.",
 ) {

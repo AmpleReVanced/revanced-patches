@@ -1,11 +1,11 @@
 package app.revanced.patches.flexcil.login
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.revanced.patches.flexcil.shared.Constants.COMPATIBILITY_FLEXCIL
 
 @Suppress("unused")
-val bypassLoginPatch = bytecodePatch(
+val bypassLoginPatch = patch(
     name = "Bypass login",
     description = "Skips the mandatory account sign-in on launch and opens the app directly.",
 ) {

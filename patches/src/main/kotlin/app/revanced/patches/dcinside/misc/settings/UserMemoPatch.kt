@@ -2,12 +2,17 @@ package app.revanced.patches.dcinside.misc.settings
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.classDefByOrNull
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patches.shared.misc.settings.preference.NonInteractivePreference
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.dcinside.misc.extension.addExtensionPatch
+import app.revanced.util.smaliReference
+import app.revanced.util.parameterRegister
+import com.android.tools.smali.dexlib2.iface.instruction.TwoRegisterInstruction
+import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
@@ -22,7 +27,7 @@ private const val EXTENSION_CLASS =
     "Lapp/revanced/extension/dcinside/settings/UserMemoPatch;"
 private typealias ClassLookup = (String) -> ClassDef?
 
-internal val userMemoPatch = bytecodePatch {
+internal val userMemoPatch = patch {
     compatibleWith(COMPATIBILITY_DC_INSIDE)
     dependsOn(
         addExtensionPatch,
@@ -53,6 +58,8 @@ internal val userMemoPatch = bytecodePatch {
             newPairArray = UserMemoNewPairArrayFingerprint.method,
             newPair = UserMemoNewPairFingerprint.method,
             registerEntries = UserMemoRegisterEntriesFingerprint.method,
+            memoPairs = UserMemoPairsFingerprint.method,
+            memoText = UserMemoTextFingerprint.method,
             beginTransaction = UserMemoBeginTransactionFingerprint.method,
             queryEntries = UserMemoQueryEntriesFingerprint.method,
             queryContainers = UserMemoQueryContainersFingerprint.method,
@@ -75,6 +82,8 @@ private data class UserMemoBridgeMethods(
     val newPairArray: MutableMethod,
     val newPair: MutableMethod,
     val registerEntries: MutableMethod,
+    val memoPairs: MutableMethod,
+    val memoText: MutableMethod,
     val beginTransaction: MutableMethod,
     val queryEntries: MutableMethod,
     val queryContainers: MutableMethod,
@@ -92,18 +101,20 @@ private data class UserMemoBindings(
     val pairArrayType: String,
     val pairType: String,
     val managerType: String,
+    val memoPairsMethod: MethodReference,
+    val pairTextField: FieldReference,
     val defaultRealmMethod: String,
     val containerType: String,
     val countType: String,
     val entryType: String,
     val realmObjectType: String,
+    val realmModelType: String,
     val realmQueryMethod: String,
     val realmFindAllMethod: MethodReference,
     val beginTransactionMethod: String,
     val commitTransactionMethod: String,
     val cancelTransactionMethod: String,
     val inTransactionMethod: String,
-    val managerInstanceFieldName: String,
     val cacheReloadMethodName: String,
     val realmObjectDeleteMethod: String,
 ) {
@@ -139,10 +150,28 @@ private data class UserMemoBindings(
             """
                 check-cast p0, $realmType
                 check-cast p1, $pairArrayType
-                invoke-static {p0, p2, p3, p4, p1}, ${registerMethod.definingClass}->${registerMethod.name}(${realmType}Ljava/lang/String;Ljava/lang/String;Z${pairArrayType})Z
-                move-result p0
-                return p0
+                invoke-static {p0, p2, p3, p4, p1}, ${registerMethod.definingClass}->${registerMethod.name}(${realmType}Ljava/lang/String;Ljava/lang/String;Z${pairArrayType})V
+                return-void
             """.trimIndent(),
+        )
+
+        methods.memoPairs.addInstructions(
+            0,
+            """
+                check-cast p0, $realmType
+                invoke-static {p0, p1}, $memoPairsMethod
+                move-result-object p0
+                return-object p0
+            """,
+        )
+        methods.memoText.addInstructions(
+            0,
+            """
+                check-cast p0, $pairType
+                iget-object p0, p0, ${pairTextField.smaliReference}
+                check-cast p0, Ljava/lang/String;
+                return-object p0
+            """,
         )
 
         methods.beginTransaction.addRealmVoidBridge(realmType, beginTransactionMethod)
@@ -166,8 +195,7 @@ private data class UserMemoBindings(
             0,
             """
                 check-cast p0, $realmType
-                sget-object p1, $managerType->$managerInstanceFieldName:$managerType
-                invoke-virtual {p1, p0}, $managerType->$cacheReloadMethodName($realmType)V
+                invoke-static {p0}, $managerType->$cacheReloadMethodName($realmType)V
                 return-void
             """.trimIndent(),
         )
@@ -176,7 +204,7 @@ private data class UserMemoBindings(
             0,
             """
                 check-cast p0, $realmObjectType
-                invoke-virtual {p0}, $realmObjectType->$realmObjectDeleteMethod()V
+                invoke-static {p0}, $realmObjectType->$realmObjectDeleteMethod($realmModelType)V
                 return-void
             """.trimIndent(),
         )
@@ -230,7 +258,7 @@ private data class UserMemoBindings(
                         classLookup(type)?.superclass == realmObjectType
                 } ?: throw PatchException("Could not infer user memo entry type")
 
-            val transactionMethods = registerMethodReferences.inferTransactionMethods(realmType)
+            val transactionMethods = classLookup.inferTransactionMethods(realmType)
             val deleteMethod = classLookup.inferRealmObjectDeleteMethod(realmObjectType)
 
             return UserMemoBindings(
@@ -239,18 +267,32 @@ private data class UserMemoBindings(
                 pairArrayType = pairArrayType,
                 pairType = pairArrayType.removePrefix("["),
                 managerType = managerType,
+                memoPairsMethod = registerMethodReferences.distinctBy { it.smaliReference }.single {
+                    it.definingClass == managerType && it.parameterTypes == listOf(realmType, "Ljava/lang/String;") &&
+                        it.returnType == "Ljava/util/HashMap;"
+                },
+                pairTextField = classLookup.requireClass(pairArrayType.removePrefix("[")).methods.single {
+                    it.name == "<init>" && it.parameterTypes == listOf("Ljava/lang/Object;", "Ljava/lang/Object;")
+                }.run {
+                    val first = parameterRegister(0)
+                    implementation!!.instructions.firstNotNullOf {
+                        it.getReference<FieldReference>()?.takeIf { _ ->
+                            it.opcode == Opcode.IPUT_OBJECT && (it as TwoRegisterInstruction).registerA == first
+                        }
+                    }
+                },
                 defaultRealmMethod = classLookup.inferDefaultRealmMethod(realmType),
                 containerType = containerType,
                 countType = countType,
                 entryType = entryType,
                 realmObjectType = realmObjectType,
+                realmModelType = classLookup.requireClass(realmObjectType).interfaces.single(),
                 realmQueryMethod = registerMethodReferences.inferRealmQueryMethod(realmType),
-                realmFindAllMethod = registerMethodReferences.inferRealmFindAllMethod(),
+                realmFindAllMethod = registerMethodReferences.inferRealmFindAllMethod(classLookup),
                 beginTransactionMethod = transactionMethods.begin,
                 commitTransactionMethod = transactionMethods.commit,
                 cancelTransactionMethod = transactionMethods.cancel,
                 inTransactionMethod = transactionMethods.isActive,
-                managerInstanceFieldName = managerClass.inferSingletonField(managerType),
                 cacheReloadMethodName = managerClass.inferCacheReloadMethod(realmType),
                 realmObjectDeleteMethod = deleteMethod,
             )
@@ -296,22 +338,11 @@ private fun ClassLookup.inferDefaultRealmMethod(realmType: String): String =
             method.isStatic
     }?.name ?: throw PatchException("Could not find default Realm opener for $realmType")
 
-private fun ClassLookup.inferRealmObjectDeleteMethod(realmObjectType: String): String {
-    val realmObjectClass = requireClass(realmObjectType)
-    val deleteStaticMethod = realmObjectClass.methods.singleOrNull { method ->
-        method.parameterTypes.singleOrNull()?.toString() == "Lio/realm/X0;" &&
-            method.returnType == "V" &&
-            method.isStatic &&
+private fun ClassLookup.inferRealmObjectDeleteMethod(realmObjectType: String): String =
+    requireClass(realmObjectType).methods.single { method ->
+        method.parameterTypes.size == 1 && method.returnType == "V" && method.isStatic &&
             method.hasString("Object malformed: missing Realm. Make sure to instantiate RealmObjects with Realm.createObject()")
-    } ?: throw PatchException("Could not infer Realm object static delete method")
-
-    return realmObjectClass.methods.singleOrNull { method ->
-        method.parameterTypes.isEmpty() &&
-            method.returnType == "V" &&
-            !method.isStatic &&
-            method.hasMethodReference(deleteStaticMethod.definingClass, deleteStaticMethod.name)
-    }?.name ?: throw PatchException("Could not infer Realm object delete method")
-}
+    }.name
 
 private fun List<MethodReference>.inferMemoContainerType(
     managerType: String,
@@ -331,65 +362,34 @@ private fun List<MethodReference>.inferRealmQueryMethod(realmType: String): Stri
             reference.returnType == "Lio/realm/RealmQuery;"
     }?.name ?: throw PatchException("Could not infer Realm query method")
 
-private fun List<MethodReference>.inferRealmFindAllMethod(): MethodReference =
+private fun List<MethodReference>.inferRealmFindAllMethod(classLookup: ClassLookup): MethodReference =
     firstOrNull { reference ->
         reference.definingClass == "Lio/realm/RealmQuery;" &&
             reference.parameterTypes.isEmpty() &&
-            reference.returnType.startsWith("Lio/realm/") &&
-            reference.returnType != "Lio/realm/RealmQuery;"
+            classLookup(reference.returnType)?.superclass == "Ljava/util/AbstractList;"
     } ?: throw PatchException("Could not infer Realm findAll method")
 
-private fun List<MethodReference>.inferTransactionMethods(realmType: String): RealmTransactionMethods {
-    val begin = firstOrNull { reference ->
-        reference.definingClass == realmType &&
-            reference.name == "beginTransaction" &&
-            reference.parameterTypes.isEmpty() &&
-            reference.returnType == "V"
-    }?.name ?: throw PatchException("Could not infer Realm beginTransaction method")
-
-    val noArgumentVoidMethods = filter { reference ->
-        reference.definingClass == realmType &&
-            reference.parameterTypes.isEmpty() &&
-            reference.returnType == "V" &&
-            reference.name != begin
-    }.map { reference -> reference.name }.distinct()
-
-    val stateMethodCallCounts = linkedMapOf<String, Int>()
-    filter { reference ->
-        reference.definingClass == realmType &&
-            reference.parameterTypes.isEmpty() &&
-            reference.returnType == "Z" &&
-            reference.name != "isClosed"
-    }
-        .forEach { reference ->
-            stateMethodCallCounts[reference.name] = stateMethodCallCounts.getOrDefault(reference.name, 0) + 1
-        }
-    val isActive = stateMethodCallCounts.maxByOrNull { (_, count) -> count }
-        ?.key ?: throw PatchException("Could not infer Realm transaction state method")
+private fun ClassLookup.inferTransactionMethods(realmType: String): RealmTransactionMethods {
+    val methods = generateSequence(this(realmType)) { it.superclass?.let(this) }.flatMap { it.methods }.toList()
+    fun sharedRealmDelegate(name: String) = methods.singleOrNull { method ->
+        method.parameterTypes.isEmpty() && method.hasMethodReference("Lio/realm/internal/OsSharedRealm;", name)
+    }?.name ?: throw PatchException("Could not infer Realm $name method")
 
     return RealmTransactionMethods(
-        begin = begin,
-        commit = noArgumentVoidMethods.getOrNull(0)
-            ?: throw PatchException("Could not infer Realm commit transaction method"),
-        cancel = noArgumentVoidMethods.getOrNull(1)
-            ?: throw PatchException("Could not infer Realm cancel transaction method"),
-        isActive = isActive,
+        begin = sharedRealmDelegate("beginTransaction"),
+        commit = sharedRealmDelegate("commitTransaction"),
+        cancel = sharedRealmDelegate("cancelTransaction"),
+        isActive = sharedRealmDelegate("isInTransaction"),
     )
 }
-
-private fun ClassDef.inferSingletonField(type: String): String =
-    fields.firstOrNull { field ->
-        field.type == type &&
-            field.accessFlags and AccessFlags.STATIC.value != 0
-    }?.name ?: throw PatchException("Could not infer user memo manager instance field")
 
 private fun ClassDef.inferCacheReloadMethod(realmType: String): String =
     methods.singleOrNull { method ->
         method.parameterTypes.size == 1 &&
             method.parameterTypes[0].toString() == realmType &&
             method.returnType == "V" &&
-            !method.isStatic &&
-            method.hasString("findAll(...)")
+            method.isStatic &&
+            method.hasMethodReference("Ljava/util/HashMap;", "putAll")
     }?.name ?: throw PatchException("Could not infer user memo cache reload method")
 
 private fun Method.hasString(string: String): Boolean =

@@ -3,15 +3,16 @@ package app.revanced.patches.dcinside.layout.history
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.methodCall
-import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.classDefBy
+import app.morphe.patcher.patch.mutableClassDefBy
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patcher.util.getMutableMethod
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.matchAllMethodIndicesForEach
-import app.morphe.patcher.util.matchSingle
 import app.morphe.patcher.util.returnEarly
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import app.morphe.util.indexOfFirstInstruction
@@ -27,17 +28,20 @@ import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.ClassDef
 import com.android.tools.smali.dexlib2.iface.Method
+import com.android.tools.smali.dexlib2.builder.MutableMethodImplementation
+import com.android.tools.smali.dexlib2.iface.instruction.Instruction
+import com.android.tools.smali.dexlib2.iface.instruction.RegisterRangeInstruction
+import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
+import com.android.tools.smali.dexlib2.immutable.ImmutableMethodParameter
+import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
 import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.value.StringEncodedValue
-import java.util.logging.Logger
-
-private const val loggerName = "app.revanced.patches.dcinside.layout.history.ShowAuthorIdentifierPatch"
 
 @Suppress("unused")
-val showAuthorIdentifierPatch = bytecodePatch(
+val showAuthorIdentifierPatch = patch(
     name = "Show author identifier",
     description = "Adds options to show the author identifier next to the nickname in posts, " +
         "post lists, comments, and the recently-viewed posts list. The recently-viewed list only " +
@@ -71,10 +75,14 @@ val showAuthorIdentifierPatch = bytecodePatch(
         val userIdGetter = postInfo.gettersOf("user_id").first()
         val ipGetter = postInfo.gettersOf("ip").first()
 
-        val authorSpanBuilder = PostAuthorLineFingerprint.method.instructions.firstNotNullOf { instruction ->
-            instruction.getReference<MethodReference>()
-                ?.takeIf { reference -> reference.returnType == "Landroid/text/Spannable;" }
-        }
+        val authorLineBuilders = PostAuthorLineFingerprint.instructionMatches.single().instruction
+            .getReference<MethodReference>()!!.definingClass
+            .let { builderClass ->
+                classDefBy(builderClass).methods.filter {
+                    it.returnType == "Landroid/text/SpannableStringBuilder;" &&
+                        it.parameterTypes.firstOrNull() == "Landroid/content/Context;"
+                }.map { it.smaliReference }.toSet()
+            }
 
         // Posts and post lists render the author line in obfuscated classes, so every method that
         // builds one is patched instead of fingerprinting each of them.
@@ -83,50 +91,17 @@ val showAuthorIdentifierPatch = bytecodePatch(
             val modelUserIdGetter = model.gettersOf("user_id").first()
 
             model.gettersOf("name").forEach { nicknameGetter ->
-                methodCall(
-                    definingClass = modelType,
-                    name = nicknameGetter.name,
-                    parameters = emptyList(),
-                    returnType = "Ljava/lang/String;",
-                ).matchAllMethodIndicesForEach(requireMatches = false) { index ->
-                    val buildsAuthorLine = instructions.any { instruction ->
-                        instruction.getReference<MethodReference>()?.smaliReference ==
-                            authorSpanBuilder.smaliReference
-                    }
-                    if (!buildsAuthorLine ||
-                        getInstruction(index + 1).opcode != Opcode.MOVE_RESULT_OBJECT
-                    ) {
+                val bridge = authorNameBridge(modelType, nicknameGetter, modelUserIdGetter, "formatPostAuthorName")
+                methodCall(nicknameGetter).matchAllMethodIndicesForEach(requireMatches = false) { index ->
+                    if (instructions.none { it.getReference<MethodReference>()?.smaliReference in authorLineBuilders }) {
                         return@matchAllMethodIndicesForEach
                     }
-
-                    val modelRegister = getInstruction<FiveRegisterInstruction>(index).registerC
-                    val nameRegister = getInstruction<OneRegisterInstruction>(index + 1).registerA
-                    val userIdRegister =
-                        getFreeRegisterProvider(index + 2, 1, modelRegister, nameRegister)
-                            .getFreeRegister4Bit()
-
-                    addInstructions(
-                        index + 2,
-                        """
-                            invoke-virtual {v$modelRegister}, ${modelUserIdGetter.smaliReference}
-                            move-result-object v$userIdRegister
-                            invoke-static {v$nameRegister, v$userIdRegister}, $EXTENSION_CLASS->formatPostAuthorName(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
-                            move-result-object v$nameRegister
-                        """.trimIndent(),
-                    )
+                    val receiver = getInstruction(index).firstArgumentRegister
+                    replaceInstruction(index, "invoke-static/range {v$receiver .. v$receiver}, $bridge")
                 }
             }
         }
-
-        // Isolated, so that a comment side app change cannot drop the post identifiers as well.
-        // On failure the comment preference stays hidden instead of becoming a dead toggle.
-        try {
-            addCommentAuthorIdentifier()
-        } catch (exception: Exception) {
-            Logger.getLogger(loggerName).warning(
-                "Could not show the author identifier in comments: $exception",
-            )
-        }
+        addCommentAuthorIdentifier()
 
         // PostHistory has no spare column for the identifier and adding one requires
         // a Realm migration, so fold it into the nickname that is stored.
@@ -139,7 +114,7 @@ val showAuthorIdentifierPatch = bytecodePatch(
 
             val setter = getInstruction(index + 2).getReference<MethodReference>()
                 ?: throw PatchException("Could not find the author name setter")
-            val postRegister = getInstruction<FiveRegisterInstruction>(index).registerC
+            val postRegister = getInstruction(index).firstArgumentRegister
             val nameRegister = getInstruction<OneRegisterInstruction>(index + 1).registerA
             val freeRegisters =
                 getFreeRegisterProvider(index + 2, 2, postRegister, nameRegister)
@@ -161,157 +136,103 @@ val showAuthorIdentifierPatch = bytecodePatch(
             setter
         }
 
-        // The setter delegates to the accessor the Realm proxy overrides.
         val storedNameField = nameSetter.getMutableMethod().instructions
-            .firstNotNullOf { instruction ->
-                instruction.getReference<MethodReference>()?.takeIf { reference ->
-                    reference.definingClass == nameSetter.definingClass &&
-                        reference.parameterTypeNames == nameSetter.parameterTypeNames
-                }
-            }
-            .getMutableMethod().instructions
-            .firstNotNullOf { instruction -> instruction.getReference<FieldReference>() }
-
-        val postHistory = mutableClassDefBy(nameSetter.definingClass)
-        val storedName = postHistory.methods.first { method -> method.readsOnly(storedNameField) }
-        val nameGetter = postHistory.methods.first { method ->
-            method.parameterTypes.isEmpty() &&
-                method.instructions.any { instruction ->
-                    instruction.getReference<MethodReference>()?.smaliReference == storedName.smaliReference
-                }
-        }
-
-        // Recently viewed posts are copied into the post archive and post series tables,
-        // so the identifier is stripped in the getter every consumer reads.
-        nameGetter.apply {
-            val nicknameRegister = getFreeRegisterProvider(0, 1).getFreeRegister4Bit()
-
-            addInstructions(
-                0,
-                """
-                    invoke-virtual {p0}, ${storedName.smaliReference}
-                    move-result-object v$nicknameRegister
-                    invoke-static {v$nicknameRegister}, $EXTENSION_CLASS->stripAuthorIdentifier(Ljava/lang/String;)Ljava/lang/String;
-                    move-result-object v$nicknameRegister
-                    return-object v$nicknameRegister
-                """.trimIndent(),
-            )
-        }
-
-        // Only the recently viewed list reads the value as stored, to show the identifier.
-        PostHistorySummaryBindFingerprint.method.apply {
-            val index = indexOfFirstInstructionOrThrow {
-                getReference<MethodReference>()?.smaliReference == nameGetter.smaliReference
-            }
-            val recordRegister = getInstruction<FiveRegisterInstruction>(index).registerC
-            val nicknameRegister = getInstruction<OneRegisterInstruction>(index + 1).registerA
-
-            addInstructions(
-                index + 2,
-                """
-                    invoke-virtual {v$recordRegister}, ${storedName.smaliReference}
-                    move-result-object v$nicknameRegister
-                    invoke-static {v$nicknameRegister}, $EXTENSION_CLASS->formatAuthorName(Ljava/lang/String;)Ljava/lang/String;
-                    move-result-object v$nicknameRegister
-                """.trimIndent(),
-            )
+            .firstNotNullOf { it.getReference<FieldReference>() }
+        val history = mutableClassDefBy(nameSetter.definingClass)
+        val getter = history.methods.single { it.readsOnly(storedNameField) }
+        val summary = PostHistorySummaryBindFingerprint.originalMethod
+        val display = historyNameBridge(getter, "formatAuthorName")
+        val nickname = historyNameBridge(getter, "stripAuthorIdentifier")
+        methodCall(getter).matchAllMethodIndicesForEach { index ->
+            if (name.startsWith("morphe_")) return@matchAllMethodIndicesForEach
+            val receiver = getInstruction(index).firstArgumentRegister
+            val target = if (definingClass == summary.definingClass && name == summary.name) display else nickname
+            replaceInstruction(index, "invoke-static/range {v$receiver .. v$receiver}, $target")
         }
     }
 }
 
-private fun BytecodePatchContext.addCommentAuthorIdentifier() {
-    // Matched exhaustively, as the signature is what identifies the builder and a second
-    // method of the same shape must not silently decide the type the bridge casts to.
-    val commentAuthorLine = CommentAuthorLineFingerprint.matchSingle().originalMethod
-    val commentType = commentAuthorLine.parameterTypes.first().toString()
-    val commentModel = classDefBy(commentType)
-    val commentUserIdGetter = commentModel.gettersOf("user_id").first()
-
-    fun formatAuthorLine(authorLineRegister: Int, commentRegister: Int) =
-        """
-            invoke-static {v$authorLineRegister, v$commentRegister}, $EXTENSION_CLASS->formatCommentAuthorLine(Ljava/lang/CharSequence;Ljava/lang/Object;)Ljava/lang/CharSequence;
-            move-result-object v$authorLineRegister
-        """.trimIndent()
-
-    var authorLineCallSites = 0
-    val injections = mutableListOf<() -> Unit>()
-    methodCall(commentAuthorLine).matchAllMethodIndicesForEach { index ->
-        authorLineCallSites++
-        if (getInstruction(index + 1).opcode != Opcode.MOVE_RESULT_OBJECT) {
-            return@matchAllMethodIndicesForEach
+private fun addCommentAuthorIdentifier() {
+    val authorLine = CommentAuthorLineFingerprint.originalMethod
+    val modelType = authorLine.parameterTypes.first().toString()
+    val model = classDefBy(modelType)
+    val userId = model.gettersOf("user_id").first()
+    var count = 0
+    model.gettersOf("name").forEach { getter ->
+        val bridge = authorNameBridge(modelType, getter, userId, "formatCommentAuthorName")
+        methodCall(getter).matchAllMethodIndicesForEach(requireMatches = false) { index ->
+            if (name.startsWith("morphe_") || instructions.none {
+                    it.getReference<MethodReference>()?.definingClass?.startsWith("Landroid/text/Spannable") == true
+                }
+            ) return@matchAllMethodIndicesForEach
+            val receiver = getInstruction(index).firstArgumentRegister
+            replaceInstruction(index, "invoke-static/range {v$receiver .. v$receiver}, $bridge")
+            count++
         }
-
-        val smaliInstructions = formatAuthorLine(
-            getInstruction<OneRegisterInstruction>(index + 1).registerA,
-            getInstruction<FiveRegisterInstruction>(index).registerD,
-        )
-        injections += { addInstructions(index + 2, smaliInstructions) }
     }
+    check(count > 0) { "Could not find comment author rendering calls" }
+    CommentPatchIncludedFingerprint.method.returnEarly(true)
+}
 
-    if (injections.size != authorLineCallSites) {
-        throw PatchException(
-            "Only ${injections.size} of $authorLineCallSites comment author line call sites are patchable",
-        )
-    }
-
-    CommentUserIdBridgeFingerprint.method.addInstructions(
+private fun authorNameBridge(
+    modelType: String,
+    getter: Method,
+    userId: Method,
+    formatter: String,
+) = ImmutableMethod(
+    modelType,
+    "morphe_${formatter}_${getter.name}",
+    listOf(ImmutableMethodParameter(modelType, null, null)),
+    "Ljava/lang/String;",
+    AccessFlags.PUBLIC.value or AccessFlags.STATIC.value,
+    null,
+    null,
+    MutableMethodImplementation(2),
+).toMutable().apply {
+    addInstructions(
         0,
         """
-            check-cast p0, $commentType
-            invoke-virtual {p0}, ${commentUserIdGetter.smaliReference}
+            invoke-virtual {p0}, ${getter.smaliReference}
+            move-result-object v0
+            invoke-virtual {p0}, ${userId.smaliReference}
+            move-result-object p0
+            invoke-static {v0, p0}, $EXTENSION_CLASS->$formatter(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+            move-result-object v0
+            return-object v0
+        """,
+    )
+    mutableClassDefBy(modelType).methods.add(this)
+}
+
+private fun historyNameBridge(getter: Method, formatter: String) = ImmutableMethod(
+    getter.definingClass,
+    "morphe_$formatter",
+    listOf(ImmutableMethodParameter(getter.definingClass, null, null)),
+    "Ljava/lang/String;",
+    AccessFlags.PUBLIC.value or AccessFlags.STATIC.value,
+    null,
+    null,
+    MutableMethodImplementation(1),
+).toMutable().apply {
+    addInstructions(
+        0,
+        """
+            invoke-virtual {p0}, ${getter.smaliReference}
+            move-result-object p0
+            invoke-static {p0}, $EXTENSION_CLASS->$formatter(Ljava/lang/String;)Ljava/lang/String;
             move-result-object p0
             return-object p0
-        """.trimIndent(),
+        """,
     )
-    injections.forEach { injection -> injection() }
-    CommentPatchIncludedFingerprint.method.returnEarly(true)
-
-    // The capture screen builds the author line itself instead of calling the builder.
-    var patchedCaptures = 0
-    commentModel.gettersOf("name").forEach { nicknameGetter ->
-        methodCall(
-            definingClass = commentType,
-            name = nicknameGetter.name,
-            parameters = emptyList(),
-            returnType = "Ljava/lang/String;",
-        ).matchAllMethodIndicesForEach(requireMatches = false) { index ->
-            val spannableIndex = indexOfFirstInstruction(
-                index,
-                methodCall(returnType = "Landroid/text/Spannable;"),
-            )
-            if (spannableIndex < 0 ||
-                getInstruction(spannableIndex + 1).opcode != Opcode.MOVE_RESULT_OBJECT
-            ) {
-                return@matchAllMethodIndicesForEach
-            }
-
-            val authorLineRegister =
-                getInstruction<OneRegisterInstruction>(spannableIndex + 1).registerA
-            val consumer = getInstruction(spannableIndex + 2)
-            if (consumer.getReference<MethodReference>()?.name != "setText" ||
-                (consumer as? FiveRegisterInstruction)?.registerD != authorLineRegister
-            ) {
-                return@matchAllMethodIndicesForEach
-            }
-
-            addInstructions(
-                spannableIndex + 2,
-                formatAuthorLine(
-                    authorLineRegister,
-                    getInstruction<FiveRegisterInstruction>(index).registerC,
-                ),
-            )
-            patchedCaptures++
-        }
-    }
-
-    if (patchedCaptures == 0) {
-        Logger.getLogger(loggerName).warning(
-            "Could not patch the captured comment author line, " +
-                "the author identifier will not be shown in comment captures.",
-        )
-    }
+    mutableClassDefBy(getter.definingClass).methods.add(this)
 }
+
+private val Instruction.firstArgumentRegister: Int
+    get() = when (this) {
+        is FiveRegisterInstruction -> registerC
+        is RegisterRangeInstruction -> startRegister
+        else -> throw PatchException("Expected a method invocation")
+    }
 
 // Matches a getter, and not methods such as 'toString' that read every field.
 private fun ClassDef.gettersOf(serializedName: String): List<Method> {

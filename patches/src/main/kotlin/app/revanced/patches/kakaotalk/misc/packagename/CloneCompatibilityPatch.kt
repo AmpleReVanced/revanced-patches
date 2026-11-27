@@ -4,7 +4,8 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.mutableClassDefBy
+import app.morphe.patcher.patch.patch
 import app.morphe.util.cloneMutable
 import app.revanced.patches.kakaotalk.misc.integrity.hookPackageManagerPatch
 import app.revanced.patches.shared.misc.packagename.resolvePackageName
@@ -17,7 +18,7 @@ import com.android.tools.smali.dexlib2.immutable.ImmutableMethodParameter
 private const val ORIGINAL_PACKAGE_NAME = "com.kakao.talk"
 private const val EXTENSION_CLASS = "Lapp/revanced/extension/kakaotalk/patches/ChangePackageNamePatch;"
 
-internal val cloneCompatibilityPatch = bytecodePatch(
+internal val cloneCompatibilityPatch = patch(
     description = "Keeps cloned installs compatible with SDK requests, payment services and internal links.",
 ) {
     dependsOn(hookPackageManagerPatch, cloneTelemetryPatch)

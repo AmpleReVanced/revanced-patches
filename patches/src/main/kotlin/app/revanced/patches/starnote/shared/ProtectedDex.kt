@@ -1,7 +1,8 @@
 package app.revanced.patches.starnote.shared
 
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.rawResourcePatch
+import app.morphe.patcher.patch.patch
+import app.morphe.patcher.patch.resourceFile
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.dexbacked.DexBackedDexFile
@@ -290,11 +291,11 @@ internal object ProtectedDex {
         size >= prefix.size && prefix.indices.all { this[it] == prefix[it] }
 }
 
-internal val loadProtectedDexPatch = rawResourcePatch {
+internal val loadProtectedDexPatch = patch {
     dependsOn(bypassProtectionIntegrityPatch)
 
     execute {
-        ProtectedDex.load(get("assets"))
+        ProtectedDex.load(resourceFile("assets"))
     }
 
     finalize {

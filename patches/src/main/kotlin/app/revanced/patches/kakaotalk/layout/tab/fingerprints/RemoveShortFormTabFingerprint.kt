@@ -33,8 +33,8 @@ private val TAB_SELECTION_SOURCES = setOf(
 
 internal fun nowChildTabSelectionFingerprint(tabType: String) = Fingerprint(
     custom = { method, classDef ->
-        method.implementation != null && tabType in method.parameterTypes &&
-                classDef.sourceFile in TAB_SELECTION_SOURCES
+        classDef.sourceFile in TAB_SELECTION_SOURCES &&
+                tabType in method.parameterTypes && method.implementation != null
     },
 )
 

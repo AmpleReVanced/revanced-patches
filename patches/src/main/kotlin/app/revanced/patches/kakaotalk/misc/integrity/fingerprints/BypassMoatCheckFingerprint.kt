@@ -1,13 +1,15 @@
 package app.revanced.patches.kakaotalk.misc.integrity.fingerprints
 
 import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.InstructionLocation.MatchAfterImmediately
 import app.morphe.patcher.OpcodesFilter
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.literal
 import app.morphe.patcher.methodCall
+import app.morphe.patcher.opcode
 import app.morphe.patcher.util.getReference
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
-import com.android.tools.smali.dexlib2.iface.instruction.formats.Instruction21s
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 
 internal object MoatScanDispatcherFingerprint : Fingerprint(
@@ -76,15 +78,14 @@ internal object MoatResultClassFingerprint : Fingerprint(
         Opcode.IPUT_OBJECT,
         Opcode.IPUT_OBJECT,
         Opcode.IPUT_BOOLEAN,
-        Opcode.CONST_16,
-        Opcode.IPUT,
-        Opcode.CONST_16,
-        Opcode.IPUT,
-        Opcode.RETURN_VOID,
+    ) + listOf(
+        literal(5000, location = MatchAfterImmediately()),
+        opcode(Opcode.IPUT, MatchAfterImmediately()),
+        opcode(Opcode.CONST_16, MatchAfterImmediately()),
+        opcode(Opcode.IPUT, MatchAfterImmediately()),
+        opcode(Opcode.RETURN_VOID, MatchAfterImmediately()),
     ),
-    custom = { method, _ ->
-        method.parameters.size == 5 && (method.instructions.firstOrNull { it.opcode == Opcode.CONST_16 } as Instruction21s?)?.wideLiteral?.toInt() == 5000
-    }
+    custom = { method, _ -> method.parameters.size == 5 }
 )
 
 internal object MoatSecurityInfoFingerprint : Fingerprint(

@@ -3,7 +3,7 @@ package app.revanced.patches.kakaotalk.interaction.media
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.findFreeRegister
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
@@ -25,7 +25,7 @@ private const val ALLOW_OPEN_CHAT_MEDIA_BUNDLE =
     "Lapp/revanced/extension/kakaotalk/settings/Settings;->allowOpenChatMediaBundle()Z"
 
 @Suppress("unused")
-val allowOpenChatMediaBundlePatch = bytecodePatch(
+val allowOpenChatMediaBundlePatch = patch(
     name = "Allow open chat media bundle",
     description = "Removes the open chat restriction that stops webp, gif and other media from " +
             "being bundled into a single multi-photo message.",

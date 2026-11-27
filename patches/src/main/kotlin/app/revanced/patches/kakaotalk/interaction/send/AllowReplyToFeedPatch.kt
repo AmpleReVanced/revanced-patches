@@ -5,7 +5,7 @@ import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.methodCall
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patcher.util.getReference
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
@@ -27,7 +27,7 @@ private const val ALLOW_REPLY_TO_FEED =
     "Lapp/revanced/extension/kakaotalk/settings/Settings;->allowReplyToFeed()Z"
 
 @Suppress("unused")
-val allowReplyToFeedPatch = bytecodePatch(
+val allowReplyToFeedPatch = patch(
     name = "Allow reply to feed",
     description = "Adds a setting to allow swiping feed messages to reply, or to comment where chat " +
             "room comments are enabled.",

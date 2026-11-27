@@ -5,8 +5,8 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.methodCall
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.patcher.patch.rawResourcePatch
+import app.morphe.patcher.patch.patch
+import app.morphe.patcher.patch.resourceFile
 import app.morphe.patcher.util.findFreeRegister
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
@@ -48,25 +48,27 @@ private object ProtectionInitializerFingerprint : Fingerprint(
     ),
 )
 
-private val addProtectionLibraryPatch = rawResourcePatch {
+private val addProtectionLibraryPatch = patch {
     execute {
         val library = ::javaClass.javaClass.classLoader
             .getResourceAsStream("starnote/$LIBRARY_PATH")
             ?.use { it.readAllBytes() }
             ?: throw PatchException("Failed to load $LIBRARY_PATH")
-        get(LIBRARY_PATH).apply {
+        resourceFile(LIBRARY_PATH).apply {
             parentFile.mkdirs()
             writeBytes(library)
         }
+    }
 
-        val uncompressedFiles = get("../uncompressed-files.json")
+    finalize {
+        val uncompressedFiles = resourceFile("../uncompressed-files.json")
         val json = JsonParser.parseString(uncompressedFiles.readText()).asJsonObject
         json.getAsJsonArray("paths").add(LIBRARY_PATH)
         uncompressedFiles.writeText(GsonBuilder().setPrettyPrinting().create().toJson(json))
     }
 }
 
-internal val bypassProtectionIntegrityPatch = bytecodePatch {
+internal val bypassProtectionIntegrityPatch = patch {
     dependsOn(addProtectionLibraryPatch)
 
     execute {

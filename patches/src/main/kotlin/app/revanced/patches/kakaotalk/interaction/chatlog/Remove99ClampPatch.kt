@@ -5,7 +5,7 @@ import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.removeInstructions
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import app.morphe.util.setExtensionIsPatchIncluded
@@ -23,7 +23,7 @@ private const val EXTENSION_CLASS =
     "Lapp/revanced/extension/kakaotalk/patches/Remove99ClampPatch;"
 
 @Suppress("unused")
-val remove99ClampPatch = bytecodePatch(
+val remove99ClampPatch = patch(
     name = "Disable 99 unread limit",
     description = "Skip the 99-cap so unread count shows full value"
 ) {

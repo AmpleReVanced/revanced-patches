@@ -1,6 +1,6 @@
 package app.revanced.patches.kakaotalk.ad
 
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.returnBoxedBooleanEarly
 import app.morphe.patcher.util.returnEarly
 import app.revanced.patches.kakaotalk.ad.fingerprints.CecallFolderBizBoardEnabledFingerprint
@@ -20,7 +20,7 @@ private const val EXTENSION_CLASS =
     "Lapp/revanced/extension/kakaotalk/patches/DisableChatRoomListAdPatch;"
 
 @Suppress("unused")
-val disableChatRoomListAdPatch = bytecodePatch(
+val disableChatRoomListAdPatch = patch(
     name = "Disable chat room list ad",
     description = "Disables chat room list and Call filter ads, including reserved ad rows.",
 ) {

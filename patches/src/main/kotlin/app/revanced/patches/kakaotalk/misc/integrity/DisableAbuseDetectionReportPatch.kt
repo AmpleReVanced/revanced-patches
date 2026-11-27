@@ -1,13 +1,13 @@
 package app.revanced.patches.kakaotalk.misc.integrity
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getFreeRegisterProvider
 import app.revanced.patches.kakaotalk.misc.integrity.fingerprints.AbuseDetectIntegrityTokenFingerprint
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 
 @Suppress("unused")
-val disableAbuseDetectionReportPatch = bytecodePatch(
+val disableAbuseDetectionReportPatch = patch(
     name = "Disable abuse detection report",
     description = "Answers the startup and login integrity challenge with an empty token and a benign " +
             "Play Integrity failure code instead of a Google-signed token that would expose the " +

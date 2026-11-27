@@ -4,18 +4,14 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
-import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.proxy.mutableTypes.MutableField.Companion.toMutable
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
-import app.morphe.patches.all.misc.resources.addResourcesPatch
 import app.morphe.util.cloneMutable
-import app.revanced.patches.kakaotalk.misc.extension.addExtensionPatch
-import app.revanced.patches.kakaotalk.misc.extension.sharedExtensionPatch
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 import app.revanced.util.argumentRegister
 import app.revanced.util.parameterTypeNames
@@ -37,21 +33,16 @@ private const val ADD_MORPHE_SETTINGS_ITEM_METHOD = "revanced_addMorpheSettingsI
 private const val DEFAULT_CONSTRUCTOR_MARKER = "Lkotlin/jvm/internal/DefaultConstructorMarker;"
 
 @Suppress("unused")
-val addSettingsTabPatch = bytecodePatch(
+val addSettingsTabPatch = patch(
     name = "Add settings tab",
     description = "Adds a settings tab to the app.",
 ) {
     compatibleWith(COMPATIBILITY_KAKAO)
-    dependsOn(
-        addExtensionPatch,
-        addResourcesPatch,
-        addSettingsResourcesPatch,
-        sharedExtensionPatch,
-        registerSettingsActivityPatch
-    )
+    dependsOn(registerSettingsActivityPatch)
 
     execute {
         syncThemeNightModePreference()
+        addAdaptiveSettingsItem()
 
         val mainSettingItemTypeClass = MainSettingItemTypeFingerprint.classDef
 
@@ -160,17 +151,8 @@ val addSettingsTabPatch = bytecodePatch(
 
         val setupSettingsItemMethod = SetupSettingsItemFingerprint.method
 
-        val laboratoryTypeIndex = setupSettingsItemMethod.instructions.indexOfFirst { instruction ->
-            if (instruction.opcode != Opcode.SGET_OBJECT) {
-                return@indexOfFirst false
-            }
-
-            val reference = instruction.getReference<FieldReference>() ?: return@indexOfFirst false
-            reference.definingClass == mainSettingItemTypeClass.type && reference.name == "LABORATORY"
-        }.takeIf { it >= 0 }
-            ?: throw PatchException("Could not find the Laboratory settings item.")
-        val laboratoryRegister =
-            (setupSettingsItemMethod.getInstruction(laboratoryTypeIndex) as OneRegisterInstruction).registerA
+        val laboratoryTypeIndex = SetupSettingsItemFingerprint.instructionMatches.single().index
+        val laboratoryRegister = setupSettingsItemMethod.getInstruction<OneRegisterInstruction>(laboratoryTypeIndex).registerA
 
         val settingsModelConstructorIndex =
             (laboratoryTypeIndex + 1 until setupSettingsItemMethod.instructions.size).firstOrNull { index ->
@@ -192,9 +174,16 @@ val addSettingsTabPatch = bytecodePatch(
         val finishSetupSettingsModel =
             setupSettingsItemMethod.instructions[settingsModelConstructorIndex].getReference<MethodReference>()
                 ?: throw PatchException("Could not resolve the settings model constructor.")
-        if (settingsModelConstructorInstruction.registerCount != 6) {
+        val rowRegisters = settingsModelConstructorInstruction.registerCount
+        if (rowRegisters != 7) {
             throw PatchException("Unexpected settings model constructor register count.")
         }
+        val maskRegister = settingsModelConstructorInstruction.argumentRegister(rowRegisters - 3)
+        val defaultMask = setupSettingsItemMethod.instructions
+            .subList(laboratoryTypeIndex, settingsModelConstructorIndex)
+            .filterIsInstance<NarrowLiteralInstruction>()
+            .lastOrNull { (it as? OneRegisterInstruction)?.registerA == maskRegister }
+            ?.narrowLiteral ?: throw PatchException("Could not resolve the settings model defaults.")
 
         val initialSettingsItemType = finishSetupSettingsModel.parameterTypeNames.singleOrNull { type ->
             type.startsWith("L") &&
@@ -325,27 +314,18 @@ val addSettingsTabPatch = bytecodePatch(
         val originalInstruction = setupSettingsItemMethod.instructions[separatorIndex]
         val originalNewInstanceRegister = (originalInstruction as OneRegisterInstruction).registerA
 
-        val themePrefClass = ThemePrefNightModeReadFingerprint.classDef
-        val themePrefInstanceField = themePrefClass.fields.singleOrNull {
-            it.type == themePrefClass.type &&
-                    it.accessFlags and AccessFlags.STATIC.value != 0
-        } ?: throw PatchException("Could not find ThemePref singleton field")
-        val themePrefNightModeReader = ThemePrefNightModeReadFingerprint.method
-
         SetupSettingsItemFingerprint.classDef.methods.add(
             addMorpheSettingsItemMethod(
                 definingClass = setupSettingsItemMethod.definingClass,
                 mainSettingItemType = mainSettingItemTypeClass.type,
                 finishSetupSettingsModel = finishSetupSettingsModel,
+                defaultMask = defaultMask,
                 initialSettingsItemType = initialSettingsItemType,
                 initialSettingsItemReference = initialSettingsItemReference,
                 settingsItemHostField = settingsItemHostField,
                 trackingActionReference = trackingActionReference,
                 trackingActionArgument = trackingActionArgument,
                 settingsListAddReference = settingsListAddReference,
-                themePrefType = themePrefClass.type,
-                themePrefInstanceField = themePrefInstanceField,
-                themePrefNightModeReader = themePrefNightModeReader,
             )
         )
 
@@ -379,15 +359,13 @@ private fun addMorpheSettingsItemMethod(
     definingClass: String,
     mainSettingItemType: String,
     finishSetupSettingsModel: MethodReference,
+    defaultMask: Int,
     initialSettingsItemType: String,
     initialSettingsItemReference: MethodReference,
     settingsItemHostField: FieldReference,
     trackingActionReference: MethodReference,
     trackingActionArgument: Int,
     settingsListAddReference: MethodReference,
-    themePrefType: String,
-    themePrefInstanceField: FieldReference,
-    themePrefNightModeReader: MethodReference,
 ): MutableMethod = ImmutableMethod(
     definingClass,
     ADD_MORPHE_SETTINGS_ITEM_METHOD,
@@ -400,13 +378,11 @@ private fun addMorpheSettingsItemMethod(
     AccessFlags.PRIVATE.value or AccessFlags.STATIC.value or AccessFlags.FINAL.value,
     null,
     null,
-    MutableMethodImplementation(9),
+    MutableMethodImplementation(10),
 ).toMutable().apply {
     addInstructions(
         0,
         """
-            sget-object v0, $themePrefType->${themePrefInstanceField.name}:$themePrefType
-            invoke-virtual {v0}, $themePrefType->${themePrefNightModeReader.name}()I
             sget-object v0, $mainSettingItemType->MORPHE:$mainSettingItemType
             invoke-virtual {v0}, $mainSettingItemType->getStringResId()I
             move-result v1
@@ -425,16 +401,17 @@ private fun addMorpheSettingsItemMethod(
             sget-object v1, $mainSettingItemType->MORPHE:$mainSettingItemType
             const/4 v2, 0x0
             move-object v3, v5
-            const/4 v4, 0x2
-            const/4 v5, 0x0
-            invoke-direct/range {v0 .. v5}, $finishSetupSettingsModel
+            const/4 v4, 0x0
+            const/16 v5, $defaultMask
+            const/4 v6, 0x0
+            invoke-direct/range {v0 .. v6}, $finishSetupSettingsModel
             invoke-virtual {p2, v0}, $settingsListAddReference
             return-void
         """.trimIndent()
     )
 }
 
-private fun BytecodePatchContext.syncThemeNightModePreference() {
+private fun syncThemeNightModePreference() {
     ThemePrefNightModeReadFingerprint.method.apply {
         val returnIndex = instructions.indexOfLast {
             it.opcode == Opcode.RETURN

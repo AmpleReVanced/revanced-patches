@@ -1,7 +1,7 @@
 package app.revanced.patches.kakaotalk.interaction.send
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.findFreeRegister
 import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
@@ -19,7 +19,7 @@ private const val ALLOW_INVISIBLE_CHARACTERS =
     "Lapp/revanced/extension/kakaotalk/settings/Settings;->allowInvisibleCharacters()Z"
 
 @Suppress("unused")
-val allowInvisibleCharactersPatch = bytecodePatch(
+val allowInvisibleCharactersPatch = patch(
     name = "Allow invisible characters",
     description = "Stops zero width and other invisible characters from being stripped out of the " +
             "chat input and out of the messages shown in a chat room.",

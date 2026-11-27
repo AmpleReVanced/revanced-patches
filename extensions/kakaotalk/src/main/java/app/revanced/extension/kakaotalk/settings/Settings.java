@@ -1,9 +1,12 @@
 package app.revanced.extension.kakaotalk.settings;
 
+import static app.morphe.extension.shared.settings.Setting.parent;
+import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 import app.morphe.extension.shared.settings.BaseSettings;
 import app.morphe.extension.shared.settings.BooleanSetting;
+import app.morphe.extension.shared.settings.DebugSettings;
 import app.morphe.extension.shared.settings.StringSetting;
 
 /**
@@ -11,6 +14,10 @@ import app.morphe.extension.shared.settings.StringSetting;
  */
 @SuppressWarnings("unused")
 public final class Settings extends BaseSettings {
+    static {
+        DebugSettings.migrateLegacyPreference();
+    }
+
     private Settings() {
     }
 
@@ -34,6 +41,21 @@ public final class Settings extends BaseSettings {
 
     public static final BooleanSetting GHOST_MODE =
             new BooleanSetting("kakaotalk_ghost_mode", TRUE);
+
+    public static final BooleanSetting GHOST_READ =
+            new BooleanSetting("kakaotalk_ghost_read", FALSE);
+
+    public static final BooleanSetting GHOST_READ_KEEP_UNREAD =
+            new BooleanSetting("kakaotalk_ghost_read_keep_unread", TRUE, parent(GHOST_READ));
+
+    public static final BooleanSetting GHOST_READ_ON_SEND =
+            new BooleanSetting("kakaotalk_ghost_read_on_send", FALSE, parent(GHOST_READ));
+
+    public static final BooleanSetting SHOW_HIDDEN_MESSAGE_AUTHOR =
+            new BooleanSetting("kakaotalk_show_hidden_message_author", TRUE);
+
+    public static final BooleanSetting MEMBER_MEMO_NICKNAME =
+            new BooleanSetting("kakaotalk_member_memo_nickname", TRUE);
 
     public static final BooleanSetting REMOVE_SHORT_FORM_TAB =
             new BooleanSetting("kakaotalk_remove_short_form_tab", TRUE, true);
@@ -107,6 +129,9 @@ public final class Settings extends BaseSettings {
     public static final BooleanSetting FORCE_DEBUG_MODE =
             new BooleanSetting("kakaotalk_force_debug_mode", TRUE, true);
 
+    public static final BooleanSetting DISABLE_SSL_PINNING =
+            new BooleanSetting("kakaotalk_disable_ssl_pinning", false, true);
+
     public static boolean showModifiedMessageSenderProfile() {
         return SHOW_MODIFIED_MESSAGE_SENDER_PROFILE.get();
     }
@@ -129,6 +154,22 @@ public final class Settings extends BaseSettings {
 
     public static boolean enableGhostMode() {
         return GHOST_MODE.get();
+    }
+
+    public static boolean enableGhostRead() {
+        return GHOST_READ.get();
+    }
+
+    public static boolean enableGhostReadKeepUnread() {
+        return GHOST_READ.get() && GHOST_READ_KEEP_UNREAD.get();
+    }
+
+    public static boolean enableGhostReadOnSend() {
+        return GHOST_READ.get() && GHOST_READ_ON_SEND.get();
+    }
+
+    public static boolean showHiddenMessageAuthor() {
+        return SHOW_HIDDEN_MESSAGE_AUTHOR.get();
     }
 
     public static boolean removeShortFormTab() {

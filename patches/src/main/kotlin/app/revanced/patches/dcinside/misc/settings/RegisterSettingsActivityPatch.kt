@@ -1,16 +1,19 @@
 package app.revanced.patches.dcinside.misc.settings
 
-import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.patch.document
+import app.morphe.patcher.patch.patch
+import app.revanced.patches.dcinside.misc.extension.addExtensionPatch
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
 import org.w3c.dom.Element
 
 private const val SETTINGS_ACTIVITY = "app.revanced.extension.dcinside.settings.SettingsActivity"
 
-internal val registerSettingsActivityPatch = resourcePatch(
+internal val registerSettingsActivityPatch = patch(
     name = "Register settings activity",
     description = "Registers the Morphe settings activity in the app manifest.",
 ) {
     compatibleWith(COMPATIBILITY_DC_INSIDE)
+    dependsOn(addExtensionPatch, addSettingsResourcesPatch)
 
     execute {
         document("AndroidManifest.xml").use { document ->

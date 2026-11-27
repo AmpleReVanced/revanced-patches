@@ -14,5 +14,5 @@ internal object RefreshImageAdFingerprint : Fingerprint(
     definingClass = "Lcom/dcinside/app/view/PostReadImageAdView;",
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     returnType = "V",
-    strings = listOf("galleryGrade")
+    parameters = listOf("Ljava/lang/String;", "I", "L", "L", "L"),
 )

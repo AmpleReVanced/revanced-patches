@@ -1,20 +1,27 @@
 package app.revanced.patches.dcinside.ad.fingerprints
 
 import app.morphe.patcher.Fingerprint
-import app.morphe.patcher.OpcodesFilter
-import com.android.tools.smali.dexlib2.AccessFlags
-import com.android.tools.smali.dexlib2.Opcode
+import app.morphe.patcher.InstructionLocation.MatchAfterImmediately
+import app.morphe.patcher.StringComparisonType
+import app.morphe.patcher.methodCall
+import app.morphe.patcher.string
 
-internal object DisableAdControllerFingerprint : Fingerprint(
-    definingClass = "Lcom/dcinside/app/ad/support",
-    accessFlags = listOf(AccessFlags.PRIVATE, AccessFlags.FINAL),
-    parameters = listOf(),
+internal object AdPlacementUnitsFingerprint : Fingerprint(
+    filters = listOf(
+        string("ad_banner_read_top", comparison = StringComparisonType.ENDS_WITH),
+        methodCall(
+            parameters = listOf("Ljava/lang/String;"),
+            returnType = "Ljava/util/List;",
+            location = MatchAfterImmediately(),
+        ),
+    ),
+)
+
+internal object InitializeAdSdksFingerprint : Fingerprint(
+    isStatic = true,
+    parameters = listOf("L"),
     returnType = "V",
-    filters = OpcodesFilter.opcodesToFilters(
-        Opcode.IGET_OBJECT,
-        Opcode.IF_NEZ,
-        Opcode.GOTO,
-        Opcode.IGET_OBJECT,
-        Opcode.INVOKE_VIRTUAL,
-    )
+    filters = listOf(
+        methodCall("Lcom/gomfactory/adpie/sdk/AdPieSDK;->initialize(Landroid/content/Context;Ljava/lang/String;)V"),
+    ),
 )

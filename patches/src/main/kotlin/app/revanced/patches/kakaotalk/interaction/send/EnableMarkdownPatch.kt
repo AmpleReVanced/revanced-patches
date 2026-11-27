@@ -4,7 +4,7 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patcher.util.getReference
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
@@ -21,7 +21,7 @@ private const val EXTENSION_CLASS =
     "Lapp/revanced/extension/kakaotalk/patches/EnableMarkdownPatch;"
 
 @Suppress("unused")
-val enableMarkdownPatch = bytecodePatch(
+val enableMarkdownPatch = patch(
     name = "Enable Markdown",
     description = "Render plain text messages with markdown-style formatting.",
     default = false, // Markdown feature is no longer supported by server

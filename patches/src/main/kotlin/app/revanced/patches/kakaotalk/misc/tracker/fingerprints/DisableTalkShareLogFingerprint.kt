@@ -1,9 +1,9 @@
 package app.revanced.patches.kakaotalk.misc.tracker.fingerprints
 
 import app.morphe.patcher.Fingerprint
-import app.morphe.patcher.util.getReference
+import app.morphe.patcher.fieldAccess
 import com.android.tools.smali.dexlib2.AccessFlags
-import com.android.tools.smali.dexlib2.iface.reference.FieldReference
+import com.android.tools.smali.dexlib2.Opcode
 
 internal object TalkShareApiFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.ABSTRACT),
@@ -12,14 +12,8 @@ internal object TalkShareApiFingerprint : Fingerprint(
     custom = { _, classDef -> classDef.sourceFile == "TalkShareApi.kt" },
 )
 
-internal object TalkShareLogAsyncFlagFingerprint : Fingerprint(
-    accessFlags = listOf(AccessFlags.PUBLIC),
-    parameters = listOf("Lkotlin/coroutines/Continuation;"),
-    returnType = "Ljava/lang/Object;",
-    custom = { method, classDef ->
-        classDef.sourceFile == "Available2.kt" &&
-            method.implementation?.instructions?.any { instruction ->
-                instruction.getReference<FieldReference>()?.name == "USE_TALK_SHARE_LOG"
-            } == true
-    },
+internal object TalkShareLogFlagFingerprint : Fingerprint(
+    returnType = "Z",
+    filters = listOf(fieldAccess(name = "USE_TALK_SHARE_LOG", opcode = Opcode.SGET_OBJECT)),
+    custom = { _, classDef -> classDef.sourceFile == "AvailableFlags.kt" },
 )

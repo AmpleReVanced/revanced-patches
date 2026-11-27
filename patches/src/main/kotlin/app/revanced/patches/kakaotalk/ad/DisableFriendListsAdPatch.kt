@@ -1,6 +1,6 @@
 package app.revanced.patches.kakaotalk.ad
 
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.returnEarly
 import app.revanced.patches.kakaotalk.ad.fingerprints.BirthdayFriendsBizBoardBindFingerprint
 import app.revanced.patches.kakaotalk.ad.fingerprints.FriendListChipBizBoardBindFingerprint
@@ -8,7 +8,7 @@ import app.revanced.patches.kakaotalk.ad.fingerprints.FriendTabGlobalAdModelFing
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 
 @Suppress("unused")
-val disableFriendListsAdPatch = bytecodePatch(
+val disableFriendListsAdPatch = patch(
     name = "Disable Friend Lists ad",
     description = "Disables the friend tab BizBoard and global-region ads in KakaoTalk.",
 ) {

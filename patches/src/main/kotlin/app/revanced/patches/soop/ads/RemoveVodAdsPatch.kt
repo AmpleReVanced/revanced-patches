@@ -2,7 +2,8 @@ package app.revanced.patches.soop.ads
 
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.mutableClassDefBy
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.returnEarly
 import app.revanced.patches.soop.ads.fingerprints.*
 import app.revanced.patches.soop.shared.Constants.COMPATIBILITY_SOOP
@@ -12,7 +13,7 @@ import com.android.tools.smali.dexlib2.iface.reference.StringReference
 import com.android.tools.smali.dexlib2.util.MethodUtil
 
 @Suppress("unused")
-val removeVodAdsPatch = bytecodePatch(
+val removeVodAdsPatch = patch(
     name = "Remove VOD ads",
     description = "Removes VOD pre-roll ads by reporting every stream as QuickView Plus to the " +
         "player's own ad-skip check.",

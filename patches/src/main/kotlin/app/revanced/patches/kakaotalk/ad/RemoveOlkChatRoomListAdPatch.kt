@@ -1,6 +1,6 @@
 package app.revanced.patches.kakaotalk.ad
 
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.returnEarly
 import app.revanced.patches.kakaotalk.ad.fingerprints.ChatListAdItemFingerprint
 import app.revanced.patches.kakaotalk.ad.fingerprints.CommonChatRoomListSubmitFingerprint
@@ -17,7 +17,7 @@ private const val EXTENSION_CLASS =
     "Lapp/revanced/extension/kakaotalk/patches/RemoveOlkChatRoomListAdPatch;"
 
 @Suppress("unused")
-val removeOlkChatRoomListAdPatch = bytecodePatch(
+val removeOlkChatRoomListAdPatch = patch(
     name = "Remove OpenLink chat room list ad",
     description = "Removes the OpenLink chat room list ad.",
 ) {

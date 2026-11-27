@@ -1,34 +1,6 @@
 /*
  * Copyright 2025 Morphe.
- * https://github.com/MorpheApp/morphe-patches
- *
- * File-Specific License Notice (GPLv3 Section 7 Terms)
- *
- * This file is part of the Morphe patches project and is licensed under
- * the GNU General Public License version 3 (GPLv3), with the Additional
- * Terms under Section 7 described in the Morphe patches
- * LICENSE file: https://github.com/MorpheApp/morphe-patches/blob/main/NOTICE
- *
- * https://www.gnu.org/licenses/gpl-3.0.html
- *
- * File-Specific Exception to Section 7b:
- * -------------------------------------
- * Section 7b (Attribution Requirement) of the Morphe patches LICENSE
- * does not apply to THIS FILE. Use of this file does NOT require any
- * user-facing, in-application, or UI-visible attribution.
- *
- * For this file only, attribution under Section 7b is satisfied by
- * retaining this comment block in the source code of this file.
- *
- * Distribution and Derivative Works:
- * ----------------------------------
- * This comment block MUST be preserved in all copies, distributions,
- * and derivative works of this file, whether in source or modified
- * form.
- *
- * All other terms of the Morphe Patches LICENSE, including Section 7c
- * (Project Name Restriction) and the GPLv3 itself, remain fully
- * applicable to this file.
+ * https://github.com/MorpheApp/morphe-patches-template
  */
 
 package app.morphe.util
@@ -65,7 +37,7 @@ fun main() {
 }
 
 @Suppress("DEPRECATION")
-private fun generatePatchList(version: String, patches: Set<Patch<*>>) {
+private fun generatePatchList(version: String, patches: Set<Patch>) {
     val listJson = File("../patches-list.json")
 
     val patchesMap = patches.sortedBy { it.name }.map { patch ->
@@ -73,7 +45,7 @@ private fun generatePatchList(version: String, patches: Set<Patch<*>>) {
             name = patch.name!!,
             description = patch.description,
             default = patch.default,
-            dependencies = patch.dependencies.map { it.javaClass.simpleName },
+            category = patch.category,
             // Map each Compatibility to a JsonCompatibility object with full metadata.
             // Patches with null compatiblePackages are universal (apply to any app).
             compatiblePackages = patch.compatibility?.map { compat ->
@@ -85,9 +57,11 @@ private fun generatePatchList(version: String, patches: Set<Patch<*>>) {
                     // Format as #RRGGBB string for readability; null if not set
                     appIconColor = compat.appIconColor?.let { "#%06X".format(it) },
                     signatures = compat.signatures,
+                    formFactor = compat.formFactor?.name,
                     targets = compat.targets.map { target ->
                         JsonCompatibility.Target(
                             version = target.version,
+                            versionCodes = target.versionCodes?.mapKeys { it.key.name },
                             isExperimental = target.isExperimental,
                             minSdk = target.minSdk,
                             description = target.description,
@@ -116,7 +90,13 @@ private fun generatePatchList(version: String, patches: Set<Patch<*>>) {
         .create()
 
     val jsonObject = JsonObject()
-    jsonObject.addProperty("version", "v$version")
+    jsonObject.addProperty(
+        "NOTE",
+        "Do NOT manually edit this file. This file is automatically updated when " +
+                "semantic release (release.yml) runs. Manually editing this file can break " +
+                "your releases and break third party tools that use this file."
+    )
+    jsonObject.addProperty("version", version)
     jsonObject.add("patches", gson.toJsonTree(patchesMap))
 
     listJson.writeText(gson.toJson(jsonObject))
@@ -128,7 +108,8 @@ private class JsonPatch(
     val name: String? = null,
     val description: String? = null,
     val default: Boolean = true,
-    val dependencies: List<String>,
+    /** Null when the patch declares no category and is left ungrouped. */
+    val category: String? = null,
     /** Null means the patch is universal and applies to any app. */
     val compatiblePackages: List<JsonCompatibility>? = null,
     val options: List<Option>,
@@ -159,10 +140,13 @@ private class JsonCompatibility(
     val appIconColor: String?,
     /** Valid SHA-256 signatures of the app. */
     val signatures: Set<String>?,
+    /** Device form factor of the app, e.g. MOBILE, TV. Null means all form factors. */
+    val formFactor: String?,
     val targets: List<Target>,
 ) {
     class Target(
         val version: String?,
+        val versionCodes: Map<String, Int>?,
         val isExperimental: Boolean,
         /** Minimum device SDK version. Null means any SDK version. */
         val minSdk: Int?,

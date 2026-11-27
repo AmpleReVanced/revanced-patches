@@ -9,18 +9,6 @@ import app.morphe.patcher.opcode
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 
-internal object ChatInfoViewClassFingerprint : Fingerprint(
-    definingClass = "Lcom/kakao/talk/widget/chatlog/ChatInfoView;",
-)
-
-internal object OthersChatInfoViewClassFingerprint : Fingerprint(
-    definingClass = "Lcom/kakao/talk/widget/chatlog/OthersChatInfoView;",
-)
-
-internal object MyChatInfoViewClassFingerprint : Fingerprint(
-    definingClass = "Lcom/kakao/talk/widget/chatlog/MyChatInfoView;",
-)
-
 internal object ChatLogViewHolderSetupChatInfoViewFingerprint : Fingerprint(
     parameters = listOf(),
     returnType = "V",
@@ -42,23 +30,6 @@ internal object ChatLogViewHolderBindProfileFingerprint : Fingerprint(
     ),
     custom = { _, classDef -> classDef.sourceFile == "ChatLogViewHolder.kt" },
 )
-
-internal fun checkViewableChatLogFingerprint(chatLogType: String) = object : Fingerprint(
-    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
-    parameters = listOf(chatLogType),
-    returnType = "Z",
-    filters = OpcodesFilter.opcodesToFilters(
-        Opcode.SGET_OBJECT,
-        Opcode.INVOKE_VIRTUAL,
-        Opcode.MOVE_RESULT_OBJECT,
-        Opcode.INVOKE_VIRTUAL,
-        Opcode.MOVE_RESULT,
-        Opcode.RETURN,
-    ),
-    custom = { _, classDef ->
-        classDef.sourceFile == "ChatLogViewHolder.kt"
-    },
-) {}
 
 internal object ChatLogItemViewHolderFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
@@ -95,41 +66,58 @@ internal object FilterChatLogItemFingerprint : Fingerprint(
     }
 )
 
-internal object ChatRoomListManagerGetInstanceFingerprint : Fingerprint(
-    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.FINAL),
-    parameters = listOf(),
-    returnType = "L",
-    custom = { _, classDef -> classDef.sourceFile == "ChatRoomListManagerProvider.kt" }
-)
+internal object ChatRoomSyncFingerprint : Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
+    parameters = { listOf(ChatLogFingerprint.originalClassDef.type, "J", "L") },
+    returnType = "V",
+    filters = listOf(
+        methodCall(
+            name = "getChatRoomId",
+            definingClass = { ChatLogFingerprint.originalClassDef.type },
+            returnType = "J",
+        ),
+        opcode(Opcode.MOVE_RESULT_WIDE, location = MatchAfterImmediately()),
+        methodCall(
+            definingClass = "this",
+            parameters = listOf("J"),
+            returnType = "L",
+            opcode = Opcode.INVOKE_VIRTUAL,
+            location = MatchAfterImmediately(),
+        ),
+        methodCall(
+            parameters = listOf("J"),
+            returnType = { ChatLogFingerprint.originalClassDef.type },
+            opcode = Opcode.INVOKE_INTERFACE,
+        ),
+        fieldAccess(name = "DELETE_TO_ALL", opcode = Opcode.SGET_OBJECT),
+    ),
+    custom = { _, classDef -> classDef.sourceFile == "ChatRoomListManager.kt" },
+) {
+    val chatRoomIdGetter get() = instructionMatches[0].methodReference
+    val chatRoomLookup get() = instructionMatches[2].methodReference
+    val lastChatLogGetter get() = instructionMatches[3].methodReference
+}
 
-internal object GetChatRoomByChannelIdFingerprint : Fingerprint(
+internal object AccountChatRoomManagerFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     parameters = listOf("J"),
-    filters = OpcodesFilter.opcodesToFilters(
-        Opcode.CONST_4,
-        Opcode.CONST_4,
-        Opcode.CONST_4,
-        Opcode.CONST_4,
-        Opcode.MOVE_OBJECT,
-        Opcode.MOVE_WIDE,
-        Opcode.INVOKE_STATIC_RANGE,
-        Opcode.MOVE_RESULT_OBJECT,
-        Opcode.RETURN_OBJECT
+    returnType = { ChatRoomSyncFingerprint.originalClassDef.type },
+    filters = listOf(
+        methodCall(opcode = Opcode.INVOKE_STATIC, parameters = listOf("Landroid/content/Context;", "J")),
+        methodCall(
+            opcode = Opcode.INVOKE_INTERFACE,
+            parameters = emptyList(),
+            returnType = { ChatRoomSyncFingerprint.originalClassDef.type },
+        ),
     ),
-    custom = { _, classDef -> classDef.sourceFile == "ChatRoomListManager.kt" }
-)
+    custom = { _, classDef -> classDef.sourceFile == "VoxAccountUtil.kt" },
+) {
+    val provider get() = originalClassDef.staticFields.single { it.type == originalClassDef.type }
+}
 
-internal object OriginalSyncMethodFingerprint : Fingerprint(
+internal object CurrentOwnerIdFingerprint : Fingerprint(
+    classFingerprint = AccountChatRoomManagerFingerprint,
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
-    parameters = listOf("L", "J", "L"),
-    returnType = "V",
-    filters = OpcodesFilter.opcodesToFilters(
-        Opcode.INVOKE_VIRTUAL,
-        Opcode.MOVE_RESULT_WIDE,
-        Opcode.INVOKE_VIRTUAL,
-        Opcode.MOVE_RESULT_OBJECT,
-        Opcode.IF_NEZ,
-        Opcode.RETURN_VOID
-    ),
-    custom = { _, classDef -> classDef.sourceFile == "ChatRoomListManager.kt" }
+    parameters = emptyList(),
+    returnType = "J",
 )

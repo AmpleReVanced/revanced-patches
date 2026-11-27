@@ -20,7 +20,7 @@ internal object MentionComponentIsMultiChatFingerprint : Fingerprint(
         methodCall(
             parameters = listOf("L", "Landroid/widget/EditText;"),
             returnType = "Z",
-            opcode = Opcode.INVOKE_VIRTUAL,
+            opcode = Opcode.INVOKE_INTERFACE,
         ),
         opcode(Opcode.MOVE_RESULT, location = MatchAfterImmediately()),
         opcode(Opcode.RETURN, location = MatchAfterImmediately()),

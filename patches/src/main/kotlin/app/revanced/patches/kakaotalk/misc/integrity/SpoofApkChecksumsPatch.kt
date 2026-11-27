@@ -3,7 +3,7 @@ package app.revanced.patches.kakaotalk.misc.integrity
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patcher.util.getReference
 import app.revanced.patches.kakaotalk.misc.integrity.fingerprints.GetApkChecksumsFingerprint
@@ -13,7 +13,7 @@ import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 
 @Suppress("unused")
-val spoofApkChecksumsPatch = bytecodePatch(
+val spoofApkChecksumsPatch = patch(
     name = "Spoof apk checksums",
     description = "Spoofs the apk checksums to pass integrity checks.",
 ) {

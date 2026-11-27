@@ -2,8 +2,10 @@ package app.revanced.patches.kakaotalk.misc.integrity
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
-import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
+import app.morphe.patcher.patch.classDefBy
+import app.morphe.patcher.patch.classDefForEach
+import app.morphe.patcher.patch.mutableClassDefBy
 import app.morphe.patcher.util.cloneParameters
 import app.morphe.patcher.util.findMutableMethodOf
 import app.morphe.patcher.util.getFreeRegisterProvider
@@ -21,7 +23,6 @@ import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
-context(context: BytecodePatchContext)
 private fun MutableMethod.bypassMoat(
     registerCount: Int = 1,
     body: (List<Int>) -> String,
@@ -42,7 +43,7 @@ private fun MutableMethod.bypassMoat(
     )
 }
 
-internal fun BytecodePatchContext.blockMoatTransmission() {
+internal fun blockMoatTransmission() {
     MoatSecurityInfoFingerprint.method.bypassMoat(3) { (result, value, success) ->
         """
             invoke-static/range {p1 .. p1}, $EXTENSION_CLASS->getSecurityInfo(Ljava/lang/Enum;)Ljava/lang/String;

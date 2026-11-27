@@ -1,6 +1,5 @@
 package app.revanced.extension.dcinside.patches;
 
-import android.text.SpannableStringBuilder;
 
 import androidx.annotation.Nullable;
 
@@ -59,34 +58,10 @@ public final class AuthorIdentifierPatch {
         return nickname + " (" + userId.trim() + ")";
     }
 
-    /**
-     * The comment list already shows the IP of anonymous authors, so only the
-     * identifier of logged in authors is added.
-     */
-    @Nullable
-    public static CharSequence formatCommentAuthorLine(
-            @Nullable CharSequence authorLine,
-            @Nullable Object comment
-    ) {
-        if (authorLine == null || comment == null || !Settings.showCommentAuthorIdentifier()) {
-            return authorLine;
-        }
-
-        String userId = getCommentUserId(comment);
-        if (userId == null || userId.trim().isEmpty()) {
-            return authorLine;
-        }
-
-        // Copied instead of appended in place, as the capture screen builds an immutable Spannable.
-        return new SpannableStringBuilder(authorLine)
-                .append(" (")
-                .append(userId.trim())
-                .append(")");
-    }
-
-    @Nullable
-    private static String getCommentUserId(Object comment) {
-        return null;  // Modified during patching.
+    public static String formatCommentAuthorName(@Nullable String name, @Nullable String userId) {
+        String nickname = name == null ? "" : name;
+        if (userId == null || userId.trim().isEmpty() || !Settings.showCommentAuthorIdentifier()) return nickname;
+        return nickname + " (" + userId.trim() + ")";
     }
 
     public static String formatAuthorName(@Nullable String storedName) {

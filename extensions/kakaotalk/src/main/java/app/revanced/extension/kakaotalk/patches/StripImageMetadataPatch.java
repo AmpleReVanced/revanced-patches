@@ -139,12 +139,13 @@ public final class StripImageMetadataPatch {
     }
 
     private static boolean hasMetadata(ExifInterface exif) {
-        return exif.getAttribute(ExifInterface.TAG_MAKE) != null
-                || exif.getAttribute(ExifInterface.TAG_MODEL) != null
-                || exif.getAttribute(ExifInterface.TAG_DATETIME_ORIGINAL) != null
-                || exif.getAttribute(ExifInterface.TAG_DATETIME) != null
-                || exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE) != null
-                || exif.getAttribute(ExifInterface.TAG_SOFTWARE) != null;
+        for (String tag : STRIP_TAGS) {
+            String value = exif.getAttribute(tag);
+            if (value != null && !(ExifInterface.TAG_LIGHT_SOURCE.equals(tag) && "0".equals(value))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static File cacheFile(File source) {

@@ -1,6 +1,9 @@
 package app.revanced.patches.dcinside.layout.hide.officialnotice
 
 import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.resource.ResourceType
+import app.morphe.patcher.resourceLiteral
+import app.revanced.patches.dcinside.layout.shortcut.PostListFragmentFingerprint
 import app.morphe.patcher.util.getReference
 import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
@@ -14,8 +17,7 @@ internal object OfficialNoticeAuthorNameBridgeFingerprint : Fingerprint(
 )
 
 internal object GalleryNoticeListHandlerFingerprint : Fingerprint(
-    definingClass = "Lcom/dcinside/app/post/fragments",
-    accessFlags = listOf(AccessFlags.PRIVATE, AccessFlags.FINAL),
+    classFingerprint = PostListFragmentFingerprint,
     returnType = "V",
     custom = custom@{ method, _ ->
         if (method.accessFlags and AccessFlags.STATIC.value != 0) {
@@ -39,9 +41,15 @@ internal object GalleryNoticeListHandlerFingerprint : Fingerprint(
     },
 )
 
+private object MiniNoticeAdapterFingerprint : Fingerprint(
+    name = "onCreateViewHolder",
+    parameters = listOf("Landroid/view/ViewGroup;", "I"),
+    returnType = "L",
+    filters = listOf(resourceLiteral(ResourceType.LAYOUT, "view_mini_notice_single_item")),
+)
+
 internal object MiniNoticeAdapterItemsFingerprint : Fingerprint(
-    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
-    parameters = listOf("Ljava/util/List;", "J", "Ljava/lang/String;"),
+    classFingerprint = MiniNoticeAdapterFingerprint,
+    parameters = listOf("J", "Ljava/lang/String;", "Ljava/util/List;"),
     returnType = "V",
-    strings = listOf("item", "gallId"),
 )

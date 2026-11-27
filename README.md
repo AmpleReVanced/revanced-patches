@@ -4,14 +4,14 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START -->
-> **[v1.5.0](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.5.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;128 patches total
+> **[v1.6.0-dev.15](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.6.0-dev.15)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;132 patches total
 <details>
-<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;76 patches</summary>
+<summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;79 patches</summary>
 <br>
 
 **🎯 Supported versions:**
 
-| 26.9.0 |
+| 26.10.1 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
@@ -21,7 +21,7 @@
 | [Add settings resources](#add-settings-resources) | Adds Morphe settings layout resources to the app. |  |
 | [Add settings tab](#add-settings-tab) | Adds a settings tab to the app. |  |
 | [Allow Hide on Any Chat](#allow-hide-on-any-chat) | Users with hiding privileges can hide any chat, including their own messages. |  |
-| [Allow Open Chat Managers To Block Members](#allow-open-chat-managers-to-block-members) | Allows open chat room hosts and co-hosts to block regular members from their profiles. |  |
+| [Allow Open Chat Managers To Block Members](#allow-open-chat-managers-to-block-members) | Shows the personal block button for eligible members alongside Open Chat host actions. |  |
 | [Allow custom profile images](#allow-custom-profile-images) | Adds a photo picker and adjustable images to the custom profile editor. |  |
 | [Allow direct thread reply editing](#allow-direct-thread-reply-editing) | Shows the edit action when long-pressing your own thread replies in the main chat. |  |
 | [Allow invisible characters](#allow-invisible-characters) | Stops zero width and other invisible characters from being stripped out of the chat input and out of the messages shown in a chat room. |  |
@@ -49,6 +49,7 @@
 | [Disable Pay banner ad](#disable-pay-banner-ad) | Disables the KakaoPay banner ad load and render paths. |  |
 | [Disable S2Event](#disable-s2event) | Disables Tracker |  |
 | [Disable SDK Tracker](#disable-sdk-tracker) | Disables the SDK Tracker in KakaoTalk. |  |
+| [Disable SSL pinning](#disable-ssl-pinning) | Adds a debug option to inspect OkHttp and WebView HTTPS traffic using an installed proxy CA certificate. |  |
 | [Disable Sentry](#disable-sentry) | Disables Sentry error reporting in KakaoTalk. |  |
 | [Disable ShortForm ad](#disable-shortform-ad) | Disables the shortform ad load and render paths. |  |
 | [Disable Talk Share Log](#disable-talk-share-log) | Disable talk share log |  |
@@ -61,11 +62,12 @@
 | [Enable send big text](#enable-send-big-text) | Allows sending big text messages in KakaoTalk. |  |
 | [Force enable debug mode](#force-enable-debug-mode) | Enables debug mode in the app. |  |
 | [Force enable emoticon plus feature](#force-enable-emoticon-plus-feature) | Force enable emoticon plus feature (Unpurchased emoticon can be sent once per day) |  |
-| [Ghost Mode](#ghost-mode) | Don't expose your typing status to the other party. |  |
+| [Ghost Mode](#ghost-mode) | Adds options to hide your typing status and to keep chats from being marked as read. |  |
 | [Hide More tab Game tab](#hide-more-tab-game-tab) | Hides the Game tab from the More tab. |  |
 | [Hide More tab components](#hide-more-tab-components) | Adds options to hide components from the More tab. |  |
 | [Hook Package Manager](#hook-package-manager) | Hooks the Package Manager to bypass integrity checks. |  |
 | [Ignore forward restriction](#ignore-forward-restriction) | Ignores the restrictions that stop messages such as KakaoLink from being forwarded to another chatroom. |  |
+| [Open chat member memo](#open-chat-member-memo) | Adds a private memo to open chat members, shown on their profile and next to their nickname. |  |
 | [Open profile from open chat feed](#open-profile-from-open-chat-feed) | Opens open chat member profiles from join and leave feed messages. |  |
 | [Override feature flag](#override-feature-flag) | Overrides the feature flag to enable the feature. | • Feature flag overrides |
 | [Register settings activity](#register-settings-activity) | Registers the Morphe settings activity in the app manifest. |  |
@@ -85,6 +87,7 @@
 | [Show message details](#show-message-details) | Adds a long-press action to inspect the complete ChatLog object, including inherited and message-specific fields, as JSON. |  |
 | [Show message read receipts](#show-message-read-receipts) | Shows the members who have or have not read each chat message. |  |
 | [Show messages restricted to mobile](#show-messages-restricted-to-mobile) | Shows the content of AlimTalk, Leverage and Universal messages that are replaced with a placeholder asking to open them on mobile while signed in on a sub device. |  |
+| [Show who hid messages or removed members](#show-who-hid-messages-or-removed-members) | Shows the nickname of the host or staff member who hid messages or removed members in open chats. |  |
 | [Spoof App ID](#spoof-app-id) | Spoofs the App ID to bypass integrity checks. (to bypass biometric auth etc.) |  |
 | [Spoof apk checksums](#spoof-apk-checksums) | Spoofs the apk checksums to pass integrity checks. |  |
 | [Spoof attestation package name](#spoof-attestation-package-name) | Reports the original package name in the attestation report, which otherwise reveals a renamed install. Only the report is affected, so the app keeps using its real package name everywhere else. |  |
@@ -101,7 +104,7 @@
 
 **🎯 Supported versions:**
 
-| 5.3.20 |
+| 5.3.30 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
@@ -119,7 +122,6 @@
 | [Disable Image Ad](#disable-image-ad) | Disables the image ad in the app. |  |
 | [Disable ad controller](#disable-ad-controller) | Disables the ad controller that manages ads in the app. |  |
 | [Disable update check](#disable-update-check) | Disables the app's update check. |  |
-| [Enable OneStore feature](#enable-onestore-feature) | Enables the OneStore feature in DC Inside app. |  |
 | [Filter recently viewed posts by gallery](#filter-recently-viewed-posts-by-gallery) | Adds a gallery filter below the recently viewed posts filters, which narrows the list down to the posts of a single gallery. |  |
 | [Gallery watch mode](#gallery-watch-mode) | Keeps gallery auto-refresh active, highlights newly arrived posts, and optionally alerts with sound or vibration while the gallery is open. |  |
 | [Hide DC official notices](#hide-dc-official-notices) | Hides official DCInside operator notices from gallery notice lists. |  |
@@ -131,24 +133,26 @@
 | [Render big DCCon as normal size](#render-big-dccon-as-normal-size) | Adds a setting to render big DCCon at normal DCCon size. |  |
 | [Restore old post icons](#restore-old-post-icons) | Adds a setting to restore DCInside 4.7.x post list and read footer icons. |  |
 | [Show author identifier](#show-author-identifier) | Adds options to show the author identifier next to the nickname in posts, post lists, comments, and the recently-viewed posts list. The recently-viewed list only shows it for posts opened after this patch is installed. |  |
+| [Show live best on home](#show-live-best-on-home) | Shows real-time best posts instead of recommended posts on the home screen. |  |
 | [Spoof Signature](#spoof-signature) | Spoofs the app signature to bypass integrity checks. |  |
 
 </details>
 
 <details>
-<summary>📦 Chzzk&nbsp;&nbsp;•&nbsp;&nbsp;5 patches</summary>
+<summary>📦 Chzzk&nbsp;&nbsp;•&nbsp;&nbsp;6 patches</summary>
 <br>
 
 **🎯 Supported versions:**
 
-| 3.15.2 | 3.13.2 |
-| :---: | :---: |
+| 3.18.0 |
+| :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
 | [Auto claim TongPow](#auto-claim-tongpow) | Automatically claims CHZZK TongPow rewards when they become available while watching streams. |  |
 | [Disable P2P](#disable-p2p) | Disables CHZZK peer-assisted grid streaming and forces CDN playback. |  |
 | [Disable ads](#disable-ads) | Disables CHZZK advertisements, including live stream pre-roll, mid-roll and post-roll ads and clip feed ads. |  |
+| [Fix KeyBox initialization](#fix-keybox-initialization) | Allows CHZZK's bundled keys to load after patching and resigning the app. |  |
 | [Hide home banners](#hide-home-banners) | Hides promotional banners on the CHZZK home recommend tab, including the top banner carousel and the in-feed event and image banners. |  |
 | [Unlock cheat key](#unlock-cheat-key) | Unlocks CHZZK cheat key subscription benefits without an active subscription. |  |
 
@@ -160,8 +164,8 @@
 
 **🎯 Supported versions:**
 
-| 1.5.0.16 | 1.5.0.11 | 1.5.0.10 | 1.5.0.9 | 1.5.0.8 | 1.5.0.7 | 1.4.4.14 | 1.4.4.12 | 1.4.4.10 | 1.4.4.9 |
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| 1.5.1.7 | 1.5.0.16 | 1.5.0.11 | 1.5.0.10 | 1.5.0.9 | 1.5.0.8 | 1.5.0.7 | 1.4.4.14 | 1.4.4.12 | 1.4.4.10 | 1.4.4.9 |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
@@ -176,7 +180,7 @@
 
 **🎯 Supported versions:**
 
-| 🧪&nbsp;1.5.4 | 🧪&nbsp;1.5.3 |
+| 🧪&nbsp;1.5.4.1 | 🧪&nbsp;1.5.3 |
 | :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
@@ -194,8 +198,8 @@
 
 **🎯 Supported versions:**
 
-| 8.33.0 | 8.31.3 | 8.30.1 | 8.29.3 | 8.28.5 |
-| :---: | :---: | :---: | :---: | :---: |
+| 8.36.2 |
+| :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
@@ -219,8 +223,8 @@
 
 **🎯 Supported versions:**
 
-| 🧪&nbsp;6.11.2.2 | 🧪&nbsp;6.10.0.16 | 🧪&nbsp;6.9.1.3 |
-| :---: | :---: | :---: |
+| 🧪&nbsp;6.13.1.2 | 🧪&nbsp;6.12.2.4 | 🧪&nbsp;6.11.2.2 | 🧪&nbsp;6.10.0.16 | 🧪&nbsp;6.9.1.3 |
+| :---: | :---: | :---: | :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
@@ -234,7 +238,7 @@
 
 **🎯 Supported versions:**
 
-| 5.9.40.48 |
+| 5.9.50.10 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |

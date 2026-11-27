@@ -1,93 +1,48 @@
 package app.revanced.patches.dcinside.layout.shortcut
 
-import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
-import app.morphe.patcher.extensions.InstructionExtensions.instructions
-import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.patcher.patch.resourcePatch
-import app.morphe.patcher.util.getReference
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
+import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
+import app.morphe.patcher.patch.document
+import app.morphe.patcher.patch.patch
 import app.morphe.patches.all.misc.resources.addResourcesPatch
 import app.morphe.util.asSequence
 import app.revanced.patches.dcinside.misc.extension.addExtensionPatch
 import app.revanced.patches.dcinside.misc.extension.sharedExtensionPatch
 import app.revanced.patches.dcinside.shared.Constants.COMPATIBILITY_DC_INSIDE
-import com.android.tools.smali.dexlib2.Opcode
-import com.android.tools.smali.dexlib2.iface.reference.MethodReference
+import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
 import org.w3c.dom.Element
 
 private const val NOTIFICATION_SHORTCUT_ID_NAME = "morphe_dcinside_post_list_quick_notifi"
 
-private val addNotificationShortcutBytecodePatch = bytecodePatch {
+private const val NOTIFICATION_SHORTCUT_EXTENSION =
+    "Lapp/revanced/extension/dcinside/patches/NotificationShortcutPatch;"
+
+private val addNotificationShortcutBytecodePatch = patch {
     compatibleWith(COMPATIBILITY_DC_INSIDE)
     dependsOn(addExtensionPatch, sharedExtensionPatch, addResourcesPatch)
 
     execute {
-        QuickWriteVisibilityFingerprint.method.apply {
-            val setVisibilityIndex = instructions.indexOfFirst {
-                it.opcode == Opcode.INVOKE_VIRTUAL &&
-                    it.getReference<MethodReference>()?.name == "setVisibility" &&
-                    it.getReference<MethodReference>()?.definingClass == "Landroid/view/View;"
-            }
-
-            check(setVisibilityIndex >= 0) {
-                "Could not find quick write visibility call in ${definingClass}->$name"
-            }
-
-            addInstructionsWithLabels(
-                setVisibilityIndex + 1,
-                """
-                    const-string v0, "$NOTIFICATION_SHORTCUT_ID_NAME"
-                    const-string v1, "id"
-                    invoke-static {v1, v0}, Lapp/revanced/extension/dcinside/helper/ResourceHelper;->getResourceId(Ljava/lang/String;Ljava/lang/String;)I
-                    move-result v0
-                    invoke-virtual {p0}, Landroidx/fragment/app/Fragment;->requireView()Landroid/view/View;
-                    move-result-object v1
-                    invoke-virtual {v1, v0}, Landroid/view/View;->findViewById(I)Landroid/view/View;
-                    move-result-object v0
-                    if-eqz v0, :revanced_notification_shortcut_end
-                    invoke-virtual {v0, p1}, Landroid/view/View;->setVisibility(I)V
-                    :revanced_notification_shortcut_end
-                    const-string v1, "postListQuickWrite"
-                """.trimIndent()
+        QuickWriteVisibilityFingerprint.apply {
+            val index = instructionMatches.first().index
+            val call = method.getInstruction<FiveRegisterInstruction>(index)
+            method.replaceInstruction(
+                index,
+                "invoke-static {v${call.registerC}, v${call.registerD}}, " +
+                    "$NOTIFICATION_SHORTCUT_EXTENSION->setQuickWriteVisibility(Landroid/view/View;I)V",
             )
         }
-
-        PostListOnViewCreatedFingerprint.method.apply {
-            val quickWriteSetupIndex = instructions.indexOfLast {
-                val reference = it.getReference<MethodReference>() ?: return@indexOfLast false
-
-                reference.returnType == "V" &&
-                    reference.parameterTypes.firstOrNull() == "Landroid/view/View;"
-            }
-
-            check(quickWriteSetupIndex >= 0) {
-                "Could not find quick write setup call in ${definingClass}->$name"
-            }
-
-            addInstructionsWithLabels(
-                quickWriteSetupIndex + 1,
-                """
-                    const-string v4, "$NOTIFICATION_SHORTCUT_ID_NAME"
-                    const-string v5, "id"
-                    invoke-static {v5, v4}, Lapp/revanced/extension/dcinside/helper/ResourceHelper;->getResourceId(Ljava/lang/String;Ljava/lang/String;)I
-                    move-result v4
-                    invoke-virtual {p1, v4}, Landroid/view/View;->findViewById(I)Landroid/view/View;
-                    move-result-object v4
-                    if-eqz v4, :revanced_notification_click_listener_end
-                    new-instance v5, Lapp/revanced/extension/dcinside/NotificationClickListener;
-                    invoke-virtual {p0}, Landroidx/fragment/app/Fragment;->requireContext()Landroid/content/Context;
-                    move-result-object v6
-                    invoke-direct {v5, v6}, Lapp/revanced/extension/dcinside/NotificationClickListener;-><init>(Landroid/content/Context;)V
-                    invoke-virtual {v4, v5}, Landroid/view/View;->setOnClickListener(Landroid/view/View${'$'}OnClickListener;)V
-                    :revanced_notification_click_listener_end
-                    nop
-                """.trimIndent()
+        PostListOnViewCreatedFingerprint.apply {
+            method.addInstructions(
+                instructionMatches.single().index + 1,
+                "invoke-static {p1}, $NOTIFICATION_SHORTCUT_EXTENSION->bind(Landroid/view/View;)V",
             )
         }
     }
 }
 
 @Suppress("unused")
-val addNotificationShortcutPatch = resourcePatch(
+val addNotificationShortcutPatch = patch(
     name = "Add notification shortcut",
     description = "Adds a notification shortcut button above quick write in the post list.",
 ) {

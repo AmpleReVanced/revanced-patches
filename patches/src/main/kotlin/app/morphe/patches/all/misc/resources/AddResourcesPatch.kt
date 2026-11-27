@@ -23,7 +23,9 @@
 
 package app.morphe.patches.all.misc.resources
 
-import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.patch.listDecodableFiles
+import app.morphe.patcher.patch.patch
+import app.morphe.patcher.patch.resourceFile
 import app.morphe.patches.util.resource.StringResourceSanitizer.sanitizeAndroidResourceString
 import app.morphe.patches.util.resource.forEachRawResourceElement
 import app.morphe.util.inputStreamFromBundledResource
@@ -282,7 +284,7 @@ private class DestinationFile(val file: File, val text: String) {
 
 private const val EMPTY_RESOURCES_FILE = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<resources>\n</resources>"
 
-internal val addResourcesPatch = resourcePatch(
+internal val addResourcesPatch = patch(
     description = "Add resources such as strings or arrays to the app."
 ) {
     finalize {
@@ -314,7 +316,7 @@ internal val addResourcesPatch = resourcePatch(
                     val source = stream.bufferedReader().use { it.readText() }
                     val destPath = "res/${locale.getDestLocaleFolderName()}/$type.xml"
                     val destination = destinations.getOrPut(destPath) {
-                        val file = get(destPath, copy = false)
+                        val file = resourceFile(destPath, copy = false)
                         file.parentFile?.mkdirs()
                         DestinationFile(file, if (file.exists()) file.readText() else EMPTY_RESOURCES_FILE)
                     }

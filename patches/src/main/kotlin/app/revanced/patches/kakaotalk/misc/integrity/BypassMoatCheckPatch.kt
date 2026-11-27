@@ -4,11 +4,14 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLa
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
+import app.morphe.patcher.methodCall
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.patcher.util.findMutableMethodOf
+import app.morphe.patcher.patch.classDefBy
+import app.morphe.patcher.patch.mutableClassDefBy
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patcher.util.getReference
+import app.morphe.patcher.util.matchAllMethodIndicesForEach
 import app.morphe.patcher.util.numberOfParameterRegisters
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
@@ -31,7 +34,6 @@ import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.RegisterRangeInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.VariableRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
-import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethodParameter
 
@@ -61,12 +63,10 @@ private class MoatNativeGate(
     val localRegisters: Int,
     val bypassInstructions: String,
     val purpose: String,
-) {
-    var callSites = 0
-}
+)
 
 @Suppress("unused")
-val bypassMoatCheckPatch = bytecodePatch(
+val bypassMoatCheckPatch = patch(
     name = "Bypass Moat check",
     description = "Adds a setting to prevent KakaoPay Moat initialization, network requests, " +
             "scans, security information sharing, telemetry, and force-off reports while returning benign " +
@@ -398,51 +398,27 @@ val bypassMoatCheckPatch = bytecodePatch(
             "detector logging",
         )
 
-        val gatesByReference = nativeGates.associateBy { it.target.toString() }
-        if (gatesByReference.size != nativeGates.size) {
+        if (nativeGates.distinctBy { it.target.toString() }.size != nativeGates.size) {
             throw PatchException("Moat native gate targets are not unique.")
         }
-        val callSites = mutableListOf<Pair<Method, List<Pair<Int, MoatNativeGate>>>>()
-        classDefForEach { classDef ->
-            for (method in classDef.methods) {
-                if (method.name.startsWith("revanced_moat")) continue
-                val implementation = method.implementation ?: continue
-                val methodCallSites = mutableListOf<Pair<Int, MoatNativeGate>>()
-                for ((index, instruction) in implementation.instructions.withIndex()) {
-                    if (instruction.opcode != Opcode.INVOKE_STATIC &&
-                        instruction.opcode != Opcode.INVOKE_STATIC_RANGE &&
-                        instruction.opcode != Opcode.INVOKE_VIRTUAL &&
-                        instruction.opcode != Opcode.INVOKE_VIRTUAL_RANGE
-                    ) continue
-                    val reference = instruction.getReference<MethodReference>() ?: continue
-                    if (reference.definingClass != moatNativeClass.type) continue
-                    val gate = gatesByReference[reference.toString()] ?: continue
-                    methodCallSites.add(index to gate)
-                    gate.callSites++
-                }
-                if (methodCallSites.isNotEmpty()) callSites.add(method to methodCallSites)
-            }
-        }
         nativeGates.forEach { gate ->
-            if (gate.callSites == 0) {
-                throw PatchException("Could not find any Moat ${gate.purpose} call sites.")
-            }
-            addNativeGate(gate.target, gate.name, gate.localRegisters, gate.bypassInstructions)
-        }
-        val gateDescriptors = nativeGates.associateWith { gate ->
             val parameters = if (AccessFlags.STATIC.isSet(gate.target.accessFlags)) {
                 gate.target.parameterTypes
             } else {
                 listOf(gate.target.definingClass) + gate.target.parameterTypes
             }
-            "${gate.target.definingClass}->${gate.name}" +
+            val descriptor = "${gate.target.definingClass}->${gate.name}" +
                     "(${parameters.joinToString("")})${gate.target.returnType}"
-        }
-        callSites.forEach { (method, matches) ->
-            val mutableMethod = mutableClassDefBy(method.definingClass).findMutableMethodOf(method)
-            matches.asReversed().forEach { (index, gate) ->
-                mutableMethod.replaceInvoke(index, gateDescriptors.getValue(gate))
+            var callSites = 0
+            methodCall(gate.target).matchAllMethodIndicesForEach(requireMatches = false) { index ->
+                if (name.startsWith("revanced_moat")) return@matchAllMethodIndicesForEach
+                replaceInvoke(index, descriptor)
+                callSites++
             }
+            if (callSites == 0) throw PatchException("Could not find any Moat ${gate.purpose} call sites.")
+        }
+        nativeGates.forEach { gate ->
+            addNativeGate(gate.target, gate.name, gate.localRegisters, gate.bypassInstructions)
         }
         blockMoatTransmission()
     }

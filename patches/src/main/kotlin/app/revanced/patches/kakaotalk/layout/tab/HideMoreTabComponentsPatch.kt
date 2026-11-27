@@ -1,6 +1,6 @@
 package app.revanced.patches.kakaotalk.layout.tab
 
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patches.shared.misc.settings.preference.SwitchPreference
 import app.morphe.util.setExtensionIsPatchIncluded
 import app.revanced.patches.kakaotalk.layout.tab.fingerprints.MoreTabGlobalServiceGroupSectionFingerprint
@@ -23,7 +23,7 @@ private const val EXTENSION_CLASS =
     "Lapp/revanced/extension/kakaotalk/patches/HideMoreTabComponentsPatch;"
 
 @Suppress("unused")
-val hideMoreTabComponentsPatch = bytecodePatch(
+val hideMoreTabComponentsPatch = patch(
     name = "Hide More tab components",
     description = "Adds options to hide components from the More tab.",
 ) {

@@ -1,7 +1,7 @@
 package app.revanced.patches.chzzk.p2p
 
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getReference
 import app.morphe.patcher.util.returnEarly
 import app.revanced.patches.chzzk.shared.Constants.COMPATIBILITY_CHZZK
@@ -11,7 +11,7 @@ import com.android.tools.smali.dexlib2.iface.instruction.TwoRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 
 @Suppress("unused")
-val disableP2PPatch = bytecodePatch(
+val disableP2PPatch = patch(
     name = "Disable P2P",
     description = "Disables CHZZK peer-assisted grid streaming and forces CDN playback.",
 ) {

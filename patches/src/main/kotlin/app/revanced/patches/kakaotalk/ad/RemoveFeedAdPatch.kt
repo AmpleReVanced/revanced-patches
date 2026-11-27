@@ -3,7 +3,7 @@ package app.revanced.patches.kakaotalk.ad
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod.Companion.toMutable
 import app.morphe.patcher.util.returnEarly
@@ -16,7 +16,7 @@ import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
 import com.android.tools.smali.dexlib2.immutable.ImmutableMethodParameter
 
 @Suppress("unused")
-val removeFeedAdPatch = bytecodePatch(
+val removeFeedAdPatch = patch(
     name = "Remove feed ad",
     description = "Removes the feed ad from the app.",
 ) {

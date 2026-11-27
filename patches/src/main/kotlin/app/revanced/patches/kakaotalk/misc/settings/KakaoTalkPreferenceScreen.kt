@@ -2,6 +2,7 @@ package app.revanced.patches.kakaotalk.misc.settings
 
 import app.morphe.patches.shared.misc.settings.preference.ActionIntentPreference
 import app.morphe.patches.shared.misc.settings.preference.BasePreferenceScreen
+import app.morphe.patches.shared.misc.settings.preference.ListPreference
 import app.morphe.patches.shared.misc.settings.preference.MORPHE_PREFERENCE_SCREEN_LAYOUT
 import app.morphe.patches.shared.misc.settings.preference.NonInteractivePreference
 import app.morphe.patches.shared.misc.settings.preference.PreferenceScreenPreference
@@ -62,10 +63,11 @@ internal fun addDefaultKakaoTalkSettingsPreferences() {
     )
 
     PreferenceScreen.DEBUG.addPreferences(
-        SwitchPreference(
+        ListPreference(
             key = "morphe_pref_debug",
             titleKey = "morphe_settings_debug",
-            summary = true,
+            entriesKey = null,
+            entryValuesKey = null,
         ),
         SwitchPreference(
             key = "morphe_pref_debug_stacktrace",
@@ -189,7 +191,12 @@ internal object PreferenceScreen : BasePreferenceScreen(MORPHE_PREFERENCE_SCREEN
 
     override fun commit(screen: PreferenceScreenPreference) {
         kakaoTalkSettingsPreferences.removeAll { it.key == screen.key }
-        kakaoTalkSettingsPreferences += screen
+        kakaoTalkSettingsPreferences += with(screen) {
+            PreferenceScreenPreference(
+                key, titleKey!!, summaryKey, icon, iconBold, layout,
+                preferences = preferences.sortedBy { it !is PreferenceScreenPreference }.toSet(),
+            )
+        }
     }
 }
 

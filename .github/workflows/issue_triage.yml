@@ -1,0 +1,58 @@
+name: Issue triage
+
+# AI issue triage using OpenRouter. Setup: https://github.com/MorpheApp/morphe-patches-template#-ai-issue-triage
+# To turn it off: Actions tab > Issue triage > "..." menu > Disable workflow.
+
+on:
+  issues:
+    types: [opened, edited]
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: Issue number to triage
+        required: true
+        type: number
+
+permissions: {}
+
+jobs:
+  triage:
+    name: Triage issue
+    # Besides new issues, only changes by the author to an issue closed as not planned are of interest.
+    if: >-
+      github.repository_owner == 'AmpleReVanced' &&
+      (github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'issues' && github.event.action == 'opened') ||
+      (!github.event.issue.pull_request &&
+      github.event.issue.state == 'closed' &&
+      github.event.issue.state_reason == 'not_planned' &&
+      github.event.sender.login == github.event.issue.user.login))
+    # One run at a time for each issue, so the number of re-checks is counted correctly.
+    concurrency:
+      group: issue-triage-${{ github.event.issue.number || inputs.issue_number }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          sparse-checkout: .github/scripts/issue-triage
+          sparse-checkout-cone-mode: false
+
+      - name: Triage issue
+        uses: actions/github-script@v9
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          # Optional repository variables.
+          OPENROUTER_MODEL: ${{ vars.OPENROUTER_MODEL }}
+          TRIAGE_MODE: ${{ vars.ISSUE_TRIAGE_MODE }}
+          INCLUDE_MAINTAINERS: ${{ vars.ISSUE_TRIAGE_INCLUDE_MAINTAINERS }}
+        with:
+          script: |
+            const run = require('./.github/scripts/issue-triage/triage.js');
+            await run({ github, context, core });

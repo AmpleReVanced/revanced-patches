@@ -2,8 +2,8 @@ package app.revanced.patches.navermap.liveupdate
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
-import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.patcher.patch.resourcePatch
+import app.morphe.patcher.patch.document
+import app.morphe.patcher.patch.patch
 import app.morphe.util.getNode
 import app.revanced.patches.navermap.shared.Constants.COMPATIBILITY_NAVER_MAP
 import app.revanced.util.parameterRegister
@@ -14,7 +14,7 @@ import org.w3c.dom.Element
 private const val EXTENSION_CLASS = "Lapp/revanced/extension/navermap/liveupdate/LiveUpdatePatch;"
 private const val PROMOTED_PERMISSION = "android.permission.POST_PROMOTED_NOTIFICATIONS"
 
-private val liveUpdatePermissionPatch = resourcePatch {
+private val liveUpdatePermissionPatch = patch {
     execute {
         document("AndroidManifest.xml").use { document ->
             val manifest = document.getNode("manifest") as Element
@@ -35,7 +35,7 @@ private val liveUpdatePermissionPatch = resourcePatch {
 }
 
 @Suppress("unused")
-val enableNavigationLiveUpdatesPatch = bytecodePatch(
+val enableNavigationLiveUpdatesPatch = patch(
     name = "Enable navigation live updates",
     description = "Converts Now Bar navigation notifications to Android Live Updates on Android 16 or newer.",
 ) {

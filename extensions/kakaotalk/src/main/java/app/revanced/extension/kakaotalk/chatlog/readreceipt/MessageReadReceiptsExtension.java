@@ -17,15 +17,16 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import app.morphe.extension.shared.Utils;
 import app.revanced.extension.kakaotalk.helper.ResourceHelper;
+import app.revanced.extension.kakaotalk.patches.GhostModePatch;
 import app.revanced.extension.kakaotalk.settings.Settings;
 
 public final class MessageReadReceiptsExtension {
     private static final String TAG = "MorpheReadReceipts";
-    private static final String LOG_ID_METHOD = "revanced_read_receipt_log_id";
-    private static final String CHAT_ID_METHOD = "revanced_read_receipt_chat_id";
-    private static final String SENDER_ID_METHOD = "revanced_read_receipt_sender_id";
+    private static final String OWNER_ID_METHOD = "revanced_read_receipt_owner_id";
     private static final String MEMBER_SET_BY_CHAT_ID_METHOD =
             "revanced_read_receipt_member_set_by_chat_id";
+    private static final String READ_LOG_ID_BY_CHAT_ID_METHOD =
+            "revanced_read_receipt_read_log_id_by_chat_id";
     private static final String WATERMARKS_METHOD = "revanced_read_receipt_watermarks";
     private static final String ACTIVE_COUNT_METHOD = "revanced_read_receipt_active_count";
     private static final String CURRENT_USER_ID_METHOD = "revanced_read_receipt_current_user_id";
@@ -106,12 +107,14 @@ public final class MessageReadReceiptsExtension {
             long chatId,
             long messageId,
             long senderId,
+            long ownerId,
             String chatLogClassName
     ) {
         Request request = new Request(
                 chatId,
                 messageId,
                 senderId,
+                ownerId,
                 chatLogClassName
         );
         return request.isValid() ? request : null;
@@ -153,9 +156,15 @@ public final class MessageReadReceiptsExtension {
                 }
             }
 
-            // Neither carries a watermark of their own, but both have seen the message.
+            // Neither carries a watermark of their own, but both have seen the message
+            // unless ghost mode is keeping the current user's read position behind it.
             markRead(readerIds, nonReaderIds, request.senderId);
-            markRead(readerIds, nonReaderIds, currentUserId);
+            if (currentUserId != request.senderId &&
+                    GhostModePatch.isUnreadByMe(request.messageId, request.readLogId())) {
+                markUnread(readerIds, nonReaderIds, currentUserId);
+            } else {
+                markRead(readerIds, nonReaderIds, currentUserId);
+            }
 
             int knownCount = readerIds.size() + nonReaderIds.size();
             // KakaoTalk can report more members than this device holds watermarks for.
@@ -305,12 +314,19 @@ public final class MessageReadReceiptsExtension {
         readers.add(userId);
     }
 
+    private static void markUnread(Set<Long> readers, Set<Long> nonReaders, long userId) {
+        if (userId <= 0L) return;
+        readers.remove(userId);
+        nonReaders.add(userId);
+    }
+
     private static Request createRequest(Object chatLog) throws Exception {
         ChatLogAccessors accessors = chatLogAccessors(chatLog.getClass());
         Request request = new Request(
                 number(accessors.chatId.invoke(chatLog)),
                 number(accessors.logId.invoke(chatLog)),
                 number(accessors.senderId.invoke(chatLog)),
+                number(accessors.ownerId.invoke(chatLog)),
                 chatLog.getClass().getName()
         );
         if (!request.isValid()) {
@@ -369,13 +385,17 @@ public final class MessageReadReceiptsExtension {
         final Method logId;
         final Method chatId;
         final Method senderId;
+        final Method ownerId;
         final Method memberSetByChatId;
+        final Method readLogIdByChatId;
 
         ChatLogAccessors(Class<?> type) throws NoSuchMethodException {
-            logId = type.getMethod(LOG_ID_METHOD);
-            chatId = type.getMethod(CHAT_ID_METHOD);
-            senderId = type.getMethod(SENDER_ID_METHOD);
-            memberSetByChatId = type.getMethod(MEMBER_SET_BY_CHAT_ID_METHOD, long.class);
+            logId = type.getMethod("getId");
+            chatId = type.getMethod("getChatRoomId");
+            senderId = type.getMethod("getUserId");
+            ownerId = type.getMethod(OWNER_ID_METHOD);
+            memberSetByChatId = type.getMethod(MEMBER_SET_BY_CHAT_ID_METHOD, long.class, long.class);
+            readLogIdByChatId = type.getMethod(READ_LOG_ID_BY_CHAT_ID_METHOD, long.class, long.class);
         }
     }
 
@@ -383,17 +403,20 @@ public final class MessageReadReceiptsExtension {
         final long chatId;
         final long messageId;
         final long senderId;
+        final long ownerId;
         final String chatLogClassName;
 
         Request(
                 long chatId,
                 long messageId,
                 long senderId,
+                long ownerId,
                 String chatLogClassName
         ) {
             this.chatId = chatId;
             this.messageId = messageId;
             this.senderId = senderId;
+            this.ownerId = ownerId;
             this.chatLogClassName = chatLogClassName;
         }
 
@@ -405,12 +428,19 @@ public final class MessageReadReceiptsExtension {
         }
 
         Object memberSet() throws Exception {
-            Class<?> chatLogType = Class.forName(
+            return accessors().memberSetByChatId.invoke(null, chatId, ownerId);
+        }
+
+        long readLogId() throws Exception {
+            return number(accessors().readLogIdByChatId.invoke(null, chatId, ownerId));
+        }
+
+        private ChatLogAccessors accessors() throws Exception {
+            return chatLogAccessors(Class.forName(
                     chatLogClassName,
                     false,
                     MessageReadReceiptsExtension.class.getClassLoader()
-            );
-            return chatLogAccessors(chatLogType).memberSetByChatId.invoke(null, chatId);
+            ));
         }
     }
 

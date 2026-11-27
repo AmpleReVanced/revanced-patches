@@ -1,13 +1,13 @@
 package app.revanced.patches.kakaotalk.ad
 
-import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.returnEarly
 import app.revanced.patches.kakaotalk.ad.fingerprints.ShortFormAdLoadFingerprint
 import app.revanced.patches.kakaotalk.ad.fingerprints.ShortFormAdRenderFingerprint
 import app.revanced.patches.kakaotalk.shared.Constants.COMPATIBILITY_KAKAO
 
 @Suppress("unused")
-val disableShortFormAdPatch = bytecodePatch(
+val disableShortFormAdPatch = patch(
     name = "Disable ShortForm ad",
     description = "Disables the shortform ad load and render paths.",
 ) {

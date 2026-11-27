@@ -6,6 +6,10 @@ import android.text.BoringLayout;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
+import android.text.TextUtils;
+import android.view.MotionEvent;
+
+import app.revanced.extension.kakaotalk.patches.HiddenMessageAuthorPatch;
 
 import com.kakao.talk.widget.chatlog.ChatInfoView;
 import com.kakao.talk.widget.chatlog.MyChatInfoView;
@@ -45,16 +49,37 @@ public class ChatInfoExtension {
 
     // Related to a hidden message
     private boolean isHidden = false;
+    private CharSequence hiddenText = null;
     private Layout hiddenLayout = null;
     private Rect hiddenRect = null;
     private TextPaint hiddenPaint = null;
 
     private final ChatInfoView view;
     private long chatLogId = 0L;
+    private Object chatRoom = null;
 
     public ChatInfoExtension(ChatInfoView view) {
         this.view = view;
         initializePaints();
+    }
+
+    public void setChatRoom(Object chatRoom) {
+        this.chatRoom = chatRoom;
+    }
+
+    public boolean onTouchEvent(MotionEvent event) {
+        if (isDeleted || !isHidden || hiddenRect == null || chatRoom == null) return false;
+        if (!HiddenMessageAuthorPatch.hasAuthor(chatLogId)) return false;
+
+        int slop = (int) (8 * view.getResources().getDisplayMetrics().density);
+        Rect target = new Rect(hiddenRect);
+        target.inset(-slop, -slop);
+        if (!target.contains((int) event.getX(), (int) event.getY())) return false;
+
+        if (event.getActionMasked() == MotionEvent.ACTION_UP) {
+            HiddenMessageAuthorPatch.openProfile(view, chatRoom, chatLogId);
+        }
+        return true;
     }
 
     public void setChatLogId(long chatLogId) {
@@ -173,18 +198,25 @@ public class ChatInfoExtension {
     }
 
     public void setHidden(boolean hidden) {
-        if (this.isHidden != hidden) {
-            this.isHidden = hidden;
-            if (hidden) {
-                ensurePaintsInitialized();
-                createHiddenLayout();
-            } else {
-                hiddenLayout = null;
-                hiddenRect = null;
-            }
-            view.requestLayout();
-            view.invalidate();
+        CharSequence text = hidden ? hiddenText() : null;
+        if (this.isHidden == hidden && TextUtils.equals(this.hiddenText, text)) return;
+
+        this.isHidden = hidden;
+        this.hiddenText = text;
+        if (hidden) {
+            ensurePaintsInitialized();
+            createHiddenLayout();
+        } else {
+            hiddenLayout = null;
+            hiddenRect = null;
         }
+        view.requestLayout();
+        view.invalidate();
+    }
+
+    private CharSequence hiddenText() {
+        CharSequence label = HiddenMessageAuthorPatch.hiddenLabel(chatLogId);
+        return label != null ? label : str("morphe_kakaotalk_chatlog_hidden");
     }
 
     private void createDeletedLayout() {
@@ -220,14 +252,15 @@ public class ChatInfoExtension {
     private void createHiddenLayout() {
         if (hiddenPaint == null) return;
 
-        String text = str("morphe_kakaotalk_chatlog_hidden");
+        CharSequence text = hiddenText;
+        int width = (int) Math.ceil(Layout.getDesiredWidth(text, hiddenPaint));
         BoringLayout.Metrics metrics = BoringLayout.isBoring(text, hiddenPaint);
 
         if (metrics == null) {
             hiddenLayout = new StaticLayout(
                     text,
                     hiddenPaint,
-                    (int) hiddenPaint.measureText(text),
+                    width,
                     Layout.Alignment.ALIGN_NORMAL,
                     1.0f,
                     0.0f,
@@ -237,7 +270,7 @@ public class ChatInfoExtension {
             hiddenLayout = BoringLayout.make(
                     text,
                     hiddenPaint,
-                    (int) hiddenPaint.measureText(text),
+                    width,
                     Layout.Alignment.ALIGN_NORMAL,
                     1.0f,
                     0.0f,
