@@ -9,6 +9,7 @@ import com.android.tools.smali.dexlib2.AccessFlags
 internal object AdBalloonBannerFingerprint : Fingerprint(
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.FINAL),
     returnType = "V",
+    parameters = listOf("Lcom/afreecatv/domain/live/model/AdBalloonBanner;", "L", "L", "L", "L", "I"),
     filters = listOf(resourceLiteral(ResourceType.STRING, "ad_balloon_of")),
 )
 

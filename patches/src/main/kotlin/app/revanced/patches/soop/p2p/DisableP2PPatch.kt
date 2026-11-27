@@ -38,7 +38,7 @@ val disableP2PPatch = patch(
     dependsOn(disableNativeP2PPatch)
 
     execute {
-        HlsEngineV2OffFingerprint.method.returnEarly(true)
+        V2PlayerFingerprint.method.returnEarly(false)
         ColonyConnectFingerprint.method.returnEarly()
         P2PCommandDispatchFingerprint.method.returnEarly()
 

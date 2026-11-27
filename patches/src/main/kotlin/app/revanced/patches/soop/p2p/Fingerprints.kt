@@ -16,10 +16,11 @@ internal object PlaybackNativeConfigurationFingerprint : Fingerprint(
     }
 )
 
-internal object HlsEngineV2OffFingerprint : Fingerprint(
+internal object V2PlayerFingerprint : Fingerprint(
+    definingClass = "Lcom/afreecatv/mobile/sdk/player/live/data/SDKConfig;",
+    name = "isV2Player",
     returnType = "Z",
-    parameters = listOf("Ljava/lang/String;"),
-    strings = listOf("HLS_ENGINE_V2_ANDROID_OFF")
+    parameters = emptyList(),
 )
 
 internal object ColonyConnectFingerprint : Fingerprint(

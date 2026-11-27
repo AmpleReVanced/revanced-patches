@@ -1,13 +1,14 @@
 package app.revanced.patches.soop.ads
 
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.mutableClassDefBy
 import app.morphe.patcher.patch.patch
-import app.morphe.patcher.util.returnEarly
 import app.revanced.patches.soop.ads.fingerprints.*
 import app.revanced.patches.soop.shared.Constants.COMPATIBILITY_SOOP
+import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 
@@ -19,7 +20,17 @@ val removeMainboardAdsPatch = patch(
     compatibleWith(COMPATIBILITY_SOOP)
 
     execute {
-        MainBoardAdRequestFingerprint.method.returnEarly(null)
+        MainBoardAdRequestFingerprint.let {
+            val builder = it.instructionMatches.first().index
+            val register = it.method.getInstruction<OneRegisterInstruction>(builder + 1).registerA
+            it.method.addInstructions(
+                builder,
+                """
+                    const/4 v$register, 0x0
+                    return-object v$register
+                """,
+            )
+        }
 
         val bind = MainBoardAdBindFingerprint.method
         val holderClass = mutableClassDefBy(bind.definingClass)

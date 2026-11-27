@@ -19,7 +19,6 @@ val removeListBannerAdsPatch = patch(
         val unitClass = KotlinUnitInstanceFingerprint.originalClassDef
 
         ListBannerAdRequestFingerprint.method.returnEarly(null)
-        ListBannerAdFlowFingerprint.method.returnUnitEarly(unitClass)
         LiveDownBannerRequestFingerprint.method.returnUnitEarly(unitClass)
     }
 }
