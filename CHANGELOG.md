@@ -1,3 +1,15 @@
+# [1.6.0-dev.14](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.13...v1.6.0-dev.14) (2026-11-27)
+
+
+### Features
+
+* **chzzk:** support version `3.18.0` ([2c4d2f3](https://github.com/AmpleReVanced/revanced-patches/commit/2c4d2f3d1d33395536952a698597ec97ca00d980))
+* **flexcil:** support version `1.5.1.7` ([2dc150e](https://github.com/AmpleReVanced/revanced-patches/commit/2dc150ec66f066324d070e534c75912f92512faa))
+* **navermap:** support version `6.12.2.4` ([1d8b36e](https://github.com/AmpleReVanced/revanced-patches/commit/1d8b36ee5f1a44cb678f605d8e169f1102dfcd47))
+* **samsung-keyboard:** support version `5.9.50.10` ([5d8d1ff](https://github.com/AmpleReVanced/revanced-patches/commit/5d8d1ffe36a232134cf81d7e4e32d5622e042f51))
+* **soop:** support version `8.36.2` ([2a3c2d7](https://github.com/AmpleReVanced/revanced-patches/commit/2a3c2d7e3da2ed4aa9c1b0029b2ddac33f07d1fa))
+* **starnote:** support version `1.5.4.1` ([440f3d0](https://github.com/AmpleReVanced/revanced-patches/commit/440f3d0865f5fbace67f5f4363b87cc0cd4fb7b0))
+
 # [1.6.0-dev.13](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.12...v1.6.0-dev.13) (2026-11-26)
 
 

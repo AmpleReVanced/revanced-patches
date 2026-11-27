@@ -4,7 +4,7 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START -->
-> **[v1.6.0-dev.13](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.6.0-dev.13)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;131 patches total
+> **[v1.6.0-dev.14](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.6.0-dev.14)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;132 patches total
 <details>
 <summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;79 patches</summary>
 <br>
@@ -139,19 +139,20 @@
 </details>
 
 <details>
-<summary>📦 Chzzk&nbsp;&nbsp;•&nbsp;&nbsp;5 patches</summary>
+<summary>📦 Chzzk&nbsp;&nbsp;•&nbsp;&nbsp;6 patches</summary>
 <br>
 
 **🎯 Supported versions:**
 
-| 3.15.2 | 3.13.2 |
-| :---: | :---: |
+| 3.18.0 |
+| :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
 | [Auto claim TongPow](#auto-claim-tongpow) | Automatically claims CHZZK TongPow rewards when they become available while watching streams. |  |
 | [Disable P2P](#disable-p2p) | Disables CHZZK peer-assisted grid streaming and forces CDN playback. |  |
 | [Disable ads](#disable-ads) | Disables CHZZK advertisements, including live stream pre-roll, mid-roll and post-roll ads and clip feed ads. |  |
+| [Fix KeyBox initialization](#fix-keybox-initialization) | Allows CHZZK's bundled keys to load after patching and resigning the app. |  |
 | [Hide home banners](#hide-home-banners) | Hides promotional banners on the CHZZK home recommend tab, including the top banner carousel and the in-feed event and image banners. |  |
 | [Unlock cheat key](#unlock-cheat-key) | Unlocks CHZZK cheat key subscription benefits without an active subscription. |  |
 
@@ -163,8 +164,8 @@
 
 **🎯 Supported versions:**
 
-| 1.5.0.16 | 1.5.0.11 | 1.5.0.10 | 1.5.0.9 | 1.5.0.8 | 1.5.0.7 | 1.4.4.14 | 1.4.4.12 | 1.4.4.10 | 1.4.4.9 |
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| 1.5.1.7 | 1.5.0.16 | 1.5.0.11 | 1.5.0.10 | 1.5.0.9 | 1.5.0.8 | 1.5.0.7 | 1.4.4.14 | 1.4.4.12 | 1.4.4.10 | 1.4.4.9 |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
@@ -179,7 +180,7 @@
 
 **🎯 Supported versions:**
 
-| 🧪&nbsp;1.5.4 | 🧪&nbsp;1.5.3 |
+| 🧪&nbsp;1.5.4.1 | 🧪&nbsp;1.5.3 |
 | :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
@@ -197,8 +198,8 @@
 
 **🎯 Supported versions:**
 
-| 8.33.0 | 8.31.3 | 8.30.1 | 8.29.3 | 8.28.5 |
-| :---: | :---: | :---: | :---: | :---: |
+| 8.36.2 |
+| :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
@@ -222,8 +223,8 @@
 
 **🎯 Supported versions:**
 
-| 🧪&nbsp;6.11.2.2 | 🧪&nbsp;6.10.0.16 | 🧪&nbsp;6.9.1.3 |
-| :---: | :---: | :---: |
+| 🧪&nbsp;6.12.2.4 | 🧪&nbsp;6.11.2.2 | 🧪&nbsp;6.10.0.16 | 🧪&nbsp;6.9.1.3 |
+| :---: | :---: | :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
@@ -237,7 +238,7 @@
 
 **🎯 Supported versions:**
 
-| 5.9.40.48 |
+| 5.9.50.10 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
