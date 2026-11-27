@@ -4,7 +4,7 @@
 ## 🩹 Patches list
 
 <!-- PATCHES_START -->
-> **[v1.6.0-dev.14](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.6.0-dev.14)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;132 patches total
+> **[v1.6.0-dev.15](https://github.com/AmpleReVanced/revanced-patches/releases/tag/v1.6.0-dev.15)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;132 patches total
 <details>
 <summary>📦 Kakao Talk&nbsp;&nbsp;•&nbsp;&nbsp;79 patches</summary>
 <br>
@@ -223,8 +223,8 @@
 
 **🎯 Supported versions:**
 
-| 🧪&nbsp;6.12.2.4 | 🧪&nbsp;6.11.2.2 | 🧪&nbsp;6.10.0.16 | 🧪&nbsp;6.9.1.3 |
-| :---: | :---: | :---: | :---: |
+| 🧪&nbsp;6.13.1.2 | 🧪&nbsp;6.12.2.4 | 🧪&nbsp;6.11.2.2 | 🧪&nbsp;6.10.0.16 | 🧪&nbsp;6.9.1.3 |
+| :---: | :---: | :---: | :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|

@@ -1,3 +1,10 @@
+# [1.6.0-dev.15](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.14...v1.6.0-dev.15) (2026-11-27)
+
+
+### Features
+
+* **navermap:** support version `6.13.1.2` ([924e093](https://github.com/AmpleReVanced/revanced-patches/commit/924e0936442b2008e0ba0313e41e5419b86a998f))
+
 # [1.6.0-dev.14](https://github.com/AmpleReVanced/revanced-patches/compare/v1.6.0-dev.13...v1.6.0-dev.14) (2026-11-27)
 
 
