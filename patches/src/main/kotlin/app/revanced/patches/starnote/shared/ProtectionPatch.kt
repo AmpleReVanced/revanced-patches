@@ -58,7 +58,9 @@ private val addProtectionLibraryPatch = patch {
             parentFile.mkdirs()
             writeBytes(library)
         }
+    }
 
+    finalize {
         val uncompressedFiles = resourceFile("../uncompressed-files.json")
         val json = JsonParser.parseString(uncompressedFiles.readText()).asJsonObject
         json.getAsJsonArray("paths").add(LIBRARY_PATH)
