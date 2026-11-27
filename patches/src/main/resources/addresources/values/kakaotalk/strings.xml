@@ -164,7 +164,7 @@ Second \"item\" text"</string>
     <string name="morphe_pref_show_modified_message_sender_profile_summary">Shows the sender’s profile image and nickname in message edit history.</string>
     <string name="morphe_pref_bypass_moat_integrity_check_summary">May be required to launch KakaoPay. This bypasses an integrity detection path. Use at your own risk.</string>
     <string name="morphe_pref_ghost_mode_summary">Prevents typing and activity updates from being sent to the other side.</string>
-    <string name="morphe_pref_ghost_read_summary">Opening or viewing a chat room does not mark its messages as read for others, including messages that arrive while you are viewing it.</string>
+    <string name="morphe_pref_ghost_read_summary">Opening or viewing a chat room does not mark its messages as read for others, including messages that arrive while you are viewing it.\n\nWhile this is on, the unread counts of messages may not go down when others read them, and some messages and chat room information may not sync correctly.</string>
     <string name="morphe_pref_ghost_read_keep_unread_summary">Messages that others still see as unread stay unread in your chat list and message counts too. Requires the option above.</string>
     <string name="morphe_pref_ghost_read_on_send_summary">Sending a message does not mark earlier messages as read. Requires “Don’t mark as read when opening chats”.</string>
     <string name="morphe_pref_show_hidden_message_author_summary">Shows the nickname of the host or staff member who hid messages or removed members in open chats.</string>
